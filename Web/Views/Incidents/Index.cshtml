@@ -1,0 +1,680 @@
+﻿<style>
+   .text-submitted {
+        color: red; 
+    }
+
+    .status-submitted{
+        background-color:red;
+    }
+    .status-validated {
+        background-color:darkorange;
+    }
+    .text-validated {
+        color: darkorange;
+        font-weight: 600;
+    }
+
+    .status-dispatched{
+        background-color:orange;
+    }
+    .text-dispatched {
+        color: orange;
+        font-weight: 600;
+    }
+
+    .status-started {
+        background-color:blue;
+    }
+    .text-started {
+        color: blue;
+        font-weight: 600;
+    }
+
+    .status-completed{
+        background-color:limegreen;
+    }
+    .text-completed {
+        color: limegreen;
+        font-weight: 600;
+    }
+
+    .status-cancelled {
+        background-color:grey;
+    }
+    .text-cancelled {
+        color: gray;
+        font-weight: 600;
+    }
+
+    .badge-low{
+        background-color:limegreen;    }
+
+        .badge-medium{
+            background-color:darkorange;
+
+        }
+
+    .badge-high{
+        background-color:red;
+
+    }
+    .statusFilter{
+        margin-right:16px;
+    }
+
+    #statusSelect{
+        width:auto;
+    }
+    .btn.btn-primary{
+        width:200px;
+    }
+
+    .form-control.search-input{
+        height:38px;
+        min-height:38px;
+    }
+
+    th,td {
+        white-space: nowrap;
+        text-align:left !important;
+    }
+
+    .btnIcon{
+        margin-right:8px;
+    }
+
+    .incident-table{
+        overflow-y:hidden;
+    }
+
+    .customTableDropdown .dropdown-toggle{
+        font-size: 14px;
+        padding: 4px 15px 4px 15px !important;
+        color:#ffffff !important;
+    }
+
+    .customTableDropdown .dropdown-toggle:hover{
+        background-color:transparent !important;
+            border-color: #000000;
+        color:#000000 !important;
+    }
+
+     .customTableDropdown .dropdown-toggle:hover::before {
+            filter: brightness(0) !important;
+    }
+
+    .customTableDropdown .dropdown-toggle::before {
+        display:none;
+         /*    width: 11px;
+            filter: brightness(1) !important;
+            left: 81% !important;
+            rotate: 92deg !important; */
+    }
+
+        .customTableDropdown .dropdown-toggle.status-started::before {
+            left: 71% !important;
+            }
+    .eyeIcon{
+        color: #1d4ed8;
+    }
+    .noteIcon{
+        color: #15803d;
+    }
+    .historyIcon{
+        color: #7e22ce;
+    }
+
+    .editIcon{
+        color:#f54e00;
+    }
+
+    .map i.fa{
+        color:grey;
+        margin-right:5px;
+    }
+
+    .date-time-sec p{
+        font-size:14px;
+        font-weight:400;
+        margin-bottom:1px;
+    }
+
+    .AddIncident{
+        margin-left:16px;
+    }
+ </style>
+<div class="incidentSec">
+    <div class="topSearchbar">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Incident</h3>
+            <div class="right-sec d-flex  align-items-center mb-3">
+                
+                <div class="search-container me-3">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="form-control search-input" placeholder="Search incidents..." id="global_search_value">
+                </div>
+                <div class="statusFilter">
+                    <select class="form-select" id="statusSelect" placeholder="status">
+                        <option value="Submitted" selected>Submitted</option>
+                        <option value="Validated">Validated</option>
+                        <option value="Dispatched">Dispatched</option>
+                        <option value="Started">Started</option>
+                        <option value="Completed">Completed</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="severityFilter">
+                    <select class="form-select" id="severitySelect" placeholder="Severity">
+                        <option value="Low" selected>Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <a href="#" class="btn btn-primary AddIncident" data-bs-toggle="modal" data-bs-target="#addIncidentModal">+ Add New Incident</a>
+            </div>
+        </div>
+    </div>
+   
+    <div class="table-responsive incident-table">
+        <table class="table align-middle text-left">
+            <thead class="table-light">
+                <tr>
+                    <th>Status</th>
+                    <th>Date/Time</th>
+                    <th>Location</th>
+                    <th>Intersection</th>
+                    <th>Asset ID</th>
+                    <th>Type of Event</th>
+                    <th>Severity</th>
+                    <th>Description</th>
+                    <th>ES Indicators</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Submitted
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted" >Submitted</div></li>
+                                <li><div class="dropdown-item text-validated" >Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Validated
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted" >Submitted</div></li>
+                                <li><div class="dropdown-item text-validated" >Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-dispatched rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dispatched
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted" >Submitted</div></li>
+                                <li><div class="dropdown-item text-validated" >Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-started rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Started
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted" >Submitted</div></li>
+                                <li><div class="dropdown-item text-validated" >Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-completed rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Completed
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted" >Submitted</div></li>
+                                <li><div class="dropdown-item text-validated" >Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-cancelled rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Cancelled
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted" >Submitted</div></li>
+                                <li><div class="dropdown-item text-validated" >Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+               
+        </table>
+    </div>
+</div>
+
+
+<div class="modal fade" id="addIncidentModal" tabindex="-1" aria-labelledby="addIncidentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addIncidentModalModalLabel">Add Incident</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="companyProfileForm">
+                    <ul class="nav nav-tabs mb-3 CustomTab" id="companyProfileTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="company-info-tab" data-bs-toggle="tab" data-bs-target="#company-info" type="button" role="tab" aria-controls="company-info" aria-selected="true"><i class="fa fa-building"></i>Company Information</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="company-contacts-tab" data-bs-toggle="tab" data-bs-target="#company-contacts" type="button" role="tab" aria-controls="company-contacts" aria-selected="false"><i class="fa fa-users"></i>Company Contacts</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="job-sites-tab" data-bs-toggle="tab" data-bs-target="#job-sites" type="button" role="tab" aria-controls="job-sites" aria-selected="false"><i class="fa fa-location-dot"></i>Job Sites</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="companyProfileTabContent">
+                        <div class="tab-pane fade show active" id="company-info" role="tabpanel" aria-labelledby="company-info-tab">
+                            <div class="shadow-sm border border-gray-200 card-body InfoCard">
+                                <h6 class="fw-bold mb-3">Company Information</h6>
+                                <div class="mb-3">
+                                    <label class="form-label">Company Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="companyName" required />
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Industry <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="industry" required>
+                                        <option value="">Select Industry</option>
+                                        <option>Oil & Gas</option>
+                                        <option>Construction</option>
+                                        <option>Other</option>
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <fieldset class="mb-3">
+                                    <legend class="fs-6">Address</legend>
+                                    <div class="row g-2">
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">Street <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="street" required />
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">City <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="city" required />
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">State <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="state" required />
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label class="form-label">Zip Code <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="zipCode" required pattern="[0-9]{5}(-[0-9]{4})?" />
+                                            <div class="invalid-feedback"></div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <div class="mb-3">
+                                    <label class="form-label">Telephone <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control" id="telephone" required pattern="[0-9\-\(\)\+\s]{10,}" />
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Web Address</label>
+                                    <input type="url" class="form-control" id="webAddress" />
+                                    <div class="invalid-feedback"></div>
+                                </div>
+                                <div class="d-flex justify-content-end gap-2 mt-3">
+                                    <button type="button" class="btn btn-primary" id="nextToContacts">Next</button>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="company-contacts" role="tabpanel" aria-labelledby="company-contacts-tab">
+                            <div class="shadow-sm border border-gray-200 card-body InfoCard">
+                                <h6 class="fw-bold mb-3">Company Contacts</h6>
+                                <div class="contact-inputs">
+                                    <div class="mb-3">
+                                        <label class="form-label">Contact Person Name</label>
+                                        <input type="text" class="form-control" id="contactPersonName" />
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Role</label>
+                                        <select class="form-select" id="contactRole">
+                                            <option value="">Select Role</option>
+                                            <option>Project Manager</option>
+                                            <option>Admin</option>
+                                        </select>
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="contactPhone" pattern="[0-9\-\(\)\+\s]{10,}" />
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="contactEmail" />
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-end gap-2 mt-3">
+                                        <button type="button" class="btn btn-secondary" id="prevToInfo">Previous</button>
+                                        <button type="button" class="btn btn-success" id="saveContact">Save</button>
+                                        <button type="button" class="btn btn-primary" id="nextToJobSites">Next</button>
+                                    </div>
+                                </div>
+                                <div class="mt-5 savedDetail">
+                                    <h6>Saved Contacts</h6>
+                                    <ul class="list-group" id="contactsList"></ul>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tab-pane fade" id="job-sites" role="tabpanel" aria-labelledby="job-sites-tab">
+                            <div class="shadow-sm border border-gray-200 card-body InfoCard">
+                                <h6 class="fw-bold mb-3">Job Sites</h6>
+                                <div class="jobsite-inputs">
+                                    <div class="mb-3">
+                                        <label class="form-label">Site Name</label>
+                                        <input type="text" class="form-control" id="siteName" />
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Contact Person Name</label>
+                                        <input type="text" class="form-control" id="jobContactPersonName" />
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Contact Person's Email</label>
+                                        <input type="email" class="form-control" id="jobContactPersonEmail" />
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Contact Person's Mobile</label>
+                                        <input type="tel" class="form-control" id="jobContactPersonMobile" />
+                                        <div class="invalid-feedback"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Special Notes</label>
+                                        <textarea class="form-control" id="specialNotes"></textarea>
+                                    </div>
+                                    <div class="d-flex justify-content-end gap-2 mt-3">
+                                        <button type="button" class="btn btn-secondary" id="prevToContacts">Previous</button>
+                                        <button type="button" class="btn btn-success" id="saveJobSite">Save</button>
+                                        <button type="button" class="btn btn-primary" id="submitForm">Submit</button>
+                                        <button type="button" class="btn btn-success" id="updateForm" style="display:none;">Update</button>
+                                    </div>
+                                </div>
+                                <div class="mt-5 savedDetail">
+                                    <h6>Saved Job Sites</h6>
+                                    <ul class="list-group" id="jobSitesList"></ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ul class="nav nav-pills incidentFilter" id="pills-tab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-caller-tab" data-bs-toggle="pill"
+                data-bs-target="#pills-caller" type="button" role="tab">
+                Caller/Source Information
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-location-tab" data-bs-toggle="pill"
+                data-bs-target="#pills-location" type="button" role="tab">
+            Location of Incident
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-detail-tab" data-bs-toggle="pill"
+                data-bs-target="#pills-detail" type="button" role="tab">
+            Incident Details
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-description-tab" data-bs-toggle="pill"
+                data-bs-target="#pills-description" type="button" role="tab">
+           Description of Issue
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-severity-tab" data-bs-toggle="pill"
+                data-bs-target="#pills-severity" type="button" role="tab">
+           Severity
+        </button>
+    </li>
+    
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-safety-tab" data-bs-toggle="pill"
+                data-bs-target="#pills-safety" type="button" role="tab">
+           Environmental / Safety Indicators
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pills-support-tab" data-bs-toggle="pill"
+                data-bs-target="#pills-support" type="button" role="tab">
+            Supporting Information
+        </button>
+    </li>
+    
+
+
+</ul>
+<div class="tab-content" id="pills-tabContent">
+
+    <div class="tab-pane fade show active" id="pills-caller" role="tabpanel">
+       
+        test1
+
+    </div>
+
+    <div class="tab-pane fade" id="pills-location" role="tabpanel">
+       
+        test2
+
+    </div>
+    <div class="tab-pane fade" id="pills-detail" role="tabpanel">
+       
+        
+        test3
+    </div>
+    <div class="tab-pane fade" id="pills-description" role="tabpanel">
+       
+        
+
+    </div>
+    <div class="tab-pane fade" id="pills-severity" role="tabpanel">
+        test4
+        
+
+    </div>
+    <div class="tab-pane fade" id="pills-safety" role="tabpanel">
+       
+        test5
+
+    </div>
+    <div class="tab-pane fade" id="pills-support" role="tabpanel">
+       
+        test6
+
+    </div>
+</div>

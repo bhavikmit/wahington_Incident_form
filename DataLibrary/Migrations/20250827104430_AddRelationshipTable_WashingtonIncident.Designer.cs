@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250827101201_AddRelationshipTable")]
-    partial class AddRelationshipTable
+    [Migration("20250827104430_AddRelationshipTable_WashingtonIncident")]
+    partial class AddRelationshipTable_WashingtonIncident
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

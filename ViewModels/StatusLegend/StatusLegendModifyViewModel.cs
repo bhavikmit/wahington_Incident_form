@@ -8,7 +8,7 @@ namespace ViewModels
 {
     public class StatusLegendModifyViewModel : BaseUpdateVM, IBaseCrudViewModel, IIdentitifier
     {
-        [Display(Name = "StatusLegend", Prompt = "StatusLegend")]
+        [Display(Name = "Status Legend", Prompt = "Status Legend")]
         public string Name { get; set; }
 
         [Display(Name = "Color", Prompt = "Color")]

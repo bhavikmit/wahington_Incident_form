@@ -13,7 +13,7 @@ namespace Web.Controllers
             IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> service,
             ILogger<StatusLegendController> logger,
             IMapper mapper
-        ) : base(service, logger, mapper, "StatusLegend", "StatusLegend", false)
+        ) : base(service, logger, mapper, "StatusLegend", "Status Legend", false)
         {
         }
 

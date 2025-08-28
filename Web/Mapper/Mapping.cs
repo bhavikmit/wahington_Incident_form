@@ -702,6 +702,13 @@ namespace Models.Mapper
             CreateMap<TimesheetBriefViewModel, Timesheet>().ReverseMap();
             CreateMap<TimesheetBreakdownUpdateViewModel, TimesheetWebUpdateViewModel>().ReverseMap();
 
+
+            //StatusLegend
+            CreateMap<StatusLegendModifyViewModel, StatusLegend>().ReverseMap();
+            CreateMap<StatusLegendDetailViewModel, StatusLegend>().ReverseMap();
+            CreateMap<StatusLegendBriefViewModel, StatusLegend>().ReverseMap();
+            CreateMap<StatusLegendModifyViewModel, StatusLegendDetailViewModel>().ReverseMap();
+
             //IgnoreGlobalProperties();
         }
         //private void IgnoreGlobalProperties()

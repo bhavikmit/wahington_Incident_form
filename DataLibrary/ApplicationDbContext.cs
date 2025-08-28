@@ -95,6 +95,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<StatusLegend> StatusLegends { get; set; }
     public DbSet<SeverityLevel> SeverityLevels { get; set; }
     public DbSet<AssetIncident> AssetIncidents { get; set; }
+    public DbSet<Incident> Incidents { get; set; }
 
 
     [DbFunction("GetWeekNumber", "dbo")]

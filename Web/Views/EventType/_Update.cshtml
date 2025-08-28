@@ -18,12 +18,10 @@
             </div>
 
             <!-- Description Field -->
-            <div class="col-lg-12">
-                <div class="mb-3 form-group">
-                    <label asp-for="Description" class="form-label fw-600"></label>
-                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-                    <span asp-validation-for="Description" class="validation-invalid-label"></span>
-                </div>
+            <div class="mb-3 form-group">
+                <label asp-for="Description" class="form-label fw-600"></label>
+                <input asp-for="Description" type="text" class="form-control" />
+                <span asp-validation-for="Description" class="validation-invalid-label"></span>
             </div>
 
         </div>

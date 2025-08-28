@@ -199,6 +199,7 @@ namespace Web.Extensions
             services.AddScoped(typeof(IReportFactory), typeof(ReportFactory));
             services.AddScoped(typeof(IRelationshipService<,,>), typeof(RelationshipService<,,>));
             services.AddScoped(typeof(IEventTypeService<,,>), typeof(EventTypeService<,,>));
+            services.AddScoped(typeof(ISeverityLevelService<,,>), typeof(SeverityLevelService<,,>));
 
             services.AddScoped(typeof(IStatusLegendService<,,>), typeof(StatusLegendService<,,>));
             services.AddScoped<IIncidentService, IncidentService>();

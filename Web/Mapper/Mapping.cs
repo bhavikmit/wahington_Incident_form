@@ -142,17 +142,24 @@ namespace Models.Mapper
             CreateMap<SupplierBriefViewModel, Supplier>().ReverseMap();
             CreateMap<SupplierModifyViewModel, SupplierDetailViewModel>().ReverseMap();
 
-            //Relationship
-            CreateMap<RelationshipModifyViewModel, Relationship>().ReverseMap();
-            CreateMap<RelationshipDetailViewModel, Relationship>().ReverseMap();
-            CreateMap<RelationshipBriefViewModel, Relationship>().ReverseMap();
-            CreateMap<RelationshipModifyViewModel, RelationshipDetailViewModel>().ReverseMap();
+           //Relationship
+                CreateMap<RelationshipModifyViewModel, Relationship>().ReverseMap();
+                CreateMap<RelationshipDetailViewModel, Relationship>().ReverseMap();
+                CreateMap<RelationshipBriefViewModel, Relationship>().ReverseMap();
+                CreateMap<RelationshipModifyViewModel, RelationshipDetailViewModel>().ReverseMap();
 
             // EventType
             CreateMap<EventTypeModifyViewModel, EventType>().ReverseMap();
             CreateMap<EventTypeDetailViewModel, EventType>().ReverseMap();
             CreateMap<EventTypeBriefViewModel, EventType>().ReverseMap();
             CreateMap<EventTypeModifyViewModel, EventTypeDetailViewModel>().ReverseMap();
+
+            // SeverityLevel
+            CreateMap<SeverityLevelModifyViewModel, SeverityLevel>().ReverseMap();
+            CreateMap<SeverityLevelDetailViewModel, SeverityLevel>().ReverseMap();
+            CreateMap<SeverityLevelBriefViewModel, SeverityLevel>().ReverseMap();
+            CreateMap<SeverityLevelModifyViewModel, SeverityLevelDetailViewModel>().ReverseMap();
+
 
 
             //Manufacturer

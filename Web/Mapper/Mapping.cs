@@ -159,7 +159,11 @@ namespace Models.Mapper
             CreateMap<SeverityLevelDetailViewModel, SeverityLevel>().ReverseMap();
             CreateMap<SeverityLevelBriefViewModel, SeverityLevel>().ReverseMap();
             CreateMap<SeverityLevelModifyViewModel, SeverityLevelDetailViewModel>().ReverseMap();
-
+            //AssetIds
+            CreateMap<AssetIdModifyViewModel, AssetIncident>().ReverseMap();
+            CreateMap<AssetIdDetailViewModel, AssetIncident>().ReverseMap();
+            CreateMap<AssetIdBriefViewModel, AssetIncident>().ReverseMap();
+            CreateMap<AssetIdModifyViewModel, AssetIdDetailViewModel>().ReverseMap();
 
 
             //Manufacturer

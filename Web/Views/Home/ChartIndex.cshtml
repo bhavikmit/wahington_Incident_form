@@ -22,7 +22,7 @@
 
     .dashboard-header {
         padding: 15px 0px;
-        border-bottom: 1px solid #e9ecef;
+        /* border-bottom: 1px solid #e9ecef; */
     }
 
     .dashboard-title {
@@ -41,6 +41,28 @@
     .header-actions i {
         font-size: 20px;
     }
+    /*****************dhara******************/
+    #dashboardTabs .nav-item .nav-link{
+        background: #f3f4f6;
+        color: #374151;
+        font-size: 16px;
+        line-height: 1.25rem;
+        margin-right: 14px;
+        border-radius:6px;
+    }
+
+    #dashboardTabs .nav-item .nav-link.active {
+            background: #f54e00;
+            color: #ffffff;
+        }
+
+    #dashboardTabs{
+        border:none;
+    }
+
+    .chartTitle{
+        margin-bottom:16px;
+    }
 </style>
 <script src="~/js/views/dashboard/dashboard-card.js"></script>
 <script src="~/js/views/dashboard/dashboard-table.js"></script>
@@ -54,7 +76,7 @@
                 <div class="col-md-4 pl-0">
                     <h2 class="dashboard-title">Dashboard</h2>
                 </div>
-                <div class="col-md-8 text-end">
+                @* <div class="col-md-8 text-end">
                     <div class="d-flex justify-content-end align-items-center header-actions">
                         <div class="search-container me-3">
                             <i class="fa-solid fa-magnifying-glass search-icon"></i>
@@ -67,13 +89,164 @@
                             <i class="fa-solid fa-bell"></i>
                         </button>
                     </div>
+                </div> *@
+            </div>
+        </div>
+    </div>
+    <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
+        <ul class="nav nav-tabs CustomTab" id="dashboardTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="map-tab" data-bs-toggle="tab" data-bs-target="#mapTab" type="button" role="tab">
+                Map
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="charts-tab" data-bs-toggle="tab" data-bs-target="#chartsTab" type="button" role="tab">
+                Charts
+            </button>
+        </li>
+    </ul>
+    </div>
+    <div class="tab-content mt-3">
+        <!-- Map Tab -->
+        <div class="tab-pane fade show active" id="mapTab" role="tabpanel">
+            <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
+                <div class="mb-3">
+                    <label class="form-label">Enter Address</label>
+                    <input type="text" id="addressInput" class="form-control" placeholder="Enter US address" />
+                    <button class="btn btn-primary mt-2" id="showOnMap">Show on Map</button>
+                </div>
+                <div id="map" style="height:400px; border:1px solid #ccc; border-radius:8px;"></div>
+            </div>
+
+           
+        </div>
+
+        <!-- Charts Tab -->
+        <div class="tab-pane fade" id="chartsTab" role="tabpanel">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
+                        <h6 class="chartTitle">Active Incidents by Severity</h6>
+                        <div class=" d-flex justify-content-center align-items-center" >
+                            <canvas id="severityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
+                        <h6 class="chartTitle">Incidents by Status</h6>
+                        <div class=" d-flex justify-content-center align-items-center">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    @section Scripts {
+        <!-- Leaflet.js (Map) -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    <div class="row total_counting">
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <script>
+            // Initialize Leaflet Map
+            var map = L.map('map').setView([37.0902, -95.7129], 4); // USA center
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(map);
+
+            var marker;
+
+            // Show pin on map when address entered
+            document.getElementById('showOnMap').addEventListener('click', function () {
+                const address = document.getElementById('addressInput').value;
+                if (!address) return;
+
+                // Free geocoding with Nominatim
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.length > 0) {
+                            var lat = data[0].lat;
+                            var lon = data[0].lon;
+
+                            if (marker) {
+                                map.removeLayer(marker);
+                            }
+                            marker = L.marker([lat, lon]).addTo(map)
+                                .bindPopup(`<b>${address}</b>`).openPopup();
+
+                            map.setView([lat, lon], 14);
+                        } else {
+                            alert("Address not found!");
+                        }
+                    });
+            });
+
+            // Chart.js Donut/Pie Charts
+            const severityCtx = document.getElementById('severityChart').getContext('2d');
+            const severityChart = new Chart(severityCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Low', 'Moderate', 'High'],
+                    datasets: [{
+                        data: [10, 20, 5], // Replace with real data
+                        backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+                    }]
+                },
+                options: {
+                responsive: false,        // keeps size fixed
+                plugins: {
+                    legend: {
+                        position: 'bottom', // legend at bottom
+                        labels: {
+                            boxWidth: 15,  // smaller legend boxes
+                            padding: 10,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+            });
+
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            const statusChart = new Chart(statusCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Submitted', 'Validated', 'Dispatched', 'Started', 'Completed', 'Cancelled'],
+                    datasets: [{
+                        data: [5, 10, 3, 7, 8, 2], // Replace with real data
+                        backgroundColor: ['#0d6efd', '#6c757d', '#198754', '#ffc107', '#20c997', '#dc3545']
+                    }]
+                },
+                        options: {
+                responsive: false,        // keeps size fixed
+                plugins: {
+                    legend: {
+                        position: 'bottom', // legend at bottom
+                        labels: {
+                            boxWidth: 15,  // smaller legend boxes
+                            padding: 10,
+                            font: {
+                                size: 12
+                            }
+                        }
+                    }
+                }
+            }
+            });
+        </script>
+    }
+
+    @* <div class="row total_counting">
         <div class="col item">
             @await Html.PartialAsync("~/Views/Dashboard/Common/Card/_Index.cshtml", Model.GetAverageLaborCost)
         </div>
@@ -113,5 +286,5 @@
         <div class="col-md-4 mb-3">
             @await Html.PartialAsync("~/Views/Shared/Charts/Index.cshtml", Model.GetCostAccuracy)
         </div>
-    </div>
+    </div> *@
 </div>

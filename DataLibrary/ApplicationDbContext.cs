@@ -90,6 +90,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<DynamicColumn> DynamicColumns { get; set; }
     public DbSet<DynamicColumnOption> DynamicColumnOptions { get; set; }
     public DbSet<DynamicColumnValue> DynamicColumnValues { get; set; }
+    public DbSet<Relationship> Relationships { get; set; }
+    public DbSet<EventType> EventTypes { get; set; }
+    public DbSet<StatusLegend> StatusLegends { get; set; }
 
     [DbFunction("GetWeekNumber", "dbo")]
     public int GetWeekNumber(DateTime dateToCheck)

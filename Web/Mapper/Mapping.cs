@@ -142,6 +142,18 @@ namespace Models.Mapper
             CreateMap<SupplierBriefViewModel, Supplier>().ReverseMap();
             CreateMap<SupplierModifyViewModel, SupplierDetailViewModel>().ReverseMap();
 
+            //Relationship
+            CreateMap<RelationshipModifyViewModel, Relationship>().ReverseMap();
+            CreateMap<RelationshipDetailViewModel, Relationship>().ReverseMap();
+            CreateMap<RelationshipBriefViewModel, Relationship>().ReverseMap();
+            CreateMap<RelationshipModifyViewModel, RelationshipDetailViewModel>().ReverseMap();
+
+            // EventType
+            CreateMap<EventTypeModifyViewModel, EventType>().ReverseMap();
+            CreateMap<EventTypeDetailViewModel, EventType>().ReverseMap();
+            CreateMap<EventTypeBriefViewModel, EventType>().ReverseMap();
+            CreateMap<EventTypeModifyViewModel, EventTypeDetailViewModel>().ReverseMap();
+
 
             //Manufacturer
             CreateMap<ManufacturerModifyViewModel, Manufacturer>().ReverseMap();
@@ -696,6 +708,13 @@ namespace Models.Mapper
             CreateMap<TimesheetBriefViewModel, TimesheetWebUpdateViewModel>().ReverseMap();
             CreateMap<TimesheetBriefViewModel, Timesheet>().ReverseMap();
             CreateMap<TimesheetBreakdownUpdateViewModel, TimesheetWebUpdateViewModel>().ReverseMap();
+
+
+            //StatusLegend
+            CreateMap<StatusLegendModifyViewModel, StatusLegend>().ReverseMap();
+            CreateMap<StatusLegendDetailViewModel, StatusLegend>().ReverseMap();
+            CreateMap<StatusLegendBriefViewModel, StatusLegend>().ReverseMap();
+            CreateMap<StatusLegendModifyViewModel, StatusLegendDetailViewModel>().ReverseMap();
 
             //IgnoreGlobalProperties();
         }

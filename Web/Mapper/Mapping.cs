@@ -142,6 +142,11 @@ namespace Models.Mapper
             CreateMap<SupplierBriefViewModel, Supplier>().ReverseMap();
             CreateMap<SupplierModifyViewModel, SupplierDetailViewModel>().ReverseMap();
 
+            //Relationship
+            CreateMap<RelationshipModifyViewModel, Relationship>().ReverseMap();
+            CreateMap<RelationshipDetailViewModel, Relationship>().ReverseMap();
+            CreateMap<RelationshipBriefViewModel, Relationship>().ReverseMap();
+            CreateMap<RelationshipModifyViewModel, RelationshipDetailViewModel>().ReverseMap();
 
             //Manufacturer
             CreateMap<ManufacturerModifyViewModel, Manufacturer>().ReverseMap();

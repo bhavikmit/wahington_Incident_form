@@ -199,6 +199,8 @@ namespace Web.Extensions
             services.AddScoped(typeof(IReportFactory), typeof(ReportFactory));
             services.AddScoped(typeof(IRelationshipService<,,>), typeof(RelationshipService<,,>));
 
+            services.AddScoped(typeof(IStatusLegendService<,,>), typeof(StatusLegendService<,,>));
+
             services.AddDefaultCorrelationId();
         }
     }

@@ -8,7 +8,7 @@ using IdentityProvider.Seed;
 using IdentityStore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;    
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -197,6 +197,7 @@ namespace Web.Extensions
 
             services.AddScoped(typeof(IUserSearchSettingService<,,>), typeof(UserSearchSettingService<,,>));
             services.AddScoped(typeof(IReportFactory), typeof(ReportFactory));
+            services.AddScoped(typeof(IRelationshipService<,,>), typeof(RelationshipService<,,>));
 
             services.AddDefaultCorrelationId();
         }

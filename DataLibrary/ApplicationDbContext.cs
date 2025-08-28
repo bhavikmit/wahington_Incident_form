@@ -92,6 +92,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<DynamicColumnValue> DynamicColumnValues { get; set; }
     public DbSet<Relationship> Relationships { get; set; }
     public DbSet<EventType> EventTypes { get; set; }
+    public DbSet<StatusLegend> StatusLegends { get; set; }
     public DbSet<SeverityLevel> SeverityLevels { get; set; }
 
 

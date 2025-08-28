@@ -4,6 +4,7 @@ using DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250828062447_addSeverityLevels")]
+    partial class addSeverityLevels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -429,41 +432,6 @@ namespace DataLibrary.Migrations
                     b.HasIndex("AssetTypeLevel2Id");
 
                     b.ToTable("AssetAssociations");
-                });
-
-            modelBuilder.Entity("Models.AssetIncident", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AssetIncidents");
                 });
 
             modelBuilder.Entity("Models.AssetNotes", b =>
@@ -1209,109 +1177,6 @@ namespace DataLibrary.Migrations
                     b.ToTable("EventTypes");
                 });
 
-            modelBuilder.Entity("Models.Incident", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AssetIds")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CallTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CallerAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CallerName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CallerPhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DescriptionIssue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("EvacuationRequiredId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("EventTypeId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("GasPresentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("HissingPresentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IncidentID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Landmark")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LocationAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("PeopleInjuredId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("RelationshipId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("ServiceAccount")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("SeverityLevelId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("StatusLegendId")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("SupportInfoNotes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("VisibleDamagePresentId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EventTypeId");
-
-                    b.HasIndex("RelationshipId");
-
-                    b.HasIndex("SeverityLevelId");
-
-                    b.HasIndex("StatusLegendId");
-
-                    b.ToTable("Incidents");
-                });
-
             modelBuilder.Entity("Models.Inventory", b =>
                 {
                     b.Property<long>("Id")
@@ -2049,10 +1914,6 @@ namespace DataLibrary.Migrations
                     b.Property<int>("ActiveStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<long>("CreatedBy")
                         .HasColumnType("bigint");
 
@@ -2114,45 +1975,6 @@ namespace DataLibrary.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Sources");
-                });
-
-            modelBuilder.Entity("Models.StatusLegend", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StatusLegends");
                 });
 
             modelBuilder.Entity("Models.StreetServiceRequest", b =>
@@ -3783,33 +3605,6 @@ namespace DataLibrary.Migrations
                     b.Navigation("Reference");
 
                     b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("Models.Incident", b =>
-                {
-                    b.HasOne("Models.EventType", "EventType")
-                        .WithMany()
-                        .HasForeignKey("EventTypeId");
-
-                    b.HasOne("Models.Relationship", "Relationship")
-                        .WithMany()
-                        .HasForeignKey("RelationshipId");
-
-                    b.HasOne("Models.SeverityLevel", "SeverityLevel")
-                        .WithMany()
-                        .HasForeignKey("SeverityLevelId");
-
-                    b.HasOne("Models.StatusLegend", "StatusLegend")
-                        .WithMany()
-                        .HasForeignKey("StatusLegendId");
-
-                    b.Navigation("EventType");
-
-                    b.Navigation("Relationship");
-
-                    b.Navigation("SeverityLevel");
-
-                    b.Navigation("StatusLegend");
                 });
 
             modelBuilder.Entity("Models.Inventory", b =>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
 
 using System;
@@ -16,6 +17,9 @@ namespace ViewModels.Incident
         public IncidentDetailsViewModel incidentDetails { get; set; } = new();
         public IncidentEnvironmentalViewModel incidentEnvironmentalViewModel { get; set; } = new();
         public IncidentSupportingInfoViewModel incidentSupportingInfoViewModel { get; set; } = new();
+
+        public List<SelectListItem> statusLegends { get; set; } = new();
+        public List<SelectListItem> severityLevels { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel

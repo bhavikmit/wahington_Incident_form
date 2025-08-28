@@ -26,6 +26,7 @@ using Repositories.Shared.UserInfoServices.Interface;
 using System.Linq.Expressions;
 
 using ViewModels;
+using ViewModels.Incident;
 using ViewModels.Shared;
 
 namespace Repositories.Common
@@ -43,10 +44,12 @@ namespace Repositories.Common
             _mapper = mapper;
         }
 
-        public async Task<List<SelectListItem>> GetIncidentDropDown()
+        public async Task<IncidentViewModel> GetIncidentDropDown()
         {
             try
             {
+                IncidentViewModel incidentViewModel = new();
+
                 var statusLegends = await _db.StatusLegends
                     .Where(it => !it.IsDeleted)
                     .OrderBy(it => it.Name)
@@ -57,22 +60,25 @@ namespace Repositories.Common
                     })
                     .ToListAsync();
 
-                return statusLegends;
+                var severityLevels = await _db.SeverityLevels
+                    .Where(it => !it.IsDeleted)
+                    .OrderBy(it => it.Name)
+                    .Select(it => new SelectListItem
+                    {
+                        Value = it.Id.ToString(),
+                        Text = it.Name
+                    })
+                    .ToListAsync();
 
-                //var statusLegends = await _db.
-                //    .Where(it => !it.IsDeleted)
-                //    .OrderBy(it => it.Name)
-                //    .Select(it => new SelectListItem
-                //    {
-                //        Value = it.Id.ToString(),
-                //        Text = it.Name
-                //    })
-                //    .ToListAsync();
+                incidentViewModel.severityLevels = severityLevels;
+                incidentViewModel.statusLegends = statusLegends;
+
+                return incidentViewModel;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating incident.");
-                return null!;
+                _logger.LogError(ex, "Error GetIncidentDropDown.");
+                return new IncidentViewModel()!;
             }
         }
     }

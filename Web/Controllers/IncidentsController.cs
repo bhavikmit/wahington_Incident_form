@@ -2,6 +2,8 @@
 
 using Repositories.Common;
 
+using System.Threading.Tasks;
+
 using ViewModels;
 using ViewModels.Incident;
 
@@ -16,9 +18,9 @@ namespace Web.Controllers
             _iIncidentService = incidentService;
         }
 
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            IncidentViewModel incidentViewModel = new();
+            var incidentViewModel = await _iIncidentService.GetIncidentDropDown();
             return View(incidentViewModel);
         }
     }

@@ -148,6 +148,13 @@ namespace Models.Mapper
             CreateMap<RelationshipBriefViewModel, Relationship>().ReverseMap();
             CreateMap<RelationshipModifyViewModel, RelationshipDetailViewModel>().ReverseMap();
 
+            // EventType
+            CreateMap<EventTypeModifyViewModel, EventType>().ReverseMap();
+            CreateMap<EventTypeDetailViewModel, EventType>().ReverseMap();
+            CreateMap<EventTypeBriefViewModel, EventType>().ReverseMap();
+            CreateMap<EventTypeModifyViewModel, EventTypeDetailViewModel>().ReverseMap();
+
+
             //Manufacturer
             CreateMap<ManufacturerModifyViewModel, Manufacturer>().ReverseMap();
             CreateMap<ManufacturerDetailViewModel, Manufacturer>().ReverseMap();

@@ -12,7 +12,12 @@ namespace ViewModels.Dashboard
         {
 
         }
-
+        public List<string> SeverityLabels { get; set; }
+        public List<int> SeverityCounts { get; set; }
+        public List<string> SeverityColors { get; set; }
+        public List<string> StatusLabels { get; set; }
+        public List<int> StatusCounts { get; set; }
+        public List<string> StatusColors { get; set; }
         public ChartViewModel PendingOrder { get; set; } = new();
         public ChartViewModel WorkOrder { get; set; } = new();
         public ChartViewModel WorkOrderByAssetType { get; set; } = new();

@@ -189,14 +189,20 @@
                     });
             });
                         // Temporary dummy data for testing
-            const severityLabels = ["Low", "Medium", "High"];
-            const severityCounts = [5, 3, 7];
-            const severityColors = ["#4caf50", "#ff9800", "#f44336"];
+            // const severityLabels = ["Low", "Medium", "High"];
+            // const severityCounts = [5, 3, 0];
+            // const severityColors = ["#4caf50", "#ff9800", "#f44336"];
 
-            const statusLabels = ["Open", "In Progress", "Closed"];
-            const statusCounts = [2, 6, 4];
-            const statusColors = ["#2196f3", "#ffc107", "#9c27b0"];
+            // const statusLabels = ["Open", "In Progress", "Closed"];
+            // const statusCounts = [2, 6, 0];
+            // const statusColors = ["#2196f3", "#ffc107", "#9c27b0"];
+                    const severityLabels = @Html.Raw(Json.Serialize(Model.SeverityLabels));
+            const severityCounts = @Html.Raw(Json.Serialize(Model.SeverityCounts));
+            const severityColors = @Html.Raw(Json.Serialize(Model.SeverityColors));
 
+            const statusLabels = @Html.Raw(Json.Serialize(Model.StatusLabels));
+            const statusCounts = @Html.Raw(Json.Serialize(Model.StatusCounts));
+            const statusColors = @Html.Raw(Json.Serialize(Model.StatusColors));
             // Chart.js Donut/Pie Charts
             const severityCtx = document.getElementById('severityChart').getContext('2d');
             const severityChart = new Chart(severityCtx, {

@@ -1,22 +1,23 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Repositories.Services.Dashboard.Interface;
-using System.Diagnostics;
-using ViewModels.Dashboard;
-using Web.Models;
-using ViewModels.Dashboard.interfaces;
-using ViewModels.Report.PendingOrder;
-using Repositories.Services.Report.Interface;
+﻿using DataLibrary;
 using DocumentFormat.OpenXml.Bibliography;
-using Humanizer;
-using Microsoft.CodeAnalysis;
-using System.Drawing;
-using System.IO.Pipelines;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
-using Microsoft.Extensions.Hosting;
-using ViewModels.Dashboard.Common.Card;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using Humanizer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using Microsoft.Extensions.Hosting;
+using Repositories.Services.Dashboard.Interface;
+using Repositories.Services.Report.Interface;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO.Pipelines;
+using ViewModels.Dashboard;
+using ViewModels.Dashboard.Common.Card;
+using ViewModels.Dashboard.interfaces;
+using ViewModels.Report.PendingOrder;
+using Web.Models;
 
 namespace Web.Controllers
 {
@@ -30,10 +31,11 @@ namespace Web.Controllers
         private readonly IDashboardCardService _cardService;
         private readonly IDashboardTableService _tableService;
         private readonly IReportService _reportService;
+        private readonly ApplicationDbContext _context;
 
         public HomeController(ILogger<HomeController> logger, IDashboardService service, IDashboardFactory dashboardFactory,
             IDashboardService dashboardService, IDashboardCardService cardService, IDashboardTableService tableService
-            , IReportService reportService
+            , IReportService reportService, ApplicationDbContext context
             )
         {
             _logger = logger;
@@ -43,6 +45,7 @@ namespace Web.Controllers
             _cardService = cardService;
             _tableService = tableService;
             _reportService = reportService;
+            _context = context;
         }
 
         //public async Task<JsonResult> GetChartData(DashboardSearchViewModel search)
@@ -77,29 +80,43 @@ namespace Web.Controllers
         public async Task<ActionResult> Dashboard()
         {
             var dashboardViewModel = new DashboardViewModel();
-            //dashboardViewModel.PendingOrder = _dashboardFactory.CreatePendingOrderChartViewModel();
+
+            // Existing chart data
             dashboardViewModel.WorkOrder = _dashboardFactory.CreateWorkOrderChartViewModel();
             dashboardViewModel.WorkOrderByAssetType = _dashboardFactory.CreateWorkOrderByAssetTypeChartViewModel();
             dashboardViewModel.WorkOrderByRepairType = _dashboardFactory.CreateWorkOrderByRepairTypeChartViewModel();
             dashboardViewModel.WorkOrderByTechnician = _dashboardFactory.CreateWorkOrderByTechnicianChartViewModel();
-
-            //i.Condition Ratings All Assets(good, fair, poor) --exists
-            //ii.Maintenance(overdue, due within 30 days, due within 90 days)
-            //iii.Replacement(overdue, due within 30 days, due within 90 days)
             dashboardViewModel.AssetByCondition = _dashboardFactory.CreateAssetByConditionChartViewModel();
             dashboardViewModel.AssetMaintenanceDue = _dashboardFactory.CreateAssetMaintenanceDueChartViewModel();
             dashboardViewModel.AssetReplacementDue = _dashboardFactory.CreateAssetReplacementDueChartViewModel();
-
-            //c.Cost Tracking
-            //i.Average Labor Cost
-            //ii.Averal Material Cost
-            //iii.Average Equipment Cost
-            //iv.Cost Accuracy(budget amount vs final amount)
             dashboardViewModel.GetCostAccuracy = _dashboardFactory.CreateCostAccuracyChartViewModel();
+
+            // ✅ Add severity data
+            var severityData = _context.Incidents
+                .GroupBy(i => i.SeverityLevelId)
+                .Select(g => new { Id = g.Key, Count = g.Count() })
+                .Join(_context.SeverityLevels, g => g.Id, s => s.Id,
+                    (g, s) => new { Name = s.Name, Color = s.Color, Count = g.Count })
+                .ToList();
+
+            dashboardViewModel.SeverityLabels = severityData.Select(s => s.Name).ToList();
+            dashboardViewModel.SeverityCounts = severityData.Select(s => s.Count).ToList();
+            dashboardViewModel.SeverityColors = severityData.Select(s => s.Color).ToList();
+
+            // ✅ Add status data
+            var statusData = _context.Incidents
+                .GroupBy(i => i.StatusLegendId)
+                .Select(g => new { Id = g.Key, Count = g.Count() })
+                .Join(_context.StatusLegends, g => g.Id, s => s.Id,
+                    (g, s) => new { Name = s.Name, Color = s.Color, Count = g.Count })
+                .ToList();
+
+            dashboardViewModel.StatusLabels = statusData.Select(s => s.Name).ToList();
+            dashboardViewModel.StatusCounts = statusData.Select(s => s.Count).ToList();
+            dashboardViewModel.StatusColors = statusData.Select(s => s.Color).ToList();
 
             return View("ChartIndex", dashboardViewModel);
         }
-
         [HttpGet]
         public async Task<ActionResult> GetWorkOrderChartData()
         {

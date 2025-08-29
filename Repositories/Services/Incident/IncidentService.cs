@@ -26,7 +26,9 @@ using Pagination;
 
 using Repositories.Shared.UserInfoServices.Interface;
 
+using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 using ViewModels;
 using ViewModels.Incident;
@@ -121,55 +123,163 @@ namespace Repositories.Common
             }
         }
 
-        public async Task<string> SaveIncident(IncidentViewModel incidentViewModel)
+        public async Task<string> SaveIncident(IncidentViewModel viewModel)
         {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
-                var transaction = await _db.Database.BeginTransactionAsync();
+                // Generate IncidentID once
+                var totalIncidentCount = await _db.Incidents.IgnoreQueryFilters().CountAsync();
+                var incidentId = $"INC-{(totalIncidentCount + 1):D4}";
 
-                var incident = new Incident();
+                // Save file if available
+                var imageUrl = viewModel.incidentSupportingInfoViewModel?.File != null
+                    ? await SaveAttachments(viewModel.incidentSupportingInfoViewModel.File)
+                    : null;
 
-                if (incidentViewModel.incidentSupportingInfoViewModel.File != null)
+                if (viewModel.incidentSupportingInfoViewModel != null)
+                    viewModel.incidentSupportingInfoViewModel.ImageUrl = imageUrl;
+
+                // Map ViewModel → Entity
+                var incident = new Incident
                 {
-                    incidentViewModel.incidentSupportingInfoViewModel.ImageUrl = await SaveAttachments(incidentViewModel.incidentSupportingInfoViewModel.File);
-                }
-                var totalIncidentCount = await _db.Equipments.IgnoreQueryFilters().CountAsync();
+                    IncidentID = incidentId,
+                    StatusLegendId = (int)StatusLegendEnum.Submitted,
+                    SeverityLevelId = viewModel.severityLevelId,
+                    DescriptionIssue = viewModel.DescriptionIssue,
 
-                incident.IncidentID = "INC-" + (totalIncidentCount + 1).ToString("D4");
-                incident.StatusLegendId = (int)StatusLegendEnum.Submitted;
-                incident.SeverityLevelId = incidentViewModel.severityLevelId;
-                incident.DescriptionIssue = incidentViewModel.DescriptionIssue;
+                    CallerAddress = viewModel.incidentCellerInformation?.CallerAddress,
+                    CallerPhoneNumber = viewModel.incidentCellerInformation?.CallerPhoneNumber,
+                    CallerName = viewModel.incidentCellerInformation?.CallerName,
+                    CallTime = viewModel.incidentCellerInformation?.CallTime ?? DateTime.Now,
+                    RelationshipId = viewModel.incidentCellerInformation?.RelationshipId,
 
-                incident.CallerAddress = incidentViewModel.incidentCellerInformation.CallerAddress;
-                incident.CallerPhoneNumber = incidentViewModel.incidentCellerInformation.CallerPhoneNumber;
-                incident.CallerName = incidentViewModel.incidentCellerInformation.CallerName;
-                incident.CallTime = (DateTime)incidentViewModel.incidentCellerInformation.CallTime;
-                incident.RelationshipId = incidentViewModel.incidentCellerInformation.RelationshipId;
+                    EventTypeId = viewModel.incidentDetails?.EventTypeId ?? 0,
 
-                incident.EventTypeId = incidentViewModel.incidentDetails.EventTypeId;
-                
+                    EvacuationRequiredId = viewModel.incidentEnvironmentalViewModel?.EvacuationRequiredID,
+                    HissingPresentId = viewModel.incidentEnvironmentalViewModel?.HissingSoundPresentID,
+                    VisibleDamagePresentId = viewModel.incidentEnvironmentalViewModel?.VisibleDamageID,
+                    PeopleInjuredId = viewModel.incidentEnvironmentalViewModel?.PeopleInjuredID,
+                    GasPresentId = viewModel.incidentEnvironmentalViewModel?.GasodorpresentID,
 
-                incident.EvacuationRequiredId = incidentViewModel.incidentEnvironmentalViewModel.EvacuationRequiredID;
-                incident.HissingPresentId = incidentViewModel.incidentEnvironmentalViewModel.HissingSoundPresentID;
-                incident.VisibleDamagePresentId = incidentViewModel.incidentEnvironmentalViewModel.VisibleDamageID;
-                incident.PeopleInjuredId = incidentViewModel.incidentEnvironmentalViewModel.PeopleInjuredID;
-                incident.GasPresentId = incidentViewModel.incidentEnvironmentalViewModel.GasodorpresentID;
+                    Landmark = viewModel.incidentiLocation?.Landmark,
+                    LocationAddress = viewModel.incidentiLocation?.Address,
+                    ServiceAccount = viewModel.incidentiLocation?.ServiceAccount,
+                    AssetIds = viewModel.incidentiLocation?.AssetIDs,
+                    ImageUrl = viewModel.incidentSupportingInfoViewModel?.ImageUrl,
+                    SupportInfoNotes = viewModel.incidentSupportingInfoViewModel?.Notes
+                };
 
-                incident.Landmark = incidentViewModel.incidentiLocation.Landmark;
-                incident.LocationAddress = incidentViewModel.incidentiLocation.Address;
-                incident.ServiceAccount = incidentViewModel.incidentiLocation.ServiceAccount;
-                incident.AssetIds = incidentViewModel.incidentiLocation.AssetIDs;
+                // Save
+                await _db.Incidents.AddAsync(incident);
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
 
-                return incident.IncidentID;
+                return incidentId;
             }
             catch (Exception ex)
             {
+                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error SaveIncident.");
-                return "";
+                return string.Empty;
             }
         }
 
+        public async Task<List<IncidentGridViewModel>> GetIncidentList()
+        {
 
+            List<IncidentGridViewModel> incidentGridViews = new();
+
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                var incidentsList = await _db.Incidents
+                                             .Include(p => p.StatusLegend)
+                                             .Include(p => p.Relationship)
+                                             .Include(p => p.EventType)
+                                             .Include(p => p.SeverityLevel).ToListAsync();
+                foreach (var item in incidentsList)
+                {
+                    incidentGridViews.Add(new IncidentGridViewModel()
+                    {
+                        CallDate = GetDate(Convert.ToString(item.CallTime)),
+                        CallTime = GetTime(Convert.ToString(item.CallTime)),
+                        AssetId = await GetAssets(item.AssetIds ?? string.Empty),
+                        DescriptionIssue = item.DescriptionIssue ?? string.Empty,
+                        EventType = item.EventType.Name,
+                        EventTypeId = item.EventTypeId,
+                        GasESIndicator = GetIndicator(item.GasPresentId),
+                        Id = item.Id,
+                        Intersection = item.Landmark ?? string.Empty,
+                        LocationAddress = item.LocationAddress ?? string.Empty,
+                        Severity = item.SeverityLevel.Name,
+                        SeverityId = item.SeverityLevelId,
+                        StatusLegend = item.StatusLegend.Name,
+                        StatusLegendColor = item.StatusLegend.Color,
+                        StatusLegendId = item.StatusLegendId
+                    });
+                }
+                return incidentGridViews;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error GetIncidentList.");
+                return new List<IncidentGridViewModel>();
+            }
+        }
+
+        #region private methods
+        private bool TryParseCallTime(string callTime, out DateTime dateTime)
+        {
+            return DateTime.TryParse(callTime, out dateTime);
+        }
+
+        private string GetDate(string callTime)
+        {
+            if (TryParseCallTime(callTime, out var dt))
+            {
+                return dt.ToString("dd MMM, yyyy");  // Example: 29 Aug, 2025
+            }
+            return string.Empty;
+        }
+
+        private string GetTime(string callTime)
+        {
+            if (TryParseCallTime(callTime, out var dt))
+            {
+                return dt.ToString("HH:mm tt");      // Example: 02:53 PM
+            }
+            return string.Empty;
+        }
+
+        private string GetIndicator(long? value) =>
+            value switch
+            {
+                1 => "Yes",
+                0 => "No",
+                2 => "Unknown",
+                _ => string.Empty
+            };
+
+        private async Task<string> GetAssets(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+                return string.Empty;
+
+            var idArray = ids.Split(",", StringSplitOptions.RemoveEmptyEntries)
+                             .Select(id => long.TryParse(id.Trim(), out var val) ? val : (long?)null)
+                             .Where(val => val.HasValue)
+                             .Select(val => val.Value)
+                             .ToList();
+
+            var assetNames = await _db.AssetIncidents
+                                      .Where(a => idArray.Contains(a.Id))
+                                      .Select(a => a.Name)
+                                      .ToListAsync();
+
+            return string.Join(",", assetNames);
+        }
         private async Task<string> SaveAttachments(IFormFile file)
         {
             string imageUrl = string.Empty;
@@ -181,8 +291,6 @@ namespace Repositories.Common
                 {
                     Directory.CreateDirectory(uploadsPath);
                 }
-
-
 
                 var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
                 var filePath = Path.Combine(uploadsPath, fileName);
@@ -200,5 +308,6 @@ namespace Repositories.Common
 
             return imageUrl;
         }
+        #endregion
     }
 }

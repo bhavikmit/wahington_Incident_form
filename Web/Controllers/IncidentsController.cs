@@ -21,16 +21,41 @@ namespace Web.Controllers
         public async Task<ActionResult> Index()
         {
             var incidentViewModel = await _iIncidentService.GetIncidentDropDown();
+            //incidentViewModel.incidentGridViewModel = await _iIncidentService.GetIncidentList();
             return View(incidentViewModel);
         }
 
         [HttpPost]
-        public async Task<ActionResult> SaveIncident([FromForm] IncidentViewModel incidentViewModel)
+        public async Task<IActionResult> SaveIncident([FromForm] IncidentViewModel incidentViewModel)
         {
-            return Ok(new { success = true });
+            if (incidentViewModel == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
 
-            //var incidentViewModel = await _iIncidentService.GetIncidentDropDown();
-            //return View(incidentViewModel);
+            try
+            {
+                var incidentId = await _iIncidentService.SaveIncident(incidentViewModel);
+
+                if (string.IsNullOrWhiteSpace(incidentId))
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save incident." });
+
+                var successMsg = $"Incident {incidentId} saved successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<PartialViewResult> GetIncidentList()
+        {
+            var incidentViewModel = new IncidentViewModel();
+            incidentViewModel.incidentGridViewModel = await _iIncidentService.GetIncidentList();
+            return PartialView("_IncidentGrid", incidentViewModel ?? new IncidentViewModel());
         }
     }
 }

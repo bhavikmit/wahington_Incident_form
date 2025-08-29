@@ -1,5 +1,7 @@
 ﻿$(function () {
 
+    GetIncidentList();
+
     $(document).off("click", "#nextToIncidentLocation");
     $(document).on("click", "#nextToIncidentLocation", function (e) {
         e.preventDefault();
@@ -244,66 +246,80 @@ function RemoveImage() {
     $("#hidden-image-url").val(null);
 }
 
-function SaveIncidentForm() {
-    debugger
+async function SaveIncidentForm() {
+    try {
+        let formData = new FormData();
+        let obj = $("#NewIncidentForm")[0];
 
-    let form = [];
-    var formData = new FormData();
-    var obj = $("#NewIncidentForm");
-
-    // Add files
-    $.each($(obj).find("input[type='file']"), function (i, tag) {
-        $.each($(tag)[0].files, function (i, file) {
-            formData.append(tag.name, file);
-            form.push({ name: tag.name, file: file });
+        // Add files
+        $(obj).find("input[type='file']").each(function (i, tag) {
+            for (let file of tag.files) {
+                formData.append(tag.name, file);
+            }
         });
-    });
 
-    var params = $(obj).serializeArray();
-    var assetIds = [];
+        // Serialize other fields
+        let params = $(obj).serializeArray();
+        let assetIds = [];
 
-    $.each(params, function (i, val) {
-        if (val.name === "asset.Id") {
-            assetIds.push(val.value); // collect all asset IDs
+        $.each(params, function (i, val) {
+            if (val.name === "asset.Id") {
+                assetIds.push(val.value);
+            } else {
+                formData.append(val.name, val.value);
+            }
+        });
+
+        // Add AssetIds
+        if (assetIds.length > 0) {
+            formData.append("incidentiLocation.AssetIDs", assetIds.join(","));
+        }
+
+        showLoader($("#addIncidentModal"));
+
+        // Send request
+        let response = await fetch("/Incidents/SaveIncident", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            SwalSuccessAlert(result.data);
+            $(".btn-close").trigger("click");
+            GetIncidentList();
         } else {
-            formData.append(val.name, val.value);
-            form.push({ name: val.name, value: val.value });
+            SwalErrorAlert(result.message || "Failed to save incident.");
         }
-    });
-
-
-
-
-    // Add AssetIds as combined value
-    if (assetIds.length > 0) {
-        // option 1: as comma-separated string
-        formData.append("AssetIDs", assetIds.join(","));
-
-        // option 2: as JSON array (better if API accepts it)
-        // formData.append("AssetIds", JSON.stringify(assetIds));
-
-        form.push({ name: "AssetIDs", value: assetIds.join(",") });
+    } catch (error) {
+        SwalErrorAlert("Error while saving incident!");
+        console.error(error);
+    } finally {
+        hideLoader($("#addIncidentModal"));
     }
+}
 
-    console.log(form);
-    //return formData;
+async function GetIncidentList() {
+    try {
 
+        showLoader($(".main-content"));
 
-    //var formData = $("#NewIncidentForm").serializeFiles(); // change #incidentForm to your form ID
+        const response = await fetch("/Incidents/GetIncidentList", {
+            method: "GET",
+            headers: { "Accept": "text/html" }
+        });
 
-    $.ajax({
-        url: "/Incidents/SaveIncident",   // 🔹 change to your API/Controller URL
-        type: "POST",
-        data: formData,
-        processData: false, // prevent jQuery from processing
-        contentType: false, // prevent jQuery from setting content type
-        success: function (response) {
-            console.log("Form saved successfully:", response);
-            alert("Incident saved successfully!");
-        },
-        error: function (xhr, status, error) {
-            console.error("Error saving incident:", error);
-            alert("Error while saving incident!");
-        }
-    });
+        if (!response.ok) throw new Error("Failed to load cart layout");
+
+        const content = await response.text();
+
+        $("#incidentGrid").empty().html(content);
+
+    } catch (error) {
+        console.error("Error updating shopping cart:", error);
+    }
+    finally {
+        hideLoader($(".main-content"));
+    }
 }

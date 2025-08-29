@@ -1,0 +1,59 @@
+﻿@using System.Web
+@using ViewModels.Incident
+@model IncidentViewModel
+
+
+<div class="shadow-sm border border-gray-200 card-body InfoCard">
+    <h6 class="fw-bold mb-3">Caller/Source Information</h6>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label" asp-for="incidentCellerInformation.CallerName">Caller Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="callerName" required asp-for="incidentCellerInformation.CallerName" />
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label" asp-for="incidentCellerInformation.CallerPhoneNumber">Caller Phone Number <span class="text-danger">*</span></label>
+                <input class="form-control input-telephone" id="callerPhoneNumber" placeholder="xxx-xxx-xxxx" asp-for="incidentCellerInformation.CallerPhoneNumber" />
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mb-3">
+                <label class="form-label" asp-for="incidentCellerInformation.CallerAddress">Caller Address <span class="text-danger">*</span></label>
+                <textarea type="number" class="form-control" asp-for="incidentCellerInformation.CallerAddress" id="companyName" placeholder="Street, city, state..."></textarea>
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">Relationship <span class="text-danger">*</span></label>
+                <select class="form-select" id="relationaship" required asp-for="incidentCellerInformation.RelationshipId">
+                    <option value="">--Select--</option>
+                    @foreach (var item in Model.incidentCellerInformation.Relationships)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </select>
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label" asp-for="incidentCellerInformation.CallTime">Caller Date & Time <span class="text-danger">*</span></label>
+                <input type="datetime-local" id="CallTimedatetime" class="form-control" asp-for="incidentCellerInformation.CallTime" />
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end gap-2 mt-3">
+        <button type="button" class="btn btn-primary" id="nextToIncidentLocation">Next</button>
+    </div>
+</div>

@@ -204,6 +204,7 @@ namespace Web.Extensions
 
 
             services.AddScoped(typeof(IStatusLegendService<,,>), typeof(StatusLegendService<,,>));
+            services.AddScoped<IIncidentService, IncidentService>();
 
             services.AddDefaultCorrelationId();
         }

@@ -1,4 +1,5 @@
 ﻿@using System.Web
+@using Enums
 @using ViewModels.Incident
 @model IncidentViewModel
 
@@ -18,7 +19,122 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+
+        @if (Model.incidentGridViewModel.Count > 0)
+        {
+            @foreach (var item in Model.incidentGridViewModel)
+            {
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+
+                            @if (item.StatusLegendId == (int)StatusLegendEnum.Submitted)
+                            {
+                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Submitted
+                                </button>
+                            }
+                            else if (item.StatusLegendId == (int)StatusLegendEnum.Validated)
+                            {
+
+                                <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Validated
+                                </button>
+                            }
+                            else if (item.StatusLegendId == (int)StatusLegendEnum.Dispatched)
+                            {
+                                <button class="btn status-dispatched rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Dispatched
+                                </button>
+                            }
+                            else if (item.StatusLegendId == (int)StatusLegendEnum.Started)
+                            {
+                                <button class="btn status-started rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Started
+                                </button>
+                            }
+                            else if (item.StatusLegendId == (int)StatusLegendEnum.Completed)
+                            {
+                                <button class="btn status-completed rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Completed
+                                </button>
+                            }
+                            else if (item.StatusLegendId == (int)StatusLegendEnum.Cancelled)
+                            {
+                                <button class="btn status-cancelled rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Cancelled
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn status-unknown rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Unknown
+                                </button>
+                            }
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                <li><div class="dropdown-item text-validated">Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">@item.CallDate</p>
+                            <p class="time">@item.CallTime</p>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="map">
+                            <i class="fa fa-map-marker"></i>
+                            @item.LocationAddress
+                        </div>
+                    </td>
+                    <td>@item.Intersection</td>
+                    <td>@item.AssetId</td>
+                    <td>@item.EventType</td>
+                    <td>
+                        @if (item.Severity == SeverityEnum.Low.ToString())
+                        {
+                            <span class="badge rounded-pill badge-low px-3 py-2">Low</span>
+                        }
+                        else if (item.Severity == SeverityEnum.Moderate.ToString())
+                        {
+                            <span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span>
+                        }
+                        else if (item.Severity == SeverityEnum.High.ToString())
+                        {
+                            <span class="badge rounded-pill badge-high px-3 py-2">High</span>
+                        }
+                        else
+                        {
+                            <span class="badge rounded-pill badge-unknown px-3 py-2">Unknown</span>
+                        }
+                    </td>
+                    <td>@item.DescriptionIssue</td>
+                    <td>@item.GasESIndicator</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="10" class="text-center">No records found.</td>
+            </tr>
+        }
+
+
+        @*   <tr>
             <td class="status-submitted">
                 <div class="dropdown customTableDropdown">
                     <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -239,6 +355,6 @@
                 <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
                 <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
             </td>
-        </tr>
+        </tr> *@
 
 </table>

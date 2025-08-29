@@ -18,6 +18,7 @@ namespace ViewModels.Incident
         public IncidentDetailsViewModel incidentDetails { get; set; } = new();
         public IncidentEnvironmentalViewModel incidentEnvironmentalViewModel { get; set; } = new();
         public IncidentSupportingInfoViewModel incidentSupportingInfoViewModel { get; set; } = new();
+        public List<IncidentGridViewModel> incidentGridViewModel { get; set; } = new();
 
         public List<SelectListItem> statusLegends { get; set; } = new();
         public List<SelectListItem> severityLevels { get; set; } = new();
@@ -54,12 +55,31 @@ namespace ViewModels.Incident
         public long? VisibleDamageID { get; set; } = default!;
         public long? PeopleInjuredID { get; set; } = default!;
         public long? EvacuationRequiredID { get; set; } = default!;
-        
+
     }
     public class IncidentSupportingInfoViewModel
     {
         public IFormFile File { get; set; }
         public string Notes { get; set; } = default!;
         public string? ImageUrl { get; set; } = default!;
+    }
+
+    public class IncidentGridViewModel
+    {
+        public long Id { get; set; }
+        public long? StatusLegendId { get; set; }
+        public string StatusLegend { get; set; }
+        public string StatusLegendColor { get; set; }
+        public string CallDate { get; set; }
+        public string CallTime { get; set; }
+        public string LocationAddress { get; set; }
+        public string Intersection { get; set; }
+        public string AssetId { get; set; }
+        public string EventType { get; set; }
+        public long? EventTypeId { get; set; }
+        public long? SeverityId { get; set; }
+        public string Severity { get; set; }
+        public string DescriptionIssue { get; set; }
+        public string GasESIndicator { get; set; }
     }
 }

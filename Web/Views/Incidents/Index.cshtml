@@ -3,149 +3,160 @@
 @model IncidentViewModel
 
 <style>
-   .text-submitted {
-        color: red; 
+    .text-submitted {
+        color: red;
     }
 
-    .status-submitted{
-        background-color:red;
+    .status-submitted {
+        background-color: red;
     }
+
     .status-validated {
-        background-color:darkorange;
+        background-color: darkorange;
     }
+
     .text-validated {
         color: darkorange;
         font-weight: 600;
     }
 
-    .status-dispatched{
-        background-color:orange;
+    .status-dispatched {
+        background-color: orange;
     }
+
     .text-dispatched {
         color: orange;
         font-weight: 600;
     }
 
     .status-started {
-        background-color:blue;
+        background-color: blue;
     }
+
     .text-started {
         color: blue;
         font-weight: 600;
     }
 
-    .status-completed{
-        background-color:limegreen;
+    .status-completed {
+        background-color: limegreen;
     }
+
     .text-completed {
         color: limegreen;
         font-weight: 600;
     }
 
     .status-cancelled {
-        background-color:grey;
+        background-color: grey;
     }
+
     .text-cancelled {
         color: gray;
         font-weight: 600;
     }
 
-    .badge-low{
-        background-color:limegreen;    }
-
-        .badge-medium{
-            background-color:darkorange;
-
-        }
-
-    .badge-high{
-        background-color:red;
-
-    }
-    .statusFilter{
-        margin-right:16px;
+    .badge-low {
+        background-color: limegreen;
     }
 
-    #statusSelect{
-        width:auto;
-    }
-    .btn.btn-primary{
-        width:200px;
+    .badge-medium {
+        background-color: darkorange;
     }
 
-    .form-control.search-input{
-        height:38px;
-        min-height:38px;
+    .badge-high {
+        background-color: red;
     }
 
-    th,td {
+    .statusFilter {
+        margin-right: 16px;
+    }
+
+    #statusSelect {
+        width: auto;
+    }
+
+    .btn.btn-primary {
+        width: 200px;
+    }
+
+    .form-control.search-input {
+        height: 38px;
+        min-height: 38px;
+    }
+
+    th, td {
         white-space: nowrap;
-        text-align:left !important;
+        text-align: left !important;
     }
 
-    .btnIcon{
-        margin-right:8px;
+    .btnIcon {
+        margin-right: 8px;
     }
 
-    .incident-table{
-        overflow-y:hidden;
-        overflow-x:auto;
+    .incident-table {
+        overflow-y: hidden;
+        overflow-x: auto;
+        overflow: visible !important;
     }
 
-    .customTableDropdown .dropdown-toggle{
+    .customTableDropdown .dropdown-toggle {
         font-size: 14px;
         padding: 4px 15px 4px 15px !important;
-        color:#ffffff !important;
+        color: #ffffff !important;
     }
 
-    .customTableDropdown .dropdown-toggle:hover{
-        background-color:transparent !important;
+        .customTableDropdown .dropdown-toggle:hover {
+            background-color: transparent !important;
             border-color: #000000;
-        color:#000000 !important;
-    }
+            color: #000000 !important;
+        }
 
-     .customTableDropdown .dropdown-toggle:hover::before {
-            filter: brightness(0) !important;
-    }
+            .customTableDropdown .dropdown-toggle:hover::before {
+                filter: brightness(0) !important;
+            }
 
-    .customTableDropdown .dropdown-toggle::before {
-        display:none;
-         /*    width: 11px;
-            filter: brightness(1) !important;
-            left: 81% !important;
-            rotate: 92deg !important; */
-    }
+        .customTableDropdown .dropdown-toggle::before {
+            display: none;
+            /*    width: 11px;
+                filter: brightness(1) !important;
+                left: 81% !important;
+                rotate: 92deg !important; */
+        }
 
         .customTableDropdown .dropdown-toggle.status-started::before {
             left: 71% !important;
-            }
-    .eyeIcon{
+        }
+
+    .eyeIcon {
         color: #1d4ed8;
     }
-    .noteIcon{
+
+    .noteIcon {
         color: #15803d;
     }
-    .historyIcon{
+
+    .historyIcon {
         color: #7e22ce;
     }
 
-    .editIcon{
-        color:#f54e00;
+    .editIcon {
+        color: #f54e00;
     }
 
-    .map i.fa{
-        color:grey;
-        margin-right:5px;
+    .map i.fa {
+        color: grey;
+        margin-right: 5px;
     }
 
-    .date-time-sec p{
-        font-size:14px;
-        font-weight:400;
-        margin-bottom:1px;
+    .date-time-sec p {
+        font-size: 14px;
+        font-weight: 400;
+        margin-bottom: 1px;
     }
 
-    .AddIncident{
-        margin-left:16px;
+    .AddIncident {
+        margin-left: 16px;
     }
 
     .InfoCard {
@@ -185,11 +196,11 @@
         margin-right: 10px !important;
     }
 
-    .nav-link i.fa{
-        color:#f54e00;
+    .nav-link i.fa {
+        color: #f54e00;
     }
 
-    .checkBoxTitle{
+    .checkBoxTitle {
         font-size: 18px;
         font-weight: 500;
         margin-bottom: 15px;
@@ -207,25 +218,21 @@
         margin-right: 8px;
     }
 
-   #addIncidentModal .form-check-label {
+    #addIncidentModal .form-check-label {
         font-size: 15px;
     }
 
-   #addIncidentModal .form-label {
+    #addIncidentModal .form-label {
         font-size: 15px;
     }
-    
-    
-
-    
 </style>
 
 <div class="incidentSec">
     <div class="topSearchbar">
         <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Incident</h3>
+            <h3>Incident</h3>
             <div class="right-sec d-flex  align-items-center mb-3">
-                
+
                 <div class="search-container me-3">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     <input type="text" class="form-control search-input" placeholder="Search incidents..." id="global_search_value">
@@ -252,8 +259,8 @@
             </div>
         </div>
     </div>
-   
-    <div class="table-responsive incident-table">
+
+    <div class="table-responsive incident-table" id="incidentGrid">
         @await Html.PartialAsync("~/Views/Incidents/_IncidentGrid.cshtml", Model)
     </div>
 </div>
@@ -340,6 +347,7 @@
         </div>
     </div>
 </div>
+<script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/masking/initiate-masking.js"></script>
 <script src="~/js/views/incident/incidentform.js"></script>
 
@@ -373,7 +381,7 @@
       moderate: document.getElementById('moderateOptions'),
       low: document.getElementById('lowOptions'),
       high: document.getElementById('highOptions'),
-      
+
     };
 
     severitySelect.addEventListener('change', function () {

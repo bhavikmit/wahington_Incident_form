@@ -3,149 +3,164 @@
 @model IncidentViewModel
 
 <style>
-   .text-submitted {
-        color: red; 
+    .text-submitted {
+        color: red;
     }
 
-    .status-submitted{
-        background-color:red;
+    .status-submitted {
+        background-color: red;
     }
+
     .status-validated {
-        background-color:darkorange;
+        background-color: darkorange;
     }
+
     .text-validated {
         color: darkorange;
         font-weight: 600;
     }
 
-    .status-dispatched{
-        background-color:orange;
+    .status-dispatched {
+        background-color: orange;
     }
+
     .text-dispatched {
         color: orange;
         font-weight: 600;
     }
 
     .status-started {
-        background-color:blue;
+        background-color: blue;
     }
+
     .text-started {
         color: blue;
         font-weight: 600;
     }
 
-    .status-completed{
-        background-color:limegreen;
+    .status-completed {
+        background-color: limegreen;
     }
+
     .text-completed {
         color: limegreen;
         font-weight: 600;
     }
 
     .status-cancelled {
-        background-color:grey;
+        background-color: grey;
     }
+
     .text-cancelled {
         color: gray;
         font-weight: 600;
     }
 
-    .badge-low{
-        background-color:limegreen;    }
-
-        .badge-medium{
-            background-color:darkorange;
-
-        }
-
-    .badge-high{
-        background-color:red;
-
-    }
-    .statusFilter{
-        margin-right:16px;
+    .badge-low {
+        background-color: limegreen;
     }
 
-    #statusSelect{
-        width:auto;
-    }
-    .btn.btn-primary{
-        width:200px;
+    .badge-medium {
+        background-color: darkorange;
     }
 
-    .form-control.search-input{
-        height:38px;
-        min-height:38px;
+    .badge-high {
+        background-color: red;
     }
 
-    th,td {
+    .statusFilter {
+        margin-right: 16px;
+    }
+
+    #statusSelect {
+        width: auto;
+    }
+
+    .btn.btn-primary {
+        width: 200px;
+    }
+
+    .form-control.search-input {
+        height: 38px;
+        min-height: 38px;
+    }
+
+    th, td {
         white-space: nowrap;
-        text-align:left !important;
+        text-align: left !important;
     }
 
-    .btnIcon{
-        margin-right:8px;
+    .btnIcon {
+        margin-right: 8px;
     }
 
-    .incident-table{
-        overflow-y:hidden;
-        overflow-x:auto;
+    .incident-table {
+        overflow-y: hidden;
+        overflow-x: auto;
+        overflow: visible !important;
     }
 
-    .customTableDropdown .dropdown-toggle{
+    .customTableDropdown .dropdown-toggle {
         font-size: 14px;
         padding: 4px 15px 4px 15px !important;
-        color:#ffffff !important;
+        color: #ffffff !important;
     }
 
-    .customTableDropdown .dropdown-toggle:hover{
-        background-color:transparent !important;
+        .customTableDropdown .dropdown-toggle:hover {
+            background-color: transparent !important;
             border-color: #000000;
-        color:#000000 !important;
-    }
+            color: #000000 !important;
+        }
 
-     .customTableDropdown .dropdown-toggle:hover::before {
-            filter: brightness(0) !important;
-    }
+            .customTableDropdown .dropdown-toggle:hover::before {
+                filter: brightness(0) !important;
+            }
 
-    .customTableDropdown .dropdown-toggle::before {
-        display:none;
-         /*    width: 11px;
-            filter: brightness(1) !important;
-            left: 81% !important;
-            rotate: 92deg !important; */
-    }
+        .customTableDropdown .dropdown-toggle::before {
+            display: none;
+            /*    width: 11px;
+                    filter: brightness(1) !important;
+                    left: 81% !important;
+                    rotate: 92deg !important; */
+        }
 
         .customTableDropdown .dropdown-toggle.status-started::before {
             left: 71% !important;
-            }
-    .eyeIcon{
+        }
+
+    .eyeIcon {
         color: #1d4ed8;
     }
-    .noteIcon{
+
+    .noteIcon {
         color: #15803d;
     }
-    .historyIcon{
+
+    .historyIcon {
         color: #7e22ce;
     }
 
-    .editIcon{
-        color:#f54e00;
+    .editIcon {
+        color: #f54e00;
     }
 
-    .map i.fa{
-        color:grey;
-        margin-right:5px;
+    .map i.fa {
+        color: grey;
+        margin-right: 5px;
     }
 
-    .date-time-sec p{
-        font-size:14px;
-        font-weight:400;
-        margin-bottom:1px;
+    .date-time-sec p {
+        font-size: 14px;
+        font-weight: 400;
+        margin-bottom: 1px;
     }
 
-    .AddIncident{
-        margin-left:16px;
+    .AddIncident {
+        margin-left: 16px;
+    }
+
+    .incidentFilter {
+        margin-bottom: 20px;
     }
 
     .InfoCard {
@@ -156,40 +171,47 @@
     .CustomTab .nav-link {
         border: none;
         color: #2f2f2f !important;
-        border-bottom: 1px solid #dee2e6 !important;
+        border-bottom: none !important;
         border-radius: 0;
+        text-align:left !important;
     }
 
         .CustomTab .nav-link:hover {
             color: #000 !important;
-            border-bottom: 1px solid #dee2e6 !important;
+            border-bottom: none !important;
         }
 
         .CustomTab .nav-link.active {
-            color: #f54e00 !important;
+            color: #ffffff !important;
             border-bottom: 1px solid #f54e00 !important;
-            background-color: #ffffff !important;
-            border-radius: 0;
+            background-color: #f54e00 !important;
+            border-radius: 8px;
         }
 
+            .CustomTab .nav-link.active i.fa {
+                color: #ffffff !important;
+            }
+
             .CustomTab .nav-link.active:hover {
-                color: #f54e00 !important;
-                border-bottom: 1px solid #f54e00 !important;
+                color: #ffffff !important;
+                border: 1px solid #f54e00 !important;
             }
 
     .CustomTab .nav-item {
-        margin-bottom: 0 !important;
+        margin-bottom: 8px !important;
+        display: block !important;
+        width: 100% !important;
     }
 
     .CustomTab .nav-link .fa {
         margin-right: 10px !important;
     }
 
-    .nav-link i.fa{
-        color:#f54e00;
+    .nav-link i.fa {
+        color: #f54e00;
     }
 
-    .checkBoxTitle{
+    .checkBoxTitle {
         font-size: 18px;
         font-weight: 500;
         margin-bottom: 15px;
@@ -207,25 +229,332 @@
         margin-right: 8px;
     }
 
-   #addIncidentModal .form-check-label {
+    #addIncidentModal .form-check-label {
         font-size: 15px;
     }
 
-   #addIncidentModal .form-label {
+    #addIncidentModal .form-label {
         font-size: 15px;
     }
-    
-    
 
-    
+    /********************View Incident css***************************/
+    #viewIncidentModal .badge-status {
+        background-color: #dc3545;
+        font-size: 0.875rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    #viewIncidentModal .badge-severity {
+        background-color: #28a745;
+        font-size: 0.875rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    #viewIncidentModal .badge-unknown {
+        background-color: #e5e7eb;
+        color: #374151;
+    }
+
+    #viewIncidentModal .badge-yes {
+        background-color: #28a745;
+    }
+
+    #viewIncidentModal .badge-no {
+        background-color: #c6f6d5;
+        color: #155724;
+    }
+
+    #viewIncidentModal .asset-badge {
+        background-color: #e5e7eb;
+        color: #374151;
+        margin-right: 0.25rem;
+        font-size: 0.8rem;
+    }
+
+    #viewIncidentModal .section-title {
+        font-weight: 600;
+        font-size: 19px;
+        margin-bottom: 0.75rem;
+    }
+
+    #viewIncidentModal .info-label {
+        font-weight: 500;
+    }
+
+    #viewIncidentModal .card,
+    #noteIncidentModal .card,
+    #historyIncidentModal .card {
+        border-radius: 6px;
+        background: #f7f7f7;
+        margin-bottom: 22px;
+        padding: 16px;
+    }
+
+    .callerInfo i.fa {
+        margin-right: 8px;
+    }
+    /********************Note Modal Css********************/
+    #noteIncidentModal .card h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    #noteIncidentModal .log-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    #noteIncidentModal .log-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        font-size: 14px;
+    }
+
+    #noteIncidentModal .log-header {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    #noteIncidentModal .tag {
+        display: inline-block;
+        font-size: 12px;
+        padding: 2px 8px;
+        border-radius: 12px;
+        margin-left: 5px;
+        color: #fff;
+    }
+
+        #noteIncidentModal .tag.system {
+            background: #2563eb;
+        }
+
+        #noteIncidentModal .tag.internal {
+            background: #9ca3af;
+        }
+
+    #noteIncidentModal .log-time {
+        font-size: 12px;
+        color: #6b7280;
+        margin-left: 5px;
+        font-weight: 400;
+    }
+
+    #noteIncidentModal .log-text {
+        font-size: 14px;
+        color: #111827;
+        margin-top: 2px;
+    }
+
+    .communication-sec h3 {
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    /* Right Section */
+
+
+    #noteIncidentModal .form-group {
+        margin-bottom: 15px;
+    }
+
+    #noteIncidentModal label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    #noteIncidentModal select, #noteIncidentModal textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    #noteIncidentModal textarea {
+        resize: vertical;
+        min-height: 80px;
+    }
+
+    #noteIncidentModal .btn {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        background: #F54E00;
+        color: white;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        #noteIncidentModal .btn:hover {
+            background: #ff7332;
+        }
+
+    #noteIncidentModal .summary p {
+        margin: 5px 0;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+        #noteIncidentModal .summary p span {
+            font-weight: bold;
+        }
+
+    #noteIncidentModal .modal-dialog {
+        width: 1200px;
+    }
+    /**********************history modal css*************************/
+    /* Left timeline */
+
+
+    #historyIncidentModal .timeline h3 {
+        margin-bottom: 20px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    #historyIncidentModal .timeline ul {
+        list-style: none;
+        padding: 0;
+        position: relative;
+    }
+
+        #historyIncidentModal .timeline ul::before {
+            content: '';
+            position: absolute;
+            left: 18px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e5e7eb;
+        }
+
+    #historyIncidentModal .timeline li {
+        position: relative;
+        margin-bottom: 25px;
+        padding-left: 50px;
+    }
+
+        #historyIncidentModal .timeline li:last-child {
+            margin-bottom: 0;
+        }
+
+        #historyIncidentModal .timeline li .icon {
+            position: absolute;
+            left: -2px;
+            top: 0;
+            background: #fff;
+            border-radius: 50%;
+            border: 2px solid #e5e7eb;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+
+
+        #historyIncidentModal .timeline li .title {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        #historyIncidentModal .timeline li .author {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 4px;
+            line-height: normal;
+        }
+
+        #historyIncidentModal .timeline li .desc {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 4px;
+            line-height: normal;
+        }
+
+        #historyIncidentModal .timeline li .time {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+    /* Different colors */
+    #historyIncidentModal .blue {
+        color: #3b82f6;
+        border-color: #3b82f6;
+    }
+
+    #historyIncidentModal .yellow {
+        color: #f59e0b;
+        border-color: #f59e0b;
+    }
+
+    #historyIncidentModal .green {
+        color: #10b981;
+        border-color: #10b981;
+    }
+
+    #historyIncidentModal .purple {
+        color: #8b5cf6;
+        border-color: #8b5cf6;
+    }
+
+
+    #historyIncidentModal .card h4 {
+        margin-bottom: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: normal;
+    }
+
+    #historyIncidentModal .card p {
+        font-size: 14px;
+        margin: 4px 0;
+        display: flex;
+        justify-content: space-between;
+        font-weight: 400;
+    }
+
+    #historyIncidentModal .content .right-sec p {
+        font-size: 12px;
+        margin-bottom: 4px;
+        display: block;
+        font-weight: 400;
+        line-height: normal;
+        text-align: right;
+    }
+
+    .newAddFormSidebar {
+        border-radius: 6px;
+        background: #f7f7f7;
+        margin-bottom: 22px;
+        padding: 16px;
+    }
+
+    #historyIncidentModal .historyModalTable {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
 </style>
 
 <div class="incidentSec">
     <div class="topSearchbar">
         <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3>Incident</h3>
+            <h3>Incident</h3>
             <div class="right-sec d-flex  align-items-center mb-3">
-                
+
                 <div class="search-container me-3">
                     <i class="fa-solid fa-magnifying-glass search-icon"></i>
                     <input type="text" class="form-control search-input" placeholder="Search incidents..." id="global_search_value">
@@ -252,12 +581,250 @@
             </div>
         </div>
     </div>
-   
+
     <div class="table-responsive incident-table">
-        @await Html.PartialAsync("~/Views/Incidents/_IncidentGrid.cshtml", Model)
+        <table class="table align-middle text-left">
+            <thead class="table-light">
+                <tr>
+                    <th>Status</th>
+                    <th>Date/Time</th>
+                    <th>Location</th>
+                    <th>Intersection</th>
+                    <th>Asset ID</th>
+                    <th>Type of Event</th>
+                    <th>Severity</th>
+                    <th>Description</th>
+                    <th>ES Indicators</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Submitted
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                <li><div class="dropdown-item text-validated">Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View" data-bs-toggle="modal" data-bs-target="#viewIncidentModal"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes" data-bs-toggle="modal" data-bs-target="#noteIncidentModal"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History" data-bs-toggle="modal" data-bs-target="#historyIncidentModal"><i class="fa fa-repeat"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit" data-bs-toggle="modal" data-bs-target="#editIncidentModal"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Validated
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                <li><div class="dropdown-item text-validated">Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-repeat"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-dispatched rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Dispatched
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                <li><div class="dropdown-item text-validated">Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-repeat"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-started rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Started
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                <li><div class="dropdown-item text-validated">Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-repeat"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-completed rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Completed
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                <li><div class="dropdown-item text-validated">Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-repeat"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="status-submitted">
+                        <div class="dropdown customTableDropdown">
+                            <button class="btn status-cancelled rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Cancelled
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                <li><div class="dropdown-item text-validated">Validated</div></li>
+                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">21 Aug,2025</p>
+                            <p class="time">14:30 PM</p>
+                        </div>
+                    </td>
+                    <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                    <td>Main St & 1st Ave</td>
+                    <td>AS12345</td>
+                    <td>Power Outage</td>
+                    <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
+                    <td>Transformer failure</td>
+                    <td>Yes</td>
+                    <td>
+                        <!-- Action Icons -->
+                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
+                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
+                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-repeat"></i></a>
+                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+
+        </table>
     </div>
 </div>
-
 
 <div class="modal fade" id="addIncidentModal" tabindex="-1" aria-labelledby="addIncidentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -267,81 +834,1000 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="NewIncidentForm" enctype="multipart/form-data">
-                    <ul class="nav nav-pills incidentFilter CustomTab" id="pills-tab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="pills-caller-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-caller" type="button" role="tab">
-                                <i class="fa fa-user"></i>Caller/Source Information
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link " id="pills-location-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-location" type="button" role="tab">
-                                <i class="fa fa-map-pin"></i>Location of Incident
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link " id="pills-detail-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-detail" type="button" role="tab">
-                                <i class="fa fa-list-check"></i>Incident Details
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link " id="pills-description-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-description" type="button" role="tab">
-                                <i class="fa  fa-address-card"></i>Description of Issue
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link " id="pills-severity-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-severity" type="button" role="tab">
-                                <i class="fa fa-thermometer-full"></i>Severity
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link " id="pills-safety-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-safety" type="button" role="tab">
-                                <i class="fa fa-shield"></i>Environmental / Safety Indicators
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link " id="pills-support-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-support" type="button" role="tab">
-                                <i class="fa fa-info-circle"></i>Supporting Information
-                            </button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="newIncidentTabContent">
-                        <div class="tab-pane fade show active" id="pills-caller" role="tabpanel" aria-labelledby="caller-tab">
-                            @await Html.PartialAsync("~/Views/Incidents/_CallerInformation.cshtml", Model)
+                <form id="NewIncidentForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="newAddFormSidebar">
+                                <ul class="nav nav-pills incidentFilter CustomTab" id="pills-tab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="pills-caller-tab" data-bs-toggle="pill"
+                                                data-bs-target="#pills-caller" type="button" role="tab">
+                                            <i class="fa fa-user"></i>Caller/Source Information
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link " id="pills-location-tab" data-bs-toggle="pill"
+                                                data-bs-target="#pills-location" type="button" role="tab">
+                                            <i class="fa fa-map-pin"></i>Location of Incident
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link " id="pills-detail-tab" data-bs-toggle="pill"
+                                                data-bs-target="#pills-detail" type="button" role="tab">
+                                            <i class="fa fa-list-check"></i>Incident Details
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link " id="pills-description-tab" data-bs-toggle="pill"
+                                                data-bs-target="#pills-description" type="button" role="tab">
+                                            <i class="fa  fa-address-card"></i>Description of Issue
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link " id="pills-severity-tab" data-bs-toggle="pill"
+                                                data-bs-target="#pills-severity" type="button" role="tab">
+                                            <i class="fa fa-thermometer-full"></i>Severity
+                                        </button>
+                                    </li>
+
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link " id="pills-safety-tab" data-bs-toggle="pill"
+                                                data-bs-target="#pills-safety" type="button" role="tab">
+                                            <i class="fa fa-shield"></i>Environmental / Safety Indicators
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link " id="pills-support-tab" data-bs-toggle="pill"
+                                                data-bs-target="#pills-support" type="button" role="tab">
+                                            <i class="fa fa-info-circle"></i>Supporting Information
+                                        </button>
+                                    </li>
+
+
+
+                                </ul>
+                            </div>
                         </div>
-                        <div class="tab-pane fade" id="pills-location" role="tabpanel" aria-labelledby="location-tab">
-                            @await Html.PartialAsync("~/Views/Incidents/_Location.cshtml", Model)
-                        </div>
-                        <div class="tab-pane fade" id="pills-detail" role="tabpanel" aria-labelledby="detail-tab">
-                            @await Html.PartialAsync("~/Views/Incidents/_IncidentDetails.cshtml", Model)
-                        </div>
-                        <div class="tab-pane fade" id="pills-description" role="tabpanel" aria-labelledby="description-tab">
-                            @await Html.PartialAsync("~/Views/Incidents/_DescriptionIssue.cshtml", Model)
-                        </div>
-                        <div class="tab-pane fade" id="pills-severity" role="tabpanel" aria-labelledby="severity-tab">
-                            @await Html.PartialAsync("~/Views/Incidents/_Severity.cshtml", Model)
-                        </div>
-                        <div class="tab-pane fade" id="pills-safety" role="tabpanel" aria-labelledby="safety-tab">
-                            @await Html.PartialAsync("~/Views/Incidents/_Environmental.cshtml", Model)
-                        </div>
-                        <div class="tab-pane fade" id="pills-support" role="tabpanel" aria-labelledby="support-tab">
-                            @await Html.PartialAsync("~/Views/Incidents/_SupportingInformation.cshtml", Model)
+                        <div class="col-md-8">
+                            <div class="tab-content" id="newIncidentTabContent">
+                                <div class="tab-pane fade show active" id="pills-caller" role="tabpanel" aria-labelledby="caller-tab">
+                                    <div class="shadow-sm border border-gray-200 card-body InfoCard">
+                                        <h6 class="fw-bold mb-3">Caller/Source Information</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Caller Name <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="companyName" required />
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Caller Phone Number <span class="text-danger">*</span></label>
+                                                    <input type="number" class="form-control" id="companyName" placeholder="xxx-xxx-xxxx" />
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Caller Address <span class="text-danger">*</span></label>
+                                                    <textarea type="number" class="form-control" id="companyName" placeholder="Street, city, state..."></textarea>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Relationship <span class="text-danger">*</span></label>
+                                                    <select class="form-select" id="relationaship" required>
+                                                        <option value="">Customer</option>
+                                                        <option>Contractor</option>
+                                                        <option>Public</option>
+                                                        <option>Internal Employee</option>
+                                                        <option>Automated Sensor</option>
+                                                        <option>First Responder</option>
+                                                        <option>Other</option>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Caller Date & Time <span class="text-danger">*</span></label>
+                                                    <input type="datetime-local" id="datetime" class="form-control" />
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end gap-2 mt-3">
+                                            <button type="button" class="btn btn-primary" id="nextToContacts">Next</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="pills-location" role="tabpanel" aria-labelledby="location-tab">
+                                    <div class="shadow-sm border border-gray-200 card-body InfoCard">
+                                        <h6 class="fw-bold mb-3">Location of Incident</h6>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <a href="https://www.openstreetmap.org/?mlat=38.8977&mlon=-77.0365&zoom=15" target="_blank" rel="noopener">
+                                                        <img src="https://staticmap.openstreetmap.de/staticmap.php?center=38.8977,-77.0365&zoom=15&size=600x350&markers=38.8977,-77.0365,red-pushpin"
+                                                             alt="Map pin"
+                                                             style="max-width:100%;height:auto;border-radius:8px;border:1px solid #ccc;" />
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Nearest Intersection / Landmark (free text) <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="landmark" required />
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Service Account # <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control" id="serviceAct" />
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="checkBoxTitle">Asset Id</div>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <input class="form-check-input" type="checkbox" value="" id="checkSingle">
+                                                            <label class="form-check-label" for="checkSingle">
+                                                                Pipeline
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <input class="form-check-input" type="checkbox" value="" id="checkSingle">
+                                                            <label class="form-check-label" for="checkSingle">
+                                                                Valve
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <input class="form-check-input" type="checkbox" value="" id="checkSingle">
+                                                            <label class="form-check-label" for="checkSingle">
+                                                                Meter
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="mb-3">
+                                                            <input class="form-check-input" type="checkbox" value="" id="checkSingle">
+                                                            <label class="form-check-label" for="checkSingle">
+                                                                Regulator
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-end gap-2 mt-3">
+                                            <button type="button" class="btn btn-primary" id="nextToContacts">Next</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="pills-detail" role="tabpanel" aria-labelledby="detail-tab">
+                                    <div class="shadow-sm border border-gray-200 card-body InfoCard">
+                                        <h6 class="fw-bold mb-3">Incident Details</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Type of Event<span class="text-danger">*</span></label>
+                                                    <select class="form-select" id="event" required>
+                                                        <option value="" selected disabled>-- Select an event --</option>
+                                                        <option value="gas">Gas Leak</option>
+                                                        <option value="water">Water in line</option>
+                                                        <option value="equipment">Equipment Failure</option>
+                                                        <option value="fire">Fire/Explosion</option>
+                                                        <option value="pressure">Overpressure/Underpressure</option>
+                                                        <option value="rupture">Pipeline Rupture</option>
+                                                        <option value="thirdparty">Third party damage</option>
+                                                        <option value="natural">Natural Disaster Impact</option>
+                                                        <option value="security">Security Threat/Tampering</option>
+                                                        <option value="other">Other</option>
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 d-none" id="otherInputWrapper">
+                                                    <label for="otherEvent" class="form-label">Please specify</label>
+                                                    <input type="text" class="form-control" id="otherEvent" placeholder="Describe the event" />
+                                                </div>
+                                                <div class="mb-3 d-none" id="gasOptions">
+                                                    <label for="gasleakEvent" class="form-label">Gas Leak</label>
+                                                    <select class="form-select" id="gasleakEvent">
+                                                        <option value="" selected disabled>-- Select an option --</option>
+                                                        <option>Odor</option>
+                                                        <option>Hissing</option>
+                                                        <option>Visible Damage</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3 d-none" id="equipmentOptions">
+                                                    <label for="equipmentEvent" class="form-label">Equipment Failure</label>
+                                                    <select class="form-select" id="equipmentEvent">
+                                                        <option value="" selected disabled>-- Select an option --</option>
+                                                        <option>Valve</option>
+                                                        <option>Regulator</option>
+                                                        <option>Compressor</option>
+                                                        <option>Meter</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3 d-none" id="thirdpartyOptions">
+                                                    <label for="equipmentEvent" class="form-label">Third party damage</label>
+                                                    <select class="form-select" id="equipmentEvent">
+                                                        <option value="" selected disabled>-- Select an option --</option>
+                                                        <option>Dig-in</option>
+                                                        <option>Contractor strike</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3 d-none" id="naturalOptions">
+                                                    <label for="equipmentEvent" class="form-label">Natural Options</label>
+                                                    <select class="form-select" id="equipmentEvent">
+                                                        <option value="" selected disabled>-- Select an option --</option>
+                                                        <option>Earthquake</option>
+                                                        <option>Flood</option>
+                                                        <option>Wildfire</option>
+
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+
+                                        <div class="d-flex justify-content-end gap-2 mt-3">
+                                            <button type="button" class="btn btn-primary" id="nextToContacts">Next</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="pills-description" role="tabpanel" aria-labelledby="description-tab">
+                                    <div class="shadow-sm border border-gray-200 card-body InfoCard">
+                                        <h6 class="fw-bold mb-3">Description of Issue</h6>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Description of issue<span class="text-danger">*</span></label>
+                                                    <textarea type="text" class="form-control" rows="4" id="description" required></textarea>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="d-flex justify-content-end gap-2 mt-3">
+                                            <button type="button" class="btn btn-primary" id="nextToContacts">Next</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="pills-severity" role="tabpanel" aria-labelledby="severity-tab">
+                                    <div class="shadow-sm border border-gray-200 card-body InfoCard">
+                                        <h6 class="fw-bold mb-3">Severity</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Severity<span class="text-danger">*</span></label>
+                                                    <select class="form-select" id="severity" required>
+                                                        <option value="" selected disabled>-- Select severity --</option>
+                                                        <option value="low">Low</option>
+                                                        <option value="moderate">Moderate</option>
+                                                        <option value="high">High</option>
+
+                                                    </select>
+                                                    <div class="invalid-feedback"></div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3 d-none" id="lowOptions">
+                                                    <label for="lowEvent" class="form-label">Low</label>
+                                                    <select class="form-select" id="lowEvent">
+                                                        <option value="" selected disabled>-- Select an option --</option>
+                                                        <option>Routine service issue</option>
+
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3 d-none" id="moderateOptions">
+                                                    <label for="moderateEvent" class="form-label">Moderate</label>
+                                                    <select class="form-select" id="moderateEvent">
+                                                        <option value="" selected disabled>-- Select an option --</option>
+                                                        <option>Verified leak</option>
+                                                        <option>Localized hazard</option>
+                                                    </select>
+                                                </div>
+                                                <div class="mb-3 d-none" id="highOptions">
+                                                    <label for="highEvent" class="form-label">High</label>
+                                                    <select class="form-select" id="highEvent">
+                                                        <option value="" selected disabled>-- Select an option --</option>
+                                                        <option>Explosion</option>
+                                                        <option>Multiple reports</option>
+                                                        <option>High risk to public safety</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="d-flex justify-content-end gap-2 mt-3">
+                                            <button type="button" class="btn btn-primary" id="nextToContacts">Next</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="pills-safety" role="tabpanel" aria-labelledby="safety-tab">
+                                    <div class="shadow-sm border border-gray-200 card-body InfoCard">
+                                        <h6 class="fw-bold mb-3">Environmental / Safety Indicators</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label d-block">Is gas odor present?</label>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="gasOdor" id="gasOdorYes" value="Yes">
+                                                        <label class="form-check-label" for="gasOdorYes">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="gasOdor" id="gasOdorNo" value="No">
+                                                        <label class="form-check-label" for="gasOdorNo">No</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="gasOdor" id="gasOdorUnknown" value="Unknown">
+                                                        <label class="form-check-label" for="gasOdorUnknown">Unknown</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label d-block">Is hissing sound present?</label>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="hissing" id="hissingYes" value="Yes">
+                                                        <label class="form-check-label" for="hissingYes">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="hissing" id="hissingNo" value="No">
+                                                        <label class="form-check-label" for="hissingNo">No</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="hissing" id="hissingUnknown" value="Unknown">
+                                                        <label class="form-check-label" for="hissingUnknown">Unknown</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label d-block">Is visible damage/fire present?</label>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="damage" id="damageYes" value="Yes">
+                                                        <label class="form-check-label" for="damageYes">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="damage" id="damageNo" value="No">
+                                                        <label class="form-check-label" for="damageNo">No</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="damage" id="damageUnknown" value="Unknown">
+                                                        <label class="form-check-label" for="damageUnknown">Unknown</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label d-block">Are people injured?</label>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="injured" id="injuredYes" value="Yes">
+                                                        <label class="form-check-label" for="injuredYes">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="injured" id="injuredNo" value="No">
+                                                        <label class="form-check-label" for="injuredNo">No</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="injured" id="injuredUnknown" value="Unknown">
+                                                        <label class="form-check-label" for="injuredUnknown">Unknown</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label d-block">Evacuation Required?</label>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="evacuation" id="evacYes" value="Yes">
+                                                        <label class="form-check-label" for="evacYes">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="evacuation" id="evacNo" value="No">
+                                                        <label class="form-check-label" for="evacNo">No</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="evacuation" id="evacUnknown" value="Unknown">
+                                                        <label class="form-check-label" for="evacUnknown">Unknown</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="d-flex justify-content-end gap-2 mt-3">
+                                            <button type="button" class="btn btn-primary" id="nextToContacts">Next</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="pills-support" role="tabpanel" aria-labelledby="support-tab">
+                                    <div class="shadow-sm border border-gray-200 card-body InfoCard">
+                                        <h6 class="fw-bold mb-3">Supporting Information</h6>
+                                        <div class="mb-3">
+                                            <label for="photoInput" class="form-label">Upload Photo</label>
+                                            <input class="form-control" type="file" id="photoInput" accept="image/*">
+                                        </div>
+
+                                        <!-- Preview -->
+                                        <div class="mb-3">
+                                            <label class="form-label d-block">Preview:</label>
+                                            <img id="photoPreview" src="" alt="No image selected"
+                                                 class="img-thumbnail d-none" style="max-width: 300px;">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Notes by Service Rep<span class="text-danger">*</span></label>
+                                            <textarea type="text" class="form-control" rows="4" id="notes" required></textarea>
+
+                                        </div>
+
+
+                                        <div class="d-flex justify-content-end gap-2 mt-3">
+                                            <button type="button" class="btn btn-success">save</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
                         </div>
                     </div>
+
+
                 </form>
             </div>
         </div>
     </div>
 </div>
-<script src="~/js/masking/initiate-masking.js"></script>
-<script src="~/js/views/incident/incidentform.js"></script>
+<div class="modal fade" id="viewIncidentModal" tabindex="-1" aria-labelledby="viewIncidentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewIncidentModalModalLabel">INC-0001</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <!-- Status & Priority -->
+                        <div class="card p-3">
+                            <div class="section-title">Status & Priority</div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span class="info-label">Status</span><br>
+                                    <span class="badge badge-status">Submitted</span>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="info-label">Severity</span><br>
+                                    <span class="badge badge-severity">Low</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Incident Details -->
+                        <div class="card p-3">
+                            <div class="section-title">Incident Details</div>
+                            <label class="info-label">Event Type: </label><p>Gas Leak</p>
+                            <label class="info-label">Description: </label><p>Sample incident description 1</p>
+                        </div>
+
+                        <!-- Location Information -->
+                        <div class="card p-3">
+                            <div class="section-title">Location Information</div>
+                            <label class="info-label">Address: </label><p>2201 Service Ave, City, ST 12345</p>
+                            <label class="info-label">Nearest Intersection: </label> <p>Main St & Service Ave</p>
+
+                            <label class="info-label">Affected Assets: </label>
+                            <p>
+                                <span class="badge asset-badge">PIPE-001</span>
+                                <span class="badge asset-badge">VALVE-123</span>
+                            </p>
+                        </div>
+
+                        <!-- Safety Assessment -->
+                        <div class="card p-3">
+                            <div class="section-title">Safety Assessment</div>
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    Gas Odor Present <span class="badge badge-unknown">Unknown</span>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    Hissing Sound <span class="badge badge-no">No</span>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    Visible Damage <span class="badge badge-no">No</span>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    People Injured <span class="badge badge-no">No</span>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    Evacuation Required <span class="badge badge-no">No</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Sidebar -->
+                    <div class="col-lg-4">
+                        <!-- Caller Information -->
+                        <div class="card p-3">
+                            <div class="section-title">Caller Information</div>
+                            <label class="info-label">Caller 1</label><p><small class="text-muted">Customer</small></p>
+                            <div class="callerInfo"><i class="fa fa-phone"></i> 555-829-0947</div>
+                            <div class="callerInfo"><i class="fa fa-calendar"></i>Aug 23, 2025 04:14 PM</div>
+                            <div class="callerInfo"><i class="fa fa-map-marker"></i> 6093 Main St, City, ST 12345</div>
+                        </div>
+
+                        <!-- Timeline -->
+                        <div class="card p-3">
+                            <div class="section-title">Timeline</div>
+                            <div class="timelineInfo">
+                                <label class="info-label">Created</label><br>
+                                <small class="text-muted">Aug 23, 2025 02:26 AM</small>
+                            </div>
+                            <div class="timelineInfo">
+                                <span class="info-label">Last Updated</span><br>
+                                <small class="text-muted">Aug 28, 2025 11:01 AM</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="noteIncidentModal" tabindex="-1" aria-labelledby="noteIncidentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="noteIncidentModalModalLabel">Notes: INC-0001</h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card communication-sec">
+                            <h3>Communication Log</h3>
+
+                            <div class="log-item">
+                                <div class="log-avatar"><i class="fa fa-user"></i></div>
+                                <div class="log-content">
+                                    <div class="log-header">
+                                        Jason <span class="tag system">external</span>
+                                        <span class="log-time">Aug 22, 2025 10:53 AM</span>
+                                    </div>
+                                    <div class="log-text">
+                                        Initial incident report received from customer. Gas odor reported at location.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="log-item">
+                                <div class="log-avatar"><i class="fa fa-user"></i></div>
+                                <div class="log-content">
+                                    <div class="log-header">
+                                        John Smith <span class="tag internal">internal</span>
+                                        <span class="log-time">Aug 22, 2025 11:23 AM</span>
+                                    </div>
+                                    <div class="log-text">
+                                        Contacted customer for additional details. Confirmed strong gas odor near meter.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="log-item">
+                                <div class="log-avatar"><i class="fa fa-user"></i></div>
+                                <div class="log-content">
+                                    <div class="log-header">
+                                        Sarah Johnson <span class="tag internal">internal</span>
+                                        <span class="log-time">Aug 22, 2025 11:38 AM</span>
+                                    </div>
+                                    <div class="log-text">
+                                        Dispatched emergency response team. ETA 15 minutes.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+                        <div class="card">
+                            <h3>Add Note</h3>
+                            <div class="form-group">
+                                <label>Note Type</label>
+                                <select>
+                                    <option>Internal Note</option>
+                                    <option>External Note</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Note Content</label>
+                                <textarea placeholder="Enter your note..."></textarea>
+                            </div>
+                            <button class="btn">+ Add Note</button>
+                        </div>
+
+                        <div class="card summary">
+                            <h3>Incident Summary</h3>
+                            <p><span>Status:</span> Started</p>
+                            <p><span>Type:</span> Gas Leak</p>
+                            <p><span>Severity:</span> High</p>
+                            <p><span>Location:</span> 1531 Service Ave, City, ST 12345</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="historyIncidentModal" tabindex="-1" aria-labelledby="historyIncidentModalModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="historyIncidentModalModalModalLabel">History: INC-0001</h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <h4>Activity Summary</h4>
+                            <p><span>Status Changes</span><span>3</span></p>
+                            <p><span>Notes Added</span><span>1</span></p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <h4>Time Metrics</h4>
+                            <p><span>Created</span><span>Aug 24, 2025 02:30 AM</span></p>
+                            <p><span>Last Updated</span><span>Aug 29, 2025 10:37 AM</span></p>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive incident-table historyModalTable">
+                            <table class="table align-middle text-left">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Status</th>
+                                        <th>Location</th>
+                                        <th>Intersection</th>
+                                        <th>Type of Event</th>
+                                        <th>Severity</th>
+                                        <th>Description</th>
+                                        <th>ES Indicators</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="status-submitted">
+                                            <div class="dropdown customTableDropdown">
+                                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Submitted
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
+                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="status-submitted">
+                                            <div class="dropdown customTableDropdown">
+                                                <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Validated
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
+                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="status-submitted">
+                                            <div class="dropdown customTableDropdown">
+                                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Submitted
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
+                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="status-submitted">
+                                            <div class="dropdown customTableDropdown">
+                                                <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Validated
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
+                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="status-submitted">
+                                            <div class="dropdown customTableDropdown">
+                                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Submitted
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
+                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="status-submitted">
+                                            <div class="dropdown customTableDropdown">
+                                                <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Validated
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
+                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
+
+
+                            </table>
+                        </div>
+                        @*  <div class="timeline card">
+                            <h3>Activity Timeline</h3>
+                            <ul>
+                                <li>
+                                    <span class="icon blue"><i class="fa fa-arrow-right"></i></span>
+                                    <div class="content">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="left-sec">
+                                                 <div class="title">Incident Created</div>
+                                                <div class="author">by System</div>
+                                            </div>
+                                            <div class="right-sec">
+                                                <div class="text-right time">
+                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
+                                                    <p class="text-xs text-gray-400">02:30 AM</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="desc">Initial incident report submitted</div>
+                                       
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <span class="icon blue"><i class="fa fa-exchange"></i></span>
+                                    <div class="content">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="left-sec">
+                                                <div class="title">Status Changed</div>
+                                                <div class="author">by John Smith</div>
+                                            </div>
+                                            <div class="right-sec">
+                                                <div class="text-right time">
+                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
+                                                    <p class="text-xs text-gray-400">02:30 AM</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="desc">Status changed from Submitted to Validated</div>
+                                        
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <span class="icon yellow"><i class="fa fa-sticky-note"></i></span>
+                                    <div class="content">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="left-sec">
+                                                <div class="title">Note Added</div>
+                                                <div class="author">by Sarah Johnson</div>
+                                            </div>
+                                            <div class="right-sec">
+                                                <div class="text-right time">
+                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
+                                                    <p class="text-xs text-gray-400">02:30 AM</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="desc">Added customer contact information and initial assessment</div>
+                                      
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <span class="icon green"><i class="fa fa-users"></i></span>
+                                    <div class="content">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="left-sec">
+                                                <div class="title">Team Assigned</div>
+                                                <div class="author">by Mike Wilson</div>
+                                            </div>
+                                            <div class="right-sec">
+                                                <div class="text-right time">
+                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
+                                                    <p class="text-xs text-gray-400">02:30 AM</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="desc">Assigned to Emergency Response Team Alpha</div>
+                                        
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <span class="icon blue"><i class="fa fa-exchange"></i></span>
+                                    <div class="content">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="left-sec">
+                                                <div class="title">Status Changed</div>
+                                                <div class="author">by Emergency Team</div>
+                                            </div>
+                                            <div class="right-sec">
+                                                <div class="text-right time">
+                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
+                                                    <p class="text-xs text-gray-400">02:30 AM</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="desc">Status changed from Validated to Dispatched</div>
+                                        
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <span class="icon purple"><i class="fa fa-wrench"></i></span>
+                                    <div class="content">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="left-sec">
+                                                <div class="title">Field Update</div>
+                                                <div class="author">by Field Technician</div>
+                                            </div>
+                                            <div class="right-sec">
+                                                <div class="text-right time">
+                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
+                                                    <p class="text-xs text-gray-400">02:30 AM</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="desc">Updated safety indicators and location details</div>
+                                       
+                                    </div>
+                                </li>
+                            </ul>
+                        </div> *@
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -373,7 +1859,7 @@
       moderate: document.getElementById('moderateOptions'),
       low: document.getElementById('lowOptions'),
       high: document.getElementById('highOptions'),
-      
+
     };
 
     severitySelect.addEventListener('change', function () {
@@ -390,19 +1876,33 @@
     //   const photoInput = document.getElementById('photoInput');
     // const photoPreview = document.getElementById('photoPreview');
 
-    // photoInput.addEventListener('change', function() {
-    //   const file = this.files[0];
-    //   if (file) {
-    //     const reader = new FileReader();
-    //     reader.onload = function(e) {
-    //       photoPreview.src = e.target.result;
-    //       photoPreview.classList.remove('d-none');
-    //     }
-    //     reader.readAsDataURL(file);
-    //   } else {
-    //     photoPreview.src = "";
-    //     photoPreview.classList.add('d-none');
-    //   }
-    // });
+    photoInput.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          photoPreview.src = e.target.result;
+          photoPreview.classList.remove('d-none');
+        }
+        reader.readAsDataURL(file);
+      } else {
+        photoPreview.src = "";
+        photoPreview.classList.add('d-none');
+      }
+    });
+
+
+     $('#historyIncidentModal').on('shown.bs.modal', function () {
+      $(this).find('.modal-dialog').css('max-width', '1200px');
+    });
+     $('#addIncidentModal').on('shown.bs.modal', function () {
+      $(this).find('.modal-dialog').css('max-width', '1200px');
+    });
+     $('#viewIncidentModal').on('shown.bs.modal', function () {
+      $(this).find('.modal-dialog').css('max-width', '1200px');
+    });
+     $('#noteIncidentModal').on('shown.bs.modal', function () {
+      $(this).find('.modal-dialog').css('max-width', '1200px');
+    });
     });
 </script>

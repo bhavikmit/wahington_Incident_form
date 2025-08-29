@@ -1,0 +1,21 @@
+﻿@using System.Web
+@using ViewModels.Incident
+@model IncidentViewModel
+
+
+<div class="shadow-sm border border-gray-200 card-body InfoCard">
+    <h6 class="fw-bold mb-3">Description of Issue</h6>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="mb-3">
+                <label class="form-label" asp-for="DescriptionIssue">Description of issue<span class="text-danger">*</span></label>
+                <textarea type="text" class="form-control" rows="4" id="description" required asp-for="DescriptionIssue"></textarea>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="d-flex justify-content-end gap-2 mt-3">
+        <button type="button" class="btn btn-primary" id="nextToSeverity">Next</button>
+    </div>
+</div>

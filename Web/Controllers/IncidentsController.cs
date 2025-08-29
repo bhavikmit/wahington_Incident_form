@@ -23,5 +23,14 @@ namespace Web.Controllers
             var incidentViewModel = await _iIncidentService.GetIncidentDropDown();
             return View(incidentViewModel);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveIncident([FromForm] IncidentViewModel incidentViewModel)
+        {
+            return Ok(new { success = true });
+
+            //var incidentViewModel = await _iIncidentService.GetIncidentDropDown();
+            //return View(incidentViewModel);
+        }
     }
 }

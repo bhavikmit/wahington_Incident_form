@@ -15,5 +15,6 @@ namespace Repositories.Common
     public interface IIncidentService
     {
         Task<IncidentViewModel> GetIncidentDropDown();
+        Task<string> SaveIncident(IncidentViewModel incidentViewModel);
     }
 }

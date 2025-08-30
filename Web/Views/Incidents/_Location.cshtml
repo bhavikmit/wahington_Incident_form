@@ -6,7 +6,7 @@
 
 <div class="shadow-sm border border-gray-200 card-body InfoCard">
     <h6 class="fw-bold mb-3">Location of Incident</h6>
-    <div class="row">
+  @*   <div class="row">
         <div class="col-md-12">
             <div class="mb-3">
                 <a href="https://www.openstreetmap.org/?mlat=38.8977&mlon=-77.0365&zoom=15" target="_blank" rel="noopener">
@@ -17,27 +17,43 @@
             </div>
         </div>
 
-    </div>
-
+    </div> *@
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="mb-3">
-                <label class="form-label" asp-for="incidentiLocation.Landmark">Nearest Intersection / Landmark (free text) <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="landmark" required asp-for="incidentiLocation.Landmark" />
-                <div class="invalid-feedback"></div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="mb-3">
-                <label class="form-label" asp-for="incidentiLocation.ServiceAccount">Service Account # <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="serviceAct" asp-for="incidentiLocation.ServiceAccount" />
+                <label class="form-label" >Address <span class="text-danger">*</span></label>
+                <textarea type="text" class="form-control" id="companyName" placeholder="Street, city, state..."></textarea>
                 <div class="invalid-feedback"></div>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="checkBoxTitle">Asset Id</div>
+            <div class="mb-3">
+                <input type="checkbox" id="option1" class="form-check-input">
+                <label class="form-check-label" for="option1">Same as Caller Address</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label" asp-for="incidentiLocation.Landmark">Intersection / Landmark<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="landmark" required asp-for="incidentiLocation.Landmark" />
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label" asp-for="incidentiLocation.ServiceAccount">Service Account # </label>
+                <input type="text" class="form-control" id="serviceAct" asp-for="incidentiLocation.ServiceAccount" />
+                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="checkBoxTitle">Asset Type</div>
             <div class="row">
 
                 @foreach (var asset in Model.incidentiLocation.AssetsIncidentList)
@@ -56,7 +72,8 @@
 
         </div>
     </div>
-    <div class="d-flex justify-content-end gap-2 mt-3">
+    <div class="d-flex justify-content-end gap-2 mt-3 addIncidentBtns">
+        <button type="button" class="btn btnBack" id="backButton">Back</button>
         <button type="button" class="btn btn-primary" id="nextToIncidentDetials">Next</button>
     </div>
 </div>

@@ -43,7 +43,7 @@
     }
     /*****************dhara******************/
     #dashboardTabs .nav-item .nav-link{
-        background: #f3f4f6;
+        background: #f9b89b;
         color: #374151;
         font-size: 16px;
         line-height: 1.25rem;
@@ -63,6 +63,43 @@
     .chartTitle{
         margin-bottom:16px;
     }
+    #viewDiv {
+      margin-top: 15px;
+      height: 500px;
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    /* Legend Styling */
+    .legend-box {
+      background: rgba(255,255,255,0.9);
+      padding: 10px 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      font-size: 14px;
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+    }
+
+    .legend-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .legend-color {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
 </style>
 <script src="~/js/views/dashboard/dashboard-card.js"></script>
 <script src="~/js/views/dashboard/dashboard-table.js"></script>
@@ -70,43 +107,45 @@
 @await Html.PartialAsync("~/Views/Shared/Charts/_Scripts.cshtml")
 <div class="container-fluid">
 
+
     <div class="dashboard-header">
         <div class="container-fluid p-0">
-            <div class="row align-items-center">
-                <div class="col-md-4 pl-0">
+            <div class="d-flex align-items-center justify-content-between dashboard-tab-title">
+                <div class="pl-0">
                     <h2 class="dashboard-title">Dashboard</h2>
                 </div>
+                <div class="tabsSec">
+                    <ul class="nav nav-tabs CustomTab" id="dashboardTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="map-tab" data-bs-toggle="tab" data-bs-target="#mapTab" type="button" role="tab">
+                                Map
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="charts-tab" data-bs-toggle="tab" data-bs-target="#chartsTab" type="button" role="tab">
+                                Charts
+                            </button>
+                        </li>
+                    </ul>
+                </div>
                 @* <div class="col-md-8 text-end">
-                    <div class="d-flex justify-content-end align-items-center header-actions">
-                        <div class="search-container me-3">
-                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                            <input type="text" class="form-control search-input" placeholder="Search">
-                        </div>
-                        <button class="btn btn-light bg-white me-3">
-                            <i class="fa-solid fa-sliders"></i>
-                        </button>
-                        <button class="btn btn-light bg-white">
-                            <i class="fa-solid fa-bell"></i>
-                        </button>
+                <div class="d-flex justify-content-end align-items-center header-actions">
+                    <div class="search-container me-3">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" class="form-control search-input" placeholder="Search">
                     </div>
-                </div> *@
+                    <button class="btn btn-light bg-white me-3">
+                        <i class="fa-solid fa-sliders"></i>
+                    </button>
+                    <button class="btn btn-light bg-white">
+                        <i class="fa-solid fa-bell"></i>
+                    </button>
+                </div>
+            </div> *@
             </div>
         </div>
     </div>
-    <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
-        <ul class="nav nav-tabs CustomTab" id="dashboardTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="map-tab" data-bs-toggle="tab" data-bs-target="#mapTab" type="button" role="tab">
-                Map
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="charts-tab" data-bs-toggle="tab" data-bs-target="#chartsTab" type="button" role="tab">
-                Charts
-            </button>
-        </li>
-    </ul>
-    </div>
+   
     <div class="tab-content mt-3">
         <!-- Map Tab -->
         <div class="tab-pane fade show active" id="mapTab" role="tabpanel">
@@ -252,6 +291,7 @@
                             font: {
                                 size: 12
                             }
+
                         }
                     }
                 }

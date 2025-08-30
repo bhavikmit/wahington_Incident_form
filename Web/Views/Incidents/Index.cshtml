@@ -235,6 +235,7 @@
 
     #addIncidentModal .form-label {
         font-size: 15px;
+        width:250px;
     }
 
     /********************View Incident css***************************/
@@ -413,6 +414,21 @@
     #noteIncidentModal .modal-dialog {
         width: 1200px;
     }
+    .attached i.fa{
+           font-size: 14px;
+    color: purple;
+   
+    margin-left: 4px;
+    margin-right: 4px;
+    }
+    .attached{
+        font-size:12px;
+        font-weight:400;
+        line-height:normal;
+    }
+    .NoteFileUpload {
+    margin-top: 13px;
+}
     /**********************history modal css*************************/
     /* Left timeline */
 
@@ -547,39 +563,124 @@
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch !important;
     }
+
+    .incident-photos {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .photo-thumb {
+        width: 100px;
+        height: 100px;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 1px solid #ddd;
+    }
+
+    .photo-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+
+    .photo-thumb:hover img {
+        transform: scale(1.05);
+    }
+
+    .file-upload {
+        margin: 12px 0;
+        padding: 10px;
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s ease;
+        background: #fafafa;
+    }
+
+        .file-upload:hover {
+            border-color: #888;
+        }
+
+        .file-upload label {
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+    .file-preview {
+        margin-top: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+        .file-preview img {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid #ddd;
+        }
+
+    .btn.btnBack{
+        background: #ffffff;
+        color: #f54e00;
+        width: auto;
+    }
+
+    .addIncidentBtns .btn-primary{
+        width:auto !important;
+    }
+    .eventCheck{
+        margin-right:10px;
+    }
+   
+
+    
 </style>
 
 <div class="incidentSec">
     <div class="topSearchbar">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3>Incident</h3>
+            <h3>Incidents</h3>
             <div class="right-sec d-flex  align-items-center mb-3">
-
-                <div class="search-container me-3">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" class="form-control search-input" placeholder="Search incidents..." id="global_search_value">
-                </div>
-                <div class="statusFilter">
-                    <select class="form-select" id="statusSelect" placeholder="status">
-                        <option value="" selected>--Select--</option>
-                        @foreach (var item in Model.statusLegends)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
-                </div>
-                <div class="severityFilter">
-                    <select class="form-select" id="severitySelect" placeholder="Severity">
-                        <option value="" selected>--Select--</option>
-                        @foreach (var item in Model.severityLevels)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
-                </div>
                 <a href="#" class="btn btn-primary AddIncident" data-bs-toggle="modal" data-bs-target="#addIncidentModal"><i class="fa fa-plus"></i>Add New Incident</a>
             </div>
         </div>
+
+    </div>
+    <div class="IncidentTopfilter d-flex justify-content-start align-items-center mb-3 bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
+
+        <div class="search-container me-3">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" class="form-control search-input" placeholder="Search incidents..." id="global_search_value">
+        </div>
+        <div class="statusFilter">
+            <select class="form-select" id="statusSelect" placeholder="status">
+                <option value="" selected>--Select--</option>
+                @foreach (var item in Model.statusLegends)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+        <div class="severityFilter">
+            <select class="form-select" id="severitySelect" placeholder="Severity">
+                <option value="" selected>--Select--</option>
+                @foreach (var item in Model.severityLevels)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+
     </div>
 
     <div class="table-responsive incident-table" id="incidentGrid">
@@ -589,7 +690,7 @@
 
  
 <div class="modal fade" id="addIncidentModal" tabindex="-1" aria-labelledby="addIncidentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addIncidentModalModalLabel">Add Incident</h5>
@@ -622,7 +723,7 @@
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link " id="pills-description-tab" data-bs-toggle="pill"
                                                 data-bs-target="#pills-description" type="button" role="tab">
-                                            <i class="fa  fa-address-card"></i>Description of Issue
+                                            <i class="fa  fa-address-card"></i>Description
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
@@ -715,6 +816,22 @@
                             <label class="info-label">Description: </label><p>Sample incident description 1</p>
                         </div>
 
+                        <!-- Incident Photos -->
+                        <div class="card incident-tablePhotso">
+                            <div class="section-title">Incident Photos</div>
+                            <div class="incident-photos">
+                                <div class="photo-thumb">
+                                    <img src="~/img/mobile-0.png" alt="Incident Photo 1">
+                                </div>
+                                <div class="photo-thumb">
+                                    <img src="~/img/mobile-1.png" alt="Incident Photo 2">
+                                </div>
+                                <div class="photo-thumb">
+                                    <img src="~/img/mobile-2.png" alt="Incident Photo 3">
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Location Information -->
                         <div class="card p-3">
                             <div class="section-title">Location Information</div>
@@ -781,7 +898,7 @@
     </div>
 </div>
 <div class="modal fade" id="noteIncidentModal" tabindex="-1" aria-labelledby="noteIncidentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="noteIncidentModalModalLabel">Notes: INC-0001</h5>
@@ -801,6 +918,7 @@
                                     <div class="log-header">
                                         Jason <span class="tag system">external</span>
                                         <span class="log-time">Aug 22, 2025 10:53 AM</span>
+                                        <span class="attached"><i class="fa fa-paperclip"></i>image.png</span>
                                     </div>
                                     <div class="log-text">
                                         Initial incident report received from customer. Gas odor reported at location.
@@ -814,6 +932,7 @@
                                     <div class="log-header">
                                         John Smith <span class="tag internal">internal</span>
                                         <span class="log-time">Aug 22, 2025 11:23 AM</span>
+                                        <span class="attached"><i class="fa fa-paperclip"></i>image.png</span>
                                     </div>
                                     <div class="log-text">
                                         Contacted customer for additional details. Confirmed strong gas odor near meter.
@@ -827,6 +946,7 @@
                                     <div class="log-header">
                                         Sarah Johnson <span class="tag internal">internal</span>
                                         <span class="log-time">Aug 22, 2025 11:38 AM</span>
+                                        <span class="attached"><i class="fa fa-paperclip"></i>image.png</span>
                                     </div>
                                     <div class="log-text">
                                         Dispatched emergency response team. ETA 15 minutes.
@@ -846,11 +966,25 @@
                                     <option>External Note</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label>Note Content</label>
-                                <textarea placeholder="Enter your note..."></textarea>
+                            <label for="noteContent">Note Content</label>
+                            <textarea id="noteContent" class="input-textarea" placeholder="Enter your note..."></textarea>
+
+                            <!-- File Upload Section -->
+                            <div class="NoteFileUpload">
+                                <div class="mb-3">
+                                    <label for="photoInput1" class="form-label">Upload Photo</label>
+                                    <input class="form-control" type="file" id="photoInput1" accept="image/*" />
+                                </div>
+
+                                <!-- Preview -->
+                               @*  <div class="mb-3">
+                                    <label class="form-label d-block">Preview:</label>
+                                    <img id="photoPreview1" src="" alt="No image selected"
+                                         class="img-thumbnail d-none" style="max-width: 300px;">
+                                </div> *@
                             </div>
-                            <button class="btn">+ Add Note</button>
+
+                            <button class="btn btn-primary AddNote"><i class="fa fa-plus"></i>Add Note</button>
                         </div>
 
                         <div class="card summary">
@@ -919,7 +1053,6 @@
                                                 </button>
                                                 <ul class="dropdown-menu">
                                                     <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
                                                     <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
                                                     <li><div class="dropdown-item text-started" href="#">Started</div></li>
                                                     <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
@@ -946,11 +1079,9 @@
                                                     <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
                                                     <li><div class="dropdown-item text-started" href="#">Started</div></li>
                                                     <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                    <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
                                                 </ul>
-                                            </div>
-                                        </td>
-                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                            </div>  ss="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
                                         <td>Main St & 1st Ave</td>
                                         <td>Power Outage</td>
                                         <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
@@ -970,7 +1101,7 @@
                                                     <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
                                                     <li><div class="dropdown-item text-started" href="#">Started</div></li>
                                                     <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                    <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -988,12 +1119,12 @@
                                                     Validated
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                   <li><div class="dropdown-item text-submitted">Submitted</div></li>
                                                     <li><div class="dropdown-item text-validated">Validated</div></li>
                                                     <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
                                                     <li><div class="dropdown-item text-started" href="#">Started</div></li>
                                                     <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                    <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -1194,7 +1325,7 @@
             </div>
         </div>
     </div>
-</div>
+
 
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/masking/initiate-masking.js"></script>
@@ -1203,6 +1334,24 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+
+           const photoInput1 = document.getElementById('photoInput1');
+    const photoPreview = document.getElementById('photoPreview1');
+
+    photoInput1.addEventListener('change', function() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          photoPreview.src = e.target.result;
+          photoPreview.classList.remove('d-none');
+        }
+        reader.readAsDataURL(file);
+      } else {
+        photoPreview.src = "";
+        photoPreview.classList.add('d-none');
+      }
+    });
 
     const eventSelect = document.getElementById('eventTypeId');
 
@@ -1276,5 +1425,16 @@
      $('#noteIncidentModal').on('shown.bs.modal', function () {
       $(this).find('.modal-dialog').css('max-width', '1200px');
     });
+
+
+
+
+function removeImage() {
+  imageUpload.value = "";
+  fileName.textContent = "No file chosen";
+  preview.innerHTML = "";
+  removeBtn.style.display = "none";
+}
+
     });
 </script>

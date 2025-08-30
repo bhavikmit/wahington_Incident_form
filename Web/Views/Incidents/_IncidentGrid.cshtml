@@ -7,13 +7,14 @@
     <thead class="table-light">
         <tr>
             <th>Status</th>
-            <th>Date/Time</th>
-            <th>Location</th>
-            <th>Intersection</th>
-            <th>Asset ID</th>
-            <th>Type of Event</th>
             <th>Severity</th>
+            <th>Date/Time</th>
+            <th>Event Type</th>
+            <th>Resources</th>
+            <th>Asset Type</th>
             <th>Description</th>
+            <th>Intersection</th>
+            <th>Location</th>
             <th>ES Indicators</th>
             <th>Action</th>
         </tr>
@@ -34,13 +35,13 @@
                                     Submitted
                                 </button>
                             }
-                            else if (item.StatusLegendId == (int)StatusLegendEnum.Validated)
+                            @* else if (item.StatusLegendId == (int)StatusLegendEnum.Validated)
                             {
 
                                 <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Validated
                                 </button>
-                            }
+                            } *@
                             else if (item.StatusLegendId == (int)StatusLegendEnum.Dispatched)
                             {
                                 <button class="btn status-dispatched rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -73,7 +74,7 @@
                             }
                             <ul class="dropdown-menu">
                                 <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                <li><div class="dropdown-item text-validated">Validated</div></li>
+                                @* <li><div class="dropdown-item text-validated">Validated</div></li> *@
                                 <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
                                 <li><div class="dropdown-item text-started" href="#">Started</div></li>
                                 <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
@@ -81,21 +82,6 @@
                             </ul>
                         </div>
                     </td>
-                    <td>
-                        <div class="date-time-sec">
-                            <p class="date">@item.CallDate</p>
-                            <p class="time">@item.CallTime</p>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="map">
-                            <i class="fa fa-map-marker"></i>
-                            @item.LocationAddress
-                        </div>
-                    </td>
-                    <td>@item.Intersection</td>
-                    <td>@item.AssetId</td>
-                    <td>@item.EventType</td>
                     <td>
                         @if (item.Severity == SeverityEnum.Low.ToString())
                         {
@@ -114,7 +100,36 @@
                             <span class="badge rounded-pill badge-unknown px-3 py-2">Unknown</span>
                         }
                     </td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">@item.CallDate</p>
+                            <p class="time">@item.CallTime</p>
+                        </div>
+                    </td>
+                    <td>@item.EventType</td>
+                    <td>
+                        <div class="event-type">
+                            resource 1
+                        </div>
+                    </td>
+                    <td>
+                        <div class="event-type">
+                            asset type 1
+                        </div>
+                    </td>
                     <td>@item.DescriptionIssue</td>
+                    <td>@item.Intersection</td>
+                    <td>
+                        <div class="map">
+                            <i class="fa fa-map-marker"></i>
+                            @item.LocationAddress
+                        </div>
+                    </td>
+                    
+                    @* <td>@item.AssetId</td> *@
+                    
+                  
+                    
                     <td>@item.GasESIndicator</td>
                    @*  <td>
                         <!-- Action Icons -->

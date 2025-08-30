@@ -82,4 +82,15 @@ namespace ViewModels.Incident
         public string DescriptionIssue { get; set; }
         public string GasESIndicator { get; set; }
     }
+
+    public class ChangeStatusRequest
+    {
+        public long IncidentId { get; set; }
+        public long StatusId { get; set; }
+    }
+    public class FilterRequest
+    {
+        public long severityId { get; set; }
+        public long statusId { get; set; }
+    }
 }

@@ -1,6 +1,9 @@
 ﻿$(function () {
 
-    GetIncidentList();
+    $("#statusSelect").val('');
+    $("#severitySelect").val('');
+
+    GetIncidentList(0, 0);
 
     $(document).off("click", "#nextToIncidentLocation");
     $(document).on("click", "#nextToIncidentLocation", function (e) {
@@ -229,6 +232,37 @@
         $field.css("border", ""); // reset to default
         $field.siblings(".field-validation-error").remove();
     }
+
+
+    $(document).off("click", ".statusLegendli");
+    $(document).on("click", ".statusLegendli", function (e) {
+        e.preventDefault();
+
+        $("#statusSelect").val('');
+        $("#severitySelect").val('');
+
+        var incidentID = $(this).closest('tr').attr('id');
+        var status = $(this).find('div.dropdown-item').attr('data-id');
+
+        ChangeIncidentStatus(incidentID, status);
+    });
+
+    $(document).off("change", "#statusSelect, #severitySelect");
+    $(document).on("change", "#statusSelect, #severitySelect", function (e) {
+
+        var statusID = $("#statusSelect").val() != "" ? $("#statusSelect").val() : 0;
+        var severityID = $("#severitySelect").val() != "" ? $("#severitySelect").val() : 0;
+
+        e.preventDefault();
+        GetIncidentList(statusID, severityID);
+    });
+
+    $(document).off("change", "#AddIncident");
+    $(document).on("change", "#AddIncident", function (e) {
+
+       
+    });
+
 });
 
 function ShowImage(input) {
@@ -248,6 +282,10 @@ function RemoveImage() {
 
 async function SaveIncidentForm() {
     try {
+
+        $("#statusSelect").val('');
+        $("#severitySelect").val('');
+
         let formData = new FormData();
         let obj = $("#NewIncidentForm")[0];
 
@@ -288,7 +326,7 @@ async function SaveIncidentForm() {
         if (result.success) {
             SwalSuccessAlert(result.data);
             $(".btn-close").trigger("click");
-            GetIncidentList();
+            GetIncidentList(0, 0);
         } else {
             SwalErrorAlert(result.message || "Failed to save incident.");
         }
@@ -300,26 +338,65 @@ async function SaveIncidentForm() {
     }
 }
 
-async function GetIncidentList() {
+async function GetIncidentList(statusID, severityID) {
     try {
+        let payload = { severityId: severityID, statusId: statusID };
 
         showLoader($(".main-content"));
 
         const response = await fetch("/Incidents/GetIncidentList", {
-            method: "GET",
-            headers: { "Accept": "text/html" }
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+            body: JSON.stringify(payload)
         });
 
-        if (!response.ok) throw new Error("Failed to load cart layout");
+        if (!response.ok) throw new Error("Failed to load incident list");
 
         const content = await response.text();
-
         $("#incidentGrid").empty().html(content);
 
     } catch (error) {
-        console.error("Error updating shopping cart:", error);
-    }
-    finally {
+        console.error("Error loading incident list:", error);
+    } finally {
         hideLoader($(".main-content"));
     }
 }
+
+async function ChangeIncidentStatus(incidentID, statusID) {
+    try {
+        showLoader($(".main-content"));
+
+        // Prepare request payload
+        let payload = {
+            incidentId: incidentID,
+            statusId: statusID
+        };
+
+        // Send request
+        let response = await fetch("/Incidents/ChangeIncidentStatus", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        let result = await response.json();
+
+        if (response.ok && result.success) {
+            SwalSuccessAlert(result.data || "Status updated successfully.");
+            GetIncidentList(0, 0);
+        } else {
+            SwalErrorAlert(result.message || "Failed to change status of incident.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while changing status of incident!");
+        console.error(error);
+    } finally {
+        hideLoader($(".main-content"));
+    }
+}
+

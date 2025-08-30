@@ -185,7 +185,7 @@ namespace Repositories.Common
             }
         }
 
-        public async Task<List<IncidentGridViewModel>> GetIncidentList()
+        public async Task<List<IncidentGridViewModel>> GetIncidentList(FilterRequest request)
         {
 
             List<IncidentGridViewModel> incidentGridViews = new();
@@ -193,11 +193,29 @@ namespace Repositories.Common
             await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
-                var incidentsList = await _db.Incidents
-                                             .Include(p => p.StatusLegend)
-                                             .Include(p => p.Relationship)
-                                             .Include(p => p.EventType)
-                                             .Include(p => p.SeverityLevel).ToListAsync();
+                var query = _db.Incidents
+                             .Include(p => p.StatusLegend)
+                             .Include(p => p.Relationship)
+                             .Include(p => p.EventType)
+                             .Include(p => p.SeverityLevel)
+                             .AsQueryable();
+
+
+                if (request != null)
+                {
+                    if (request.severityId > 0)
+                    {
+                        query = query.Where(p => p.SeverityLevelId == request.severityId);
+                    }
+
+                    if (request.statusId > 0)
+                    {
+                        query = query.Where(p => p.StatusLegendId == request.statusId);
+                    }
+                }
+                var incidentsList = await query.ToListAsync();
+
+
                 foreach (var item in incidentsList)
                 {
                     incidentGridViews.Add(new IncidentGridViewModel()
@@ -226,6 +244,35 @@ namespace Repositories.Common
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error GetIncidentList.");
                 return new List<IncidentGridViewModel>();
+            }
+        }
+
+        public async Task<string?> ChangeIncidentStatus(long incidentId, long statusId)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+
+            try
+            {
+                var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == incidentId);
+
+                if (incident == null)
+                {
+                    await transaction.RollbackAsync();
+                    return null; // or string.Empty if you want
+                }
+
+                incident.StatusLegendId = statusId;
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                // Assuming you want to return IncidentID (string) or Id as string
+                return incident.IncidentID; // change to incident.Id.ToString() if needed
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error ChangeIncidentStatus.");
+                return null; // or string.Empty
             }
         }
 

@@ -24,7 +24,7 @@
         {
             @foreach (var item in Model.incidentGridViewModel)
             {
-                <tr>
+                <tr id="@item.Id">
                     <td class="status-submitted">
                         <div class="dropdown customTableDropdown">
 
@@ -72,12 +72,12 @@
                                 </button>
                             }
                             <ul class="dropdown-menu">
-                                <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                <li><div class="dropdown-item text-validated">Validated</div></li>
-                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-submitted" data-id="1">Submitted</div></li>
+                                <li style="cursor: pointer; display:none" class="statusLegendli"><div class="dropdown-item text-validated" data-id="6">Validated</div></li>
+                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-dispatched" data-id="2" href="#">Dispatched</div></li>
+                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-started" data-id="3" href="#">Started</div></li>
+                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-completed" data-id="4" href="#">Completed</div></li>
+                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-cancelled" data-id="5" href="#">Cancelled</div></li>
                             </ul>
                         </div>
                     </td>

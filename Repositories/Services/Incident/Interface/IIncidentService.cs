@@ -16,6 +16,7 @@ namespace Repositories.Common
     {
         Task<IncidentViewModel> GetIncidentDropDown();
         Task<string> SaveIncident(IncidentViewModel incidentViewModel);
-        Task<List<IncidentGridViewModel>> GetIncidentList();
+        Task<List<IncidentGridViewModel>> GetIncidentList(FilterRequest request);
+        Task<string?> ChangeIncidentStatus(long incidenetID, long statusId);
     }
 }

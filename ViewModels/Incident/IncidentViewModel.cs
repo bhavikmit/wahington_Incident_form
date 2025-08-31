@@ -23,6 +23,7 @@ namespace ViewModels.Incident
         public List<SelectListItem> statusLegends { get; set; } = new();
         public List<SelectListItem> severityLevels { get; set; } = new();
         public long? severityLevelId { get; set; } = default!;
+        public long? Id { get; set; } = default!;
         public string DescriptionIssue { get; set; } = default!;
     }
 
@@ -38,6 +39,7 @@ namespace ViewModels.Incident
     public class IncidentiLocationViewModel
     {
         public string Address { get; set; } = default!;
+        public bool IsSameCallerAddress { get; set; } = default!;
         public string Landmark { get; set; } = default!;
         public string ServiceAccount { get; set; } = default!;
         public string AssetIDs { get; set; } = default!;
@@ -45,7 +47,9 @@ namespace ViewModels.Incident
     }
     public class IncidentDetailsViewModel
     {
-        public long? EventTypeId { get; set; } = default!;
+        public string EventTypeIds { get; set; } = default!;
+        public bool IsOtherEvent { get; set; } = default!;
+        public string OtherEventDetail { get; set; } = default!;
         public List<SelectListItem> EventTypes { get; set; } = new();
     }
     public class IncidentEnvironmentalViewModel
@@ -76,10 +80,20 @@ namespace ViewModels.Incident
         public string Intersection { get; set; }
         public string AssetId { get; set; }
         public string EventType { get; set; }
-        public long? EventTypeId { get; set; }
+        public string EventTypeId { get; set; }
         public long? SeverityId { get; set; }
         public string Severity { get; set; }
         public string DescriptionIssue { get; set; }
         public string GasESIndicator { get; set; }
+    }
+    public class ChangeStatusRequest
+    {
+        public long IncidentId { get; set; }
+        public long StatusId { get; set; }
+    }
+    public class FilterRequest
+    {
+        public long severityId { get; set; }
+        public long statusId { get; set; }
     }
 }

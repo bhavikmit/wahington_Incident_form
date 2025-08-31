@@ -6,23 +6,12 @@
 
 <div class="shadow-sm border border-gray-200 card-body InfoCard">
     <h6 class="fw-bold mb-3">Location of Incident</h6>
-  @*   <div class="row">
-        <div class="col-md-12">
-            <div class="mb-3">
-                <a href="https://www.openstreetmap.org/?mlat=38.8977&mlon=-77.0365&zoom=15" target="_blank" rel="noopener">
-                    <img src="https://staticmap.openstreetmap.de/staticmap.php?center=38.8977,-77.0365&zoom=15&size=600x350&markers=38.8977,-77.0365,red-pushpin"
-                         alt="Map pin"
-                         style="max-width:100%;height:auto;border-radius:8px;border:1px solid #ccc;" />
-                </a>
-            </div>
-        </div>
-
-    </div> *@
+ 
     <div class="row">
         <div class="col-md-12">
             <div class="mb-3">
-                <label class="form-label" >Address <span class="text-danger">*</span></label>
-                <textarea type="text" class="form-control" id="companyName" placeholder="Street, city, state..."></textarea>
+                <label class="form-label" asp-for="incidentiLocation.Address">Address <span class="text-danger">*</span></label>
+                <textarea type="text" class="form-control" id="locAddress" asp-for="incidentiLocation.Address" placeholder="Street, city, state..."></textarea>
                 <div class="invalid-feedback"></div>
             </div>
         </div>
@@ -30,8 +19,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="mb-3">
-                <input type="checkbox" id="option1" class="form-check-input">
-                <label class="form-check-label" for="option1">Same as Caller Address</label>
+                <input type="checkbox" id="isSameCallerAddress" class="form-check-input" asp-for="incidentiLocation.IsSameCallerAddress">
+                <label class="form-check-label" asp-for="incidentiLocation.IsSameCallerAddress">Same as Caller Address</label>
             </div>
         </div>
     </div>
@@ -73,7 +62,7 @@
         </div>
     </div>
     <div class="d-flex justify-content-end gap-2 mt-3 addIncidentBtns">
-        <button type="button" class="btn btnBack" id="backButton">Back</button>
+        <button type="button" class="btn btnBack" id="backButtonToCaller">Back</button>
         <button type="button" class="btn btn-primary" id="nextToIncidentDetials">Next</button>
     </div>
 </div>

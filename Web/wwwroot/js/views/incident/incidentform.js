@@ -1,6 +1,9 @@
 ﻿$(function () {
 
-    GetIncidentList();
+    $("#statusSelect").val('');
+    $("#severitySelect").val('');
+
+    GetIncidentList(0, 0);
 
     $(document).off("click", "#nextToIncidentLocation");
     $(document).on("click", "#nextToIncidentLocation", function (e) {
@@ -16,11 +19,11 @@
             // Dropdown special check
             if ($field.is("select") && (value === "" || value === "--Select--")) {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else if (value === "") {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else {
                 clearError($field);
@@ -39,18 +42,18 @@
         var isValid = true;
 
         // Loop through all required fields
-        $("#pills-location").find("input[data-val-required]").each(function () {
+        $("#pills-location").find("input[data-val-required], textarea[data-val-required]").each(function () {
             var $field = $(this);
             var value = $.trim($field.val());
 
             // Dropdown special check
             if ($field.is("select") && (value === "" || value === "--Select--")) {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else if (value === "") {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else {
                 clearError($field);
@@ -76,16 +79,24 @@
             // Dropdown special check
             if ($field.is("select") && (value === "" || value === "--Select--")) {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else if (value === "") {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else {
                 clearError($field);
             }
         });
+
+        // ✅ Checkbox validation
+        if ($(".eventCheck input[type='checkbox']:checked").length === 0) {
+            isValid = false;
+            $(".eventCheck input[type='checkbox']").css("outline", "2px solid red");
+        } else {
+            $(".eventCheck input[type='checkbox']").css("outline", "none");
+        }
 
         if (isValid) {
             $("#pills-description-tab").trigger("click");
@@ -106,11 +117,11 @@
             // Dropdown special check
             if ($field.is("select") && (value === "" || value === "--Select--")) {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else if (value === "") {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else {
                 clearError($field);
@@ -136,11 +147,11 @@
             // Dropdown special check
             if ($field.is("select") && (value === "" || value === "--Select--")) {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else if (value === "") {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else {
                 clearError($field);
@@ -166,11 +177,11 @@
             // Dropdown special check
             if ($field.is("select") && (value === "" || value === "--Select--")) {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else if (value === "") {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else {
                 clearError($field);
@@ -195,11 +206,11 @@
             // Dropdown special check
             if ($field.is("select") && (value === "" || value === "--Select--")) {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else if (value === "") {
                 isValid = false;
-                showError($field, $field.attr("data-val-required"));
+                showError($field);
             }
             else {
                 clearError($field);
@@ -211,17 +222,98 @@
         }
     });
 
+    $(document).off("click", ".statusLegendli");
+    $(document).on("click", ".statusLegendli", function (e) {
+        e.preventDefault();
+
+        $("#statusSelect").val('');
+        $("#severitySelect").val('');
+
+        var incidentID = $(this).closest('tr').attr('id');
+        var status = $(this).find('div.dropdown-item').attr('data-id');
+
+        ChangeIncidentStatus(incidentID, status);
+    });
+
+    $(document).off("change", "#statusSelect, #severitySelect");
+    $(document).on("change", "#statusSelect, #severitySelect", function (e) {
+
+        var statusID = $("#statusSelect").val() != "" ? $("#statusSelect").val() : 0;
+        var severityID = $("#severitySelect").val() != "" ? $("#severitySelect").val() : 0;
+
+        e.preventDefault();
+        GetIncidentList(statusID, severityID);
+    });
+
+    $(document).off("change", "#AddIncident");
+    $(document).on("change", "#AddIncident", function (e) {
+
+
+    });
+
+    $(document).off("change", "#isSameCallerAddress");
+    $(document).on("change", "#isSameCallerAddress", function (e) {
+        if ($(this).is(":checked")) {
+            $("#locAddress").val($("#callerAddress").val());
+        }
+        else {
+            $("#locAddress").val("");
+        }
+    });
+
+    $(document).off("click", "#backButtonToEnvironmental");
+    $(document).on("click", "#backButtonToEnvironmental", function (e) {
+        e.preventDefault();
+        $("#pills-safety-tab").trigger("click");
+    });
+
+    $(document).off("click", "#backButtonToSeverity");
+    $(document).on("click", "#backButtonToSeverity", function (e) {
+        e.preventDefault();
+        $("#pills-severity-tab").trigger("click");
+    });
+
+    $(document).off("click", "#backButtonToDescription");
+    $(document).on("click", "#backButtonToDescription", function (e) {
+        e.preventDefault();
+        $("#pills-description-tab").trigger("click");
+    });
+
+    $(document).off("click", "#backButtonToIncidentDtl");
+    $(document).on("click", "#backButtonToIncidentDtl", function (e) {
+        e.preventDefault();
+        $("#pills-detail-tab").trigger("click");
+    });
+
+    $(document).off("click", "#backButtonToIncidentLoc");
+    $(document).on("click", "#backButtonToIncidentLoc", function (e) {
+        e.preventDefault();
+        $("#pills-location-tab").trigger("click");
+    });
+
+    $(document).off("click", "#backButtonToCaller");
+    $(document).on("click", "#backButtonToCaller", function (e) {
+        e.preventDefault();
+        $("#pills-caller-tab").trigger("click");
+    });
+
+    // Open Add
+    // Add new
+    $(document).on("click", "#btnAddIncident", function () {
+        resetIncidentForm();   
+        LoadIncidentModal();   // load modal
+    });
+
+    // Edit
+    $(document).on("click", ".btnEditIncident", function () {
+        const id = $(this).attr('id');
+        resetIncidentForm();
+        LoadIncidentModal(id);   // load modal
+    });
+
     // Show error: red border + message
-    function showError($field, message) {
+    function showError($field) {
         $field.css("border", "1px solid red");
-
-        //var $errorSpan = $field.siblings(".field-validation-error");
-
-        //if ($errorSpan.length === 0) {
-        //    $errorSpan = $("<span class='field-validation-error text-danger'></span>");
-        //    $field.after($errorSpan);
-        //}
-        //$errorSpan.text(message);
     }
 
     // Clear error: reset border + remove message
@@ -248,6 +340,10 @@ function RemoveImage() {
 
 async function SaveIncidentForm() {
     try {
+
+        $("#statusSelect").val('');
+        $("#severitySelect").val('');
+
         let formData = new FormData();
         let obj = $("#NewIncidentForm")[0];
 
@@ -261,7 +357,7 @@ async function SaveIncidentForm() {
         // Serialize other fields
         let params = $(obj).serializeArray();
         let assetIds = [];
-
+        let eventTypeIds = [];
         $.each(params, function (i, val) {
             if (val.name === "asset.Id") {
                 assetIds.push(val.value);
@@ -270,12 +366,28 @@ async function SaveIncidentForm() {
             }
         });
 
+        $.each(params, function (i, val) {
+            if (val.name === "eventTypes.Id") {
+                eventTypeIds.push(val.value);
+            } else {
+                formData.append(val.name, val.value);
+            }
+        });
+
+
         // Add AssetIds
         if (assetIds.length > 0) {
             formData.append("incidentiLocation.AssetIDs", assetIds.join(","));
         }
 
+        // Add EventTypes
+        if (eventTypeIds.length > 0) {
+            formData.append("incidentDetails.EventTypeIds", eventTypeIds.join(","));
+        }
+
         showLoader($("#addIncidentModal"));
+
+        console.log(formData);
 
         // Send request
         let response = await fetch("/Incidents/SaveIncident", {
@@ -288,7 +400,7 @@ async function SaveIncidentForm() {
         if (result.success) {
             SwalSuccessAlert(result.data);
             $(".btn-close").trigger("click");
-            GetIncidentList();
+            GetIncidentList(0, 0);
         } else {
             SwalErrorAlert(result.message || "Failed to save incident.");
         }
@@ -300,26 +412,121 @@ async function SaveIncidentForm() {
     }
 }
 
-async function GetIncidentList() {
+async function GetIncidentList(statusID, severityID) {
     try {
+        let payload = { severityId: severityID, statusId: statusID };
 
         showLoader($(".main-content"));
 
         const response = await fetch("/Incidents/GetIncidentList", {
-            method: "GET",
-            headers: { "Accept": "text/html" }
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+            body: JSON.stringify(payload)
         });
 
-        if (!response.ok) throw new Error("Failed to load cart layout");
+        if (!response.ok) throw new Error("Failed to load incident list");
 
         const content = await response.text();
-
         $("#incidentGrid").empty().html(content);
 
     } catch (error) {
-        console.error("Error updating shopping cart:", error);
-    }
-    finally {
+        console.error("Error loading incident list:", error);
+    } finally {
         hideLoader($(".main-content"));
     }
 }
+
+async function ChangeIncidentStatus(incidentID, statusID) {
+    try {
+        showLoader($(".main-content"));
+
+        // Prepare request payload
+        let payload = {
+            incidentId: incidentID,
+            statusId: statusID
+        };
+
+        // Send request
+        let response = await fetch("/Incidents/ChangeIncidentStatus", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        let result = await response.json();
+
+        if (response.ok && result.success) {
+            SwalSuccessAlert(result.data || "Status updated successfully.");
+            GetIncidentList(0, 0);
+        } else {
+            SwalErrorAlert(result.message || "Failed to change status of incident.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while changing status of incident!");
+        console.error(error);
+    } finally {
+        hideLoader($(".main-content"));
+    }
+}
+
+async function LoadIncidentModal(id = 0) {
+    try {
+        showLoader($(".main-content"));
+
+        const url = id > 0
+            ? `/Incidents/EditIncident?id=${id}`   // Edit mode
+            : `/Incidents/AddIncident`;            // Add mode
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Accept": "text/html"
+            }
+        });
+
+        if (!response.ok) throw new Error("Failed to load incident modal");
+
+        const content = await response.text();
+        $("#incidentAddEditModalContainer").empty().html(content);
+
+        // Show Bootstrap modal
+        $("#addIncidentModal").modal("show");
+
+    } catch (error) {
+        console.error("Error loading incident modal:", error);
+    } finally {
+        hideLoader($(".main-content"));
+        maskTelephone(".input-telephone");
+        $("#addIncidentModalModalLabel").text(id > 0 ? "Update Incident" : "Add Incident");
+    }
+}
+
+
+function resetIncidentForm() {
+    const form = document.querySelector("#NewIncidentForm");
+    if (!form) return;
+
+    // Reset all standard inputs
+    form.reset();
+
+    // Reset file inputs (form.reset doesn’t always clear them)
+    form.querySelectorAll("input[type='file']").forEach(fileInput => {
+        fileInput.value = "";
+    });
+
+    // Reset checkboxes & radios (ensure uncheck)
+    form.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(input => {
+        input.checked = false;
+    });
+
+    // Reset dropdowns to first option
+    form.querySelectorAll("select").forEach(select => {
+        select.selectedIndex = 0;
+    });
+}
+

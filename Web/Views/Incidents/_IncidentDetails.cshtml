@@ -9,50 +9,42 @@
         <label class="form-label">Type of Event<span class="text-danger">*</span></label>
         <div class="col-md-12">
             <div class="d-flex align-items-center">
-                <div class="mb-3 eventCheck">
-                    <input type="checkbox" id="option1" class="form-check-input">
-                    <label class="form-check-label" for="option1">Option 1</label>
-                </div>
-                <div class="mb-3 eventCheck">
-                    <input type="checkbox" id="option2" class="form-check-input">
-                    <label class="form-check-label" for="option2">Option 2</label>
-                </div>
-                <div class="mb-3 eventCheck">
-                    <input type="checkbox" id="option3" class="form-check-input">
-                    <label class="form-check-label" for="option3">Option 3</label>
-                </div>
-                
-            </div>
+                @* @foreach (var item in Model.incidentDetails.EventTypes)
+                {
+                    <div class="mb-3 eventCheck">
+                        <input type="checkbox" name="eventTypes.Id" id="@item.Value" class="form-check-input">
+                        <label class="form-check-label" for="@item.Value">@item.Text</label>
+                    </div>
+                } *@
 
-         @*    <div class="mb-3">
-                <label class="form-label">Type of Event<span class="text-danger">*</span></label>
-                <select class="form-select" id="eventTypeId" required asp-for="incidentDetails.EventTypeId">
-                    <option value="" selected >-- Select --</option>
-                    @foreach (var item in Model.incidentDetails.EventTypes)
-                    {
-                        <option value="@item.Value">@item.Text</option>
-                    }
-                </select>
-                <div class="invalid-feedback"></div>
-            </div> *@
-        </div>
-        <div class="col-md-12">
-            <div class="mb-3">
-                <input type="checkbox" id="option4" class="form-check-input">
-                <label class="form-check-label" for="option4">Other</label>
-            </div>
-            <div class="mb-3">
-                @* <label class="form-label">Other</label> *@
-                <input type="text" id="other" class="form-control">
+                @foreach (var et in Model.incidentDetails.EventTypes)
+                {
+                    var id = "eventType_" + et.Value;
+                    var checkedAttr = Model.incidentDetails.EventTypeIds != null ? (Model.incidentDetails.EventTypeIds.Contains(et.Value) ? "checked" : "") : "";
+                    <div class="mb-3 eventCheck">
+                        <input name="eventTypes.Id" type="checkbox" class="form-check-input"
+                               data-val="true" data-val-required="The Event Type field is required." @checkedAttr value="@et.Value" id="@id">
+                        <label class="form-check-label" for="@id">@et.Text</label>
+                    </div>
+                }
 
+            </div>
+            <div class="col-md-12">
+                <div class="mb-3">
+                    <input type="checkbox" id="IsOtherEvent" class="form-check-input" asp-for="incidentDetails.IsOtherEvent">
+                    <label class="form-check-label" asp-for="incidentDetails.IsOtherEvent">Other</label>
+                </div>
+                <div class="mb-3">
+                    <input type="text" id="OtherEventDetail" class="form-control" asp-for="incidentDetails.OtherEventDetail">
+                </div>
             </div>
         </div>
-    </div>
 
 
 
-    <div class="d-flex justify-content-end gap-2 mt-3 addIncidentBtns">
-        <button type="button" class="btn btnBack" id="backButton">Back</button>
-        <button type="button" class="btn btn-primary" id="nextToDescriptionIssue">Next</button>
+        <div class="d-flex justify-content-end gap-2 mt-3 addIncidentBtns">
+            <button type="button" class="btn btnBack" id="backButtonToIncidentLoc">Back</button>
+            <button type="button" class="btn btn-primary" id="nextToDescriptionIssue">Next</button>
+        </div>
     </div>
 </div>

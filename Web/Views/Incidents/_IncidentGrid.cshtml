@@ -25,7 +25,7 @@
         {
             @foreach (var item in Model.incidentGridViewModel)
             {
-                <tr>
+                <tr id="@item.Id">
                     <td class="status-submitted">
                         <div class="dropdown customTableDropdown">
 
@@ -35,13 +35,6 @@
                                     Submitted
                                 </button>
                             }
-                            @* else if (item.StatusLegendId == (int)StatusLegendEnum.Validated)
-                            {
-
-                                <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Validated
-                                </button>
-                            } *@
                             else if (item.StatusLegendId == (int)StatusLegendEnum.Dispatched)
                             {
                                 <button class="btn status-dispatched rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -73,25 +66,24 @@
                                 </button>
                             }
                             <ul class="dropdown-menu">
-                                <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                @* <li><div class="dropdown-item text-validated">Validated</div></li> *@
-                                <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-submitted" data-id="1">Submitted</div></li>
+                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-dispatched" href="#" data-id="2">Dispatched</div></li>
+                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-started" href="#" data-id="3">Started</div></li>
+                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-completed" href="#" data-id="4">Completed</div></li>
+                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-cancelled" href="#" data-id="5">Cancelled</div></li>
                             </ul>
                         </div>
                     </td>
                     <td>
-                        @if (item.Severity == SeverityEnum.Low.ToString())
+                        @if (item.SeverityId == (int)SeverityEnum.Low)
                         {
                             <span class="badge rounded-pill badge-low px-3 py-2">Low</span>
                         }
-                        else if (item.Severity == SeverityEnum.Moderate.ToString())
+                        else if (item.SeverityId == (int)SeverityEnum.Moderate)
                         {
                             <span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span>
                         }
-                        else if (item.Severity == SeverityEnum.High.ToString())
+                        else if (item.SeverityId == (int)SeverityEnum.High)
                         {
                             <span class="badge rounded-pill badge-high px-3 py-2">High</span>
                         }
@@ -131,19 +123,12 @@
                   
                     
                     <td>@item.GasESIndicator</td>
-                   @*  <td>
-                        <!-- Action Icons -->
-                        <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
-                        <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
-                        <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
-                        <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
-                    </td> *@
                     <td>
                         <!-- Action Icons -->
                         <a href="#" class="btnIcon eyeIcon" title="View" data-bs-toggle="modal" data-bs-target="#viewIncidentModal"><i class="fa fa-eye"></i></a>
                         <a href="#" class="btnIcon noteIcon" title="Notes" data-bs-toggle="modal" data-bs-target="#noteIncidentModal"><i class="fa fa-message"></i></a>
                         <a href="#" class="btnIcon historyIcon" title="History" data-bs-toggle="modal" data-bs-target="#historyIncidentModal"><i class="fa fa-repeat"></i></a>
-                        <a href="#" class="btnIcon editIcon" title="Edit" data-bs-toggle="modal" data-bs-target="#editIncidentModal"><i class="fa fa-pencil"></i></a>
+                        <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit"><i class="fa fa-pencil"></i></a>
                     </td>
                 </tr>
             }
@@ -154,229 +139,4 @@
                 <td colspan="10" class="text-center">No records found.</td>
             </tr>
         }
-
-
-        @*   <tr>
-            <td class="status-submitted">
-                <div class="dropdown customTableDropdown">
-                    <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Submitted
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                        <li><div class="dropdown-item text-validated">Validated</div></li>
-                        <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                        <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                        <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                        <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                    </ul>
-                </div>
-            </td>
-            <td>
-                <div class="date-time-sec">
-                    <p class="date">21 Aug,2025</p>
-                    <p class="time">14:30 PM</p>
-                </div>
-            </td>
-            <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-            <td>Main St & 1st Ave</td>
-            <td>AS12345</td>
-            <td>Power Outage</td>
-            <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
-            <td>Transformer failure</td>
-            <td>Yes</td>
-            <td>
-                <!-- Action Icons -->
-                <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
-                <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
-                <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
-                <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
-            </td>
-        </tr>
-        <tr>
-            <td class="status-submitted">
-                <div class="dropdown customTableDropdown">
-                    <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Validated
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                        <li><div class="dropdown-item text-validated">Validated</div></li>
-                        <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                        <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                        <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                        <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                    </ul>
-                </div>
-            </td>
-            <td>
-                <div class="date-time-sec">
-                    <p class="date">21 Aug,2025</p>
-                    <p class="time">14:30 PM</p>
-                </div>
-            </td>
-            <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-            <td>Main St & 1st Ave</td>
-            <td>AS12345</td>
-            <td>Power Outage</td>
-            <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
-            <td>Transformer failure</td>
-            <td>Yes</td>
-            <td>
-                <!-- Action Icons -->
-                <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
-                <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
-                <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
-                <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
-            </td>
-        </tr>
-        <tr>
-            <td class="status-submitted">
-                <div class="dropdown customTableDropdown">
-                    <button class="btn status-dispatched rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Dispatched
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                        <li><div class="dropdown-item text-validated">Validated</div></li>
-                        <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                        <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                        <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                        <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                    </ul>
-                </div>
-            </td>
-            <td>
-                <div class="date-time-sec">
-                    <p class="date">21 Aug,2025</p>
-                    <p class="time">14:30 PM</p>
-                </div>
-            </td>
-            <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-            <td>Main St & 1st Ave</td>
-            <td>AS12345</td>
-            <td>Power Outage</td>
-            <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
-            <td>Transformer failure</td>
-            <td>Yes</td>
-            <td>
-                <!-- Action Icons -->
-                <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
-                <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
-                <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
-                <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
-            </td>
-        </tr>
-        <tr>
-            <td class="status-submitted">
-                <div class="dropdown customTableDropdown">
-                    <button class="btn status-started rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Started
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                        <li><div class="dropdown-item text-validated">Validated</div></li>
-                        <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                        <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                        <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                        <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                    </ul>
-                </div>
-            </td>
-            <td>
-                <div class="date-time-sec">
-                    <p class="date">21 Aug,2025</p>
-                    <p class="time">14:30 PM</p>
-                </div>
-            </td>
-            <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-            <td>Main St & 1st Ave</td>
-            <td>AS12345</td>
-            <td>Power Outage</td>
-            <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
-            <td>Transformer failure</td>
-            <td>Yes</td>
-            <td>
-                <!-- Action Icons -->
-                <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
-                <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
-                <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
-                <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
-            </td>
-        </tr>
-        <tr>
-            <td class="status-submitted">
-                <div class="dropdown customTableDropdown">
-                    <button class="btn status-completed rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Completed
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                        <li><div class="dropdown-item text-validated">Validated</div></li>
-                        <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                        <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                        <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                        <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                    </ul>
-                </div>
-            </td>
-            <td>
-                <div class="date-time-sec">
-                    <p class="date">21 Aug,2025</p>
-                    <p class="time">14:30 PM</p>
-                </div>
-            </td>
-            <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-            <td>Main St & 1st Ave</td>
-            <td>AS12345</td>
-            <td>Power Outage</td>
-            <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
-            <td>Transformer failure</td>
-            <td>Yes</td>
-            <td>
-                <!-- Action Icons -->
-                <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
-                <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
-                <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
-                <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
-            </td>
-        </tr>
-        <tr>
-            <td class="status-submitted">
-                <div class="dropdown customTableDropdown">
-                    <button class="btn status-cancelled rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Cancelled
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                        <li><div class="dropdown-item text-validated">Validated</div></li>
-                        <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                        <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                        <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                        <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                    </ul>
-                </div>
-            </td>
-            <td>
-                <div class="date-time-sec">
-                    <p class="date">21 Aug,2025</p>
-                    <p class="time">14:30 PM</p>
-                </div>
-            </td>
-            <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-            <td>Main St & 1st Ave</td>
-            <td>AS12345</td>
-            <td>Power Outage</td>
-            <td><span class="badge rounded-pill badge-medium px-3 py-2">Moderate</span></td>
-            <td>Transformer failure</td>
-            <td>Yes</td>
-            <td>
-                <!-- Action Icons -->
-                <a href="#" class="btnIcon eyeIcon" title="View"><i class="fa fa-eye"></i></a>
-                <a href="#" class="btnIcon noteIcon" title="Notes"><i class="fa fa-message"></i></a>
-                <a href="#" class="btnIcon historyIcon" title="History"><i class="fa fa-clock"></i></a>
-                <a href="#" class="btnIcon editIcon" title="Edit"><i class="fa fa-pencil"></i></a>
-            </td>
-        </tr> *@
-
 </table>

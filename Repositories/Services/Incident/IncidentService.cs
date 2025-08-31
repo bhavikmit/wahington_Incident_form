@@ -154,7 +154,9 @@ namespace Repositories.Common
                     CallTime = viewModel.incidentCellerInformation?.CallTime ?? DateTime.Now,
                     RelationshipId = viewModel.incidentCellerInformation?.RelationshipId,
 
-                    EventTypeId = viewModel.incidentDetails?.EventTypeId ?? 0,
+                    EventTypeIds = viewModel.incidentDetails?.EventTypeIds,
+                    IsOtherEvent = viewModel.incidentDetails.IsOtherEvent,
+                    OtherEventDetail = viewModel.incidentDetails?.OtherEventDetail,
 
                     EvacuationRequiredId = viewModel.incidentEnvironmentalViewModel?.EvacuationRequiredID,
                     HissingPresentId = viewModel.incidentEnvironmentalViewModel?.HissingSoundPresentID,
@@ -166,6 +168,8 @@ namespace Repositories.Common
                     LocationAddress = viewModel.incidentiLocation?.Address,
                     ServiceAccount = viewModel.incidentiLocation?.ServiceAccount,
                     AssetIds = viewModel.incidentiLocation?.AssetIDs,
+                    IsSameCallerAddress = viewModel.incidentiLocation.IsSameCallerAddress,
+
                     ImageUrl = viewModel.incidentSupportingInfoViewModel?.ImageUrl,
                     SupportInfoNotes = viewModel.incidentSupportingInfoViewModel?.Notes
                 };
@@ -185,7 +189,7 @@ namespace Repositories.Common
             }
         }
 
-        public async Task<List<IncidentGridViewModel>> GetIncidentList()
+        public async Task<List<IncidentGridViewModel>> GetIncidentList(FilterRequest request)
         {
 
             List<IncidentGridViewModel> incidentGridViews = new();
@@ -193,11 +197,29 @@ namespace Repositories.Common
             await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
-                var incidentsList = await _db.Incidents
-                                             .Include(p => p.StatusLegend)
-                                             .Include(p => p.Relationship)
-                                             .Include(p => p.EventType)
-                                             .Include(p => p.SeverityLevel).ToListAsync();
+                var query = _db.Incidents
+                             .Include(p => p.StatusLegend)
+                             .Include(p => p.Relationship)
+                             //.Include(p => p.EventType)
+                             .Include(p => p.SeverityLevel)
+                             .AsQueryable();
+
+
+                if (request != null)
+                {
+                    if (request.severityId > 0)
+                    {
+                        query = query.Where(p => p.SeverityLevelId == request.severityId);
+                    }
+
+                    if (request.statusId > 0)
+                    {
+                        query = query.Where(p => p.StatusLegendId == request.statusId);
+                    }
+                }
+                var incidentsList = await query.ToListAsync();
+
+
                 foreach (var item in incidentsList)
                 {
                     incidentGridViews.Add(new IncidentGridViewModel()
@@ -206,8 +228,7 @@ namespace Repositories.Common
                         CallTime = GetTime(Convert.ToString(item.CallTime)),
                         AssetId = await GetAssets(item.AssetIds ?? string.Empty),
                         DescriptionIssue = item.DescriptionIssue ?? string.Empty,
-                        EventType = item.EventType.Name,
-                        EventTypeId = item.EventTypeId,
+                        EventTypeId = await GetEventTypes(item.EventTypeIds ?? string.Empty),
                         GasESIndicator = GetIndicator(item.GasPresentId),
                         Id = item.Id,
                         Intersection = item.Landmark ?? string.Empty,
@@ -227,6 +248,92 @@ namespace Repositories.Common
                 _logger.LogError(ex, "Error GetIncidentList.");
                 return new List<IncidentGridViewModel>();
             }
+        }
+
+        public async Task<string?> ChangeIncidentStatus(long incidentId, long statusId)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+
+            try
+            {
+                var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == incidentId);
+
+                if (incident == null)
+                {
+                    await transaction.RollbackAsync();
+                    return null; // or string.Empty if you want
+                }
+
+                incident.StatusLegendId = statusId;
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                // Assuming you want to return IncidentID (string) or Id as string
+                return incident.IncidentID; // change to incident.Id.ToString() if needed
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error ChangeIncidentStatus.");
+                return null; // or string.Empty
+            }
+        }
+
+        public async Task<IncidentViewModel> GetById(long incidentId)
+        {
+            IncidentViewModel incidentViewModel = new();
+
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+
+            try
+            {
+                incidentViewModel = await GetIncidentDropDown();
+
+                var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == incidentId);
+
+                if (incident == null)
+                {
+                    await transaction.RollbackAsync();
+                    return new IncidentViewModel();
+                }
+
+                incidentViewModel.Id = incident?.Id;
+
+                incidentViewModel.DescriptionIssue = incident?.DescriptionIssue;
+                incidentViewModel.severityLevelId = incident?.SeverityLevelId;
+                incidentViewModel.incidentiLocation.Address = incident?.LocationAddress;
+                incidentViewModel.incidentiLocation.AssetIDs = incident?.AssetIds;
+                incidentViewModel.incidentiLocation.Landmark = incident?.Landmark;
+                incidentViewModel.incidentiLocation.ServiceAccount = incident?.ServiceAccount;
+                incidentViewModel.incidentiLocation.IsSameCallerAddress = incident.IsSameCallerAddress;
+
+                incidentViewModel.incidentDetails.EventTypeIds = incident?.EventTypeIds;
+                incidentViewModel.incidentDetails.OtherEventDetail = incident?.OtherEventDetail;
+                incidentViewModel.incidentDetails.IsOtherEvent = incident.IsOtherEvent;
+
+                incidentViewModel.incidentCellerInformation.CallerPhoneNumber = incident.CallerPhoneNumber;
+                incidentViewModel.incidentCellerInformation.CallerAddress = incident.CallerAddress;
+                incidentViewModel.incidentCellerInformation.CallerName = incident.CallerName;
+                incidentViewModel.incidentCellerInformation.CallTime = incident.CallTime;
+                incidentViewModel.incidentCellerInformation.RelationshipId = incident.RelationshipId;
+
+                incidentViewModel.incidentEnvironmentalViewModel.PeopleInjuredID = incident.PeopleInjuredId;
+                incidentViewModel.incidentEnvironmentalViewModel.HissingSoundPresentID = incident.HissingPresentId;
+                incidentViewModel.incidentEnvironmentalViewModel.EvacuationRequiredID = incident.EvacuationRequiredId;
+                incidentViewModel.incidentEnvironmentalViewModel.VisibleDamageID = incident.VisibleDamagePresentId;
+                incidentViewModel.incidentEnvironmentalViewModel.GasodorpresentID = incident.GasPresentId;
+
+                incidentViewModel.incidentSupportingInfoViewModel.ImageUrl = incident.ImageUrl;
+                incidentViewModel.incidentSupportingInfoViewModel.Notes = incident.SupportInfoNotes;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error GetById.");
+                return new IncidentViewModel(); 
+            }
+
+            return incidentViewModel;
         }
 
         #region private methods
@@ -258,7 +365,7 @@ namespace Repositories.Common
             {
                 1 => "Yes",
                 0 => "No",
-                2 => "Unknown",
+                2 => "N/A",
                 _ => string.Empty
             };
 
@@ -279,6 +386,25 @@ namespace Repositories.Common
                                       .ToListAsync();
 
             return string.Join(",", assetNames);
+        }
+
+        private async Task<string> GetEventTypes(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+                return string.Empty;
+
+            var idArray = ids.Split(",", StringSplitOptions.RemoveEmptyEntries)
+                             .Select(id => long.TryParse(id.Trim(), out var val) ? val : (long?)null)
+                             .Where(val => val.HasValue)
+                             .Select(val => val.Value)
+                             .ToList();
+
+            var eventTypes = await _db.EventTypes
+                                      .Where(a => idArray.Contains(a.Id))
+                                      .Select(a => a.Name)
+                                      .ToListAsync();
+
+            return string.Join(",", eventTypes);
         }
         private async Task<string> SaveAttachments(IFormFile file)
         {

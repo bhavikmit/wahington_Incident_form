@@ -17,9 +17,11 @@ namespace Models
         public long? RelationshipId { get; set; }
         public Relationship Relationship { get; set; }
 
-        [ForeignKey("EventTypeId")]
-        public long? EventTypeId { get; set; }
-        public EventType EventType { get; set; }
+        //[ForeignKey("EventTypeId")]
+        //public long? EventTypeId { get; set; }
+        //public EventType EventType { get; set; }
+
+        public string? EventTypeIds { get; set; }
 
         [ForeignKey("SeverityLevelId")]
         public long? SeverityLevelId { get; set; }
@@ -45,5 +47,8 @@ namespace Models
         public long? EvacuationRequiredId { get; set; }
         public string? ImageUrl { get; set; }
         public string? SupportInfoNotes { get; set; }
+        public bool IsSameCallerAddress { get; set; }
+        public bool IsOtherEvent { get; set; }
+        public string? OtherEventDetail { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250831105814_AddNewColIncidentTbl")]
+    partial class AddNewColIncidentTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1266,9 +1269,6 @@ namespace DataLibrary.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsOtherEvent")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsSameCallerAddress")
                         .HasColumnType("bit");
 
@@ -1280,6 +1280,9 @@ namespace DataLibrary.Migrations
 
                     b.Property<string>("OtherEventDetail")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("OtherEventId")
+                        .HasColumnType("bit");
 
                     b.Property<long?>("PeopleInjuredId")
                         .HasColumnType("bigint");

@@ -37,7 +37,8 @@
         <label class="form-label" asp-for="incidentSupportingInfoViewModel.Notes">Notes by Service Rep<span class="text-danger">*</span></label>
         <textarea type="text" class="form-control" rows="4" id="notes" required asp-for="incidentSupportingInfoViewModel.Notes"></textarea>
     </div>
-    <div class="d-flex justify-content-end gap-2 mt-3">
-        <button type="button" class="btn btn-success" id="btn_Incident_Save">save</button>
+    <div class="d-flex justify-content-end gap-2 mt-3 addIncidentBtns">
+        <button type="button" class="btn btnBack" id="backButton">Back</button>
+        <button type="button" class="btn btn-success" id="btn_Incident_Save">Submit</button>
     </div>
 </div>

@@ -76,7 +76,7 @@
                 <div class="mb-3 form-group">
                     <label asp-for="ReplacementYear" class="form-label fw-600"></label>
                     <select asp-for="ReplacementYear" class="form-select" asp-items="@Html.GetEnumSelectList<ReplacementCycleCatalog>()">
-                        <option value="">-- Select --</option>
+                        <option value="">Select Year</option>
                     </select>
                     <span asp-validation-for="ReplacementYear" class="validation-invalid-label"></span>
                 </div>
@@ -85,7 +85,7 @@
                 <div class="mb-3 form-group">
                     <label asp-for="NextMaintenanceYear" class="form-label fw-600"></label>
                     <select asp-for="NextMaintenanceYear" class="form-select" asp-items="@Html.GetEnumSelectList<MaintenanceCycleCatalog>()">
-                        <option value="">-- Select --</option>
+                        <option value="">Select Maintenance Year</option>
                     </select>
                     <span asp-validation-for="NextMaintenanceYear" class="validation-invalid-label"></span>
                 </div>

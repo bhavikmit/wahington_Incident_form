@@ -119,9 +119,9 @@
         .customTableDropdown .dropdown-toggle::before {
             display: none;
             /*    width: 11px;
-                    filter: brightness(1) !important;
-                    left: 81% !important;
-                    rotate: 92deg !important; */
+                            filter: brightness(1) !important;
+                            left: 81% !important;
+                            rotate: 92deg !important; */
         }
 
         .customTableDropdown .dropdown-toggle.status-started::before {
@@ -692,6 +692,7 @@
 
 <!-- Placeholder where modal will be injected -->
 <div id="incidentAddEditModalContainer"></div>
+<div id="incidentDetailModalContainer"></div>
 
 <div class="modal fade" id="viewIncidentModal" tabindex="-1" aria-labelledby="viewIncidentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -990,113 +991,114 @@
                                                     <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
                                                     <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
                                                 </ul>
-                                            </div>  ss="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345
-                        </div></td>
-                        <td>Main St & 1st Ave</td>
-                        <td>Power Outage</td>
-                        <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
-                        <td>Transformer failure</td>
-                        <td>Yes</td>
-                        </tr>
+                                            </div>
+                                            <i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345
+                                        </td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
 
-                        <tr>
-                            <td class="status-submitted">
-                                <div class="dropdown customTableDropdown">
-                                    <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Submitted
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                        <li><div class="dropdown-item text-validated">Validated</div></li>
-                                        <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                        <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                        <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                        <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
-                                    </ul>
-                                </div>
-                            </td>
-                            <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-                            <td>Main St & 1st Ave</td>
-                            <td>Power Outage</td>
-                            <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
-                            <td>Transformer failure</td>
-                            <td>Yes</td>
-                        </tr>
-                        <tr>
-                            <td class="status-submitted">
-                                <div class="dropdown customTableDropdown">
-                                    <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Validated
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                        <li><div class="dropdown-item text-validated">Validated</div></li>
-                                        <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                        <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                        <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                        <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
-                                    </ul>
-                                </div>
-                            </td>
-                            <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-                            <td>Main St & 1st Ave</td>
-                            <td>Power Outage</td>
-                            <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
-                            <td>Transformer failure</td>
-                            <td>Yes</td>
-                        </tr>
+                                    <tr>
+                                        <td class="status-submitted">
+                                            <div class="dropdown customTableDropdown">
+                                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Submitted
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
+                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                                    <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="status-submitted">
+                                            <div class="dropdown customTableDropdown">
+                                                <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Validated
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
+                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                                    <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
 
-                        <tr>
-                            <td class="status-submitted">
-                                <div class="dropdown customTableDropdown">
-                                    <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Submitted
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                        <li><div class="dropdown-item text-validated">Validated</div></li>
-                                        <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                        <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                        <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                        <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                                    </ul>
-                                </div>
-                            </td>
-                            <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-                            <td>Main St & 1st Ave</td>
-                            <td>Power Outage</td>
-                            <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
-                            <td>Transformer failure</td>
-                            <td>Yes</td>
-                        </tr>
-                        <tr>
-                            <td class="status-submitted">
-                                <div class="dropdown customTableDropdown">
-                                    <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Validated
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                        <li><div class="dropdown-item text-validated">Validated</div></li>
-                                        <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                        <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                        <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                        <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                                    </ul>
-                                </div>
-                            </td>
-                            <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-                            <td>Main St & 1st Ave</td>
-                            <td>Power Outage</td>
-                            <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
-                            <td>Transformer failure</td>
-                            <td>Yes</td>
-                        </tr>
+                                    <tr>
+                                        <td class="status-submitted">
+                                            <div class="dropdown customTableDropdown">
+                                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Submitted
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
+                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="status-submitted">
+                                            <div class="dropdown customTableDropdown">
+                                                <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Validated
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
+                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
+                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
+                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
+                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                        <td>Main St & 1st Ave</td>
+                                        <td>Power Outage</td>
+                                        <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
+                                        <td>Transformer failure</td>
+                                        <td>Yes</td>
+                                    </tr>
 
 
-                        </table>
-                    </div>
-                    @*  <div class="timeline card">
+                            </table>
+                        </div>
+                        @*  <div class="timeline card">
                             <h3>Activity Timeline</h3>
                             <ul>
                                 <li>
@@ -1225,17 +1227,18 @@
                                 </li>
                             </ul>
                         </div> *@
+                    </div>
+
                 </div>
 
+
+
+
             </div>
-
-
-
-
         </div>
     </div>
+    <!-- ✅ Dynamic Incident Details Modal -->
 </div>
-
 
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/masking/initiate-masking.js"></script>
@@ -1321,7 +1324,7 @@
             photoPreview.classList.add('d-none');
           }
         });
-
+             // ✅ Dynamic Incident View Loader
 
          $('#historyIncidentModal').on('shown.bs.modal', function () {
           $(this).find('.modal-dialog').css('max-width', '1200px');

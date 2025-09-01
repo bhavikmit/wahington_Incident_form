@@ -418,6 +418,118 @@ namespace Repositories.Common
             return incidentViewModel;
         }
 
+        public async Task<IncidentViewModel> GetIncidentDetailsById(long id)
+        {
+            try
+            {
+                var incident = await _db.Incidents
+                    .Include(i => i.StatusLegend)
+                    .Include(i => i.SeverityLevel)
+                    .Include(i => i.Relationship)
+                    .FirstOrDefaultAsync(i => i.Id == id);
+
+                if (incident == null)
+                    return new IncidentViewModel();
+
+                var viewModel = new IncidentViewModel
+                {
+                    Id = incident.Id,
+                    DescriptionIssue = incident.DescriptionIssue,
+                    severityLevelId = incident.SeverityLevelId,
+                    SeverityName = incident.SeverityLevel?.Name ?? string.Empty,
+                    SeverityColor = incident.SeverityLevel?.Color ?? string.Empty,
+                    StatusLegendName = incident.StatusLegend?.Name ?? string.Empty,
+                    StatusLegendColor = incident.StatusLegend?.Color ?? string.Empty,
+                    IncidentNumber = incident.IncidentID,
+                    CreatedOn = incident.CreatedOn,
+                    UpdatedOn = incident.UpdatedOn,
+
+                    incidentDetails = new IncidentDetailsViewModel
+                    {
+                        EventTypeIds = incident.EventTypeIds,
+                        IsOtherEvent = incident.IsOtherEvent,
+                        OtherEventDetail = incident.OtherEventDetail ?? string.Empty,
+                        EventTypes = new List<SelectListItem>()
+                    },
+
+                    incidentCellerInformation = new IncidentCellerInformationViewModel
+                    {
+                        CallerName = incident.CallerName,
+                        CallerPhoneNumber = incident.CallerPhoneNumber,
+                        CallerAddress = incident.CallerAddress,
+                        CallTime = incident.CallTime,
+                        RelationshipId = incident.RelationshipId,
+                        RelationshipName = incident.Relationship?.Name ?? string.Empty
+                    },
+
+                    incidentiLocation = new IncidentiLocationViewModel
+                    {
+                        Address = incident.LocationAddress,
+                        Landmark = incident.Landmark,
+                        ServiceAccount = incident.ServiceAccount,
+                        AssetIDs = incident.AssetIds,
+                        IsSameCallerAddress = incident.IsSameCallerAddress,
+                        AssetsIncidentList = new List<SelectListItem>()
+                    },
+
+                    incidentEnvironmentalViewModel = new IncidentEnvironmentalViewModel
+                    {
+                        GasodorpresentID = incident.GasPresentId,
+                        HissingSoundPresentID = incident.HissingPresentId,
+                        VisibleDamageID = incident.VisibleDamagePresentId,
+                        PeopleInjuredID = incident.PeopleInjuredId,
+                        EvacuationRequiredID = incident.EvacuationRequiredId,
+
+                        GasOdorText = GetIndicator(incident.GasPresentId),
+                        HissingSoundText = GetIndicator(incident.HissingPresentId),
+                        VisibleDamageText = GetIndicator(incident.VisibleDamagePresentId),
+                        PeopleInjuredText = GetIndicator(incident.PeopleInjuredId),
+                        EvacuationRequiredText = GetIndicator(incident.EvacuationRequiredId)
+                    },
+
+                    incidentSupportingInfoViewModel = new IncidentSupportingInfoViewModel
+                    {
+                        Notes = incident.SupportInfoNotes,
+                        ImageUrl = incident.ImageUrl, // keep original value
+
+                        // ✅ split comma-separated image URLs
+                        ImageUrls = !string.IsNullOrEmpty(incident.ImageUrl)
+                         ? incident.ImageUrl.Split(",", StringSplitOptions.RemoveEmptyEntries)
+                           .Select(img => img.Trim())
+                           .ToList()
+                            : new List<string>()
+                    }
+                };
+
+                // ✅ Resolve EventType names
+                if (!string.IsNullOrWhiteSpace(incident.EventTypeIds))
+                {
+                    var ids = incident.EventTypeIds.Split(',').Select(long.Parse).ToList();
+                    viewModel.incidentDetails.EventTypeNames = await _db.EventTypes
+                        .Where(et => ids.Contains(et.Id))
+                        .Select(et => et.Name)
+                        .ToListAsync();
+                }
+
+                // ✅ Resolve Asset names
+                if (!string.IsNullOrWhiteSpace(incident.AssetIds))
+                {
+                    var ids = incident.AssetIds.Split(',').Select(long.Parse).ToList();
+                    viewModel.incidentiLocation.AssetNames = await _db.AssetIncidents
+                        .Where(a => ids.Contains(a.Id))
+                        .Select(a => a.Name)
+                        .ToListAsync();
+                }
+
+                return viewModel;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetIncidentById.");
+                return new IncidentViewModel();
+            }
+        }
+
         #region private methods
         private bool TryParseCallTime(string callTime, out DateTime dateTime)
         {

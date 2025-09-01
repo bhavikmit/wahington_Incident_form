@@ -25,6 +25,13 @@ namespace ViewModels.Incident
         public long? severityLevelId { get; set; } = default!;
         public long? Id { get; set; } = default!;
         public string DescriptionIssue { get; set; } = default!;
+        public string SeverityName { get; set; } = string.Empty;
+        public string StatusLegendName { get; set; } = string.Empty;
+        public string StatusLegendColor { get; set; } = string.Empty;
+        public string SeverityColor { get; set; } = string.Empty;  
+        public string IncidentNumber { get; set; } = string.Empty;
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 
     public class IncidentCellerInformationViewModel
@@ -35,6 +42,7 @@ namespace ViewModels.Incident
         public List<SelectListItem> Relationships { get; set; } = new();
         public long? RelationshipId { get; set; } = default!;
         public DateTime? CallTime { get; set; } = default!;
+        public string RelationshipName { get; set; } = string.Empty;
     }
     public class IncidentiLocationViewModel
     {
@@ -44,6 +52,7 @@ namespace ViewModels.Incident
         public string ServiceAccount { get; set; } = default!;
         public string AssetIDs { get; set; } = default!;
         public List<SelectListItem> AssetsIncidentList { get; set; } = new();
+        public List<string> AssetNames { get; set; } = new();
     }
     public class IncidentDetailsViewModel
     {
@@ -51,6 +60,7 @@ namespace ViewModels.Incident
         public bool IsOtherEvent { get; set; } = default!;
         public string OtherEventDetail { get; set; } = default!;
         public List<SelectListItem> EventTypes { get; set; } = new();
+        public List<string> EventTypeNames { get; set; } = new();
     }
     public class IncidentEnvironmentalViewModel
     {
@@ -59,6 +69,12 @@ namespace ViewModels.Incident
         public long? VisibleDamageID { get; set; } = default!;
         public long? PeopleInjuredID { get; set; } = default!;
         public long? EvacuationRequiredID { get; set; } = default!;
+        // ✅ Friendly
+        public string GasOdorText { get; set; } = string.Empty;
+        public string HissingSoundText { get; set; } = string.Empty;
+        public string VisibleDamageText { get; set; } = string.Empty;
+        public string PeopleInjuredText { get; set; } = string.Empty;
+        public string EvacuationRequiredText { get; set; } = string.Empty;
 
     }
     public class IncidentSupportingInfoViewModel
@@ -66,6 +82,7 @@ namespace ViewModels.Incident
         public List<IFormFile> File { get; set; }
         public string Notes { get; set; } = default!;
         public string? ImageUrl { get; set; } = default!;
+        public List<string> ImageUrls { get; set; } = new();
     }
 
     public class IncidentGridViewModel

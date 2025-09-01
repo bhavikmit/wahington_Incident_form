@@ -60,46 +60,97 @@
         border:none;
     }
 
-    .chartTitle{
-        margin-bottom:16px;
-    }
-    #viewDiv {
-      margin-top: 15px;
-      height: 500px;
-      width: 100%;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    /* Legend Styling */
-    .legend-box {
-      background: rgba(255,255,255,0.9);
-      padding: 10px 15px;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      font-size: 14px;
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
+    .stat-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px;
+        border-radius: 10px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        margin-bottom: 15px;
     }
 
-    .legend-title {
-      font-weight: bold;
-      margin-bottom: 5px;
+    .stat-label {
+        font-size: 14px;
+        color: #374151;
     }
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 4px;
+    .stat-value {
+        font-size: 18px;
+        font-weight: bold;
     }
 
-    .legend-color {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      margin-right: 8px;
+    .icon-box {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
+
+    .icon-orange {
+        background: #fde68a;
+        color: #f59e0b;
+    }
+
+    .icon-red {
+        background: #fecaca;
+        color: #ef4444;
+    }
+
+    .icon-green {
+        background: #bbf7d0;
+        color: #22c55e;
+    }
+
+    .icon-chart {
+        background: #d1fae5;
+        color: #059669;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 260px;
+        width: 260px;
+        margin: auto;
+    }
+
+    .chart-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .chart-legend li {
+        list-style: none;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .legend-dot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+
+    #severityChart, .chart-container {
+        width :180px !important;
+        height:180px !important;
+    }
+    #statusChart{
+        width: 180px !important;
+        height: 180px !important;
+    }
+
+    
 </style>
 <script src="~/js/views/dashboard/dashboard-card.js"></script>
 <script src="~/js/views/dashboard/dashboard-table.js"></script>
@@ -111,23 +162,25 @@
     <div class="dashboard-header">
         <div class="container-fluid p-0">
             <div class="d-flex align-items-center justify-content-between dashboard-tab-title">
-                <div class="pl-0">
-                    <h2 class="dashboard-title">Dashboard</h2>
+                <div class="DashboardHeader">
+                    <h4 class="fw-bold">Map & Chart</h4>
+                    <p class="text-muted">Visual representation of incident data and analytics</p>
                 </div>
                 <div class="tabsSec">
                     <ul class="nav nav-tabs CustomTab" id="dashboardTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="map-tab" data-bs-toggle="tab" data-bs-target="#mapTab" type="button" role="tab">
-                                Map
+                                Map View
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="charts-tab" data-bs-toggle="tab" data-bs-target="#chartsTab" type="button" role="tab">
-                                Charts
+                                Charts & Analytics
                             </button>
                         </li>
                     </ul>
                 </div>
+             
                 @* <div class="col-md-8 text-end">
                 <div class="d-flex justify-content-end align-items-center header-actions">
                     <div class="search-container me-3">
@@ -163,7 +216,104 @@
 
         <!-- Charts Tab -->
         <div class="tab-pane fade" id="chartsTab" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold">Incident Analytics</h6>
+                <span class="text-muted small">15 total incidents analyzed</span>
+            </div>
+            <p class="text-muted">Visual breakdown of incident data and trends</p>
             <div class="row">
+                <div class="col-md-3">
+                    <div class="stat-box">
+                        <div>
+                            <div class="stat-label">Moderate Priority</div>
+                            <div class="stat-value">5</div>
+                        </div>
+                        <div class="icon-box icon-orange"></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-box">
+                        <div>
+                            <div class="stat-label">High Priority</div>
+                            <div class="stat-value">4</div>
+                        </div>
+                        <div class="icon-box icon-red"></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-box">
+                        <div>
+                            <div class="stat-label">Low Priority</div>
+                            <div class="stat-value">6</div>
+                        </div>
+                        <div class="icon-box icon-green"></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-box">
+                        <div>
+                            <div class="stat-label">Response Rate</div>
+                            <div class="stat-value text-success">13%</div>
+                        </div>
+                        <div class="icon-box icon-chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card p-3">
+                        <h6 class="fw-bold">Active Incidents by Severity</h6>
+                        <div class="chart-container">
+                            <canvas id="severityChart" width="180" height="180"></canvas>
+                            <div class="chart-center">
+                                <div>15</div>
+                                <small>Total</small>
+                            </div>
+                        </div>
+                        <ul class="chart-legend p-0 mt-2">
+                            <li class="d-flex align-items-center justify-content-between InfoCount">
+                                <div class="dot-name">
+                                    <div class="legend-dot" style="background:#f59e0b"></div> Moderate 
+                                </div>
+                                <div class="count">5 (33%)</div>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between InfoCount">
+                                <div class="dot-name">
+                                <div class="legend-dot" style="background:#ef4444"></div> High</div>
+                                <div class="count">4 (27%)</div>
+                            </li>
+                            <li class="d-flex align-items-center justify-content-between InfoCount">
+                                <div class="dot-name">
+                                <div class="legend-dot" style="background:#22c55e"></div> Low</div>
+                                <div class="count">6 (40%)</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-3">
+                        <h6 class="fw-bold">Incidents by Status</h6>
+                        <div class="chart-container">
+                            <canvas id="statusChart" width="180" height="180"></canvas>
+                            <div class="chart-center">
+                                <div>15</div>
+                                <small>Total</small>
+                            </div>
+                        </div>
+                        <ul class="chart-legend p-0 mt-2">
+                            <li class="d-flex align-items-center justify-content-between InfoCount"> <div class="dot-name"><div class="legend-dot" style="background:#ef4444"></div> Submitted</div> <div class="count">5 (33%)</div></li>
+                            <li class="d-flex align-items-center justify-content-between InfoCount"> <div class="dot-name"><div class="legend-dot" style="background:#3b82f6"></div> Started</div><div class="count">2 (13%)</div></li>
+                            <li class="d-flex align-items-center justify-content-between InfoCount"> <div class="dot-name"><div class="legend-dot" style="background:#fbbf24"></div> Validated</div><div class="count">2 (13%)</div></li>
+                            <li class="d-flex align-items-center justify-content-between InfoCount"> <div class="dot-name"><div class="legend-dot" style="background:#22c55e"></div> Completed</div><div class="count">2 (13%)</div></li>
+                            <li class="d-flex align-items-center justify-content-between InfoCount"> <div class="dot-name"><div class="legend-dot" style="background:#f97316"></div> Dispatched</div><div class="count">3 (20%)</div></li>
+                            <li class="d-flex align-items-center justify-content-between InfoCount"> <div class="dot-name"><div class="legend-dot" style="background:#6b7280"></div> Cancelled</div><div class="count">1 (7%)</div></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            @* <div class="row">
                 <div class="col-md-6">
                     <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
                         <h6 class="chartTitle">Active Incidents by Severity</h6>
@@ -180,126 +330,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> *@
         </div>
     </div>
 
-    @section Scripts {
-        <!-- Leaflet.js (Map) -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-        <!-- Chart.js -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-        <script>
-            // Initialize Leaflet Map
-            var map = L.map('map').setView([37.0902, -95.7129], 4); // USA center
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19
-            }).addTo(map);
-
-            var marker;
-
-            // Show pin on map when address entered
-            document.getElementById('showOnMap').addEventListener('click', function () {
-                const address = document.getElementById('addressInput').value;
-                if (!address) return;
-
-                // Free geocoding with Nominatim
-                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.length > 0) {
-                            var lat = data[0].lat;
-                            var lon = data[0].lon;
-
-                            if (marker) {
-                                map.removeLayer(marker);
-                            }
-                            marker = L.marker([lat, lon]).addTo(map)
-                                .bindPopup(`<b>${address}</b>`).openPopup();
-
-                            map.setView([lat, lon], 14);
-                        } else {
-                            alert("Address not found!");
-                        }
-                    });
-            });
-                        // Temporary dummy data for testing
-            // const severityLabels = ["Low", "Medium", "High"];
-            // const severityCounts = [5, 3, 0];
-            // const severityColors = ["#4caf50", "#ff9800", "#f44336"];
-
-            // const statusLabels = ["Open", "In Progress", "Closed"];
-            // const statusCounts = [2, 6, 0];
-            // const statusColors = ["#2196f3", "#ffc107", "#9c27b0"];
-                    const severityLabels = @Html.Raw(Json.Serialize(Model.SeverityLabels));
-            const severityCounts = @Html.Raw(Json.Serialize(Model.SeverityCounts));
-            const severityColors = @Html.Raw(Json.Serialize(Model.SeverityColors));
-
-            const statusLabels = @Html.Raw(Json.Serialize(Model.StatusLabels));
-            const statusCounts = @Html.Raw(Json.Serialize(Model.StatusCounts));
-            const statusColors = @Html.Raw(Json.Serialize(Model.StatusColors));
-            // Chart.js Donut/Pie Charts
-            const severityCtx = document.getElementById('severityChart').getContext('2d');
-            const severityChart = new Chart(severityCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: severityLabels,
-                    datasets: [{
-                        data: severityCounts, // Replace with real data
-                        backgroundColor: severityColors
-                    }]
-                },
-                options: {
-                responsive: false,        // keeps size fixed
-                plugins: {
-                    legend: {
-                        position: 'bottom', // legend at bottom
-                        labels: {
-                            boxWidth: 15,  // smaller legend boxes
-                            padding: 10,
-                            font: {
-                                size: 12
-                            }
-                        }
-                    }
-                }
-            }
-            });
-
-            const statusCtx = document.getElementById('statusChart').getContext('2d');
-            const statusChart = new Chart(statusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: statusLabels,
-                    datasets: [{
-                        data: statusCounts, // Replace with real data
-                        backgroundColor: statusColors
-                    }]
-                },
-                        options: {
-                responsive: false,        // keeps size fixed
-                plugins: {
-                    legend: {
-                        position: 'bottom', // legend at bottom
-                        labels: {
-                            boxWidth: 15,  // smaller legend boxes
-                            padding: 10,
-                            font: {
-                                size: 12
-                            }
-
-                        }
-                    }
-                }
-            }
-            });
-        </script>
-    }
-
+    
     @* <div class="row total_counting">
         <div class="col item">
             @await Html.PartialAsync("~/Views/Dashboard/Common/Card/_Index.cshtml", Model.GetAverageLaborCost)
@@ -342,3 +377,44 @@
         </div>
     </div> *@
 </div>
+<script>
+    // Severity Chart
+    const ctx1 = document.getElementById('severityChart');
+    new Chart(ctx1, {
+      type: 'doughnut',
+      data: {
+        labels: ['Moderate', 'High', 'Low'],
+        datasets: [{
+          data: [5, 4, 6],
+          backgroundColor: ['#f59e0b', '#ef4444', '#22c55e'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '70%',
+         width: 180,          // custom width
+    height: 180,
+        plugins: { legend: { display: false } },
+      }
+    });
+
+    // Status Chart
+    const ctx2 = document.getElementById('statusChart');
+    new Chart(ctx2, {
+      type: 'doughnut',
+      data: {
+        labels: ['Submitted', 'Started', 'Validated', 'Completed', 'Dispatched', 'Cancelled'],
+        datasets: [{
+          data: [5, 2, 2, 2, 3, 1],
+          backgroundColor: ['#ef4444', '#3b82f6', '#fbbf24', '#22c55e', '#f97316', '#6b7280'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '70%',
+         width: 180,          // custom width
+    height: 180,
+        plugins: { legend: { display: false } },
+      }
+    });
+</script>

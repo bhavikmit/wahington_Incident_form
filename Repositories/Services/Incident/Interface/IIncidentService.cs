@@ -19,5 +19,9 @@ namespace Repositories.Common
         Task<List<IncidentGridViewModel>> GetIncidentList(FilterRequest request);
         Task<string?> ChangeIncidentStatus(long incidenetID, long statusId);
         Task<IncidentViewModel> GetById(long incidentId);
+        Task<IncidentViewModel> GetIncidentDetailsById(long incidentId);
+
+
+
     }
 }

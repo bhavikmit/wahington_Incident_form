@@ -1,0 +1,112 @@
+﻿@model ViewModels.Incident.IncidentViewModel
+
+<div class="modal fade" id="incidentDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content" id="incidentDetailsContent">
+
+
+            <div class="modal-header">
+                <h5 class="modal-title"> @Model.IncidentNumber</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8">
+
+                        <!-- Status & Severity -->
+                        <div class="card p-3">
+                            <div class="section-title">Status & Priority</div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <span class="info-label">Status</span><br />
+                                    <span class="badge" style="background-color:@Model.StatusLegendColor">
+                                        @Model.StatusLegendName
+                                    </span>
+                                </div>
+                                <div class="col-md-6">
+                                    <span class="info-label">Severity</span><br />
+                                    <span class="badge" style="background-color:@Model.SeverityColor">
+                                        @Model.SeverityName
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Incident Details -->
+                        <div class="card p-3">
+                            <div class="section-title">Incident Details</div>
+                            <p>
+                                <b>Event Type:</b>
+                                @(Model.incidentDetails.EventTypeNames != null && Model.incidentDetails.EventTypeNames.Any()
+                                                                ? string.Join(", ", Model.incidentDetails.EventTypeNames)
+                                                                : "Unknown")
+                            </p>
+                            <p><b>Description:</b> @Model.DescriptionIssue</p>
+                        </div>
+
+                        @if (Model.incidentSupportingInfoViewModel.ImageUrls != null
+                                                && Model.incidentSupportingInfoViewModel.ImageUrls.Any())
+                        {
+                            <div class="card p-3">
+                                <div class="section-title">Incident Photos</div>
+                                <div class="incident-photos">
+                                    @foreach (var img in Model.incidentSupportingInfoViewModel.ImageUrls)
+                                    {
+                                        <div class="photo-thumb">
+                                            <img src="@img" alt="Incident Photo" />
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Location Information -->
+                        <div class="card p-3">
+                            <div class="section-title">Location Information</div>
+                            <p><b>Address:</b> @Model.incidentiLocation.Address</p>
+                            <p><b>Nearest Intersection:</b> @Model.incidentiLocation.Landmark</p>
+                            <p><b>Service Account:</b> @Model.incidentiLocation.ServiceAccount</p>
+                            <p>
+                                <b>Affected Assets:</b>
+                                @(Model.incidentiLocation.AssetNames != null && Model.incidentiLocation.AssetNames.Any()
+                                                                ? string.Join(", ", Model.incidentiLocation.AssetNames)
+                                                                : "Unknown")
+                            </p>
+                        </div>
+
+                        <!-- Safety Assessment -->
+                        <div class="card p-3">
+                            <div class="section-title">Safety Assessment</div>
+                            <p>Gas Odor Present: @Model.incidentEnvironmentalViewModel.GasOdorText</p>
+                            <p>Hissing Sound: @Model.incidentEnvironmentalViewModel.HissingSoundText</p>
+                            <p>Visible Damage: @Model.incidentEnvironmentalViewModel.VisibleDamageText</p>
+                            <p>People Injured: @Model.incidentEnvironmentalViewModel.PeopleInjuredText</p>
+                            <p>Evacuation Required: @Model.incidentEnvironmentalViewModel.EvacuationRequiredText</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Sidebar -->
+                    <div class="col-lg-4">
+
+                        <!-- Caller Information -->
+                        <div class="card p-3">
+                            <div class="section-title">Caller Information</div>
+                            <p><b>@Model.incidentCellerInformation.CallerName</b></p>
+                            <p><i class="fa fa-phone"></i> @Model.incidentCellerInformation.CallerPhoneNumber</p>
+                            <p><i class="fa fa-calendar"></i> @(Model.incidentCellerInformation.CallTime?.ToString("dd MMM yyyy hh:mm tt"))</p>
+                            <p><i class="fa fa-map-marker"></i> @Model.incidentCellerInformation.CallerAddress</p>
+                        </div>
+
+                        <!-- Timeline -->
+                        <div class="card p-3">
+                            <div class="section-title">Timeline</div>
+                            <p><b>Created On:</b> @Model.CreatedOn?.ToString("dd MMM yyyy hh:mm tt")</p>
+                            <p><b>Last Updated:</b> @Model.UpdatedOn?.ToString("dd MMM yyyy hh:mm tt")</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

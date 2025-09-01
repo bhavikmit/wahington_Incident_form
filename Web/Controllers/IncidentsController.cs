@@ -92,5 +92,11 @@ namespace Web.Controllers
             var model = await _iIncidentService.GetById(id);
             return PartialView("_AddEditIncidentModal", model);
         }
+        [HttpGet]
+        public async Task<PartialViewResult> GetIncidentDetails(long id)
+        {
+            var model = await _iIncidentService.GetIncidentDetailsById(id);
+            return PartialView("_IncidentAllDetails", model);
+        }
     }
 }

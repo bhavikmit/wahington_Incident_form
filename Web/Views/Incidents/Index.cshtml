@@ -119,9 +119,9 @@
         .customTableDropdown .dropdown-toggle::before {
             display: none;
             /*    width: 11px;
-                filter: brightness(1) !important;
-                left: 81% !important;
-                rotate: 92deg !important; */
+                        filter: brightness(1) !important;
+                        left: 81% !important;
+                        rotate: 92deg !important; */
         }
 
         .customTableDropdown .dropdown-toggle.status-started::before {
@@ -173,7 +173,7 @@
         color: #2f2f2f !important;
         border-bottom: none !important;
         border-radius: 0;
-        text-align:left !important;
+        text-align: left !important;
     }
 
         .CustomTab .nav-link:hover {
@@ -235,7 +235,7 @@
 
     #addIncidentModal .form-label {
         font-size: 15px;
-        width:250px;
+        width: 250px;
     }
 
     /********************View Incident css***************************/
@@ -414,21 +414,23 @@
     #noteIncidentModal .modal-dialog {
         width: 1200px;
     }
-    .attached i.fa{
-           font-size: 14px;
-    color: purple;
-   
-    margin-left: 4px;
-    margin-right: 4px;
+
+    .attached i.fa {
+        font-size: 14px;
+        color: purple;
+        margin-left: 4px;
+        margin-right: 4px;
     }
-    .attached{
-        font-size:12px;
-        font-weight:400;
-        line-height:normal;
+
+    .attached {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: normal;
     }
+
     .NoteFileUpload {
-    margin-top: 13px;
-}
+        margin-top: 13px;
+    }
     /**********************history modal css*************************/
     /* Left timeline */
 
@@ -579,16 +581,16 @@
         border: 1px solid #ddd;
     }
 
-    .photo-thumb img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s;
-    }
+        .photo-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
 
-    .photo-thumb:hover img {
-        transform: scale(1.05);
-    }
+        .photo-thumb:hover img {
+            transform: scale(1.05);
+        }
 
     .file-upload {
         margin: 12px 0;
@@ -629,21 +631,19 @@
             border: 1px solid #ddd;
         }
 
-    .btn.btnBack{
+    .btn.btnBack {
         background: #ffffff;
         color: #f54e00;
         width: auto;
     }
 
-    .addIncidentBtns .btn-primary{
-        width:auto !important;
+    .addIncidentBtns .btn-primary {
+        width: auto !important;
     }
-    .eventCheck{
-        margin-right:10px;
-    }
-   
 
-    
+    .eventCheck {
+        margin-right: 10px;
+    }
 </style>
 
 <div class="incidentSec">
@@ -690,6 +690,7 @@
 
 <!-- Placeholder where modal will be injected -->
 <div id="incidentAddEditModalContainer"></div>
+<div id="incidentDetailModalContainer"></div>
 
 <div class="modal fade" id="viewIncidentModal" tabindex="-1" aria-labelledby="viewIncidentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -884,7 +885,7 @@
                                 </div>
 
                                 <!-- Preview -->
-                               @*  <div class="mb-3">
+                                @*  <div class="mb-3">
                                     <label class="form-label d-block">Preview:</label>
                                     <img id="photoPreview1" src="" alt="No image selected"
                                          class="img-thumbnail d-none" style="max-width: 300px;">
@@ -988,7 +989,9 @@
                                                     <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
                                                     <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
                                                 </ul>
-                                            </div>  ss="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
+                                            </div>
+                                            <i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345
+                                        </td>
                                         <td>Main St & 1st Ave</td>
                                         <td>Power Outage</td>
                                         <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
@@ -1026,7 +1029,7 @@
                                                     Validated
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                   <li><div class="dropdown-item text-submitted">Submitted</div></li>
+                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
                                                     <li><div class="dropdown-item text-validated">Validated</div></li>
                                                     <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
                                                     <li><div class="dropdown-item text-started" href="#">Started</div></li>
@@ -1232,116 +1235,117 @@
             </div>
         </div>
     </div>
+    <!-- ✅ Dynamic Incident Details Modal -->
+   </div>
+
+    <script src="~/js/custom/loader/loader.js"></script>
+    <script src="~/js/masking/initiate-masking.js"></script>
+    <script src="~/js/views/incident/incidentform.js"></script>
 
 
-<script src="~/js/custom/loader/loader.js"></script>
-<script src="~/js/masking/initiate-masking.js"></script>
-<script src="~/js/views/incident/incidentform.js"></script>
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+
+                   const photoInput1 = document.getElementById('photoInput1');
+            const photoPreview = document.getElementById('photoPreview1');
+
+            photoInput1.addEventListener('change', function() {
+              const file = this.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                  photoPreview.src = e.target.result;
+                  photoPreview.classList.remove('d-none');
+                }
+                reader.readAsDataURL(file);
+              } else {
+                photoPreview.src = "";
+                photoPreview.classList.add('d-none');
+              }
+            });
+
+            const eventSelect = document.getElementById('eventTypeId');
+
+            const eventSections  = {
+                gas: document.getElementById('gasOptions'),
+                equipment: document.getElementById('equipmentOptions'),
+                thirdparty: document.getElementById('thirdpartyOptions'),
+                natural: document.getElementById('naturalOptions'),
+                other: document.getElementById('otherInputWrapper')
+            };
+
+            eventSelect.addEventListener('change', function () {
+                // hide all first
+                Object.values(eventSections).forEach(sec => sec.classList.add('d-none'));
+
+                // show selected
+                const selected = this.value;
+                if (eventSections[selected]) {
+                    eventSections[selected].classList.remove('d-none');
+                }
+            });
+
+            const severitySelect  = document.getElementById('severity');
+
+            const severitySections  = {
+              moderate: document.getElementById('moderateOptions'),
+              low: document.getElementById('lowOptions'),
+              high: document.getElementById('highOptions'),
+
+            };
+
+            severitySelect.addEventListener('change', function () {
+              // hide all sections first
+              Object.values(severitySections).forEach(sec => sec.classList.add('d-none'));
+
+              // show the relevant one
+              const selected = this.value;
+              if (severitySections[selected]) {
+                severitySections[selected].classList.remove('d-none');
+              }
+            });
+
+            //   const photoInput = document.getElementById('photoInput');
+            // const photoPreview = document.getElementById('photoPreview');
+
+            photoInput.addEventListener('change', function() {
+              const file = this.files[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                  photoPreview.src = e.target.result;
+                  photoPreview.classList.remove('d-none');
+                }
+                reader.readAsDataURL(file);
+              } else {
+                photoPreview.src = "";
+                photoPreview.classList.add('d-none');
+              }
+            });
+                 // ✅ Dynamic Incident View Loader
+            
+             $('#historyIncidentModal').on('shown.bs.modal', function () {
+              $(this).find('.modal-dialog').css('max-width', '1200px');
+            });
+             $('#addIncidentModal').on('shown.bs.modal', function () {
+              $(this).find('.modal-dialog').css('max-width', '1200px');
+            });
+             $('#viewIncidentModal').on('shown.bs.modal', function () {
+              $(this).find('.modal-dialog').css('max-width', '1200px');
+            });
+             $('#noteIncidentModal').on('shown.bs.modal', function () {
+              $(this).find('.modal-dialog').css('max-width', '1200px');
+            });
 
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
 
-           const photoInput1 = document.getElementById('photoInput1');
-    const photoPreview = document.getElementById('photoPreview1');
 
-    photoInput1.addEventListener('change', function() {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          photoPreview.src = e.target.result;
-          photoPreview.classList.remove('d-none');
+        function removeImage() {
+          imageUpload.value = "";
+          fileName.textContent = "No file chosen";
+          preview.innerHTML = "";
+          removeBtn.style.display = "none";
         }
-        reader.readAsDataURL(file);
-      } else {
-        photoPreview.src = "";
-        photoPreview.classList.add('d-none');
-      }
-    });
 
-    const eventSelect = document.getElementById('eventTypeId');
-
-    const eventSections  = {
-        gas: document.getElementById('gasOptions'),
-        equipment: document.getElementById('equipmentOptions'),
-        thirdparty: document.getElementById('thirdpartyOptions'),
-        natural: document.getElementById('naturalOptions'),
-        other: document.getElementById('otherInputWrapper')
-    };
-
-    eventSelect.addEventListener('change', function () {
-        // hide all first
-        Object.values(eventSections).forEach(sec => sec.classList.add('d-none'));
-
-        // show selected
-        const selected = this.value;
-        if (eventSections[selected]) {
-            eventSections[selected].classList.remove('d-none');
-        }
-    });
-
-    const severitySelect  = document.getElementById('severity');
-
-    const severitySections  = {
-      moderate: document.getElementById('moderateOptions'),
-      low: document.getElementById('lowOptions'),
-      high: document.getElementById('highOptions'),
-
-    };
-
-    severitySelect.addEventListener('change', function () {
-      // hide all sections first
-      Object.values(severitySections).forEach(sec => sec.classList.add('d-none'));
-
-      // show the relevant one
-      const selected = this.value;
-      if (severitySections[selected]) {
-        severitySections[selected].classList.remove('d-none');
-      }
-    });
-
-    //   const photoInput = document.getElementById('photoInput');
-    // const photoPreview = document.getElementById('photoPreview');
-
-    photoInput.addEventListener('change', function() {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          photoPreview.src = e.target.result;
-          photoPreview.classList.remove('d-none');
-        }
-        reader.readAsDataURL(file);
-      } else {
-        photoPreview.src = "";
-        photoPreview.classList.add('d-none');
-      }
-    });
-
-
-     $('#historyIncidentModal').on('shown.bs.modal', function () {
-      $(this).find('.modal-dialog').css('max-width', '1200px');
-    });
-     $('#addIncidentModal').on('shown.bs.modal', function () {
-      $(this).find('.modal-dialog').css('max-width', '1200px');
-    });
-     $('#viewIncidentModal').on('shown.bs.modal', function () {
-      $(this).find('.modal-dialog').css('max-width', '1200px');
-    });
-     $('#noteIncidentModal').on('shown.bs.modal', function () {
-      $(this).find('.modal-dialog').css('max-width', '1200px');
-    });
-
-
-
-
-function removeImage() {
-  imageUpload.value = "";
-  fileName.textContent = "No file chosen";
-  preview.innerHTML = "";
-  removeBtn.style.display = "none";
-}
-
-    });
-</script>
+            });
+    </script>

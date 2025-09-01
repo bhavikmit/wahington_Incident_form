@@ -311,6 +311,24 @@
         LoadIncidentModal(id);   // load modal
     });
 
+    $(document).off("click", "view-incident");
+    $(document).on("click", ".view-incident", function () {
+        var id = $(this).data("id");
+        $.get("/Incidents/GetIncidentDetails", { id: id }, function (data) {
+
+            $("#incidentDetailModalContainer").empty().html(data);
+
+            // Show Bootstrap modal
+            $("#incidentDetailsModal").modal("show");
+
+
+            //$("#incidentDetailModalContainer").html(data);
+            //var modal = new bootstrap.Modal(document.getElementById("incidentDetailsModal"));
+            //modal.show();
+        });
+    });
+
+
     // Show error: red border + message
     function showError($field) {
         $field.css("border", "1px solid red");

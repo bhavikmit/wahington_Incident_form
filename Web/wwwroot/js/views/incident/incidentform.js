@@ -71,19 +71,6 @@
 
         var isValid = true;
 
-        //$("#pills-detail").find(".eventCheck").each(function () {
-        //    var $field = $(this);
-        //    var value = $.trim($field.val());
-
-        //    if (value === "") {
-        //        isValid = false;
-        //        showError($field);
-        //    }
-        //    else {
-        //        clearError($field);
-        //    }
-        //});
-
         if (!$("#IsOtherEvent").is(":checked")) {
             if ($(".eventCheck input[type='radio']:checked").length === 0) {
                 isValid = false;

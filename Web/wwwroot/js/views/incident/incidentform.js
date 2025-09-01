@@ -3,7 +3,7 @@
     $("#statusSelect").val('');
     $("#severitySelect").val('');
 
-    GetIncidentList(0, 0);
+    GetIncidentList(0, 0, "");
 
     $(document).off("click", "#nextToIncidentLocation");
     $(document).on("click", "#nextToIncidentLocation", function (e) {
@@ -71,31 +71,37 @@
 
         var isValid = true;
 
-        // Loop through all required fields
-        $("#pills-detail").find("#eventTypeId").each(function () {
-            var $field = $(this);
-            var value = $.trim($field.val());
+        //$("#pills-detail").find(".eventCheck").each(function () {
+        //    var $field = $(this);
+        //    var value = $.trim($field.val());
 
-            // Dropdown special check
-            if ($field.is("select") && (value === "" || value === "--Select--")) {
+        //    if (value === "") {
+        //        isValid = false;
+        //        showError($field);
+        //    }
+        //    else {
+        //        clearError($field);
+        //    }
+        //});
+
+        if (!$("#IsOtherEvent").is(":checked")) {
+            if ($(".eventCheck input[type='radio']:checked").length === 0) {
                 isValid = false;
-                showError($field);
+                $(".eventCheck input[type='radio']").css("outline", "2px solid red");
+            } else {
+                $(".eventCheck input[type='radio']").css("outline", "none");
             }
-            else if (value === "") {
+        }
+        else {
+            $(".eventCheck input[type='radio']").css("outline", "none");
+            var OtherEventDetailText = $("#OtherEventDetail").val();
+            if (OtherEventDetailText == "") {
                 isValid = false;
-                showError($field);
+                showError($("#OtherEventDetail"));
             }
             else {
-                clearError($field);
+                clearError($("#OtherEventDetail"));
             }
-        });
-
-        // ✅ Checkbox validation
-        if ($(".eventCheck input[type='checkbox']:checked").length === 0) {
-            isValid = false;
-            $(".eventCheck input[type='checkbox']").css("outline", "2px solid red");
-        } else {
-            $(".eventCheck input[type='checkbox']").css("outline", "none");
         }
 
         if (isValid) {
@@ -232,6 +238,8 @@
         var incidentID = $(this).closest('tr').attr('id');
         var status = $(this).find('div.dropdown-item').attr('data-id');
 
+        status = $.trim(status);
+
         ChangeIncidentStatus(incidentID, status);
     });
 
@@ -240,15 +248,10 @@
 
         var statusID = $("#statusSelect").val() != "" ? $("#statusSelect").val() : 0;
         var severityID = $("#severitySelect").val() != "" ? $("#severitySelect").val() : 0;
+        var globalSearch = $("#global_search_value").val() != "" ? $("#global_search_value").val() : "";
 
         e.preventDefault();
-        GetIncidentList(statusID, severityID);
-    });
-
-    $(document).off("change", "#AddIncident");
-    $(document).on("change", "#AddIncident", function (e) {
-
-
+        GetIncidentList(statusID, severityID, globalSearch);
     });
 
     $(document).off("change", "#isSameCallerAddress");
@@ -300,7 +303,7 @@
     // Open Add
     // Add new
     $(document).on("click", "#btnAddIncident", function () {
-        resetIncidentForm();   
+        resetIncidentForm();
         LoadIncidentModal();   // load modal
     });
 
@@ -310,6 +313,45 @@
         resetIncidentForm();
         LoadIncidentModal(id);   // load modal
     });
+
+
+    $(document).off("change", "#IsOtherEvent");
+    $(document).on("change", "#IsOtherEvent", function (e) {
+        if ($(this).is(":checked")) {
+            $(".OtherEventDetail").show();
+            $(".eventCheck input[type='radio']").prop("checked", false);
+        }
+        else {
+            $("#OtherEventDetail").val('');
+            $(".OtherEventDetail").hide();
+        }
+    });
+
+    $(document).off("keyup", "#global_search_value");
+    $(document).on("keyup", "#global_search_value", function (e) {
+        var description = $(this).val().trim();
+        var statusID = $("#statusSelect").val() != "" ? $("#statusSelect").val() : 0;
+        var severityID = $("#severitySelect").val() != "" ? $("#severitySelect").val() : 0;
+
+        e.preventDefault();
+
+        if (description.length >= 3) {
+            GetIncidentList(statusID, severityID, description);
+        }
+        else {
+            GetIncidentList(statusID, severityID,"");
+        }
+    });
+
+    $(document).off("change", ".eventCheck input[type='radio']");
+    $(document).on("change", ".eventCheck input[type='radio']", function () {
+        if ($(".eventCheck input[type='radio']:checked").length > 0) {
+            $(".OtherEventDetail").hide();
+            $("#OtherEventDetail").val('');
+            $("#IsOtherEvent").prop("checked", false); // uncheck if needed
+        }
+    });
+
 
     // Show error: red border + message
     function showError($field) {
@@ -323,18 +365,46 @@
     }
 });
 
+//function ShowImage(input) {
+//    if (input.files && input.files[0]) {
+//        var reader = new FileReader();
+//        reader.onload = function (e) {
+//            $('#image-thumbnail').attr('src', e.target.result);
+//        }
+//        reader.readAsDataURL(input.files[0]);
+//    }
+//}
+
 function ShowImage(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            $('#image-thumbnail').attr('src', e.target.result);
-        }
-        reader.readAsDataURL(input.files[0]);
+    if (input.files && input.files.length > 0) {
+        var preview = $('#image-thumbnails');
+        preview.empty(); // clear previous thumbnails if needed
+
+        Array.from(input.files).forEach(function (file) {
+            if (file.type.match('image.*')) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = $('<img>')
+                        .attr('src', e.target.result)
+                        .addClass('img-thumbnail me-2 mb-2')
+                        .css({ 'max-width': '100px', 'max-height': '100px' });
+                    preview.append(img);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                var fileIcon = $('<div>')
+                    .addClass('file-item me-2 mb-2 p-2 border rounded')
+                    .html('<i class="fa fa-file"></i> ' + file.name);
+                preview.append(fileIcon);
+            }
+        });
     }
 }
+
+
 function RemoveImage() {
     document.getElementById("Image").value = "";
-    $("#image-thumbnail").removeAttr('src');
+    $(".img-thumbnail").remove();
     $("#hidden-image-url").val(null);
 }
 
@@ -400,7 +470,7 @@ async function SaveIncidentForm() {
         if (result.success) {
             SwalSuccessAlert(result.data);
             $(".btn-close").trigger("click");
-            GetIncidentList(0, 0);
+            GetIncidentList(0, 0, "");
         } else {
             SwalErrorAlert(result.message || "Failed to save incident.");
         }
@@ -412,9 +482,9 @@ async function SaveIncidentForm() {
     }
 }
 
-async function GetIncidentList(statusID, severityID) {
+async function GetIncidentList(statusID, severityID, description) {
     try {
-        let payload = { severityId: severityID, statusId: statusID };
+        let payload = { severityId: severityID, statusId: statusID, description: description };
 
         showLoader($(".main-content"));
 
@@ -446,7 +516,7 @@ async function ChangeIncidentStatus(incidentID, statusID) {
         // Prepare request payload
         let payload = {
             incidentId: incidentID,
-            statusId: statusID
+            status: statusID
         };
 
         // Send request
@@ -462,7 +532,7 @@ async function ChangeIncidentStatus(incidentID, statusID) {
 
         if (response.ok && result.success) {
             SwalSuccessAlert(result.data || "Status updated successfully.");
-            GetIncidentList(0, 0);
+            GetIncidentList(0, 0, "");
         } else {
             SwalErrorAlert(result.message || "Failed to change status of incident.");
         }
@@ -503,6 +573,10 @@ async function LoadIncidentModal(id = 0) {
         hideLoader($(".main-content"));
         maskTelephone(".input-telephone");
         $("#addIncidentModalModalLabel").text(id > 0 ? "Update Incident" : "Add Incident");
+
+        //if (id > 0) {
+        //    displaySavedAttachments($.makeArray($("#hidden-image-url").val()));
+        //}
     }
 }
 
@@ -530,3 +604,34 @@ function resetIncidentForm() {
     });
 }
 
+//function displaySavedAttachments(attachmentUrls) {
+//    var preview = $('#image-thumbnail');
+//    preview.empty();
+
+//    attachmentUrls.forEach(function (url) {
+//        var fileName = url.split('/').pop();
+//        var isImage = /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(fileName);
+
+//        if (isImage) {
+//            fetch(url)
+//                .then(response => response.blob())
+//                .then(blob => {
+//                    var reader = new FileReader();
+//                    reader.onloadend = function () {
+//                        var img = $('<img>').attr('src', reader.result)
+//                            .addClass('img-thumbnail me-2 mb-2')
+//                            .css({ 'max-width': '100px', 'max-height': '100px' });
+//                        preview.append(img);
+//                    };
+//                    reader.readAsDataURL(blob); // Convert blob -> Base64
+//                })
+//                .catch(err => {
+//                    console.error("Error loading image:", err);
+//                });
+//        } else {
+//            var fileIcon = $('<div>').addClass('file-item me-2 mb-2 p-2 border rounded')
+//                .html('<i class="fa fa-file"></i> ' + fileName.split('_').slice(1).join('_'));
+//            preview.append(fileIcon);
+//        }
+//    });
+//}

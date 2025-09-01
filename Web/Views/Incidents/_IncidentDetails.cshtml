@@ -8,22 +8,28 @@
     <div class="row">
         <label class="form-label">Type of Event<span class="text-danger">*</span></label>
         <div class="col-md-12">
-            <div class="d-flex align-items-center">
-                @* @foreach (var item in Model.incidentDetails.EventTypes)
-                {
-                    <div class="mb-3 eventCheck">
-                        <input type="checkbox" name="eventTypes.Id" id="@item.Value" class="form-check-input">
-                        <label class="form-check-label" for="@item.Value">@item.Text</label>
-                    </div>
-                } *@
+            <div class="eventType">
+              
 
-                @foreach (var et in Model.incidentDetails.EventTypes)
+                @* @foreach (var et in Model.incidentDetails.EventTypes)
                 {
                     var id = "eventType_" + et.Value;
                     var checkedAttr = Model.incidentDetails.EventTypeIds != null ? (Model.incidentDetails.EventTypeIds.Contains(et.Value) ? "checked" : "") : "";
                     <div class="mb-3 eventCheck">
                         <input name="eventTypes.Id" type="checkbox" class="form-check-input"
                                data-val="true" data-val-required="The Event Type field is required." @checkedAttr value="@et.Value" id="@id">
+                        <label class="form-check-label" for="@id">@et.Text</label>
+                    </div>
+                } *@
+
+
+                @foreach (var et in Model.incidentDetails.EventTypes)
+                {
+                    var id = "eventType_" + et.Value;
+                    var checkedAttr = Model.incidentDetails.EventTypeIds != null ? (Model.incidentDetails.EventTypeIds.Contains(et.Value) ? "checked" : "") : "";
+                    <div class="form-check form-check-inline eventCheck">
+                        <input class="form-check-input" type="radio" id="@id" name="eventTypes.Id"
+                               value="@et.Value" data-val="true" data-val-required="The Event Type field is required." @checkedAttr>
                         <label class="form-check-label" for="@id">@et.Text</label>
                     </div>
                 }
@@ -34,7 +40,7 @@
                     <input type="checkbox" id="IsOtherEvent" class="form-check-input" asp-for="incidentDetails.IsOtherEvent">
                     <label class="form-check-label" asp-for="incidentDetails.IsOtherEvent">Other</label>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 OtherEventDetail" style="@(Model.incidentDetails.IsOtherEvent ? "display:block" : "display:none")">
                     <input type="text" id="OtherEventDetail" class="form-control" asp-for="incidentDetails.OtherEventDetail">
                 </div>
             </div>

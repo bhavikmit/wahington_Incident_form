@@ -177,4 +177,10 @@
 		<Folder Include="Views\Report\WorkOrderRaw\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Storage\uploads\incidents\b8d2eb24-5c25-439d-b27c-863f7ecd5775_02222025_045010810.png">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 </Project>

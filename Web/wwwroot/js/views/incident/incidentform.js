@@ -327,6 +327,38 @@
             //modal.show();
         });
     });
+    $(document).on("click", ".note-incident", function () {
+        var id = $(this).data("id");
+        $.get("/IncidentNotes/GetNotesModal", { incidentId: id }, function (data) {
+            $("#incidentNotesModalContainer").html(data);
+            $("#noteIncidentModal").modal("show");
+        });
+    });
+
+    $(document).on("submit", "#addNoteForm", function (e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: "/IncidentNotes/AddNote",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (html) {
+                // ✅ Replace only the notes log
+                $("#notesLogContainer").html(html);
+
+                // Reset form
+                $("#addNoteForm")[0].reset();
+            },
+            error: function () {
+                alert("Error while adding note.");
+            }
+        });
+    });
+
 
 
     // Show error: red border + message

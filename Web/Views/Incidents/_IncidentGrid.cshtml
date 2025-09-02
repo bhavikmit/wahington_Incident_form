@@ -31,47 +31,36 @@
 
                             @if (item.StatusLegend == StatusLegendEnum.Submitted.ToString())
                             {
-                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Submitted
-                                </button>
+                                <span class="dot status-submitted"></span>
                             }
                             else if (item.StatusLegend == StatusLegendEnum.Dispatched.ToString())
                             {
-                                <button class="btn status-dispatched rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dispatched
-                                </button>
+                                <span class="dot status-dispatched"></span>
                             }
                             else if (item.StatusLegend == StatusLegendEnum.Started.ToString())
                             {
-                                <button class="btn status-started rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Started
-                                </button>
+                                <span class="dot status-started"></span>
                             }
                             else if (item.StatusLegend == StatusLegendEnum.Completed.ToString())
                             {
-                                <button class="btn status-completed rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Completed
-                                </button>
+                                <span class="dot status-completed"></span>
                             }
                             else if (item.StatusLegend == StatusLegendEnum.Cancelled.ToString())
                             {
-                                <button class="btn status-cancelled rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Cancelled
-                                </button>
+                                <span class="dot status-cancelled"></span>
                             }
                             else
                             {
-                                <button class="btn status-unknown rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Unknown
-                                </button>
+                                <span class="dot status-unknown"></span>
+
                             }
-                            <ul class="dropdown-menu">
+                            @* <ul class="dropdown-menu">
                                 <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-submitted" data-id="Submitted">Submitted</div></li>
                                 <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-dispatched" href="#" data-id="Dispatched">Dispatched</div></li>
                                 <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-started" href="#" data-id="Started">Started</div></li>
                                 <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-completed" href="#" data-id="Completed">Completed</div></li>
                                 <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-cancelled" href="#" data-id="Cancelled">Cancelled</div></li>
-                            </ul>
+                            </ul> *@
                         </div>
                     </td>
                     <td>

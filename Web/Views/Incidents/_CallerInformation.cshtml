@@ -36,7 +36,7 @@
             <div class="mb-3">
                 <label class="form-label">Relationship <span class="text-danger">*</span></label>
                 <select class="form-select" id="relationaship" required asp-for="incidentCellerInformation.RelationshipId">
-                    <option value="">--Select--</option>
+                    <option value="">Select Relationship</option>
                     @foreach (var item in Model.incidentCellerInformation.Relationships)
                     {
                         <option value="@item.Value">@item.Text</option>

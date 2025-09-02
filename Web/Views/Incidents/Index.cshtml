@@ -4,57 +4,60 @@
 
 <style>
     .text-submitted {
-        color: red;
+        color: #bfbfbf;
     }
-
+    .status-unknown{
+        background-color: #0000FFFF;
+    }
     .status-submitted {
-        background-color: red;
+        background-color: #bfbfbf;
     }
 
     .status-validated {
-        background-color: darkorange;
+        background-color: #ccffcc;
     }
 
     .text-validated {
-        color: darkorange;
+        color: #ccffcc;
         font-weight: 600;
     }
 
     .status-dispatched {
-        background-color: orange;
+        background-color: #ccffcc;
     }
 
     .text-dispatched {
-        color: orange;
+        color: #ccffcc;
         font-weight: 600;
     }
 
     .status-started {
-        background-color: blue;
+        background-color: #66cc66;
     }
 
     .text-started {
-        color: blue;
+        color: #66cc66;
         font-weight: 600;
     }
 
     .status-completed {
-        background-color: limegreen;
+        background-color: #003300;
     }
 
     .text-completed {
-        color: limegreen;
+        color: #003300;
         font-weight: 600;
     }
 
     .status-cancelled {
-        background-color: grey;
+        background-color: #cc0000;
     }
 
     .text-cancelled {
-        color: gray;
+        color: #cc0000;
         font-weight: 600;
     }
+
 
     .badge-low {
         background-color: limegreen;
@@ -646,6 +649,49 @@
         width: 100%;
         display: block;
     }
+
+    .Statuslegend {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        
+        font-size: 14px;
+        margin-left: 25px;
+    }
+
+    .Statuslegend .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .Statuslegend .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .submitted {
+        background-color: #bfbfbf;
+    }
+    /* Grey */
+    .dispacthed {
+        background-color: #ccffcc;
+    }
+    /* Light Green */
+    .started {
+        background-color: #66cc66;
+    }
+    /* Green */
+    .complete {
+        background-color: #003300;
+    }
+    /* Dark Green */
+    .rejected {
+        background-color: #cc0000;
+    }
+    /* Red */
 </style>
 
 <div class="incidentSec">
@@ -666,7 +712,7 @@
         </div>
         <div class="statusFilter">
             <select class="form-select" id="statusSelect" placeholder="status">
-                <option value="" selected>--Select--</option>
+                <option value="" selected>Select Status</option>
                 @foreach (var item in Model.statusLegends)
                 {
                     <option value="@item.Value">@item.Text</option>
@@ -675,12 +721,19 @@
         </div>
         <div class="severityFilter">
             <select class="form-select" id="severitySelect" placeholder="Severity">
-                <option value="" selected>--Select--</option>
+                <option value="" selected>Select Severity</option>
                 @foreach (var item in Model.severityLevels)
                 {
                     <option value="@item.Value">@item.Text</option>
                 }
             </select>
+        </div>
+        <div class="Statuslegend">
+            <div class="legend-item"><span class="dot submitted"></span> Submitted</div>
+            <div class="legend-item"><span class="dot dispacthed"></span> Dispatched</div>
+            <div class="legend-item"><span class="dot started"></span> Started</div>
+            <div class="legend-item"><span class="dot complete"></span> Completed</div>
+            <div class="legend-item"><span class="dot rejected"></span> Cancelled</div>
         </div>
 
     </div>

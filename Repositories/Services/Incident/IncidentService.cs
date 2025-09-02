@@ -311,7 +311,9 @@ namespace Repositories.Common
                         SeverityId = item.SeverityLevelId,
                         StatusLegend = item.StatusLegend.Name,
                         StatusLegendColor = item.StatusLegend.Color,
-                        StatusLegendId = item.StatusLegendId
+                        StatusLegendId = item.StatusLegendId,
+                        RelationShipName = item.Relationship.Name,
+                        RelationShipId = item.RelationshipId,
                     });
                 }
                 return incidentGridViews;

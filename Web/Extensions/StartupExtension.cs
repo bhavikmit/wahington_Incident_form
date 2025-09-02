@@ -48,6 +48,7 @@ using Repositories.Services.Dashboard;
 using Repositories.Services.Dashboard.Interface;
 using Repositories.Services.ExcelHelper;
 using Repositories.Services.ExcelHelper.Interface;
+using Repositories.Services.IncidentHistory.Interface;
 using Repositories.Services.Report;
 using Repositories.Services.Report.Common;
 using Repositories.Services.Report.Common.interfaces;
@@ -207,6 +208,7 @@ namespace Web.Extensions
             services.AddScoped(typeof(IStatusLegendService<,,>), typeof(StatusLegendService<,,>));
             services.AddScoped<IIncidentService, IncidentService>();
             services.AddScoped<IIncidentNoteService, IncidentNoteService>();
+            services.AddScoped<IIncidentHistoryService, IncidentHistoryService>();
 
             services.AddDefaultCorrelationId();
         }

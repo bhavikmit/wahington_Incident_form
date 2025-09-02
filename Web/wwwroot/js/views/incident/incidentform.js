@@ -388,6 +388,18 @@
         });
     });
 
+    $(document).on("click", ".historyIcon", function () {
+        var id = $(this).data("id");
+
+        $.get("/IncidentHistory/GetHistoryModal", { incidentId: id }, function (data) {
+            // Inject modal content into container
+            $("#incidentHistoryContainer").html(data);
+
+            // Show modal
+            $("#historyIncidentModal").modal("show");
+        });
+    });
+
 
 
     // Show error: red border + message

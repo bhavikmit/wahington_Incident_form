@@ -326,6 +326,42 @@ namespace Repositories.Common
             }
         }
 
+        //public async Task<string?> ChangeIncidentStatus(long incidentId, string statusText)
+        //{
+        //    await using var transaction = await _db.Database.BeginTransactionAsync();
+
+        //    try
+        //    {
+        //        var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == incidentId);
+
+        //        if (incident == null)
+        //        {
+        //            await transaction.RollbackAsync();
+        //            return null; // or string.Empty if you want
+        //        }
+
+        //        if (Enum.TryParse<StatusLegendEnum>(statusText, true, out var status))
+        //        {
+        //            incident.StatusLegendId = (long)status;
+
+        //            await _db.SaveChangesAsync();
+        //            await transaction.CommitAsync();
+        //        }
+        //        else
+        //        {
+        //            await transaction.RollbackAsync();
+        //            return null;
+        //        }
+
+        //        return incident.IncidentID;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await transaction.RollbackAsync();
+        //        _logger.LogError(ex, "Error ChangeIncidentStatus.");
+        //        return null; // or string.Empty
+        //    }
+        //}
         public async Task<string?> ChangeIncidentStatus(long incidentId, string statusText)
         {
             await using var transaction = await _db.Database.BeginTransactionAsync();
@@ -337,21 +373,41 @@ namespace Repositories.Common
                 if (incident == null)
                 {
                     await transaction.RollbackAsync();
-                    return null; // or string.Empty if you want
-                }
-
-                if (Enum.TryParse<StatusLegendEnum>(statusText, true, out var status))
-                {
-                    incident.StatusLegendId = (long)status;
-
-                    await _db.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                else
-                {
-                    await transaction.RollbackAsync();
                     return null;
                 }
+
+                // find matching status from StatusLegends table
+                var statusLegend = await _db.StatusLegends
+                    .FirstOrDefaultAsync(s => s.Name.ToLower() == statusText.ToLower());
+
+                if (statusLegend == null)
+                {
+                    await transaction.RollbackAsync();
+                    return null; // no such status in DB
+                }
+
+                // update incident status
+                incident.StatusLegendId = statusLegend.Id;
+                incident.UpdatedOn = DateTime.UtcNow;
+
+                // add history entry
+                var history = new IncidentHistory
+                {
+                    IncidentId = incident.Id,
+                    StatusLegendId = statusLegend.Id,
+                    Description = $"Status changed to {statusLegend.Name}",
+                    IsDeleted = false,
+                    ActiveStatus = Enums.ActiveStatus.Active,
+                    CreatedOn = DateTime.UtcNow,
+                    CreatedBy = 1,  // replace with current user id
+                    UpdatedOn = DateTime.UtcNow,
+                    UpdatedBy = 1   // replace with current user id
+                };
+
+                _db.IncidentHistories.Add(history);
+
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
 
                 return incident.IncidentID;
             }
@@ -359,9 +415,11 @@ namespace Repositories.Common
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error ChangeIncidentStatus.");
-                return null; // or string.Empty
+                return null;
             }
         }
+
+
 
         public async Task<IncidentViewModel> GetById(long incidentId)
         {

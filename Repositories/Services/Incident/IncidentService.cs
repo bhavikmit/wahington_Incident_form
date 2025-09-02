@@ -382,9 +382,9 @@ namespace Repositories.Common
         {
             await using var transaction = await _db.Database.BeginTransactionAsync();
 
-           try
-        {
-               var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == incidentId);
+            try
+            {
+                var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == incidentId);
 
                 if (incident == null)
                 {
@@ -440,7 +440,7 @@ namespace Repositories.Common
         public async Task<IncidentViewModel> GetById(long incidentId)
         {
             var incidentViewModel = new IncidentViewModel();
-            
+
             try
             {
                 incidentViewModel = await GetIncidentDropDown();

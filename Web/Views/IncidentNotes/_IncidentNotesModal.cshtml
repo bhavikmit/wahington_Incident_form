@@ -12,7 +12,7 @@
                 <div class="row">
                     <!-- Left side Communication Log -->
                     <div class="col-md-8">
-                        <div id="notesLogContainer">
+                        <div id="notesLogContainer" class="notes-log">
                             @await Html.PartialAsync("_IncidentNotesLog", Model.Notes)
                         </div>
                     </div>
@@ -64,6 +64,31 @@
     </div>
 </div>
 
+<style>
+    /* Scrollable Communication Log */
+    .notes-log {
+        max-height: 500px; /* Adjust as needed */
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background: #fff;
+    }
+
+        /* Optional: nice modern scrollbar for Chrome/Edge/Safari */
+        .notes-log::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .notes-log::-webkit-scrollbar-thumb {
+            background-color: #bbb;
+            border-radius: 4px;
+        }
+
+            .notes-log::-webkit-scrollbar-thumb:hover {
+                background-color: #888;
+            }
+</style>
+
 @section Scripts {
     <script>
         // Ajax submit for Add Note
@@ -90,6 +115,12 @@
                     alert("Error adding note.");
                 }
             });
+        });
+
+        // Auto-scroll when modal opens
+        $('#noteIncidentModal').on('shown.bs.modal', function () {
+            var container = $("#notesLogContainer");
+            container.scrollTop(container.prop("scrollHeight"));
         });
     </script>
 }

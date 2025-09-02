@@ -453,13 +453,7 @@ namespace Repositories.Common
                     Id = incident.Id,
                     DescriptionIssue = incident.DescriptionIssue,
                     severityLevelId = incident.SeverityLevelId,
-                    SeverityName = incident.SeverityLevel?.Name ?? string.Empty,
-                    SeverityColor = incident.SeverityLevel?.Color ?? string.Empty,
-                    StatusLegendName = incident.StatusLegend?.Name ?? string.Empty,
-                    StatusLegendColor = incident.StatusLegend?.Color ?? string.Empty,
-                    IncidentNumber = incident.IncidentID,
-                    CreatedOn = incident.CreatedOn,
-                    UpdatedOn = incident.UpdatedOn,
+
 
                     incidentDetails = new IncidentDetailsViewModel
                     {
@@ -467,6 +461,17 @@ namespace Repositories.Common
                         IsOtherEvent = incident.IsOtherEvent,
                         OtherEventDetail = incident.OtherEventDetail ?? string.Empty,
                         EventTypes = new List<SelectListItem>()
+                    },
+
+                    incidentDetailByIdViewModel = new IncidentDetailByIdViewModel()
+                    {
+                        SeverityName = incident.SeverityLevel?.Name ?? string.Empty,
+                        SeverityColor = incident.SeverityLevel?.Color ?? string.Empty,
+                        StatusLegendName = incident.StatusLegend?.Name ?? string.Empty,
+                        StatusLegendColor = incident.StatusLegend?.Color ?? string.Empty,
+                        IncidentNumber = incident.IncidentID,
+                        CreatedOn = incident.CreatedOn,
+                        UpdatedOn = incident.UpdatedOn,
                     },
 
                     incidentCellerInformation = new IncidentCellerInformationViewModel

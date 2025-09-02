@@ -14,33 +14,18 @@ public class IncidentNotesController : Controller
         _noteService = noteService;
         _db = db;
     }
-
     [HttpGet("GetNotesModal")]
     public async Task<IActionResult> GetNotesModal(long incidentId)
     {
-        var incident = await _db.Incidents
-            .Include(i => i.StatusLegend)
-            .Include(i => i.SeverityLevel)
-            .FirstOrDefaultAsync(i => i.Id == incidentId);
+        var viewModel = await _noteService.GetIncidentNotesModal(incidentId);
 
-        if (incident == null) return NotFound();
-
-        var notes = await _noteService.GetNotesByIncidentId(incidentId);
-
-        var viewModel = new IncidentNotesModalViewModel
-        {
-            IncidentId = incidentId,
-            Notes = notes,
-            Status = incident.StatusLegend?.Name ?? "Unknown",
-            Severity = incident.SeverityLevel?.Name ?? "Unknown",
-            IncidentType = "Gas Leak", // TODO: map properly from EventTypes if needed
-            Location = incident.LocationAddress ?? string.Empty
-        };
+        if (viewModel == null)
+            return NotFound();
 
         return PartialView("_IncidentNotesModal", viewModel);
     }
 
-   [HttpPost("AddNote")]
+    [HttpPost("AddNote")]
 public async Task<IActionResult> AddNote(long incidentId, string author, string noteType, string content, IFormFile? file)
 {
     string? fileUrl = null;

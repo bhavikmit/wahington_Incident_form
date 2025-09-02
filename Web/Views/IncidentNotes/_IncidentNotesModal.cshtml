@@ -25,7 +25,7 @@
                             <!-- AJAX-enabled form -->
                             <form id="addNoteForm" enctype="multipart/form-data">
                                 <input type="hidden" name="incidentId" value="@Model.IncidentId" />
-                                <input type="hidden" name="author" value="Current User" />
+                                <input type="hidden" name="author" value="@User.Identity?.Name" />
 
                                 <div class="form-group mb-2">
                                     <label>Note Type</label>

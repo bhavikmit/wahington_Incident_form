@@ -192,7 +192,7 @@
         var isValid = true;
 
         // Loop through all required fields
-        $("#pills-support").find("input[data-val-required], select[data-val-required], textarea[data-val-required]").each(function () {
+        $("#pills-support").find("select[data-val-required], textarea[data-val-required]").each(function () {
             var $field = $(this);
             var value = $.trim($field.val());
 
@@ -350,10 +350,6 @@
             // Show Bootstrap modal
             $("#incidentDetailsModal").modal("show");
 
-
-            //$("#incidentDetailModalContainer").html(data);
-            //var modal = new bootstrap.Modal(document.getElementById("incidentDetailsModal"));
-            //modal.show();
         });
     });
 

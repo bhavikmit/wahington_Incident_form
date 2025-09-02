@@ -75,11 +75,10 @@ namespace ViewModels.Incident
         public string VisibleDamageText { get; set; } = string.Empty;
         public string PeopleInjuredText { get; set; } = string.Empty;
         public string EvacuationRequiredText { get; set; } = string.Empty;
-
     }
     public class IncidentSupportingInfoViewModel
     {
-        public List<IFormFile> File { get; set; }
+        public List<IFormFile>? File { get; set; }
         public string Notes { get; set; } = default!;
         public string? ImageUrl { get; set; } = default!;
         public List<string> ImageUrls { get; set; } = new();

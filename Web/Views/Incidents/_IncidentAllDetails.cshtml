@@ -51,11 +51,15 @@
                             <div class="card p-3">
                                 <div class="section-title">Incident Photos</div>
                                 <div class="incident-photos">
-                                    @foreach (var img in Model.incidentSupportingInfoViewModel.ImageUrls)
+                                    @if (!string.IsNullOrEmpty(Model.incidentSupportingInfoViewModel.ImageUrl))
                                     {
-                                        <div class="photo-thumb">
-                                            <img src="@img" alt="Incident Photo" />
-                                        </div>
+                                        var urls = Model.incidentSupportingInfoViewModel.ImageUrl.Split(','); // assuming "," separated
+                                        foreach (var img in urls)
+                                        {
+                                            <div class="photo-thumb">
+                                                <img src="@img" alt="Incident Photo" />
+                                            </div>
+                                        }
                                     }
                                 </div>
                             </div>

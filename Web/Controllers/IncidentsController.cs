@@ -32,8 +32,15 @@ namespace Web.Controllers
 
             try
             {
-                var incidentId = await _iIncidentService.SaveIncident(incidentViewModel);
-
+                var incidentId = string.Empty;
+                if (incidentViewModel.Id > 0)
+                {
+                    incidentId = await _iIncidentService.UpdateIncident(incidentViewModel);
+                }
+                else
+                {
+                    incidentId = await _iIncidentService.SaveIncident(incidentViewModel);
+                }
                 if (string.IsNullOrWhiteSpace(incidentId))
                     return StatusCode(StatusCodes.Status500InternalServerError,
                         new { success = false, message = "Failed to save incident." });
@@ -64,12 +71,12 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> ChangeIncidentStatus([FromBody] ChangeStatusRequest request)
         {
-            if (request == null || request.IncidentId <= 0 || request.StatusId <= 0)
+            if (request == null || request.IncidentId <= 0 || string.IsNullOrWhiteSpace(request.Status))
             {
                 return BadRequest(new { success = false, message = "Invalid data." });
             }
 
-            var result = await _iIncidentService.ChangeIncidentStatus(request.IncidentId, request.StatusId);
+            var result = await _iIncidentService.ChangeIncidentStatus(request.IncidentId, request.Status);
 
             if (string.IsNullOrEmpty(result))
             {

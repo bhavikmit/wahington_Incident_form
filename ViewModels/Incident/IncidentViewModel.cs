@@ -79,7 +79,7 @@ namespace ViewModels.Incident
     }
     public class IncidentSupportingInfoViewModel
     {
-        public IFormFile File { get; set; }
+        public List<IFormFile> File { get; set; }
         public string Notes { get; set; } = default!;
         public string? ImageUrl { get; set; } = default!;
         public List<string> ImageUrls { get; set; } = new();
@@ -100,17 +100,21 @@ namespace ViewModels.Incident
         public string EventTypeId { get; set; }
         public long? SeverityId { get; set; }
         public string Severity { get; set; }
+
+        public long? RelationShipId { get; set; }
+        public string RelationShipName { get; set; }
         public string DescriptionIssue { get; set; }
         public string GasESIndicator { get; set; }
     }
     public class ChangeStatusRequest
     {
         public long IncidentId { get; set; }
-        public long StatusId { get; set; }
+        public string Status { get; set; }
     }
     public class FilterRequest
     {
         public long severityId { get; set; }
         public long statusId { get; set; }
+        public string description { get; set; }
     }
 }

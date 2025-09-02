@@ -48,7 +48,7 @@
         <div class="col-md-6">
             <div class="mb-3">
                 <label class="form-label" asp-for="incidentCellerInformation.CallTime">Caller Date & Time <span class="text-danger">*</span></label>
-                <input type="datetime-local" id="CallTimedatetime" class="form-control" asp-for="incidentCellerInformation.CallTime" />
+                <input type="datetime-local" disabled id="CallTimedatetime" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" class="form-control" asp-for="incidentCellerInformation.CallTime" />
                 <div class="invalid-feedback"></div>
             </div>
         </div>

@@ -119,9 +119,9 @@
         .customTableDropdown .dropdown-toggle::before {
             display: none;
             /*    width: 11px;
-                        filter: brightness(1) !important;
-                        left: 81% !important;
-                        rotate: 92deg !important; */
+                            filter: brightness(1) !important;
+                            left: 81% !important;
+                            rotate: 92deg !important; */
         }
 
         .customTableDropdown .dropdown-toggle.status-started::before {
@@ -652,6 +652,8 @@
 
     .eventCheck {
         margin-right: 10px;
+        width: 100%;
+        display: block;
     }
 </style>
 
@@ -1246,116 +1248,116 @@
         </div>
     </div>
     <!-- ✅ Dynamic Incident Details Modal -->
-   </div>
+</div>
 
-    <script src="~/js/custom/loader/loader.js"></script>
-    <script src="~/js/masking/initiate-masking.js"></script>
-    <script src="~/js/views/incident/incidentform.js"></script>
-
-
-    <script>
-            document.addEventListener("DOMContentLoaded", function () {
-
-                   const photoInput1 = document.getElementById('photoInput1');
-            const photoPreview = document.getElementById('photoPreview1');
-
-            photoInput1.addEventListener('change', function() {
-              const file = this.files[0];
-              if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                  photoPreview.src = e.target.result;
-                  photoPreview.classList.remove('d-none');
-                }
-                reader.readAsDataURL(file);
-              } else {
-                photoPreview.src = "";
-                photoPreview.classList.add('d-none');
-              }
-            });
-
-            const eventSelect = document.getElementById('eventTypeId');
-
-            const eventSections  = {
-                gas: document.getElementById('gasOptions'),
-                equipment: document.getElementById('equipmentOptions'),
-                thirdparty: document.getElementById('thirdpartyOptions'),
-                natural: document.getElementById('naturalOptions'),
-                other: document.getElementById('otherInputWrapper')
-            };
-
-            eventSelect.addEventListener('change', function () {
-                // hide all first
-                Object.values(eventSections).forEach(sec => sec.classList.add('d-none'));
-
-                // show selected
-                const selected = this.value;
-                if (eventSections[selected]) {
-                    eventSections[selected].classList.remove('d-none');
-                }
-            });
-
-            const severitySelect  = document.getElementById('severity');
-
-            const severitySections  = {
-              moderate: document.getElementById('moderateOptions'),
-              low: document.getElementById('lowOptions'),
-              high: document.getElementById('highOptions'),
-
-            };
-
-            severitySelect.addEventListener('change', function () {
-              // hide all sections first
-              Object.values(severitySections).forEach(sec => sec.classList.add('d-none'));
-
-              // show the relevant one
-              const selected = this.value;
-              if (severitySections[selected]) {
-                severitySections[selected].classList.remove('d-none');
-              }
-            });
-
-            //   const photoInput = document.getElementById('photoInput');
-            // const photoPreview = document.getElementById('photoPreview');
-
-            photoInput.addEventListener('change', function() {
-              const file = this.files[0];
-              if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                  photoPreview.src = e.target.result;
-                  photoPreview.classList.remove('d-none');
-                }
-                reader.readAsDataURL(file);
-              } else {
-                photoPreview.src = "";
-                photoPreview.classList.add('d-none');
-              }
-            });
-                 // ✅ Dynamic Incident View Loader
-            
-             $('#historyIncidentModal').on('shown.bs.modal', function () {
-              $(this).find('.modal-dialog').css('max-width', '1200px');
-            });
-             $('#addIncidentModal').on('shown.bs.modal', function () {
-              $(this).find('.modal-dialog').css('max-width', '1200px');
-            });
-             $('#viewIncidentModal').on('shown.bs.modal', function () {
-              $(this).find('.modal-dialog').css('max-width', '1200px');
-            });
-             $('#noteIncidentModal').on('shown.bs.modal', function () {
-              $(this).find('.modal-dialog').css('max-width', '1200px');
-            });
+<script src="~/js/custom/loader/loader.js"></script>
+<script src="~/js/masking/initiate-masking.js"></script>
+<script src="~/js/views/incident/incidentform.js"></script>
 
 
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+               const photoInput1 = document.getElementById('photoInput1');
+        const photoPreview = document.getElementById('photoPreview1');
+
+        photoInput1.addEventListener('change', function() {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              photoPreview.src = e.target.result;
+              photoPreview.classList.remove('d-none');
+            }
+            reader.readAsDataURL(file);
+          } else {
+            photoPreview.src = "";
+            photoPreview.classList.add('d-none');
+          }
+        });
+
+        const eventSelect = document.getElementById('eventTypeId');
+
+        const eventSections  = {
+            gas: document.getElementById('gasOptions'),
+            equipment: document.getElementById('equipmentOptions'),
+            thirdparty: document.getElementById('thirdpartyOptions'),
+            natural: document.getElementById('naturalOptions'),
+            other: document.getElementById('otherInputWrapper')
+        };
+
+        eventSelect.addEventListener('change', function () {
+            // hide all first
+            Object.values(eventSections).forEach(sec => sec.classList.add('d-none'));
+
+            // show selected
+            const selected = this.value;
+            if (eventSections[selected]) {
+                eventSections[selected].classList.remove('d-none');
+            }
+        });
+
+        const severitySelect  = document.getElementById('severity');
+
+        const severitySections  = {
+          moderate: document.getElementById('moderateOptions'),
+          low: document.getElementById('lowOptions'),
+          high: document.getElementById('highOptions'),
+
+        };
+
+        severitySelect.addEventListener('change', function () {
+          // hide all sections first
+          Object.values(severitySections).forEach(sec => sec.classList.add('d-none'));
+
+          // show the relevant one
+          const selected = this.value;
+          if (severitySections[selected]) {
+            severitySections[selected].classList.remove('d-none');
+          }
+        });
+
+        //   const photoInput = document.getElementById('photoInput');
+        // const photoPreview = document.getElementById('photoPreview');
+
+        photoInput.addEventListener('change', function() {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              photoPreview.src = e.target.result;
+              photoPreview.classList.remove('d-none');
+            }
+            reader.readAsDataURL(file);
+          } else {
+            photoPreview.src = "";
+            photoPreview.classList.add('d-none');
+          }
+        });
+             // ✅ Dynamic Incident View Loader
+
+         $('#historyIncidentModal').on('shown.bs.modal', function () {
+          $(this).find('.modal-dialog').css('max-width', '1200px');
+        });
+         $('#addIncidentModal').on('shown.bs.modal', function () {
+          $(this).find('.modal-dialog').css('max-width', '1200px');
+        });
+         $('#viewIncidentModal').on('shown.bs.modal', function () {
+          $(this).find('.modal-dialog').css('max-width', '1200px');
+        });
+         $('#noteIncidentModal').on('shown.bs.modal', function () {
+          $(this).find('.modal-dialog').css('max-width', '1200px');
+        });
 
 
-        function removeImage() {
-          imageUpload.value = "";
-          fileName.textContent = "No file chosen";
-          preview.innerHTML = "";
-          removeBtn.style.display = "none";
-        }
 
-            });
-    </script>
+
+    function removeImage() {
+      imageUpload.value = "";
+      fileName.textContent = "No file chosen";
+      preview.innerHTML = "";
+      removeBtn.style.display = "none";
+    }
+
+        });
+</script>

@@ -1,0 +1,27 @@
+﻿@model List<ViewModels.Incident.IncidentNoteViewModel>
+
+<div class="card communication-sec">
+    <h3>Communication Log</h3>
+    @foreach (var note in Model)
+    {
+        <div class="log-item">
+            <div class="log-avatar"><i class="fa fa-user"></i></div>
+            <div class="log-content">
+                <div class="log-header">
+                    @note.Author
+                    <span class="tag @(note.NoteType.ToLower())">@note.NoteType</span>
+                    <span class="log-time">@note.CreatedOn.ToString("MMM dd yyyy hh:mm tt")</span>
+
+                    @if (!string.IsNullOrEmpty(note.FileUrl))
+                    {
+                        <span class="attached">
+                            <i class="fa fa-paperclip"></i>
+                            @System.IO.Path.GetFileName(note.FileUrl)
+                        </span>
+                    }
+                </div>
+                <div class="log-text">@note.Content</div>
+            </div>
+        </div>
+    }
+</div>

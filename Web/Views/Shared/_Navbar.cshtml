@@ -56,19 +56,52 @@
         @if (User.Identity.IsAuthenticated)
         {
             <div class="navigation">
-                <ul class="nav-ul">
+                <ul class="nav-ul Ezsidebar">
                     <li>
                         <a href="/Home/Dashboard" class="@(currentPath.Contains("/home/dashboard") ? "active" : "")">
-                            <img src="~/img/icons/dashboard.svg">
+                            <span class="SidebarIcon dashboard"><i class="fa fa-home"></i></span>
                             <span class="name">Dashboard</span>
                         </a>
                     </li>
                     <li>
                         <a href="/Incidents" class="@(currentPath.Contains("/incidents") ? "active" : "")">
-                            <img src="~/img/icons/inventory.svg">
+                            <span class="SidebarIcon incident"><i class="fa fa-list"></i></span>
                             <span class="name">Incidents</span>
                         </a>
                     </li>
+                    <li>
+                        
+                        <a href="/Settings">
+                            <span class="SidebarIcon setting"><i class="fa fa-gear"></i></span>
+                            <span class="name">Settings</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3 sidebar-account" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-user"></i>
+                            <div class="d-flex flex-column">
+                                <span class="ml-1 user-name menu-text">Account</span>
+                                <span class="ml-1 user-name menu-text"><small>Admin</small></span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3"
+                            style="background-color: white;">
+                            <li class="dropdown-item">
+                                <a class="nav-link d-flex align-items-center" href="/Identity/Account/Manage/ChangePassword">
+                                    <i class="fa fa-lock"></i>
+                                    <span class="menu-text">Change Password</span>
+                                </a>
+                            </li>
+
+                            <li class="dropdown-item">
+                                <a class="nav-link d-flex align-items-center" href="/Identity/Account/Logout">
+                                    <i class="fa fa-user"></i>
+                                    <span class="menu-text">Log Out</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
                     @* <li>
                         <a href="/WorkOrders" class="@(currentPath.Contains("/workorders") ? "active" : "")">
                             <img src="~/img/icons/work-order.svg">
@@ -274,7 +307,7 @@
         }
 
         <div class="sidebar-footer">
-            <div class="dropdown account-dropdown border-top pt-2 pr-2">
+            <div class="dropdown account-dropdown  pt-2 pr-2">
                 @* <ul class="nav nav-pills nav-flush flex-column mb-auto text-center nav-main-ul">
                 <li class="nav-item">
                 <a class="nav-link d-flex align-items-center" href="/Settings/Index">
@@ -284,10 +317,10 @@
                 </li>
                 </ul> *@
 
-                <a href="/Settings">
+              @*   <a href="/Settings">
                     <img src="~/img/icons/settings.svg">
                     <span class="name">Settings</span>
-                </a>
+                </a> *@
 
                @*  <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3"
                    id="dropdownUser4" data-bs-toggle="dropdown" aria-expanded="false">
@@ -311,7 +344,7 @@
                     </li>
                 </ul>
 
-                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3 sidebar-account"
+              @*   <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3 sidebar-account"
                    id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa fa-user"></i>
                     <div class="d-flex flex-column">
@@ -334,11 +367,11 @@
                             <span class="menu-text">Log Out</span>
                         </a>
                     </li>
-                </ul>
+                </ul> *@
 
             </div>
 
-            <div class="collapse_toggle_wrap mt-4 border-top pt-4">
+            <div class="collapse_toggle_wrap mt-4  pt-4">
                 <button type="button" class="toggle-menu">
                     @* <svg width="16" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path

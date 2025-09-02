@@ -192,7 +192,7 @@
         var isValid = true;
 
         // Loop through all required fields
-        $("#pills-support").find("input[data-val-required], select[data-val-required], textarea[data-val-required]").each(function () {
+        $("#pills-support").find("select[data-val-required], textarea[data-val-required]").each(function () {
             var $field = $(this);
             var value = $.trim($field.val());
 
@@ -215,20 +215,20 @@
         }
     });
 
-    $(document).off("click", ".statusLegendli");
-    $(document).on("click", ".statusLegendli", function (e) {
-        e.preventDefault();
+    //$(document).off("click", ".statusLegendli");
+    //$(document).on("click", ".statusLegendli", function (e) {
+    //    e.preventDefault();
 
-        $("#statusSelect").val('');
-        $("#severitySelect").val('');
+    //    $("#statusSelect").val('');
+    //    $("#severitySelect").val('');
 
-        var incidentID = $(this).closest('tr').attr('id');
-        var status = $(this).find('div.dropdown-item').attr('data-id');
+    //    var incidentID = $(this).closest('tr').attr('id');
+    //    var status = $(this).find('div.dropdown-item').attr('data-id');
 
-        status = $.trim(status);
+    //    status = $.trim(status);
 
-        ChangeIncidentStatus(incidentID, status);
-    });
+    //    ChangeIncidentStatus(incidentID, status);
+    //});
 
     $(document).off("change", "#statusSelect, #severitySelect");
     $(document).on("change", "#statusSelect, #severitySelect", function (e) {
@@ -350,10 +350,6 @@
             // Show Bootstrap modal
             $("#incidentDetailsModal").modal("show");
 
-
-            //$("#incidentDetailModalContainer").html(data);
-            //var modal = new bootstrap.Modal(document.getElementById("incidentDetailsModal"));
-            //modal.show();
         });
     });
     $(document).on("click", ".note-incident", function () {
@@ -558,40 +554,40 @@ async function GetIncidentList(statusID, severityID, description) {
     }
 }
 
-async function ChangeIncidentStatus(incidentID, statusID) {
-    try {
-        showLoader($(".main-content"));
+//async function ChangeIncidentStatus(incidentID, statusID) {
+//    try {
+//        showLoader($(".main-content"));
 
-        // Prepare request payload
-        let payload = {
-            incidentId: incidentID,
-            status: statusID
-        };
+//        // Prepare request payload
+//        let payload = {
+//            incidentId: incidentID,
+//            status: statusID
+//        };
 
-        // Send request
-        let response = await fetch("/Incidents/ChangeIncidentStatus", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(payload)
-        });
+//        // Send request
+//        let response = await fetch("/Incidents/ChangeIncidentStatus", {
+//            method: "POST",
+//            headers: {
+//                "Content-Type": "application/json"
+//            },
+//            body: JSON.stringify(payload)
+//        });
 
-        let result = await response.json();
+//        let result = await response.json();
 
-        if (response.ok && result.success) {
-            SwalSuccessAlert(result.data || "Status updated successfully.");
-            GetIncidentList(0, 0, "");
-        } else {
-            SwalErrorAlert(result.message || "Failed to change status of incident.");
-        }
-    } catch (error) {
-        SwalErrorAlert("Error while changing status of incident!");
-        console.error(error);
-    } finally {
-        hideLoader($(".main-content"));
-    }
-}
+//        if (response.ok && result.success) {
+//            SwalSuccessAlert(result.data || "Status updated successfully.");
+//            GetIncidentList(0, 0, "");
+//        } else {
+//            SwalErrorAlert(result.message || "Failed to change status of incident.");
+//        }
+//    } catch (error) {
+//        SwalErrorAlert("Error while changing status of incident!");
+//        console.error(error);
+//    } finally {
+//        hideLoader($(".main-content"));
+//    }
+//}
 
 async function LoadIncidentModal(id = 0) {
     try {

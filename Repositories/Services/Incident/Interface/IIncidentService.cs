@@ -20,9 +20,6 @@ namespace Repositories.Common
        // Task<string?> ChangeIncidentStatus(long incidenetID, string status);
         Task<IncidentViewModel> GetById(long incidentId);
         Task<IncidentViewModel> GetIncidentDetailsById(long incidentId);
-
-        Task<string?> ChangeIncidentStatus(long incidentId, string statusId);
-        
         Task<string> UpdateIncident(IncidentViewModel viewModel);
     }
 }

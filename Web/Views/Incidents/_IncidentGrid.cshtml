@@ -26,53 +26,8 @@
             @foreach (var item in Model.incidentGridViewModel)
             {
                 <tr id="@item.Id">
-                    <td class="status-submitted">
-                        <div class="dropdown customTableDropdown">
-
-                            @if (item.StatusLegend == StatusLegendEnum.Submitted.ToString())
-                            {
-                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Submitted
-                                </button>
-                            }
-                            else if (item.StatusLegend == StatusLegendEnum.Dispatched.ToString())
-                            {
-                                <button class="btn status-dispatched rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dispatched
-                                </button>
-                            }
-                            else if (item.StatusLegend == StatusLegendEnum.Started.ToString())
-                            {
-                                <button class="btn status-started rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Started
-                                </button>
-                            }
-                            else if (item.StatusLegend == StatusLegendEnum.Completed.ToString())
-                            {
-                                <button class="btn status-completed rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Completed
-                                </button>
-                            }
-                            else if (item.StatusLegend == StatusLegendEnum.Cancelled.ToString())
-                            {
-                                <button class="btn status-cancelled rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Cancelled
-                                </button>
-                            }
-                            else
-                            {
-                                <button class="btn status-unknown rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Unknown
-                                </button>
-                            }
-                            <ul class="dropdown-menu">
-                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-submitted" data-id="Submitted">Submitted</div></li>
-                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-dispatched" href="#" data-id="Dispatched">Dispatched</div></li>
-                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-started" href="#" data-id="Started">Started</div></li>
-                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-completed" href="#" data-id="Completed">Completed</div></li>
-                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-cancelled" href="#" data-id="Cancelled">Cancelled</div></li>
-                            </ul>
-                        </div>
+                    <td style="text-align:center !important">
+                        <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.StatusLegendColor"></span>
                     </td>
                     <td>
                         @if (item.Severity == SeverityEnum.Low.ToString())
@@ -106,7 +61,7 @@
                     </td>
                     <td>
                         <div class="event-type">
-                           @item.AssetId
+                            @item.AssetId
                         </div>
                     </td>
                     <td>@item.DescriptionIssue</td>
@@ -117,11 +72,10 @@
                             @item.LocationAddress
                         </div>
                     </td>
-                    
+
                     <td>@item.GasESIndicator</td>
                     <td>
                         <!-- Action Icons -->
-                        @* <a href="#" class="btnIcon eyeIcon" title="View" data-bs-toggle="modal" data-bs-target="#viewIncidentModal"><i class="fa fa-eye"></i></a> *@
                         <a href="javascript:void(0);"
                            class="btnIcon eyeIcon view-incident"
                            data-id="@item.Id"
@@ -150,7 +104,7 @@
         else
         {
             <tr>
-                <td colspan="10" class="text-center">No records found.</td>
+                <td colspan="12" class="text-center">No records found.</td>
             </tr>
         }
     </tbody>

@@ -10,10 +10,10 @@
         @* border: 1px solid #666666 !important; *@
     }
 
-    .chart-container .card-footer {
-        background-color: #CACACA;
-        color: #666666;
-    }
+        .chart-container .card-footer {
+            background-color: #CACACA;
+            color: #666666;
+        }
 
     .card-header {
         background: none;
@@ -42,110 +42,144 @@
         font-size: 20px;
     }
     /*****************dhara******************/
-    #dashboardTabs .nav-item .nav-link{
+    #dashboardTabs .nav-item .nav-link {
         background: #f9b89b;
         color: #374151;
         font-size: 16px;
         line-height: 1.25rem;
         margin-right: 14px;
-        border-radius:6px;
+        border-radius: 6px;
     }
 
-    #dashboardTabs .nav-item .nav-link.active {
+        #dashboardTabs .nav-item .nav-link.active {
             background: #f54e00;
             color: #ffffff;
         }
 
-    #dashboardTabs{
-        border:none;
+    #dashboardTabs {
+        border: none;
     }
 
-    .chartTitle{
-        margin-bottom:16px;
-    }
-    #viewDiv {
-      margin-top: 15px;
-      height: 500px;
-      width: 100%;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    /* Legend Styling */
-    .legend-box {
-      background: rgba(255,255,255,0.9);
-      padding: 10px 15px;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-      font-size: 14px;
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
+    .stat-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px;
+        border-radius: 10px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        margin-bottom: 15px;
     }
 
-    .legend-title {
-      font-weight: bold;
-      margin-bottom: 5px;
+    .stat-label {
+        font-size: 14px;
+        color: #374151;
     }
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 4px;
+    .stat-value {
+        font-size: 18px;
+        font-weight: bold;
     }
 
-    .legend-color {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      margin-right: 8px;
+    .icon-box {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
+
+    .icon-orange {
+        background: #fde68a;
+        color: #f59e0b;
+    }
+
+    .icon-red {
+        background: #fecaca;
+        color: #ef4444;
+    }
+
+    .icon-green {
+        background: #bbf7d0;
+        color: #22c55e;
+    }
+
+    .icon-chart {
+        background: #d1fae5;
+        color: #059669;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 260px;
+        width: 260px;
+        margin: auto;
+    }
+
+    .chart-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
+        font-size: 16px;
+        text-align: center;
+    }
+
+    .chart-legend li {
+        list-style: none;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .legend-dot {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+
+    #severityChart, .chart-container {
+        width: 180px !important;
+        height: 180px !important;
+    }
+
+    #statusChart {
+        width: 180px !important;
+        height: 180px !important;
+    }
+
 </style>
-<script src="~/js/views/dashboard/dashboard-card.js"></script>
-<script src="~/js/views/dashboard/dashboard-table.js"></script>
-@await Html.PartialAsync("~/Views/Shared/Charts/_Css.cshtml")
-@await Html.PartialAsync("~/Views/Shared/Charts/_Scripts.cshtml")
+
 <div class="container-fluid">
-
-
     <div class="dashboard-header">
         <div class="container-fluid p-0">
             <div class="d-flex align-items-center justify-content-between dashboard-tab-title">
-                <div class="pl-0">
-                    <h2 class="dashboard-title">Dashboard</h2>
+                <div class="DashboardHeader">
+                    <h4 class="fw-bold">Map & Chart</h4>
+                    <p class="text-muted">Visual representation of incident data and analytics</p>
                 </div>
                 <div class="tabsSec">
                     <ul class="nav nav-tabs CustomTab" id="dashboardTabs" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="map-tab" data-bs-toggle="tab" data-bs-target="#mapTab" type="button" role="tab">
-                                Map
+                                Map View
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="charts-tab" data-bs-toggle="tab" data-bs-target="#chartsTab" type="button" role="tab">
-                                Charts
+                                Charts & Analytics
                             </button>
                         </li>
                     </ul>
                 </div>
-                @* <div class="col-md-8 text-end">
-                <div class="d-flex justify-content-end align-items-center header-actions">
-                    <div class="search-container me-3">
-                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                        <input type="text" class="form-control search-input" placeholder="Search">
-                    </div>
-                    <button class="btn btn-light bg-white me-3">
-                        <i class="fa-solid fa-sliders"></i>
-                    </button>
-                    <button class="btn btn-light bg-white">
-                        <i class="fa-solid fa-bell"></i>
-                    </button>
-                </div>
-            </div> *@
+
             </div>
         </div>
     </div>
-   
+
     <div class="tab-content mt-3">
         <!-- Map Tab -->
         <div class="tab-pane fade show active" id="mapTab" role="tabpanel">
@@ -158,187 +192,136 @@
                 <div id="map" style="height:400px; border:1px solid #ccc; border-radius:8px;"></div>
             </div>
 
-           
+
         </div>
 
         <!-- Charts Tab -->
         <div class="tab-pane fade" id="chartsTab" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="fw-bold">Incident Analytics</h6>
+                <span class="text-muted small">(@Model.IncidentDashboard.TotalIncidentCount) total incidents analyzed</span>
+            </div>
+            <p class="text-muted">Visual breakdown of incident data and trends</p>
             <div class="row">
-                <div class="col-md-6">
-                    <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
-                        <h6 class="chartTitle">Active Incidents by Severity</h6>
-                        <div class=" d-flex justify-content-center align-items-center" >
-                            <canvas id="severityChart"></canvas>
+
+                @foreach (var item in Model.IncidentDashboard.ListIncidentDashboardSeverityReportViewModel)
+                {
+                    <div class="col-md-3">
+                        <div class="stat-box">
+                            <div>
+                                <div class="stat-label">@item.name</div>
+                                <div class="stat-value">@item.count</div>
+                            </div>
+                            <div class="icon-box icon-orange"></div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
-                        <h6 class="chartTitle">Incidents by Status</h6>
-                        <div class=" d-flex justify-content-center align-items-center">
-                            <canvas id="statusChart"></canvas>
+                }
+
+
+                <div class="col-md-3">
+                    <div class="stat-box">
+                        <div>
+                            <div class="stat-label">Response Rate</div>
+                            <div class="stat-value text-success">13%</div>
                         </div>
+                        <div class="icon-box icon-chart"></div>
                     </div>
                 </div>
             </div>
+
+            <!-- Charts -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card p-3">
+                        <h6 class="fw-bold">Active Incidents by Severity</h6>
+                        <div class="chart-container">
+                            <canvas id="severityChart" width="180" height="180"></canvas>
+                            <div class="chart-center">
+                                <div>@Model.IncidentDashboard.TotalSeverityCount</div>
+                                <small>Total</small>
+                            </div>
+                        </div>
+                        <ul class="chart-legend p-0 mt-2">
+                            @foreach (var item in Model.IncidentDashboard.ListIncidentDashboardSeverityReportViewModel)
+                            {
+                                <li class="d-flex align-items-center justify-content-between InfoCount">
+                                    <div class="dot-name">
+                                        <div class="legend-dot" style="background:@item.color"></div> @item.name
+                                    </div>
+                                    <div class="count">@item.count (@item.SeverityPercentage %)</div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-3">
+                        <h6 class="fw-bold">Incidents by Status</h6>
+                        <div class="chart-container">
+                            <canvas id="statusChart" width="180" height="180"></canvas>
+                            <div class="chart-center">
+                                <div>@Model.IncidentDashboard.TotalStatusLegendCount</div>
+                                <small>Total</small>
+                            </div>
+                        </div>
+                        <ul class="chart-legend p-0 mt-2">
+                            @foreach (var item in Model.IncidentDashboard.ListIncidentDashboardStatusReport)
+                            {
+
+                                <li class="d-flex align-items-center justify-content-between InfoCount">
+                                    <div class="dot-name">
+                                        <div class="legend-dot" style="background:@item.color"></div>
+                                        @item.name
+                                    </div>
+                                    <div class="count">@item.count (@item.StatusPercentage%)</div>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </div>
 
-    @section Scripts {
-        <!-- Leaflet.js (Map) -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-        <!-- Chart.js -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-        <script>
-            // Initialize Leaflet Map
-            var map = L.map('map').setView([37.0902, -95.7129], 4); // USA center
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19
-            }).addTo(map);
-
-            var marker;
-
-            // Show pin on map when address entered
-            document.getElementById('showOnMap').addEventListener('click', function () {
-                const address = document.getElementById('addressInput').value;
-                if (!address) return;
-
-                // Free geocoding with Nominatim
-                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.length > 0) {
-                            var lat = data[0].lat;
-                            var lon = data[0].lon;
-
-                            if (marker) {
-                                map.removeLayer(marker);
-                            }
-                            marker = L.marker([lat, lon]).addTo(map)
-                                .bindPopup(`<b>${address}</b>`).openPopup();
-
-                            map.setView([lat, lon], 14);
-                        } else {
-                            alert("Address not found!");
-                        }
-                    });
-            });
-                        // Temporary dummy data for testing
-            // const severityLabels = ["Low", "Medium", "High"];
-            // const severityCounts = [5, 3, 0];
-            // const severityColors = ["#4caf50", "#ff9800", "#f44336"];
-
-            // const statusLabels = ["Open", "In Progress", "Closed"];
-            // const statusCounts = [2, 6, 0];
-            // const statusColors = ["#2196f3", "#ffc107", "#9c27b0"];
-                    const severityLabels = @Html.Raw(Json.Serialize(Model.SeverityLabels));
-            const severityCounts = @Html.Raw(Json.Serialize(Model.SeverityCounts));
-            const severityColors = @Html.Raw(Json.Serialize(Model.SeverityColors));
-
-            const statusLabels = @Html.Raw(Json.Serialize(Model.StatusLabels));
-            const statusCounts = @Html.Raw(Json.Serialize(Model.StatusCounts));
-            const statusColors = @Html.Raw(Json.Serialize(Model.StatusColors));
-            // Chart.js Donut/Pie Charts
-            const severityCtx = document.getElementById('severityChart').getContext('2d');
-            const severityChart = new Chart(severityCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: severityLabels,
-                    datasets: [{
-                        data: severityCounts, // Replace with real data
-                        backgroundColor: severityColors
-                    }]
-                },
-                options: {
-                responsive: false,        // keeps size fixed
-                plugins: {
-                    legend: {
-                        position: 'bottom', // legend at bottom
-                        labels: {
-                            boxWidth: 15,  // smaller legend boxes
-                            padding: 10,
-                            font: {
-                                size: 12
-                            }
-                        }
-                    }
-                }
-            }
-            });
-
-            const statusCtx = document.getElementById('statusChart').getContext('2d');
-            const statusChart = new Chart(statusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: statusLabels,
-                    datasets: [{
-                        data: statusCounts, // Replace with real data
-                        backgroundColor: statusColors
-                    }]
-                },
-                        options: {
-                responsive: false,        // keeps size fixed
-                plugins: {
-                    legend: {
-                        position: 'bottom', // legend at bottom
-                        labels: {
-                            boxWidth: 15,  // smaller legend boxes
-                            padding: 10,
-                            font: {
-                                size: 12
-                            }
-
-                        }
-                    }
-                }
-            }
-            });
-        </script>
-    }
-
-    @* <div class="row total_counting">
-        <div class="col item">
-            @await Html.PartialAsync("~/Views/Dashboard/Common/Card/_Index.cshtml", Model.GetAverageLaborCost)
-        </div>
-        <div class="col item">
-            @await Html.PartialAsync("~/Views/Dashboard/Common/Card/_Index.cshtml", Model.GetAverageMaterialCost)
-        </div>
-        <div class="col item">
-            @await Html.PartialAsync("~/Views/Dashboard/Common/Card/_Index.cshtml", Model.GetAverageEquipmentCost)
-        </div>
-        <div class="col item">
-            @await Html.PartialAsync("~/Views/Dashboard/Common/Card/_Index.cshtml", Model.AverageCompletionTime)
-        </div>
-    </div>
-
-    <div class="row col-md-12">
-        <div class="col-md-4 mb-3">
-            @await Html.PartialAsync("~/Views/Shared/Charts/Index.cshtml", Model.WorkOrder)
-        </div>
-        <div class="col-md-4 mb-3">
-            @await Html.PartialAsync("~/Views/Shared/Charts/Index.cshtml", Model.WorkOrderByAssetType)
-        </div>
-        <div class="col-md-4 mb-3 pe-0">
-            @await Html.PartialAsync("~/Views/Shared/Charts/Index.cshtml", Model.WorkOrderByRepairType)
-        </div>
-        <div class="col-md-4 mb-3">
-            @await Html.PartialAsync("~/Views/Shared/Charts/Index.cshtml", Model.WorkOrderByTechnician)
-        </div>
-        <div class="col-md-4 mb-3">
-            @await Html.PartialAsync("~/Views/Shared/Charts/Index.cshtml", Model.AssetByCondition)
-        </div>
-        <div class="col-md-4 mb-3 pe-0">
-            @await Html.PartialAsync("~/Views/Shared/Charts/Index.cshtml", Model.AssetMaintenanceDue)
-        </div>
-        <div class="col-md-4 mb-3">
-            @await Html.PartialAsync("~/Views/Shared/Charts/Index.cshtml", Model.AssetReplacementDue)
-        </div>
-        <div class="col-md-4 mb-3">
-            @await Html.PartialAsync("~/Views/Shared/Charts/Index.cshtml", Model.GetCostAccuracy)
-        </div>
-    </div> *@
+    
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Convert server-side model into JS object
+            var severityData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.IncidentDashboard.ListIncidentDashboardSeverityReportViewModel));
+            var statusData   = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.IncidentDashboard.ListIncidentDashboardStatusReport));
+
+            // Helper function to render a doughnut chart
+            function renderDoughnutChart(canvasId, chartData) {
+                var ctx = document.getElementById(canvasId);
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: chartData.map(x => x.name),
+                        datasets: [{
+                            data: chartData.map(x => x.count),
+                            backgroundColor: chartData.map(x => x.color),
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        cutout: '70%',
+                        width: 180,
+                        height: 180,
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+
+            // Build both charts from model
+            renderDoughnutChart("severityChart", severityData);
+            renderDoughnutChart("statusChart", statusData);
+        });
+    </script>
+}

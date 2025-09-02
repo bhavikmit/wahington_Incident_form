@@ -65,7 +65,11 @@ namespace Repositories.Common
                     .Select(it => new SelectListItem
                     {
                         Value = it.Id.ToString(),
-                        Text = it.Name
+                        Text = it.Name,
+                        Group = new SelectListGroup()
+                        {
+                            Name = it.Color
+                        }
                     })
                     .ToListAsync();
 
@@ -277,8 +281,6 @@ namespace Repositories.Common
         {
 
             List<IncidentGridViewModel> incidentGridViews = new();
-
-            await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
                 var query = _db.Incidents
@@ -335,55 +337,52 @@ namespace Repositories.Common
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error GetIncidentList.");
                 return new List<IncidentGridViewModel>();
             }
         }
 
-        public async Task<string?> ChangeIncidentStatus(long incidentId, string statusText)
-        {
-            await using var transaction = await _db.Database.BeginTransactionAsync();
+        //public async Task<string?> ChangeIncidentStatus(long incidentId, string statusText)
+        //{
+        //    await using var transaction = await _db.Database.BeginTransactionAsync();
 
-            try
-            {
-                var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == incidentId);
+        //    try
+        //    {
+        //        var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == incidentId);
 
-                if (incident == null)
-                {
-                    await transaction.RollbackAsync();
-                    return null; // or string.Empty if you want
-                }
+        //        if (incident == null)
+        //        {
+        //            await transaction.RollbackAsync();
+        //            return null; // or string.Empty if you want
+        //        }
 
-                if (Enum.TryParse<StatusLegendEnum>(statusText, true, out var status))
-                {
-                    incident.StatusLegendId = (long)status;
+        //        if (Enum.TryParse<StatusLegendEnum>(statusText, true, out var status))
+        //        {
+        //            incident.StatusLegendId = (long)status;
 
-                    await _db.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                else
-                {
-                    await transaction.RollbackAsync();
-                    return null;
-                }
+        //            await _db.SaveChangesAsync();
+        //            await transaction.CommitAsync();
+        //        }
+        //        else
+        //        {
+        //            await transaction.RollbackAsync();
+        //            return null;
+        //        }
 
-                return incident.IncidentID;
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error ChangeIncidentStatus.");
-                return null; // or string.Empty
-            }
-        }
+        //        return incident.IncidentID;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await transaction.RollbackAsync();
+        //        _logger.LogError(ex, "Error ChangeIncidentStatus.");
+        //        return null; // or string.Empty
+        //    }
+        //}
 
         public async Task<IncidentViewModel> GetById(long incidentId)
         {
-            IncidentViewModel incidentViewModel = new();
-
-            await using var transaction = await _db.Database.BeginTransactionAsync();
-
+            var incidentViewModel = new IncidentViewModel();
+            
             try
             {
                 incidentViewModel = await GetIncidentDropDown();
@@ -392,7 +391,6 @@ namespace Repositories.Common
 
                 if (incident == null)
                 {
-                    await transaction.RollbackAsync();
                     return new IncidentViewModel();
                 }
 
@@ -427,7 +425,6 @@ namespace Repositories.Common
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error GetById.");
                 return new IncidentViewModel();
             }

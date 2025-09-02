@@ -68,23 +68,23 @@ namespace Web.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> ChangeIncidentStatus([FromBody] ChangeStatusRequest request)
-        {
-            if (request == null || request.IncidentId <= 0 || string.IsNullOrWhiteSpace(request.Status))
-            {
-                return BadRequest(new { success = false, message = "Invalid data." });
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> ChangeIncidentStatus([FromBody] ChangeStatusRequest request)
+        //{
+        //    if (request == null || request.IncidentId <= 0 || string.IsNullOrWhiteSpace(request.Status))
+        //    {
+        //        return BadRequest(new { success = false, message = "Invalid data." });
+        //    }
 
-            var result = await _iIncidentService.ChangeIncidentStatus(request.IncidentId, request.Status);
+        //    var result = await _iIncidentService.ChangeIncidentStatus(request.IncidentId, request.Status);
 
-            if (string.IsNullOrEmpty(result))
-            {
-                return NotFound(new { success = false, message = "Incident not found." });
-            }
+        //    if (string.IsNullOrEmpty(result))
+        //    {
+        //        return NotFound(new { success = false, message = "Incident not found." });
+        //    }
 
-            return Ok(new { success = true, data = $"Incident {result} status changed successfully." });
-        }
+        //    return Ok(new { success = true, data = $"Incident {result} status changed successfully." });
+        //}
 
         [HttpGet]
         public async Task<IActionResult> AddIncident()

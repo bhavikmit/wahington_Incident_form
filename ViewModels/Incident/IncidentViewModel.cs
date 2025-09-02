@@ -26,7 +26,6 @@ namespace ViewModels.Incident
         public long? severityLevelId { get; set; } = default!;
         public long? Id { get; set; } = default!;
         public string DescriptionIssue { get; set; } = default!;
-       
     }
 
     public class IncidentCellerInformationViewModel

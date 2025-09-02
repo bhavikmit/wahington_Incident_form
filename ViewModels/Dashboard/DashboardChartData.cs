@@ -1,4 +1,6 @@
-﻿using Pagination;
+﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
+
+using Pagination;
 using ViewModels.Charts.Shared;
 using ViewModels.Dashboard.Common.Card;
 using ViewModels.Dashboard.Common.Table;
@@ -12,12 +14,9 @@ namespace ViewModels.Dashboard
         {
 
         }
-        public List<string> SeverityLabels { get; set; }
-        public List<int> SeverityCounts { get; set; }
-        public List<string> SeverityColors { get; set; }
-        public List<string> StatusLabels { get; set; }
-        public List<int> StatusCounts { get; set; }
-        public List<string> StatusColors { get; set; }
+       
+        public IncidentDashboardViewModel IncidentDashboard { get; set; } = new();
+       
         public ChartViewModel PendingOrder { get; set; } = new();
         public ChartViewModel WorkOrder { get; set; } = new();
         public ChartViewModel WorkOrderByAssetType { get; set; } = new();
@@ -42,4 +41,36 @@ namespace ViewModels.Dashboard
         public DateTime? ToDate { get; set; }
     }
 
+    public class IncidentDashboardViewModel
+    {
+        public List<string> SeverityLabels { get; set; } = default!;
+        public List<long> SeverityCounts { get; set; } = default!;
+        public List<string> SeverityColors { get; set; } = default!;
+        public List<string> StatusLabels { get; set; } = default!;
+        public List<long> StatusCounts { get; set; } = default!;
+        public List<string> StatusColors { get; set; } = default!;
+
+        public List<IncidentDashboardStatusReportViewModel> ListIncidentDashboardStatusReport { get; set; } = new();
+        public List<IncidentDashboardSeverityReportViewModel> ListIncidentDashboardSeverityReportViewModel { get; set; } = new();
+
+        public long TotalIncidentCount { get; set; } = default!;
+        public long TotalSeverityCount { get; set; } = default!;
+        public long TotalStatusLegendCount { get; set; } = default!;
+        public decimal ResponsePercentage { get; set; } = default!;
+    }
+
+    public class IncidentDashboardStatusReportViewModel
+    {
+        public string name { get; set; } = default!;
+        public string color { get; set; } = default!;
+        public long count { get; set; } = default!;
+        public decimal StatusPercentage { get; set; } = default!;
+    }
+    public class IncidentDashboardSeverityReportViewModel
+    {
+        public string name { get; set; } = default!;
+        public string color { get; set; } = default!;
+        public long count { get; set; } = default!;
+        public decimal SeverityPercentage { get; set; } = default!;
+    }
 }

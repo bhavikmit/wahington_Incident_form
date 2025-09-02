@@ -5,26 +5,44 @@
 
 <div class="shadow-sm border border-gray-200 card-body InfoCard">
     <h6 class="fw-bold mb-3">Supporting Information</h6>
-    @* <div class="mb-3">
-        <label for="photoInput" class="form-label">Upload Photo</label>
-        <input class="form-control" type="file" id="photoInput" accept="image/*">
-    </div> *@
 
     <div class="mb-3">
         <div class="form-group">
             <label class="col-sm-12 form-label fw-600">Upload Image</label>
             <div class="col-sm-12">
                 <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                    <input asp-for="incidentSupportingInfoViewModel.File" class="form-control" placeholder="Upload Image" id="Image" onchange="ShowImage(this)" />
+                    <input asp-for="incidentSupportingInfoViewModel.File" multiple="true" class="form-control" placeholder="Upload Image" id="Image" onchange="ShowImage(this)" />
                     <span> <a href="javascript:void(0)" class="input-group-addon btn btn-default fileinput-exists" 
                         onclick='RemoveImage()' data-dismiss="fileinput">Remove</a></span>
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 mt-2">
+       @*  <div class="col-sm-12 mt-2">
             <img class="img-responsive image-thumbnail" src="@Model.incidentSupportingInfoViewModel.ImageUrl" id="image-thumbnail" alt="" style="max-width:120px;">
             <input type="hidden" asp-for="incidentSupportingInfoViewModel.ImageUrl" value="@Model.incidentSupportingInfoViewModel.ImageUrl" id="hidden-image-url" />
+        </div> *@
+
+        <div class="col-sm-12 mt-2">
+            <div id="image-thumbnails" class="d-flex flex-wrap">
+                @if (!string.IsNullOrEmpty(Model.incidentSupportingInfoViewModel.ImageUrl))
+                {
+                    var urls = Model.incidentSupportingInfoViewModel.ImageUrl.Split(','); // assuming "," separated
+                    foreach (var url in urls)
+                    {
+                        <img class="img-responsive img-thumbnail me-2 mb-2"
+                             src="@url"
+                             alt="attachment"
+                             style="max-width:120px; max-height:120px;">
+                    }
+                }
+            </div>
+
+            <input type="hidden" asp-for="incidentSupportingInfoViewModel.ImageUrl"
+                   value="@Model.incidentSupportingInfoViewModel.ImageUrl"
+                   id="hidden-image-url" />
         </div>
+
+
     </div>
 
     <!-- Preview -->

@@ -727,6 +727,12 @@ namespace Models.Mapper
             CreateMap<StatusLegendBriefViewModel, StatusLegend>().ReverseMap();
             CreateMap<StatusLegendModifyViewModel, StatusLegendDetailViewModel>().ReverseMap();
 
+            //AssignResponseTeams
+            CreateMap<AssignResponseTeamsModifyViewModel, AssignResponseTeams>().ReverseMap();
+            CreateMap<AssignResponseTeamsDetailViewModel, AssignResponseTeams>().ReverseMap();
+            CreateMap<AssignResponseTeamsBriefViewModel, AssignResponseTeams>().ReverseMap();
+            CreateMap<AssignResponseTeamsModifyViewModel, AssignResponseTeamsDetailViewModel>().ReverseMap();
+
             //IgnoreGlobalProperties();
         }
         //private void IgnoreGlobalProperties()

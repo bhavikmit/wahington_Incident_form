@@ -180,12 +180,13 @@
 
 <script>
         document.querySelectorAll('.photo-thumb').forEach(link => {
+            
       link.addEventListener('click', function (e) {
         e.preventDefault(); // prevent normal link behavior
         const modal = document.getElementById("imgPreviewModal");
         const modalImg = document.getElementById("previewImg");
         modal.style.display = "block";
-        modalImg.src = this.href; // show clicked image
+        modalImg.src = $(this).find('img').attr('src'); // show clicked image
       });
     });
 

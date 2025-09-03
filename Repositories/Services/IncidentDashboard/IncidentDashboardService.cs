@@ -55,9 +55,9 @@ namespace Repositories.Common
         {
             try
             {
-                var incidents = _db.Incidents.Where(i => !i.IsDeleted);
+                var incidents = await _db.Incidents.Where(i => !i.IsDeleted).ToListAsync();
 
-                var severityData = await incidents
+                var severityData = incidents
                     .GroupBy(i => i.SeverityLevelId)
                     .Select(g => new
                     {
@@ -73,9 +73,9 @@ namespace Repositories.Common
                               name = s.Name,
                               count = g.Count
                           })
-                    .ToListAsync();
+                    .ToList();
 
-                var statusData = await incidents
+                var statusData = incidents
                     .GroupBy(i => i.StatusLegendId)
                     .Select(g => new
                     {
@@ -91,12 +91,77 @@ namespace Repositories.Common
                               name = s.Name,
                               count = g.Count
                           })
-                    .ToListAsync();
+                    .ToList();
 
-                var totalIncidentCount = await incidents.CountAsync();
+
+
+                // Define static colors for events
+                var eventColors = new Dictionary<int, string>
+                                {
+                                    { 1, "#FF0000" }, // Red
+                                    { 2, "#00FF00" }, // Green
+                                    { 3, "#0000FF" }, // Blue
+                                    { 4, "#FFA500" }, // Orange
+                                    { 5, "#800080" }, // Purple
+                                    { 6, "#008080" }, // Teal
+                                    { 7, "#808000" }, // Olive
+                                    { 10, "#FFD700" }, // Gold
+                                    { 11, "#A52A2A" }  // Brown
+                                };
+
+
+                //var incidentsList = await _db.Incidents.Where(i => !i.IsDeleted).ToListAsync();
+
+
+                var eventData = incidents
+                                .SelectMany(i => (i.EventTypeIds ?? "")
+                                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                .Select(id => new { EventId = int.Parse(id), Incident = i }))
+                                .GroupBy(x => x.EventId)
+                                 .Select(g => new
+                                 {
+                                     Id = g.Key,
+                                     Count = g.Count()
+                                 })
+                                 .Join(_db.EventTypes,
+                                     g => g.Id,
+                                     e => e.Id,
+                                     (g, e) => new IncidentDashboardEventTypeReportViewModel
+                                     {
+                                         color = eventColors.ContainsKey(g.Id) ? eventColors[g.Id] : "#808080",
+                                         name = e.Name,
+                                         count = g.Count
+                                     })
+                                 .ToList();
+
+                var assetTypeData = incidents
+                                    .SelectMany(i => (i.AssetIds ?? "")
+                                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                    .Select(id => new { AssetId = int.Parse(id), Incident = i }))
+                                .GroupBy(x => x.AssetId)
+                                .Select(g => new
+                                {
+                                    Id = g.Key,
+                                    Count = g.Count()
+                                })
+                                .Join(_db.AssetIncidents,
+                                    g => g.Id,
+                                    e => e.Id,
+                                    (g, e) => new IncidentDashboardAssetTypeReportViewModel
+                                    {
+                                        name = e.Name,
+                                        count = g.Count,
+                                        color = eventColors.ContainsKey(g.Id) ? eventColors[g.Id] : "#808080"
+                                    })
+                                .ToList();
+
+
+                var totalIncidentCount = incidents.Count;
 
                 var totalSeverity = severityData.Sum(x => x.count);
                 var totalStatus = statusData.Sum(x => x.count);
+                var totalEvent = eventData.Sum(x => x.count);
+                var totalAssetType = assetTypeData.Sum(x => x.count);
 
                 foreach (var s in severityData)
                 {
@@ -112,6 +177,20 @@ namespace Repositories.Common
                         : Math.Round((decimal)s.count / totalStatus * 100, 2);
                 }
 
+                foreach (var s in eventData)
+                {
+                    s.EventTypePercentage = totalEvent == 0
+                        ? 0
+                        : Math.Round((decimal)s.count / totalEvent * 100, 2);
+                }
+
+                foreach (var s in assetTypeData)
+                {
+                    s.AssetTypePercentage = totalAssetType == 0
+                        ? 0
+                        : Math.Round((decimal)s.count / totalAssetType * 100, 2);
+                }
+
                 return new DashboardViewModel
                 {
                     IncidentDashboard = new IncidentDashboardViewModel
@@ -124,9 +203,13 @@ namespace Repositories.Common
                         StatusColors = statusData.Select(s => s.color).ToList(),
                         ListIncidentDashboardSeverityReportViewModel = severityData,
                         ListIncidentDashboardStatusReport = statusData,
+                        ListIncidentDashboardEventTypeReportViewModel = eventData,
+                        ListIncidentDashboardAssetTypeReportViewModel = assetTypeData,
                         TotalIncidentCount = totalIncidentCount,
                         TotalSeverityCount = totalSeverity,
                         TotalStatusLegendCount = totalStatus,
+                        TotalEventTypeCount = totalEvent,
+                        TotalAssetTypeCount = totalAssetType,
                     }
                 };
             }

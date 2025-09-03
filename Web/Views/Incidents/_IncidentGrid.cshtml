@@ -26,42 +26,8 @@
             @foreach (var item in Model.incidentGridViewModel)
             {
                 <tr id="@item.Id">
-                    <td class="status-submitted">
-                        <div class="dropdown customTableDropdown">
-
-                            @if (item.StatusLegend == StatusLegendEnum.Submitted.ToString())
-                            {
-                                <span class="dot status-submitted"></span>
-                            }
-                            else if (item.StatusLegend == StatusLegendEnum.Dispatched.ToString())
-                            {
-                                <span class="dot status-dispatched"></span>
-                            }
-                            else if (item.StatusLegend == StatusLegendEnum.Started.ToString())
-                            {
-                                <span class="dot status-started"></span>
-                            }
-                            else if (item.StatusLegend == StatusLegendEnum.Completed.ToString())
-                            {
-                                <span class="dot status-completed"></span>
-                            }
-                            else if (item.StatusLegend == StatusLegendEnum.Cancelled.ToString())
-                            {
-                                <span class="dot status-cancelled"></span>
-                            }
-                            else
-                            {
-                                <span class="dot status-unknown"></span>
-
-                            }
-                            @* <ul class="dropdown-menu">
-                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-submitted" data-id="Submitted">Submitted</div></li>
-                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-dispatched" href="#" data-id="Dispatched">Dispatched</div></li>
-                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-started" href="#" data-id="Started">Started</div></li>
-                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-completed" href="#" data-id="Completed">Completed</div></li>
-                                <li style="cursor: pointer" class="statusLegendli"><div class="dropdown-item text-cancelled" href="#" data-id="Cancelled">Cancelled</div></li>
-                            </ul> *@
-                        </div>
+                    <td style="text-align:center !important">
+                        <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.StatusLegendColor"></span>
                     </td>
                     <td>
                         @if (item.Severity == SeverityEnum.Low.ToString())
@@ -90,12 +56,12 @@
                     <td style="text-wrap:auto">@item.EventTypeId</td>
                     <td>
                         <div class="event-type">
-                            resource 1
+                            @item.RelationShipName
                         </div>
                     </td>
                     <td>
                         <div class="event-type">
-                           @item.AssetId
+                            @item.AssetId
                         </div>
                     </td>
                     <td>@item.DescriptionIssue</td>
@@ -106,19 +72,30 @@
                             @item.LocationAddress
                         </div>
                     </td>
-                    
+
                     <td>@item.GasESIndicator</td>
                     <td>
                         <!-- Action Icons -->
-                        @* <a href="#" class="btnIcon eyeIcon" title="View" data-bs-toggle="modal" data-bs-target="#viewIncidentModal"><i class="fa fa-eye"></i></a> *@
                         <a href="javascript:void(0);"
                            class="btnIcon eyeIcon view-incident"
                            data-id="@item.Id"
                            title="View">
                             <i class="fa fa-eye"></i>
                         </a>
-                        <a href="#" class="btnIcon noteIcon" title="Notes" data-bs-toggle="modal" data-bs-target="#noteIncidentModal"><i class="fa fa-message"></i></a>
-                        <a href="#" class="btnIcon historyIcon" title="History" data-bs-toggle="modal" data-bs-target="#historyIncidentModal"><i class="fa fa-repeat"></i></a>
+                        <a href="javascript:void(0);"
+                           class="btnIcon noteIcon note-incident"
+                           title="Notes"
+                           data-id="@item.Id">
+                            <i class="fa fa-message"></i>
+                        </a>
+
+                        <a href="javascript:void(0);"
+                           class="btnIcon historyIcon"
+                           data-id="@item.Id"
+                           title="History">
+                            <i class="fa fa-repeat"></i>
+                        </a>
+
                         <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit"><i class="fa fa-pencil"></i></a>
                     </td>
                 </tr>
@@ -127,7 +104,7 @@
         else
         {
             <tr>
-                <td colspan="10" class="text-center">No records found.</td>
+                <td colspan="12" class="text-center">No records found.</td>
             </tr>
         }
     </tbody>

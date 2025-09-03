@@ -10,10 +10,10 @@
         @* border: 1px solid #666666 !important; *@
     }
 
-    .chart-container .card-footer {
-        background-color: #CACACA;
-        color: #666666;
-    }
+        .chart-container .card-footer {
+            background-color: #CACACA;
+            color: #666666;
+        }
 
     .card-header {
         background: none;
@@ -152,10 +152,11 @@
     }
 
     #severityChart, .chart-container {
-        width :180px !important;
-        height:180px !important;
+        width: 180px !important;
+        height: 180px !important;
     }
-    #statusChart{
+
+    #statusChart {
         width: 180px !important;
         height: 180px !important;
     }
@@ -536,23 +537,9 @@
       }
     });
 
-    // Status Chart
-    const ctx2 = document.getElementById('statusChart');
-    new Chart(ctx2, {
-      type: 'doughnut',
-      data: {
-        labels: ['Submitted', 'Started', 'Validated', 'Completed', 'Dispatched', 'Cancelled'],
-        datasets: [{
-          data: [5, 2, 2, 2, 3, 1],
-          backgroundColor: ['#ef4444', '#3b82f6', '#fbbf24', '#22c55e', '#f97316', '#6b7280'],
-          borderWidth: 0
-        }]
-      },
-      options: {
-        cutout: '70%',
-         width: 180,          // custom width
-    height: 180,
-        plugins: { legend: { display: false } },
-      }
-    });
-</script>
+            // Build both charts from model
+            renderDoughnutChart("severityChart", severityData);
+            renderDoughnutChart("statusChart", statusData);
+        });
+    </script>
+}

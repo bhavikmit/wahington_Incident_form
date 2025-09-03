@@ -6,9 +6,11 @@
     .text-submitted {
         color: #bfbfbf;
     }
-    .status-unknown{
+
+    .status-unknown {
         background-color: #0000FFFF;
     }
+
     .status-submitted {
         background-color: #bfbfbf;
     }
@@ -122,9 +124,9 @@
         .customTableDropdown .dropdown-toggle::before {
             display: none;
             /*    width: 11px;
-                            filter: brightness(1) !important;
-                            left: 81% !important;
-                            rotate: 92deg !important; */
+                                    filter: brightness(1) !important;
+                                    left: 81% !important;
+                                    rotate: 92deg !important; */
         }
 
         .customTableDropdown .dropdown-toggle.status-started::before {
@@ -343,6 +345,15 @@
 
         #noteIncidentModal .tag.internal {
             background: #9ca3af;
+        }
+
+        #noteIncidentModal .tag.external {
+            background: #2563eb; /* blue */
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 5px;
         }
 
     #noteIncidentModal .log-time {
@@ -654,23 +665,22 @@
         display: flex;
         align-items: center;
         gap: 20px;
-        
         font-size: 14px;
         /* margin-left: 25px; */
     }
 
-    .Statuslegend .legend-item {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
+        .Statuslegend .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-    .Statuslegend .dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        display: inline-block;
-    }
+        .Statuslegend .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
 
     .submitted {
         background-color: #bfbfbf;
@@ -853,11 +863,11 @@
 
         </div>
         <div class="Statuslegend">
-            <div class="legend-item"><span class="dot submitted"></span> Submitted</div>
-            <div class="legend-item"><span class="dot dispacthed"></span> Dispatched</div>
-            <div class="legend-item"><span class="dot started"></span> Started</div>
-            <div class="legend-item"><span class="dot complete"></span> Completed</div>
-            <div class="legend-item"><span class="dot rejected"></span> Cancelled</div>
+
+            @foreach (var item in Model.statusLegends)
+            {
+                <div class="legend-item"><span class="dot" style="background-color:@item.Group?.Name"></span> @item.Text</div>
+            }
         </div>
     </div>
     <div class="table-responsive incident-table" id="incidentGrid">
@@ -868,557 +878,13 @@
 <!-- Placeholder where modal will be injected -->
 <div id="incidentAddEditModalContainer"></div>
 <div id="incidentDetailModalContainer"></div>
+<div id="incidentNotesModalContainer"></div>
+<div id="incidentHistoryContainer"></div>
 
-<div class="modal fade" id="viewIncidentModal" tabindex="-1" aria-labelledby="viewIncidentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="viewIncidentModalModalLabel">INC-0001</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <!-- Status & Priority -->
-                        <div class="card p-3">
-                            <div class="section-title">Status & Priority</div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <span class="info-label">Status</span><br>
-                                    <span class="badge badge-status">Submitted</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span class="info-label">Severity</span><br>
-                                    <span class="badge badge-severity">Low</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Incident Details -->
-                        <div class="card p-3">
-                            <div class="section-title">Incident Details</div>
-                            <label class="info-label">Event Type: </label><p>Gas Leak</p>
-                            <label class="info-label">Description: </label><p>Sample incident description 1</p>
-                        </div>
-
-                        <!-- Incident Photos -->
-                        <div class="card incident-tablePhotso">
-                            <div class="section-title">Incident Photos</div>
-                            <div class="incident-photos">
-                                <div class="photo-thumb">
-                                    <img src="~/img/mobile-0.png" alt="Incident Photo 1">
-                                </div>
-                                <div class="photo-thumb">
-                                    <img src="~/img/mobile-1.png" alt="Incident Photo 2">
-                                </div>
-                                <div class="photo-thumb">
-                                    <img src="~/img/mobile-2.png" alt="Incident Photo 3">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Location Information -->
-                        <div class="card p-3">
-                            <div class="section-title">Location Information</div>
-                            <label class="info-label">Address: </label><p>2201 Service Ave, City, ST 12345</p>
-                            <label class="info-label">Nearest Intersection: </label> <p>Main St & Service Ave</p>
-
-                            <label class="info-label">Affected Assets: </label>
-                            <p>
-                                <span class="badge asset-badge">PIPE-001</span>
-                                <span class="badge asset-badge">VALVE-123</span>
-                            </p>
-                        </div>
-
-                        <!-- Safety Assessment -->
-                        <div class="card p-3">
-                            <div class="section-title">Safety Assessment</div>
-                            <div class="row">
-                                <div class="col-md-6 mb-2">
-                                    Gas Odor Present <span class="badge badge-unknown">Unknown</span>
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    Hissing Sound <span class="badge badge-no">No</span>
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    Visible Damage <span class="badge badge-no">No</span>
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    People Injured <span class="badge badge-no">No</span>
-                                </div>
-                                <div class="col-md-6 mb-2">
-                                    Evacuation Required <span class="badge badge-no">No</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Sidebar -->
-                    <div class="col-lg-4">
-                        <!-- Caller Information -->
-                        <div class="card p-3">
-                            <div class="section-title">Caller Information</div>
-                            <label class="info-label">Caller 1</label><p><small class="text-muted">Customer</small></p>
-                            <div class="callerInfo"><i class="fa fa-phone"></i> 555-829-0947</div>
-                            <div class="callerInfo"><i class="fa fa-calendar"></i>Aug 23, 2025 04:14 PM</div>
-                            <div class="callerInfo"><i class="fa fa-map-marker"></i> 6093 Main St, City, ST 12345</div>
-                        </div>
-
-                        <!-- Timeline -->
-                        <div class="card p-3">
-                            <div class="section-title">Timeline</div>
-                            <div class="timelineInfo">
-                                <label class="info-label">Created</label><br>
-                                <small class="text-muted">Aug 23, 2025 02:26 AM</small>
-                            </div>
-                            <div class="timelineInfo">
-                                <span class="info-label">Last Updated</span><br>
-                                <small class="text-muted">Aug 28, 2025 11:01 AM</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="noteIncidentModal" tabindex="-1" aria-labelledby="noteIncidentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="noteIncidentModalModalLabel">Notes: INC-0001</h5>
-
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="card communication-sec">
-                            <h3>Communication Log</h3>
-
-                            <div class="log-item">
-                                <div class="log-avatar"><i class="fa fa-user"></i></div>
-                                <div class="log-content">
-                                    <div class="log-header">
-                                        Jason <span class="tag system">external</span>
-                                        <span class="log-time">Aug 22, 2025 10:53 AM</span>
-                                        <span class="attached"><i class="fa fa-paperclip"></i>image.png</span>
-                                    </div>
-                                    <div class="log-text">
-                                        Initial incident report received from customer. Gas odor reported at location.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="log-item">
-                                <div class="log-avatar"><i class="fa fa-user"></i></div>
-                                <div class="log-content">
-                                    <div class="log-header">
-                                        John Smith <span class="tag internal">internal</span>
-                                        <span class="log-time">Aug 22, 2025 11:23 AM</span>
-                                        <span class="attached"><i class="fa fa-paperclip"></i>image.png</span>
-                                    </div>
-                                    <div class="log-text">
-                                        Contacted customer for additional details. Confirmed strong gas odor near meter.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="log-item">
-                                <div class="log-avatar"><i class="fa fa-user"></i></div>
-                                <div class="log-content">
-                                    <div class="log-header">
-                                        Sarah Johnson <span class="tag internal">internal</span>
-                                        <span class="log-time">Aug 22, 2025 11:38 AM</span>
-                                        <span class="attached"><i class="fa fa-paperclip"></i>image.png</span>
-                                    </div>
-                                    <div class="log-text">
-                                        Dispatched emergency response team. ETA 15 minutes.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-
-                        <div class="card">
-                            <h3>Add Note</h3>
-                            <div class="form-group">
-                                <label>Note Type</label>
-                                <select>
-                                    <option>Internal Note</option>
-                                    <option>External Note</option>
-                                </select>
-                            </div>
-                            <label for="noteContent">Note Content</label>
-                            <textarea id="noteContent" class="input-textarea" placeholder="Enter your note..."></textarea>
-
-                            <!-- File Upload Section -->
-                            <div class="NoteFileUpload">
-                                <div class="mb-3">
-                                    <label for="photoInput1" class="form-label">Upload Photo</label>
-                                    <input class="form-control" type="file" id="photoInput1" accept="image/*" />
-                                </div>
-
-                                <!-- Preview -->
-                                @*  <div class="mb-3">
-                                    <label class="form-label d-block">Preview:</label>
-                                    <img id="photoPreview1" src="" alt="No image selected"
-                                         class="img-thumbnail d-none" style="max-width: 300px;">
-                                </div> *@
-                            </div>
-
-                            <button class="btn btn-primary AddNote"><i class="fa fa-plus"></i>Add Note</button>
-                        </div>
-
-                        <div class="card summary">
-                            <h3>Incident Summary</h3>
-                            <p><span>Status:</span> Started</p>
-                            <p><span>Type:</span> Gas Leak</p>
-                            <p><span>Severity:</span> High</p>
-                            <p><span>Location:</span> 1531 Service Ave, City, ST 12345</p>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="historyIncidentModal" tabindex="-1" aria-labelledby="historyIncidentModalModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="historyIncidentModalModalModalLabel">History: INC-0001</h5>
-
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <h4>Activity Summary</h4>
-                            <p><span>Status Changes</span><span>3</span></p>
-                            <p><span>Notes Added</span><span>1</span></p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <h4>Time Metrics</h4>
-                            <p><span>Created</span><span>Aug 24, 2025 02:30 AM</span></p>
-                            <p><span>Last Updated</span><span>Aug 29, 2025 10:37 AM</span></p>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive incident-table historyModalTable">
-                            <table class="table align-middle text-left">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>Status</th>
-                                        <th>Location</th>
-                                        <th>Intersection</th>
-                                        <th>Type of Event</th>
-                                        <th>Severity</th>
-                                        <th>Description</th>
-                                        <th>ES Indicators</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="status-submitted">
-                                            <div class="dropdown customTableDropdown">
-                                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Submitted
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-                                        <td>Main St & 1st Ave</td>
-                                        <td>Power Outage</td>
-                                        <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
-                                        <td>Transformer failure</td>
-                                        <td>Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="status-submitted">
-                                            <div class="dropdown customTableDropdown">
-                                                <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Validated
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
-                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                                    <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
-                                                </ul>
-                                            </div>
-                                            <i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345
-                                        </td>
-                                        <td>Main St & 1st Ave</td>
-                                        <td>Power Outage</td>
-                                        <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
-                                        <td>Transformer failure</td>
-                                        <td>Yes</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="status-submitted">
-                                            <div class="dropdown customTableDropdown">
-                                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Submitted
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
-                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                                    <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-                                        <td>Main St & 1st Ave</td>
-                                        <td>Power Outage</td>
-                                        <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
-                                        <td>Transformer failure</td>
-                                        <td>Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="status-submitted">
-                                            <div class="dropdown customTableDropdown">
-                                                <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Validated
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
-                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                                    <li><div class="dropdown-item text-c ancelled" href="#">Cancelled</div></li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-                                        <td>Main St & 1st Ave</td>
-                                        <td>Power Outage</td>
-                                        <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
-                                        <td>Transformer failure</td>
-                                        <td>Yes</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td class="status-submitted">
-                                            <div class="dropdown customTableDropdown">
-                                                <button class="btn status-submitted rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Submitted
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
-                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-                                        <td>Main St & 1st Ave</td>
-                                        <td>Power Outage</td>
-                                        <td><span class="badge rounded-pill badge-low px-3 py-2">Low</span></td>
-                                        <td>Transformer failure</td>
-                                        <td>Yes</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="status-submitted">
-                                            <div class="dropdown customTableDropdown">
-                                                <button class="btn status-validated rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Validated
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><div class="dropdown-item text-submitted">Submitted</div></li>
-                                                    <li><div class="dropdown-item text-validated">Validated</div></li>
-                                                    <li><div class="dropdown-item text-dispatched" href="#">Dispatched</div></li>
-                                                    <li><div class="dropdown-item text-started" href="#">Started</div></li>
-                                                    <li><div class="dropdown-item text-completed" href="#">Completed</div></li>
-                                                    <li><div class="dropdown-item text-cancelled" href="#">Cancelled</div></li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                        <td><div class="map"><i class="fa fa-map-marker"></i>3069 Service Ave, City, ST 12345</div></td>
-                                        <td>Main St & 1st Ave</td>
-                                        <td>Power Outage</td>
-                                        <td><span class="badge rounded-pill badge-high px-3 py-2">High</span></td>
-                                        <td>Transformer failure</td>
-                                        <td>Yes</td>
-                                    </tr>
-
-
-                            </table>
-                        </div>
-                        @*  <div class="timeline card">
-                            <h3>Activity Timeline</h3>
-                            <ul>
-                                <li>
-                                    <span class="icon blue"><i class="fa fa-arrow-right"></i></span>
-                                    <div class="content">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="left-sec">
-                                                 <div class="title">Incident Created</div>
-                                                <div class="author">by System</div>
-                                            </div>
-                                            <div class="right-sec">
-                                                <div class="text-right time">
-                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
-                                                    <p class="text-xs text-gray-400">02:30 AM</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                       
-                                        <div class="desc">Initial incident report submitted</div>
-                                       
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <span class="icon blue"><i class="fa fa-exchange"></i></span>
-                                    <div class="content">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="left-sec">
-                                                <div class="title">Status Changed</div>
-                                                <div class="author">by John Smith</div>
-                                            </div>
-                                            <div class="right-sec">
-                                                <div class="text-right time">
-                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
-                                                    <p class="text-xs text-gray-400">02:30 AM</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                       
-                                        <div class="desc">Status changed from Submitted to Validated</div>
-                                        
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <span class="icon yellow"><i class="fa fa-sticky-note"></i></span>
-                                    <div class="content">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="left-sec">
-                                                <div class="title">Note Added</div>
-                                                <div class="author">by Sarah Johnson</div>
-                                            </div>
-                                            <div class="right-sec">
-                                                <div class="text-right time">
-                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
-                                                    <p class="text-xs text-gray-400">02:30 AM</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="desc">Added customer contact information and initial assessment</div>
-                                      
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <span class="icon green"><i class="fa fa-users"></i></span>
-                                    <div class="content">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="left-sec">
-                                                <div class="title">Team Assigned</div>
-                                                <div class="author">by Mike Wilson</div>
-                                            </div>
-                                            <div class="right-sec">
-                                                <div class="text-right time">
-                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
-                                                    <p class="text-xs text-gray-400">02:30 AM</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                       
-                                        <div class="desc">Assigned to Emergency Response Team Alpha</div>
-                                        
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <span class="icon blue"><i class="fa fa-exchange"></i></span>
-                                    <div class="content">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="left-sec">
-                                                <div class="title">Status Changed</div>
-                                                <div class="author">by Emergency Team</div>
-                                            </div>
-                                            <div class="right-sec">
-                                                <div class="text-right time">
-                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
-                                                    <p class="text-xs text-gray-400">02:30 AM</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                       
-                                        <div class="desc">Status changed from Validated to Dispatched</div>
-                                        
-                                    </div>
-                                </li>
-
-                                <li>
-                                    <span class="icon purple"><i class="fa fa-wrench"></i></span>
-                                    <div class="content">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="left-sec">
-                                                <div class="title">Field Update</div>
-                                                <div class="author">by Field Technician</div>
-                                            </div>
-                                            <div class="right-sec">
-                                                <div class="text-right time">
-                                                    <p class="text-sm text-gray-500">Aug 24, 2025</p>
-                                                    <p class="text-xs text-gray-400">02:30 AM</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="desc">Updated safety indicators and location details</div>
-                                       
-                                    </div>
-                                </li>
-                            </ul>
-                        </div> *@
-                    </div>
-
-                </div>
-
-
-
-
-            </div>
-        </div>
-    </div>
-    <!-- ✅ Dynamic Incident Details Modal -->
-</div>
 
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/masking/initiate-masking.js"></script>
 <script src="~/js/views/incident/incidentform.js"></script>
-
 
 <script>
         document.addEventListener("DOMContentLoaded", function () {

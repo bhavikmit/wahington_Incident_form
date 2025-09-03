@@ -1,22 +1,31 @@
 ﻿using DataLibrary;
+
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Office2013.Drawing.ChartStyle;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+
 using Humanizer;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Hosting;
+
+using Repositories.Common;
 using Repositories.Services.Dashboard.Interface;
 using Repositories.Services.Report.Interface;
+
 using System.Diagnostics;
 using System.Drawing;
 using System.IO.Pipelines;
+
 using ViewModels.Dashboard;
 using ViewModels.Dashboard.Common.Card;
 using ViewModels.Dashboard.interfaces;
+using ViewModels.Incident;
 using ViewModels.Report.PendingOrder;
+
 using Web.Models;
 
 namespace Web.Controllers
@@ -26,6 +35,7 @@ namespace Web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IDashboardService _service;
+        private readonly IIncidentDashboardService _iIncidentDashboardService;
         private readonly IDashboardFactory _dashboardFactory;
         private readonly IDashboardService _dashboardService;
         private readonly IDashboardCardService _cardService;
@@ -35,7 +45,7 @@ namespace Web.Controllers
 
         public HomeController(ILogger<HomeController> logger, IDashboardService service, IDashboardFactory dashboardFactory,
             IDashboardService dashboardService, IDashboardCardService cardService, IDashboardTableService tableService
-            , IReportService reportService, ApplicationDbContext context
+            , IReportService reportService, ApplicationDbContext context, IIncidentDashboardService iIncidentDashboardService
             )
         {
             _logger = logger;
@@ -46,6 +56,7 @@ namespace Web.Controllers
             _tableService = tableService;
             _reportService = reportService;
             _context = context;
+            _iIncidentDashboardService = iIncidentDashboardService;
         }
 
         //public async Task<JsonResult> GetChartData(DashboardSearchViewModel search)
@@ -79,42 +90,7 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Dashboard()
         {
-            var dashboardViewModel = new DashboardViewModel();
-
-            // Existing chart data
-            dashboardViewModel.WorkOrder = _dashboardFactory.CreateWorkOrderChartViewModel();
-            dashboardViewModel.WorkOrderByAssetType = _dashboardFactory.CreateWorkOrderByAssetTypeChartViewModel();
-            dashboardViewModel.WorkOrderByRepairType = _dashboardFactory.CreateWorkOrderByRepairTypeChartViewModel();
-            dashboardViewModel.WorkOrderByTechnician = _dashboardFactory.CreateWorkOrderByTechnicianChartViewModel();
-            dashboardViewModel.AssetByCondition = _dashboardFactory.CreateAssetByConditionChartViewModel();
-            dashboardViewModel.AssetMaintenanceDue = _dashboardFactory.CreateAssetMaintenanceDueChartViewModel();
-            dashboardViewModel.AssetReplacementDue = _dashboardFactory.CreateAssetReplacementDueChartViewModel();
-            dashboardViewModel.GetCostAccuracy = _dashboardFactory.CreateCostAccuracyChartViewModel();
-
-            // ✅ Add severity data
-            var severityData = _context.Incidents
-                .GroupBy(i => i.SeverityLevelId)
-                .Select(g => new { Id = g.Key, Count = g.Count() })
-                .Join(_context.SeverityLevels, g => g.Id, s => s.Id,
-                    (g, s) => new { Name = s.Name, Color = s.Color, Count = g.Count })
-                .ToList();
-
-            dashboardViewModel.SeverityLabels = severityData.Select(s => s.Name).ToList();
-            dashboardViewModel.SeverityCounts = severityData.Select(s => s.Count).ToList();
-            dashboardViewModel.SeverityColors = severityData.Select(s => s.Color).ToList();
-
-            // ✅ Add status data
-            var statusData = _context.Incidents
-                .GroupBy(i => i.StatusLegendId)
-                .Select(g => new { Id = g.Key, Count = g.Count() })
-                .Join(_context.StatusLegends, g => g.Id, s => s.Id,
-                    (g, s) => new { Name = s.Name, Color = s.Color, Count = g.Count })
-                .ToList();
-
-            dashboardViewModel.StatusLabels = statusData.Select(s => s.Name).ToList();
-            dashboardViewModel.StatusCounts = statusData.Select(s => s.Count).ToList();
-            dashboardViewModel.StatusColors = statusData.Select(s => s.Color).ToList();
-
+            var dashboardViewModel = await _iIncidentDashboardService.GetIncidentDashboardReport();
             return View("ChartIndex", dashboardViewModel);
         }
         [HttpGet]
@@ -244,7 +220,5 @@ namespace Web.Controllers
             var response = await _tableService.SaveDatatableCell(propertyName, propertyValue, entityId, entityName);
             return Json(response);
         }
-
-
     }
 }

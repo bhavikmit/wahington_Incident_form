@@ -65,7 +65,11 @@ namespace Repositories.Common
                     .Select(it => new SelectListItem
                     {
                         Value = it.Id.ToString(),
-                        Text = it.Name
+                        Text = it.Name,
+                        Group = new SelectListGroup()
+                        {
+                            Name = it.Color
+                        }
                     })
                     .ToListAsync();
 
@@ -193,77 +197,90 @@ namespace Repositories.Common
 
         public async Task<string> UpdateIncident(IncidentViewModel viewModel)
         {
-            await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
                 var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == viewModel.Id);
 
+                // If no incident, save as new
                 if (incident == null)
                 {
-                    await transaction.RollbackAsync();
                     return await SaveIncident(viewModel);
                 }
 
                 // Save file if available
-                var imageUrl = viewModel.incidentSupportingInfoViewModel?.File != null && viewModel.incidentSupportingInfoViewModel?.File.Count > 0
-                    ? await SaveAttachments(viewModel.incidentSupportingInfoViewModel.File)
-                    : null;
+                var file = viewModel.incidentSupportingInfoViewModel?.File;
+                var imageUrl = (file?.Count > 0) ? await SaveAttachments(file) : null;
 
-                if (viewModel.incidentSupportingInfoViewModel != null)
-                    viewModel.incidentSupportingInfoViewModel.ImageUrl = imageUrl;
+                if (!string.IsNullOrWhiteSpace(imageUrl))
+                {
+                    viewModel.incidentSupportingInfoViewModel!.ImageUrl = imageUrl;
+                }
+                else
+                {
+                    viewModel.incidentSupportingInfoViewModel!.ImageUrl ??= incident.ImageUrl;
+                }
 
-                // Map ViewModel → Entity
-
-                //incident.IncidentID = incident.IncidentID;
-                //incident.StatusLegendId = incident.StatusLegendId;
+                // Update entity from ViewModel
                 incident.SeverityLevelId = viewModel.severityLevelId;
                 incident.DescriptionIssue = viewModel.DescriptionIssue;
 
-                incident.CallerAddress = viewModel.incidentCellerInformation?.CallerAddress;
-                incident.CallerPhoneNumber = viewModel.incidentCellerInformation?.CallerPhoneNumber;
-                incident.CallerName = viewModel.incidentCellerInformation?.CallerName;
-                incident.CallTime = viewModel.incidentCellerInformation?.CallTime ?? DateTime.Now;
-                incident.RelationshipId = viewModel.incidentCellerInformation?.RelationshipId;
+                var caller = viewModel.incidentCellerInformation;
+                incident.CallerAddress = caller?.CallerAddress;
+                incident.CallerPhoneNumber = caller?.CallerPhoneNumber;
+                incident.CallerName = caller?.CallerName;
+                incident.CallTime = caller?.CallTime ?? DateTime.Now;
+                incident.RelationshipId = caller?.RelationshipId;
 
-                incident.EventTypeIds = viewModel.incidentDetails?.EventTypeIds;
-                incident.IsOtherEvent = viewModel.incidentDetails.IsOtherEvent;
-                incident.OtherEventDetail = viewModel.incidentDetails?.OtherEventDetail;
+                var details = viewModel.incidentDetails;
+                incident.EventTypeIds = details?.EventTypeIds;
+                incident.IsOtherEvent = details?.IsOtherEvent ?? false;
+                incident.OtherEventDetail = details?.OtherEventDetail;
 
-                incident.EvacuationRequiredId = viewModel.incidentEnvironmentalViewModel?.EvacuationRequiredID;
-                incident.HissingPresentId = viewModel.incidentEnvironmentalViewModel?.HissingSoundPresentID;
-                incident.VisibleDamagePresentId = viewModel.incidentEnvironmentalViewModel?.VisibleDamageID;
-                incident.PeopleInjuredId = viewModel.incidentEnvironmentalViewModel?.PeopleInjuredID;
-                incident.GasPresentId = viewModel.incidentEnvironmentalViewModel?.GasodorpresentID;
+                var env = viewModel.incidentEnvironmentalViewModel;
+                incident.EvacuationRequiredId = env?.EvacuationRequiredID;
+                incident.HissingPresentId = env?.HissingSoundPresentID;
+                incident.VisibleDamagePresentId = env?.VisibleDamageID;
+                incident.PeopleInjuredId = env?.PeopleInjuredID;
+                incident.GasPresentId = env?.GasodorpresentID;
 
-                incident.Landmark = viewModel.incidentiLocation?.Landmark;
-                incident.LocationAddress = viewModel.incidentiLocation?.Address;
-                incident.ServiceAccount = viewModel.incidentiLocation?.ServiceAccount;
-                incident.AssetIds = viewModel.incidentiLocation?.AssetIDs;
-                incident.IsSameCallerAddress = viewModel.incidentiLocation.IsSameCallerAddress;
+                var loc = viewModel.incidentiLocation;
+                incident.Landmark = loc?.Landmark;
+                incident.LocationAddress = loc?.Address;
+                incident.ServiceAccount = loc?.ServiceAccount;
+                incident.AssetIds = loc?.AssetIDs;
+                incident.IsSameCallerAddress = loc?.IsSameCallerAddress ?? false;
 
-                incident.ImageUrl = viewModel.incidentSupportingInfoViewModel != null ? viewModel.incidentSupportingInfoViewModel?.ImageUrl : incident.ImageUrl;
-                incident.SupportInfoNotes = viewModel.incidentSupportingInfoViewModel?.Notes;
+                var support = viewModel.incidentSupportingInfoViewModel;
+                incident.ImageUrl = support?.ImageUrl ?? incident.ImageUrl;
+                incident.SupportInfoNotes = support?.Notes;
 
-
-                await _db.SaveChangesAsync();
-                await transaction.CommitAsync();
+                // Save within transaction
+                await using var transaction = await _db.Database.BeginTransactionAsync();
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
 
                 return incident.IncidentID;
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error SaveIncident.");
+                _logger.LogError(ex, "Error updating incident.");
                 return string.Empty;
             }
         }
+
 
         public async Task<List<IncidentGridViewModel>> GetIncidentList(FilterRequest request)
         {
 
             List<IncidentGridViewModel> incidentGridViews = new();
-
-            await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
                 var query = _db.Incidents
@@ -311,19 +328,56 @@ namespace Repositories.Common
                         SeverityId = item.SeverityLevelId,
                         StatusLegend = item.StatusLegend.Name,
                         StatusLegendColor = item.StatusLegend.Color,
-                        StatusLegendId = item.StatusLegendId
+                        StatusLegendId = item.StatusLegendId,
+                        RelationShipName = item.Relationship.Name,
+                        RelationShipId = item.RelationshipId,
                     });
                 }
                 return incidentGridViews;
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error GetIncidentList.");
                 return new List<IncidentGridViewModel>();
             }
         }
 
+        //public async Task<string?> ChangeIncidentStatus(long incidentId, string statusText)
+        //{
+        //    await using var transaction = await _db.Database.BeginTransactionAsync();
+
+        //    try
+        //    {
+        //        var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == incidentId);
+
+        //        if (incident == null)
+        //        {
+        //            await transaction.RollbackAsync();
+        //            return null; // or string.Empty if you want
+        //        }
+
+        //        if (Enum.TryParse<StatusLegendEnum>(statusText, true, out var status))
+        //        {
+        //            incident.StatusLegendId = (long)status;
+
+        //            await _db.SaveChangesAsync();
+        //            await transaction.CommitAsync();
+        //        }
+        //        else
+        //        {
+        //            await transaction.RollbackAsync();
+        //            return null;
+        //        }
+
+        //        return incident.IncidentID;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        await transaction.RollbackAsync();
+        //        _logger.LogError(ex, "Error ChangeIncidentStatus.");
+        //        return null; // or string.Empty
+        //    }
+        //}
         public async Task<string?> ChangeIncidentStatus(long incidentId, string statusText)
         {
             await using var transaction = await _db.Database.BeginTransactionAsync();
@@ -335,21 +389,41 @@ namespace Repositories.Common
                 if (incident == null)
                 {
                     await transaction.RollbackAsync();
-                    return null; // or string.Empty if you want
-                }
-
-                if (Enum.TryParse<StatusLegendEnum>(statusText, true, out var status))
-                {
-                    incident.StatusLegendId = (long)status;
-
-                    await _db.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                else
-                {
-                    await transaction.RollbackAsync();
                     return null;
                 }
+
+                // find matching status from StatusLegends table
+                var statusLegend = await _db.StatusLegends
+                    .FirstOrDefaultAsync(s => s.Name.ToLower() == statusText.ToLower());
+
+                if (statusLegend == null)
+                {
+                    await transaction.RollbackAsync();
+                    return null; // no such status in DB
+                }
+
+                // update incident status
+                incident.StatusLegendId = statusLegend.Id;
+                incident.UpdatedOn = DateTime.UtcNow;
+
+                // add history entry
+                var history = new IncidentHistory
+                {
+                    IncidentId = incident.Id,
+                    StatusLegendId = statusLegend.Id,
+                    Description = $"Status changed to {statusLegend.Name}",
+                    IsDeleted = false,
+                    ActiveStatus = Enums.ActiveStatus.Active,
+                    CreatedOn = DateTime.UtcNow,
+                    CreatedBy = 1,  // replace with current user id
+                    UpdatedOn = DateTime.UtcNow,
+                    UpdatedBy = 1   // replace with current user id
+                };
+
+                _db.IncidentHistories.Add(history);
+
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
 
                 return incident.IncidentID;
             }
@@ -357,15 +431,15 @@ namespace Repositories.Common
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error ChangeIncidentStatus.");
-                return null; // or string.Empty
+                return null;
             }
         }
 
+
+
         public async Task<IncidentViewModel> GetById(long incidentId)
         {
-            IncidentViewModel incidentViewModel = new();
-
-            await using var transaction = await _db.Database.BeginTransactionAsync();
+            var incidentViewModel = new IncidentViewModel();
 
             try
             {
@@ -375,7 +449,6 @@ namespace Repositories.Common
 
                 if (incident == null)
                 {
-                    await transaction.RollbackAsync();
                     return new IncidentViewModel();
                 }
 
@@ -410,7 +483,6 @@ namespace Repositories.Common
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 _logger.LogError(ex, "Error GetById.");
                 return new IncidentViewModel();
             }
@@ -436,13 +508,7 @@ namespace Repositories.Common
                     Id = incident.Id,
                     DescriptionIssue = incident.DescriptionIssue,
                     severityLevelId = incident.SeverityLevelId,
-                    SeverityName = incident.SeverityLevel?.Name ?? string.Empty,
-                    SeverityColor = incident.SeverityLevel?.Color ?? string.Empty,
-                    StatusLegendName = incident.StatusLegend?.Name ?? string.Empty,
-                    StatusLegendColor = incident.StatusLegend?.Color ?? string.Empty,
-                    IncidentNumber = incident.IncidentID,
-                    CreatedOn = incident.CreatedOn,
-                    UpdatedOn = incident.UpdatedOn,
+
 
                     incidentDetails = new IncidentDetailsViewModel
                     {
@@ -450,6 +516,17 @@ namespace Repositories.Common
                         IsOtherEvent = incident.IsOtherEvent,
                         OtherEventDetail = incident.OtherEventDetail ?? string.Empty,
                         EventTypes = new List<SelectListItem>()
+                    },
+
+                    incidentDetailByIdViewModel = new IncidentDetailByIdViewModel()
+                    {
+                        SeverityName = incident.SeverityLevel?.Name ?? string.Empty,
+                        SeverityColor = incident.SeverityLevel?.Color ?? string.Empty,
+                        StatusLegendName = incident.StatusLegend?.Name ?? string.Empty,
+                        StatusLegendColor = incident.StatusLegend?.Color ?? string.Empty,
+                        IncidentNumber = incident.IncidentID,
+                        CreatedOn = incident.CreatedOn,
+                        UpdatedOn = incident.UpdatedOn,
                     },
 
                     incidentCellerInformation = new IncidentCellerInformationViewModel

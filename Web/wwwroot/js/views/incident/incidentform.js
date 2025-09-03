@@ -41,8 +41,8 @@
 
         var isValid = true;
 
-        // Loop through all required fields
-        $("#pills-location").find("input[data-val-required], textarea[data-val-required]").each(function () {
+        // Loop through all required fields, excluding the serviceAct field
+        $("#pills-location").find("input[data-val-required]:not(#serviceAct), textarea[data-val-required]").each(function () {
             var $field = $(this);
             var value = $.trim($field.val());
 
@@ -64,6 +64,7 @@
             $("#pills-detail-tab").trigger("click");
         }
     });
+
 
     $(document).off("click", "#nextToDescriptionIssue");
     $(document).on("click", "#nextToDescriptionIssue", function (e) {
@@ -409,17 +410,6 @@
         $field.siblings(".field-validation-error").remove();
     }
 });
-
-//function ShowImage(input) {
-//    if (input.files && input.files[0]) {
-//        var reader = new FileReader();
-//        reader.onload = function (e) {
-//            $('#image-thumbnail').attr('src', e.target.result);
-//        }
-//        reader.readAsDataURL(input.files[0]);
-//    }
-//}
-
 function ShowImage(input) {
     if (input.files && input.files.length > 0) {
         var preview = $('#image-thumbnails');
@@ -445,8 +435,6 @@ function ShowImage(input) {
         });
     }
 }
-
-
 function RemoveImage() {
     document.getElementById("Image").value = "";
     $(".img-thumbnail").remove();
@@ -458,7 +446,7 @@ async function SaveIncidentForm() {
 
         $("#statusSelect").val('');
         $("#severitySelect").val('');
-
+        let form = [];
         let formData = new FormData();
         let obj = $("#NewIncidentForm")[0];
 
@@ -466,6 +454,7 @@ async function SaveIncidentForm() {
         $(obj).find("input[type='file']").each(function (i, tag) {
             for (let file of tag.files) {
                 formData.append(tag.name, file);
+                form.push({ name: tag.name, file: file });
             }
         });
 
@@ -476,18 +465,36 @@ async function SaveIncidentForm() {
         $.each(params, function (i, val) {
             if (val.name === "asset.Id") {
                 assetIds.push(val.value);
-            } else {
+                form.push({ name: val.name, value: val.value });
+            }
+            else if (val.name === "eventTypes.Id") {
+                eventTypeIds.push(val.value);
+                form.push({ name: val.name, value: val.value });
+            }
+            else if (val.name === "incidentDetails.IsOtherEvent") {
+                formData.append("incidentDetails.IsOtherEvent", $("#IsOtherEvent").is(":checked"));
+                form.push({ name: val.name, value: $("#IsOtherEvent").is(":checked") });
+            }
+            else if (val.name === "incidentCellerInformation.CallTime") {
+                formData.append("incidentCellerInformation.CallTime", $("#hdnCallTimedatetime").val());
+                form.push({ name: val.name, value: $("#hdnCallTimedatetime").val() });
+            }
+
+            else {
                 formData.append(val.name, val.value);
+                form.push({ name: val.name, value: val.value });
             }
         });
 
-        $.each(params, function (i, val) {
-            if (val.name === "eventTypes.Id") {
-                eventTypeIds.push(val.value);
-            } else {
-                formData.append(val.name, val.value);
-            }
-        });
+        //$.each(params, function (i, val) {
+        //    if (val.name === "eventTypes.Id") {
+        //        eventTypeIds.push(val.value);
+        //        form.push({ name: val.name, value: val.value });
+        //    } else {
+        //        formData.append(val.name, val.value);
+        //        form.push({ name: val.name, value: val.value });
+        //    }
+        //});
 
 
         // Add AssetIds
@@ -502,7 +509,8 @@ async function SaveIncidentForm() {
 
         showLoader($("#addIncidentModal"));
 
-        console.log(formData);
+        //console.log(formData);
+        console.log(form);
 
         // Send request
         let response = await fetch("/Incidents/SaveIncident", {
@@ -554,41 +562,6 @@ async function GetIncidentList(statusID, severityID, description) {
     }
 }
 
-//async function ChangeIncidentStatus(incidentID, statusID) {
-//    try {
-//        showLoader($(".main-content"));
-
-//        // Prepare request payload
-//        let payload = {
-//            incidentId: incidentID,
-//            status: statusID
-//        };
-
-//        // Send request
-//        let response = await fetch("/Incidents/ChangeIncidentStatus", {
-//            method: "POST",
-//            headers: {
-//                "Content-Type": "application/json"
-//            },
-//            body: JSON.stringify(payload)
-//        });
-
-//        let result = await response.json();
-
-//        if (response.ok && result.success) {
-//            SwalSuccessAlert(result.data || "Status updated successfully.");
-//            GetIncidentList(0, 0, "");
-//        } else {
-//            SwalErrorAlert(result.message || "Failed to change status of incident.");
-//        }
-//    } catch (error) {
-//        SwalErrorAlert("Error while changing status of incident!");
-//        console.error(error);
-//    } finally {
-//        hideLoader($(".main-content"));
-//    }
-//}
-
 async function LoadIncidentModal(id = 0) {
     try {
         showLoader($(".main-content"));
@@ -624,8 +597,6 @@ async function LoadIncidentModal(id = 0) {
         //}
     }
 }
-
-
 function resetIncidentForm() {
     const form = document.querySelector("#NewIncidentForm");
     if (!form) return;
@@ -679,4 +650,48 @@ function resetIncidentForm() {
 //            preview.append(fileIcon);
 //        }
 //    });
+//}
+
+//async function ChangeIncidentStatus(incidentID, statusID) {
+//    try {
+//        showLoader($(".main-content"));
+
+//        // Prepare request payload
+//        let payload = {
+//            incidentId: incidentID,
+//            status: statusID
+//        };
+
+//        // Send request
+//        let response = await fetch("/Incidents/ChangeIncidentStatus", {
+//            method: "POST",
+//            headers: {
+//                "Content-Type": "application/json"
+//            },
+//            body: JSON.stringify(payload)
+//        });
+
+//        let result = await response.json();
+
+//        if (response.ok && result.success) {
+//            SwalSuccessAlert(result.data || "Status updated successfully.");
+//            GetIncidentList(0, 0, "");
+//        } else {
+//            SwalErrorAlert(result.message || "Failed to change status of incident.");
+//        }
+//    } catch (error) {
+//        SwalErrorAlert("Error while changing status of incident!");
+//        console.error(error);
+//    } finally {
+//        hideLoader($(".main-content"));
+//    }
+//}
+//function ShowImage(input) {
+//    if (input.files && input.files[0]) {
+//        var reader = new FileReader();
+//        reader.onload = function (e) {
+//            $('#image-thumbnail').attr('src', e.target.result);
+//        }
+//        reader.readAsDataURL(input.files[0]);
+//    }
 //}

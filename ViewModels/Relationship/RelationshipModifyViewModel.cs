@@ -8,7 +8,7 @@ namespace ViewModels
 {
     public class RelationshipModifyViewModel : BaseUpdateVM, IBaseCrudViewModel, IIdentitifier
     {
-        [Display(Name = "Relationship", Prompt = "Relationship")]
+        [Display(Name = "Source", Prompt = "Source")]
         public string Name { get; set; }
     }
 }

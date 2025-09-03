@@ -35,7 +35,7 @@ namespace ViewModels.Incident
         public string CallerAddress { get; set; } = default!;
         public List<SelectListItem> Relationships { get; set; } = new();
         public long? RelationshipId { get; set; } = default!;
-        public DateTime? CallTime { get; set; } = default!;
+        public DateTime CallTime { get; set; } = default!;
         public string RelationshipName { get; set; } = string.Empty;
     }
     public class IncidentiLocationViewModel
@@ -43,7 +43,7 @@ namespace ViewModels.Incident
         public string Address { get; set; } = default!;
         public bool IsSameCallerAddress { get; set; } = default!;
         public string Landmark { get; set; } = default!;
-        public string ServiceAccount { get; set; } = default!;
+        public string? ServiceAccount { get; set; } = default!;
         public string AssetIDs { get; set; } = default!;
         public List<SelectListItem> AssetsIncidentList { get; set; } = new();
         public List<string> AssetNames { get; set; } = new();

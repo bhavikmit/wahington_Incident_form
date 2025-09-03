@@ -228,7 +228,7 @@ namespace Repositories.Common
                 incident.CallerAddress = caller?.CallerAddress;
                 incident.CallerPhoneNumber = caller?.CallerPhoneNumber;
                 incident.CallerName = caller?.CallerName;
-                incident.CallTime = caller?.CallTime ?? DateTime.Now;
+                incident.CallTime = caller?.CallTime ?? incident.CallTime;
                 incident.RelationshipId = caller?.RelationshipId;
 
                 var details = viewModel.incidentDetails;

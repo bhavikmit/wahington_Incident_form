@@ -1497,6 +1497,7 @@ Media Query
     overflow-x: hidden;
     overflow-y: auto;
     box-shadow: 0px 0px 14px #efefef;
+    z-index:9;
     /* box-shadow: 0px 2px 3px 0px #0000004D;
     box-shadow: 0px 6px 10px 4px #00000026; */
 }
@@ -1540,7 +1541,9 @@ Media Query
                 margin-bottom: 0;
                 position: relative;
             }
-
+                .sidebar .navigation ul li .dropdown-menu li {
+                    margin-top: 0;
+                }
                 .sidebar .navigation ul li:first-child {
                     margin-top: 0;
                 }
@@ -1560,8 +1563,9 @@ Media Query
         /* font-family: "Inter", sans-serif; */
         font-weight: 400;
         line-height: 1.2;
-        font-size: 13px;
-        color: var(--text-gray);
+        font-size: 14px;
+        /*color: var(--text-gray);*/
+        color: #f54e00;
         border: 1px solid var(--primary-color);
         min-height: 44px;
         padding: 0 20px;
@@ -2199,7 +2203,7 @@ span.select2-selection__arrow:after {
 
 .main-content {
     width: calc(100% - 240px);
-    padding: 15px 20px 20px;
+    /*padding: 15px 20px 20px;*/
     height: calc(100vh - 27px);
     height: calc(100vh - 0px);
     overflow-x: hidden;
@@ -3166,11 +3170,11 @@ body.menu-collapsed .sidebar .nav-ul li a.dropdown-item span {
 }
 
 .sidebar-account.dropdown-toggle::before {
-    content: "";
+    content: "" !important;
     background: url(../../img/dropdown.svg) no-repeat;
     background-size: contain;
     height: 1.5em;
-    width: 1.5em;
+    width: 1.5em !important; 
     filter: none;
 }
 
@@ -3193,6 +3197,7 @@ body.menu-collapsed .btn-toggle::before {
     width: 1em;
     content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
 }
+
 
 .navigation .dropdown-toggle[aria-expanded="true"]::before,
 .btn-toggle[aria-expanded="true"]::before {

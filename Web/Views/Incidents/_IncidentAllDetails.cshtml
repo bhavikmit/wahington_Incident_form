@@ -1,7 +1,39 @@
 ﻿@model ViewModels.Incident.IncidentViewModel
+<style>
+    #imgPreviewModal.modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        padding-top: 60px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,61%);
+    }
 
+    #imgPreviewModal .modal-content {
+        display: block;
+        margin: auto;
+        max-width: 50%;
+        max-height: 80%;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    #imgPreviewModal .close {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        cursor: pointer;
+        opacity: 1;
+    }
+</style>
 <div class="modal fade" id="incidentDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content" id="incidentDetailsContent">
 
 
@@ -14,7 +46,7 @@
                 <div class="row">
                     <div class="col-lg-8">
 
-                        <!-- Status & Severity -->
+                        <!-- Status & Severity --> 
                         <div class="card p-3">
                             <div class="section-title">Status & Priority</div>
                             <div class="row">
@@ -36,14 +68,16 @@
                         <!-- Incident Details -->
                         <div class="card p-3">
                             <div class="section-title">Incident Details</div>
+                            
+                                <label class="info-label">Event Type:</label>
                             <p>
-                                <b>Event Type:</b>
                                 @(Model.incidentDetails.EventTypeNames != null && Model.incidentDetails.EventTypeNames.Any()
                                                                 ? string.Join(", ", Model.incidentDetails.EventTypeNames)
                                                                 : "Unknown")
                             </p>
-                            <p><b>Description:</b> @Model.DescriptionIssue</p>
+                            <label class="info-label">Description:</label><p>@Model.DescriptionIssue</p>
                         </div>
+                        
 
                         @if (Model.incidentSupportingInfoViewModel.ImageUrls != null
                                                 && Model.incidentSupportingInfoViewModel.ImageUrls.Any())
@@ -68,11 +102,12 @@
                         <!-- Location Information -->
                         <div class="card p-3">
                             <div class="section-title">Location Information</div>
-                            <p><b>Address:</b> @Model.incidentiLocation.Address</p>
-                            <p><b>Nearest Intersection:</b> @Model.incidentiLocation.Landmark</p>
-                            <p><b>Service Account:</b> @Model.incidentiLocation.ServiceAccount</p>
+                            <label class="info-label">Address:</label><p> @Model.incidentiLocation.Address</p>
+                            <label class="info-label">Nearest Intersection:</label><p> @Model.incidentiLocation.Landmark</p>
+                            <label class="info-label">Service Account:</label><p> @Model.incidentiLocation.ServiceAccount</p>
+                            
+                                <label class="info-label">Affected Assets:</label>
                             <p>
-                                <b>Affected Assets:</b>
                                 @(Model.incidentiLocation.AssetNames != null && Model.incidentiLocation.AssetNames.Any()
                                                                 ? string.Join(", ", Model.incidentiLocation.AssetNames)
                                                                 : "Unknown")
@@ -80,13 +115,27 @@
                         </div>
 
                         <!-- Safety Assessment -->
+                       
+
                         <div class="card p-3">
                             <div class="section-title">Safety Assessment</div>
-                            <p>Gas Odor Present: @Model.incidentEnvironmentalViewModel.GasOdorText</p>
-                            <p>Hissing Sound: @Model.incidentEnvironmentalViewModel.HissingSoundText</p>
-                            <p>Visible Damage: @Model.incidentEnvironmentalViewModel.VisibleDamageText</p>
-                            <p>People Injured: @Model.incidentEnvironmentalViewModel.PeopleInjuredText</p>
-                            <p>Evacuation Required: @Model.incidentEnvironmentalViewModel.EvacuationRequiredText</p>
+                            <div class="row">
+                                <div class="col-md-6 mb-2 d-flex justify-content-between">
+                                    <div>Gas Odor Present:</div><div class="badge badge-unknown">@Model.incidentEnvironmentalViewModel.GasOdorText</div>
+                                </div>
+                                <div class="col-md-6 mb-2 d-flex justify-content-between">
+                                    <div> Hissing Sound:</div><div class="badge badge-no">@Model.incidentEnvironmentalViewModel.HissingSoundText</div>
+                                </div>
+                                <div class="col-md-6 mb-2 d-flex justify-content-between">
+                                    <div>Visible Damage:</div><div class="badge badge-no">@Model.incidentEnvironmentalViewModel.VisibleDamageText</div>
+                                </div>
+                                <div class="col-md-6 mb-2 d-flex justify-content-between">
+                                    <div>People Injured:</div><div class="badge badge-no">@Model.incidentEnvironmentalViewModel.PeopleInjuredText</div>
+                                </div>
+                                <div class="col-md-6 mb-2 d-flex justify-content-between">
+                                    <div>Evacuation Required:</div><div class="badge badge-no">@Model.incidentEnvironmentalViewModel.EvacuationRequiredText</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -96,17 +145,21 @@
                         <!-- Caller Information -->
                         <div class="card p-3">
                             <div class="section-title">Caller Information</div>
-                            <p><b>@Model.incidentCellerInformation.CallerName</b></p>
-                            <p><i class="fa fa-phone"></i> @Model.incidentCellerInformation.CallerPhoneNumber</p>
-                            <p><i class="fa fa-calendar"></i> @(Model.incidentCellerInformation.CallTime?.ToString("dd MMM yyyy hh:mm tt"))</p>
-                            <p><i class="fa fa-map-marker"></i> @Model.incidentCellerInformation.CallerAddress</p>
+                            <label class="info-label">Caller 1</label><p><small class="text-muted">@Model.incidentCellerInformation.CallerName</small></p>
+                            
+                            <div class="callerInfo"><i class="fa fa-phone"></i> @Model.incidentCellerInformation.CallerPhoneNumber</div>
+                            <div class="callerInfo"><i class="fa fa-calendar"></i> @(Model.incidentCellerInformation.CallTime?.ToString("dd MMM yyyy hh:mm tt"))</div>
+                            <div class="callerInfo"><i class="fa fa-map-marker"></i> @Model.incidentCellerInformation.CallerAddress</div>
                         </div>
 
                         <!-- Timeline -->
                         <div class="card p-3">
                             <div class="section-title">Timeline</div>
-                            <p><b>Created On:</b> @Model.incidentDetailByIdViewModel.CreatedOn?.ToString("dd MMM yyyy hh:mm tt")</p>
-                            <p><b>Last Updated:</b> @Model.incidentDetailByIdViewModel.UpdatedOn?.ToString("dd MMM yyyy hh:mm tt")</p>
+                            <div class="timelineInfo"><label class="info-label">Created On:</label> <small class="text-muted">@Model.incidentDetailByIdViewModel.CreatedOn?.ToString("dd MMM yyyy hh:mm tt")</small></div>
+                            <div class="timelineInfo">
+                                <span class="info-label">Last Updated:</span>
+                                <small class="text-muted"> @Model.incidentDetailByIdViewModel.UpdatedOn?.ToString("dd MMM yyyy hh:mm tt")</small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -114,3 +167,32 @@
         </div>
     </div>
 </div>
+<div id="imgPreviewModal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="previewImg" src="~/img/banner.jpg">
+</div>
+
+<script>
+        document.querySelectorAll('.photo-thumb').forEach(link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault(); // prevent normal link behavior
+        const modal = document.getElementById("imgPreviewModal");
+        const modalImg = document.getElementById("previewImg");
+        modal.style.display = "block";
+        modalImg.src = this.href; // show clicked image
+      });
+    });
+
+    // Close modal on click of X
+    document.querySelector('.close').onclick = function () {
+      document.getElementById("imgPreviewModal").style.display = "none";
+    };
+
+    // Close modal when clicking outside the image
+    window.onclick = function (event) {
+      const modal = document.getElementById("imgPreviewModal");
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    };
+</script>

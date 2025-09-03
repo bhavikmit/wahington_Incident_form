@@ -1,124 +1,809 @@
 ﻿@{
     ViewBag.Title = "Settings";
-
 }
 
-<link rel="stylesheet" href="~/css/tabs.css" asp-append-version="true" />
-<h3 class="default-heading">
-    Settings
-</h3>
-<section class="tabs-section">
-    <div class="container-fluid" style=" min-height: calc(100vh - 240px);">
+<style>
+    /*****************Header style***************************/
+    .header {
+        background: #ffffff;
+        padding: 16px;
+        box-shadow: 0px 0px 14px #efefef;
+    }
 
-        <div class="mt-4">
-            <div id="menu-items-container" class="menu-items-container d-flex flex-wrap gap-2 mt-3">
+    .logo-section .title h2 {
+        font-weight: 800;
+        font-size: 28px;
+        margin-bottom: 0;
+        line-height: normal;
+        color: #494949;
+    }
+
+    .logo-section .title span {
+        color: darkgrey;
+    }
+
+    .profile .sidebar-account.dropdown-toggle::before {
+        display: none;
+    }
+
+    .icon {
+        position: relative;
+        font-size: 18px;
+        color: #666;
+        cursor: pointer;
+        margin-right: 16px;
+    }
+
+    .notification-dot {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 8px;
+        height: 8px;
+        background-color: red;
+        border-radius: 50%;
+    }
+
+    .profile {
+        width: 34px;
+        height: 34px;
+        background: #f54e00;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .profile i.fa {
+            color: #ffffff;
+        }
+
+    .header .logo {
+        background-color: #ededed;
+        color: #f54e00;
+        border-radius: 12px;
+        padding: 10px;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+    }
+
+    .header .dropdown-toggle::before {
+        display: none;
+    }
+
+    /*****************setting page style******************/
+    .settings-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+    }
+
+        .settings-header h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .settings-header p {
+            margin: 4px 0 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+    .save-btn {
+        background-color: green;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .save-btn:hover {
+            background-color: forestgreen;
+        }
+
+    .settings-container {
+        display: flex;
+        gap: 20px;
+        padding: 0 20px 20px;
+    }
+
+        /* Sidebar */
+        .settings-container .sidebar {
+            width: 250px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+            .settings-container .sidebar h3 {
+                margin: 0 0 15px 20px;
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+            .settings-container .sidebar ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+                .settings-container .sidebar ul li {
+                    padding: 12px 20px;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    font-size: 14px;
+                    color: #333;
+                    cursor: pointer;
+                }
+
+                    .settings-container .sidebar ul li.active {
+                        background-color: #ffddcc;
+                        font-weight: bold;
+                        color: #f54e00;
+                        border-left: 4px solid #f54e00;
+                    }
+
+                    .settings-container .sidebar ul li:hover {
+                        background-color: #f3f4f6;
+                    }
+
+            .settings-container .sidebar i {
+                font-size: 16px;
+            }
+
+    /* Content Area */
+    .content {
+        flex: 1;
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+        .content h3 {
+            margin: 0 0 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+    /* Tab visibility */
+    .tab-content {
+        display: none;
+    }
+
+        .tab-content.active {
+            display: block;
+        }
+
+    .SettingHeader {
+        margin: 16px 0;
+    }
+
+    .input-box {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+        .input-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        .input-box button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+    .add-btn {
+        background-color: #16a34a;
+        color: #fff;
+        padding: 10px 16px;
+        font-size: 14px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        float: right;
+    }
+
+        .add-btn:hover {
+            background-color: #15803d;
+        }
+
+    .list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #f9fafb;
+        border-radius: 8px;
+        padding: 10px 14px;
+        margin-bottom: 10px;
+    }
+
+        .list-item span {
+            font-size: 14px;
+        }
+
+    .actions {
+        display: flex;
+        gap: 12px;
+    }
+
+        .actions i {
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .actions .edit {
+            color: #2563eb;
+        }
+
+        .actions .delete {
+            color: #dc2626;
+        }
+
+    .addItem .input-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background-color: #ffefe7;
+        padding: 12px;
+        border-radius: 12px;
+        width: 100%;
+    }
+
+        .addItem .input-container input,
+        .input-container.EditInput input ,
+        .input-container textarea {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            width:100%;
+        }
+
+    .input-container.type input,
+    .input-container.EditInput input {
+        margin-bottom:12px;
+    }
+        .addItem .input-container.type{
+            display:block; 
+        }
+
+    .input-container.EditInput,
+    .input-container.EditInput input ,
+    .input-container textarea{
+        width: 100%;
+    }
+
+    .addItem.list-item .btn {
+        background-color: green;
+        color: #fff;
+        border: none;
+        padding: 10px 10px;
+        font-size: 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .item-info {
+        flex: 1;
+    }
+
+        .item-info strong {
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .item-info p {
+            font-size: 14px;
+            color: #555;
+            margin: 0;
+        }
+
+    .btnAddNew {
+        background-color: #f54e00;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 42px;
+    }
+
+    .addItem .btn.check {
+        background-color: #16a34a;
+    }
+
+        .addItem .btn.check:hover {
+            background-color: #15803d;
+        }
+
+    .addItem .btn.cancel {
+        background-color: #374151;
+    }
+
+        .addItem .btn.cancel:hover {
+            background-color: #111827;
+        }
+
+    .statusDot{
+        width:20px;
+        height:20px;
+        border-radius:100%;
+        background:green;
+    }
+</style>
+
+<header class="header dashboard-header d-flex align-items-center justify-content-between">
+    <!-- Left section -->
+    <div class="logo-section d-flex align-items-center">
+        <div class="logo"><i class="fa-solid fa-home"></i></div>
+        <div class="title">
+            <h2>Settings</h2>
+            <span>Manage master data and system configurations</span>
+        </div>
+    </div>
+
+    <!-- Right section -->
+    <div class="right-section d-flex align-items-center">
+        <div class="icon">
+            <i class="fa-regular fa-bell"></i>
+            <span class="notification-dot"></span>
+        </div>
+        <a class="icon" href="/Settings"><i class="fa fa-gear"></i></a>
+        <div class="profile">
+            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3"
+               id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-user"></i>
+            </a>
+            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3"
+                style="background-color: white;">
+                <li class="dropdown-item">
+                    <a class="nav-link d-flex align-items-center" href="/Identity/Account/Manage/ChangePassword">
+                        <i class="fa fa-lock"></i>
+                        <span class="menu-text">Change Password</span>
+                    </a>
+                </li>
+                <li class="dropdown-item">
+                    <a class="nav-link d-flex align-items-center" href="/Identity/Account/Logout">
+                        <i class="fa fa-user"></i>
+                        <span class="menu-text">Log Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+
+<div class="setting">
+    <div class="container-fluid">
+        @* <div class="SettingHeader d-flex justify-content-end">
+            <button class="save-btn btn btn-primary">
+                <i class="fa fa-floppy-disk"></i> Save Changes
+            </button>
+        </div> *@
+
+        <div class="settings-container">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <h3>Configuration</h3>
+                <ul>
+                    <li class="active" data-tab="source"><i class="fa-solid fa-user-group"></i> Source</li>
+                    <li data-tab="event"><i class="fa-regular fa-file-lines"></i> Event Types</li>
+                    <li data-tab="severity"><i class="fa-solid fa-triangle-exclamation"></i> Severity Levels</li>
+                    <li data-tab="asset"><i class="fa-solid fa-barcode"></i> Asset IDs</li>
+                    <li data-tab="type"><i class="fa-solid fa-building"></i> Asset Types</li>
+                    <li data-tab="status"><i class="fa-solid fa-palette"></i> Status Legend</li>
+                    <li data-tab="teams"><i class="fa-brands fa-teamspeak"></i> Assign Response Teams</li>
+                </ul>
+            </div>
+
+            <!-- Content -->
+            <div class="content">
+                <div id="source" class="tab-content active">
+                    <div class="d-flex justify-content-between">
+                        <h3>Source</h3>
+                        <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
+                    </div>
+                    <div class="list-item addItem">
+                        <div class="input-container">
+                            <input type="text" placeholder="Enter source...">
+                            <button class="btn check"><i class="fa-solid fa-check"></i></button>
+                            <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="input-container EditInput">
+                            <input type="text" value="jason">
+                        </div>
+
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <span>Contractor</span>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <span>Public</span>
+                        <div class="actions">
+                            <i class="fa-solid fa-pen edit"></i>
+                            <i class="fa-solid fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <span>Internal Employee</span>
+                        <div class="actions">
+                            <i class="fa-solid fa-pen edit"></i>
+                            <i class="fa-solid fa-trash delete"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="event" class="tab-content">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Event Type</h3>
+                        <button class="btn btn-primary btnAddNew">
+                            <i class="fa-solid fa-plus"></i> Add New
+                        </button>
+                    </div>
+
+                    <!-- Add New Form -->
+                    <div class="list-item addItem">
+                        <div class="input-container type">
+                            <input type="text" placeholder="Event name...">
+                            <textarea type="text" placeholder="Event description..."></textarea>
+                            <div class="actions">
+                                <button class="btn check"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Example Saved Item -->
+                    <div class="list-item">
+                        <div class="input-container EditInput">
+                            <input type="text" value="Gas Leak">
+                            <textarea type="text" value="Handles odor, hissing, visible damage incidents"></textarea> 
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-info">
+                            <strong>Gas Leak</strong>
+                            <p>Handles odor, hissing, visible damage incidents</p>
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="item-info">
+                            <strong>Water in Line</strong>
+                            <p>Water contamination in gas line</p>
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="severity" class="tab-content">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Severity Levels</h3>
+                        <button class="btn btn-primary btnAddNew">
+                            <i class="fa-solid fa-plus"></i> Add New
+                        </button>
+                    </div>
+
+                    <!-- Add New Form -->
+                    <div class="list-item addItem">
+                        <div class="input-container type">
+                            <input type="text" placeholder="Severity level name...">
+                            <textarea type="text" placeholder="Event description..."></textarea>
+                            <div class="actions">
+                                <button class="btn check"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Example Saved Item -->
+                    <div class="list-item">
+                        <div class="input-container EditInput">
+                            <input type="text" value="Low">
+                            <textarea type="text" value="routine service issue"></textarea>
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-info">
+                            <div class="d-flex align-item-center"><div class="statusDot"></div><strong>Moderate</strong></div>
+                            <p>verified leak, localized hazard</p>
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="item-info">
+                            <strong>Water in Line</strong>
+                            <p>Water contamination in gas line</p>
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="asset" class="tab-content">
+                    <div class="d-flex justify-content-between">
+                        <h3>Asset IDs</h3>
+                        <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
+                    </div>
+                    <div class="list-item addItem">
+                        <div class="input-container">
+                            <input type="text" placeholder="Enter ID...">
+                            <button class="btn check"><i class="fa-solid fa-check"></i></button>
+                            <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="input-container EditInput">
+                            <input type="text" value="Valve">
+                        </div>
+
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <span>Meter</span>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <span>Other</span>
+                        <div class="actions">
+                            <i class="fa-solid fa-pen edit"></i>
+                            <i class="fa-solid fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <span>Pipeline</span>
+                        <div class="actions">
+                            <i class="fa-solid fa-pen edit"></i>
+                            <i class="fa-solid fa-trash delete"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="type" class="tab-content">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Asset Type</h3>
+                        <button class="btn btn-primary btnAddNew">
+                            <i class="fa-solid fa-plus"></i> Add New
+                        </button>
+                    </div>
+
+                    <!-- Add New Form -->
+                    <div class="list-item addItem">
+                        <div class="input-container type">
+                            <input type="text" placeholder="Enter asset name...">
+                            <input type="text" placeholder="Enter color...">
+                            
+                            <div class="actions">
+                                <button class="btn check"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Example Saved Item -->
+                    <div class="list-item">
+                        <div class="input-container EditInput">
+                            <input type="text" value="type1">
+                            <input type="text" value="#000000">
+                            
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-info">
+                            <strong>Type 1</strong></>
+                            <p>#000000</p>
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="item-info">
+                            <strong>Type 2</strong></>
+                            <p>#ffffff</p>
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="status" class="tab-content">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Status Legend</h3>
+                        <button class="btn btn-primary btnAddNew">
+                            <i class="fa-solid fa-plus"></i> Add New
+                        </button>
+                    </div>
+
+                    <!-- Add New Form -->
+                    <div class="list-item addItem">
+                        <div class="input-container type">
+                            <input type="text" placeholder="Enter status name...">
+                            <input type="text" placeholder="Enter color...">
+
+                            <div class="actions">
+                                <button class="btn check"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Example Saved Item -->
+                    <div class="list-item">
+                        <div class="input-container EditInput">
+                            <input type="text" value="Status 1">
+                            <input type="text" value="#000000">
+
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="item-info">
+                            <strong>Status 1</strong></>
+                            <p>#000000</p>
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <div class="item-info">
+                            <strong>Status 2</strong></>
+                            <p>#ffffff</p>
+                        </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+                </div>
+                <div id="teams" class="tab-content">
+                        <div class="d-flex justify-content-between">
+                            <h3>Assign Response Teams</h3>
+                            <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
+                        </div>
+                        <div class="list-item addItem">
+                            <div class="input-container">
+                                <input type="text" placeholder="Enter Name...">
+                                <button class="btn check"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <div class="input-container EditInput">
+                                <input type="text" value="Jason">
+                            </div>
+
+                            <div class="actions">
+                                <i class="fa fa-pen edit"></i>
+                                <i class="fa fa-trash delete"></i>
+                            </div>
+                        </div>
+
+                    <div class="list-item">
+                        <span>Hubert</span>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                    <div class="list-item">
+                        <span>Hardik</span>
+                        <div class="actions">
+                            <i class="fa-solid fa-pen edit"></i>
+                            <i class="fa-solid fa-trash delete"></i>
+                        </div>
+                    </div>
+
+                   
+                </div>
             </div>
         </div>
     </div>
-</section>
+</div>
 
 <script>
+    // Vertical tab switching
+    document.querySelectorAll(".sidebar ul li").forEach(item => {
+        item.addEventListener("click", function () {
+            // Remove active class from all tabs
+            document.querySelectorAll(".sidebar ul li").forEach(el => el.classList.remove("active"));
+            this.classList.add("active");
 
+            // Hide all tab contents
+            document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
 
-    const menuData = [
-        {
-            "section": "Accounts",
-            "items": [
-                {
-                    "name": "Source",
-                    "link": "/Relationship/Index",
-                    "icon": "fa-solid fa-users",
-                    "description": "Manage caller sources such as customer, contractor, or employee."
-                 },
-                {
-                      "name": "Event Types",
-                      "link": "/EventType/Index",
-                      "icon": "fa-solid fa-calendar-days",
-                      "description": "Manage different types of events with name and description."
-                   },
-                   {
-                     "name": "Severity Levels",
-                      "link": "/SeverityLevel/Index",
-                     "icon": "fa-solid fa-exclamation-triangle",
-                     "description": "Manage different severity levels with name, description, and color."
-                    },
-                         {
-                             "name": "Asset IDs",
-                             "link": "/AssetId/Index",
-                              "icon": "fa-solid fa-barcode",
-                              "description": "Manage unique identifiers for assets."
-                    },
-
-                {
-                    "name": "Asset Type",
-                    "link": "/AssetType/Index",
-                    "icon": "fa-solid fa-tape",
-                    "description": "Organize and manage asset types for assets."
-                }
-                ,
-                    {
-                      "name": "Status Legend",
-                      "link": "/StatusLegend/Index",
-                      "icon": "fa-solid fa-flag",
-                      "description": "Manage status legends for incident."
-                    },
-                        {
-                           "name": "Policies",
-                           "link": "/Policy/Index",
-                           "icon": "fa-solid fa-file-contract",
-                           "description": "Manage policies for the system."
-                         },
-                    {
-                        "name":"Assign Response Teams",
-                        "link":"/AssignResponseTeams/Index",
-                        "icon":"fa-solid fa-users",
-                        "description": "Manage Assign Response Teams"
-                    }
-            ]
-        }
-    ];
-
-
-    function renderMenuItems(sectionName) {
-        const section = menuData.find(s => s.section === sectionName);
-
-        const $container = $('#menu-items-container');
-
-
-        $container.empty();
-
-        if (section) {
-            $.each(section.items, function (index, item) {
-                let cardLink = `<a href="${item.link}" class="card-link" style="text-decoration: none;"`;
-
-                // Check if target exists, and if it does, add it to the link
-                if (item.target) {
-                    cardLink += ` target="${item.target}"`;
-                }
-
-                cardLink += `>
-                                                                            <div class="custom-card">
-                                                                                <div class="d-flex align-items-start">
-                                                                                    <i class="${item.icon}"></i>
-                                                                                    <div>
-                                                                                        <h6 class="card-title">${item.name}</h6>
-                                                                                        <p class="card-text">${item.description}</p>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </a>`;
-
-                $container.append(cardLink);
-            });
-        }
-    }
-
-    $('.nav-link').on('click', function () {
-        $('.nav-link').removeClass('active');
-        $(this).addClass('active');
-
-        const sectionName = $(this).data('bs-target');
-        renderMenuItems(sectionName);
+            // Show selected tab content
+            const tabId = this.getAttribute("data-tab");
+            const tabContent = document.getElementById(tabId);
+            if (tabContent) {
+                tabContent.classList.add("active");
+            }
+        });
     });
-
-    renderMenuItems('Accounts');</script>
+</script>

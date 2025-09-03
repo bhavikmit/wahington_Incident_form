@@ -34,9 +34,9 @@
     <div class="row">
         <div class="col-md-6">
             <div class="mb-3">
-                <label class="form-label">Relationship <span class="text-danger">*</span></label>
+                <label class="form-label">Source <span class="text-danger">*</span></label>
                 <select class="form-select" id="relationaship" required asp-for="incidentCellerInformation.RelationshipId">
-                    <option value="">Select Relationship</option>
+                    <option value="">Select Source</option>
                     @foreach (var item in Model.incidentCellerInformation.Relationships)
                     {
                         <option value="@item.Value">@item.Text</option>
@@ -48,7 +48,10 @@
         <div class="col-md-6">
             <div class="mb-3">
                 <label class="form-label" asp-for="incidentCellerInformation.CallTime">Caller Date & Time <span class="text-danger">*</span></label>
-                <input type="datetime-local" disabled id="CallTimedatetime" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" class="form-control" asp-for="incidentCellerInformation.CallTime" />
+                <input type="datetime-local" disabled id="CallTimedatetime" value="@(Model.Id > 0 ? Model.incidentCellerInformation.CallTime.ToString("yyyy-MM-ddTHH:mm") : DateTime.Now.ToString("yyyy-MM-ddTHH:mm"))"
+                       class="form-control" asp-for="incidentCellerInformation.CallTime" />
+                <input type="hidden" id="hdnCallTimedatetime" name="incidentCellerInformation.CallTime"
+                       value="@(Model.Id > 0 ? Model.incidentCellerInformation.CallTime.ToString("yyyy-MM-ddTHH:mm") : DateTime.Now.ToString("yyyy-MM-ddTHH:mm"))" />
                 <div class="invalid-feedback"></div>
             </div>
         </div>

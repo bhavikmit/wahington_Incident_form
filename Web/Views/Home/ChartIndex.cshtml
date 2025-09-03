@@ -309,8 +309,8 @@
 <div class="dashboard">
     <div class="container-fluid ">
         <div class="DashboardHeader">
-            <h4 class="fw-bold">Map & Analytics</h4>
-            <p class="text-muted">Visual representation of incident data and analytics</p>
+            <h4 class="fw-bold" style="display:none">Map & Analytics</h4>
+            <p class="text-muted" style="display:none">Visual representation of incident data and analytics</p>
         </div>
 
         <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
@@ -348,7 +348,7 @@
                             <h6 class="fw-bold anakyticsTitle">Incident Analytics</h6>
                             <span class="text-muted small"><i class="fa fa-arrow-trend-up"></i>(@Model.IncidentDashboard.TotalIncidentCount) total incidents analyzed</span>
                         </div>
-                        <p class="text-muted">Visual breakdown of incident data and trends</p>
+                        <p class="text-muted" style="display:none">Visual breakdown of incident data and trends</p>
                         <div class="row">
                             @foreach (var item in Model.IncidentDashboard.ListIncidentDashboardSeverityReportViewModel)
                             {

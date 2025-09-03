@@ -8,7 +8,6 @@
         <tr>
             <th>Status</th>
             <th>Severity</th>
-            <th>Date/Time</th>
             <th>Event Type</th>
             <th>Source</th>
             <th>Asset Type</th>
@@ -16,6 +15,7 @@
             <th>Intersection</th>
             <th>Location</th>
             <th>ES Indicators</th>
+            <th>Date/Time</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -47,12 +47,7 @@
                             <span class="badge rounded-pill badge-unknown px-3 py-2">Unknown</span>
                         }
                     </td>
-                    <td>
-                        <div class="date-time-sec">
-                            <p class="date">@item.CallDate</p>
-                            <p class="time">@item.CallTime</p>
-                        </div>
-                    </td>
+                  
                     <td style="text-wrap:auto">@item.EventTypeId</td>
                     <td>
                         <div class="event-type">
@@ -74,6 +69,12 @@
                     </td>
 
                     <td>@item.GasESIndicator</td>
+                    <td>
+                        <div class="date-time-sec">
+                            <p class="date">@item.CallDate </p>
+                            <p class="time">@item.CallTime</p>
+                        </div>
+                    </td>
                     <td>
                         <!-- Action Icons -->
                         <a href="javascript:void(0);"

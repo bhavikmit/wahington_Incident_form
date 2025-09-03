@@ -260,17 +260,61 @@ namespace Repositories.Common
                     }).OrderByDescending(p => p.count).ToList();
 
                 // 🔹 Event grouping
-                var eventData = incidents
-                    .SelectMany(i => (i.EventTypeIds ?? "")
-                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(id => int.Parse(id)))
-                    .GroupBy(id => id)
-                    .Select(g => new IncidentDashboardEventTypeReportViewModel
-                    {
-                        color = chartColors.ContainsKey(g.Key) ? chartColors[g.Key] : "#808080",
-                        name = eventTypes.FirstOrDefault(e => e.Id == g.Key)?.Name ?? $"Event {g.Key}",
-                        count = g.Count()
-                    }).OrderByDescending(p => p.count).ToList();
+                //var eventData = incidents
+                //    .SelectMany(i => (i.EventTypeIds ?? "")
+                //        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                //        .Select(id => int.Parse(id)))
+                //    .GroupBy(id => id)
+                //    .Select(g => new IncidentDashboardEventTypeReportViewModel
+                //    {
+                //        color = chartColors.ContainsKey(g.Key) ? chartColors[g.Key] : "#808080",
+                //        name = eventTypes.FirstOrDefault(e => e.Id == g.Key)?.Name ?? $"Event {g.Key}",
+                //        count = g.Count()
+                //    }).OrderByDescending(p => p.count).ToList();
+
+
+                var eventOtherData = incidents
+                        .SelectMany(i =>
+                        {
+                            // normal event type ids
+                            var ids = (i.EventTypeIds ?? "")
+                                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                .Select(id => int.Parse(id))
+                                .ToList();
+
+                            // if it's "Other", add a synthetic id (e.g. -1)
+                            if (i.IsOtherEvent)
+                            {
+                                ids.Add(-1);
+                            }
+
+                            return ids.Select(id => new { EventId = id, Incident = i });
+                        })
+                        .GroupBy(x => x.EventId)
+                        .Select(g => new
+                        {
+                            Id = g.Key,
+                            Count = g.Count()
+                        })
+                        .ToList();
+
+                // join with EventTypes + add "Other"
+                var eventData = eventOtherData
+                    .GroupJoin(_db.EventTypes,
+                        g => g.Id,
+                        e => e.Id,
+                        (g, evts) => new { g, evts })
+                    .SelectMany(
+                        x => x.evts.DefaultIfEmpty(),
+                        (x, e) => new IncidentDashboardEventTypeReportViewModel
+                        {
+                            color = x.g.Id == -1
+                                ? "#000000" // color for "Other"
+                                : (chartColors.ContainsKey(x.g.Id) ? chartColors[x.g.Id] : "#808080"),
+                            name = x.g.Id == -1 ? "Other" : e.Name,
+                            count = x.g.Count
+                        }).OrderByDescending(p => p.count).ToList();
+
 
                 // 🔹 Asset grouping
                 var assetTypeData = incidents

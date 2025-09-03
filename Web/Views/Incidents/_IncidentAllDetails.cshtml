@@ -6,7 +6,7 @@
 
 
             <div class="modal-header">
-                <h5 class="modal-title"> @Model.IncidentNumber</h5>
+                <h5 class="modal-title"> @Model.incidentDetailByIdViewModel.IncidentNumber</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
@@ -20,14 +20,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <span class="info-label">Status</span><br />
-                                    <span class="badge" style="background-color:@Model.StatusLegendColor">
-                                        @Model.StatusLegendName
+                                    <span class="badge" style="background-color:@Model.incidentDetailByIdViewModel.StatusLegendColor">
+                                        @Model.incidentDetailByIdViewModel.StatusLegendName
                                     </span>
                                 </div>
                                 <div class="col-md-6">
                                     <span class="info-label">Severity</span><br />
-                                    <span class="badge" style="background-color:@Model.SeverityColor">
-                                        @Model.SeverityName
+                                    <span class="badge" style="background-color:@Model.incidentDetailByIdViewModel.SeverityColor">
+                                        @Model.incidentDetailByIdViewModel.SeverityName
                                     </span>
                                 </div>
                             </div>
@@ -98,15 +98,15 @@
                             <div class="section-title">Caller Information</div>
                             <p><b>@Model.incidentCellerInformation.CallerName</b></p>
                             <p><i class="fa fa-phone"></i> @Model.incidentCellerInformation.CallerPhoneNumber</p>
-                            <p><i class="fa fa-calendar"></i> @(Model.incidentCellerInformation.CallTime?.ToString("dd MMM yyyy hh:mm tt"))</p>
+                            <p><i class="fa fa-calendar"></i> @(Model.incidentCellerInformation.CallTime.ToString("dd MMM yyyy hh:mm tt"))</p>
                             <p><i class="fa fa-map-marker"></i> @Model.incidentCellerInformation.CallerAddress</p>
                         </div>
 
                         <!-- Timeline -->
                         <div class="card p-3">
                             <div class="section-title">Timeline</div>
-                            <p><b>Created On:</b> @Model.CreatedOn?.ToString("dd MMM yyyy hh:mm tt")</p>
-                            <p><b>Last Updated:</b> @Model.UpdatedOn?.ToString("dd MMM yyyy hh:mm tt")</p>
+                            <p><b>Created On:</b> @Model.incidentDetailByIdViewModel.CreatedOn?.ToString("dd MMM yyyy hh:mm tt")</p>
+                            <p><b>Last Updated:</b> @Model.incidentDetailByIdViewModel.UpdatedOn?.ToString("dd MMM yyyy hh:mm tt")</p>
                         </div>
                     </div>
                 </div>

@@ -18,6 +18,7 @@ namespace ViewModels.Incident
         public IncidentDetailsViewModel incidentDetails { get; set; } = new();
         public IncidentEnvironmentalViewModel incidentEnvironmentalViewModel { get; set; } = new();
         public IncidentSupportingInfoViewModel incidentSupportingInfoViewModel { get; set; } = new();
+        public IncidentDetailByIdViewModel incidentDetailByIdViewModel { get; set; } = new();
         public List<IncidentGridViewModel> incidentGridViewModel { get; set; } = new();
 
         public List<SelectListItem> statusLegends { get; set; } = new();
@@ -25,13 +26,6 @@ namespace ViewModels.Incident
         public long? severityLevelId { get; set; } = default!;
         public long? Id { get; set; } = default!;
         public string DescriptionIssue { get; set; } = default!;
-        public string SeverityName { get; set; } = string.Empty;
-        public string StatusLegendName { get; set; } = string.Empty;
-        public string StatusLegendColor { get; set; } = string.Empty;
-        public string SeverityColor { get; set; } = string.Empty;  
-        public string IncidentNumber { get; set; } = string.Empty;
-        public DateTime? CreatedOn { get; set; }
-        public DateTime? UpdatedOn { get; set; }
     }
 
     public class IncidentCellerInformationViewModel
@@ -41,7 +35,7 @@ namespace ViewModels.Incident
         public string CallerAddress { get; set; } = default!;
         public List<SelectListItem> Relationships { get; set; } = new();
         public long? RelationshipId { get; set; } = default!;
-        public DateTime? CallTime { get; set; } = default!;
+        public DateTime CallTime { get; set; } = default!;
         public string RelationshipName { get; set; } = string.Empty;
     }
     public class IncidentiLocationViewModel
@@ -49,7 +43,7 @@ namespace ViewModels.Incident
         public string Address { get; set; } = default!;
         public bool IsSameCallerAddress { get; set; } = default!;
         public string Landmark { get; set; } = default!;
-        public string ServiceAccount { get; set; } = default!;
+        public string? ServiceAccount { get; set; } = default!;
         public string AssetIDs { get; set; } = default!;
         public List<SelectListItem> AssetsIncidentList { get; set; } = new();
         public List<string> AssetNames { get; set; } = new();
@@ -75,14 +69,24 @@ namespace ViewModels.Incident
         public string VisibleDamageText { get; set; } = string.Empty;
         public string PeopleInjuredText { get; set; } = string.Empty;
         public string EvacuationRequiredText { get; set; } = string.Empty;
-
     }
     public class IncidentSupportingInfoViewModel
     {
-        public List<IFormFile> File { get; set; }
+        public List<IFormFile>? File { get; set; }
         public string Notes { get; set; } = default!;
         public string? ImageUrl { get; set; } = default!;
         public List<string> ImageUrls { get; set; } = new();
+    }
+
+    public class IncidentDetailByIdViewModel
+    {
+        public string SeverityName { get; set; } = string.Empty;
+        public string StatusLegendName { get; set; } = string.Empty;
+        public string StatusLegendColor { get; set; } = string.Empty;
+        public string SeverityColor { get; set; } = string.Empty;
+        public string IncidentNumber { get; set; } = string.Empty;
+        public DateTime? CreatedOn { get; set; }
+        public DateTime? UpdatedOn { get; set; }
     }
 
     public class IncidentGridViewModel

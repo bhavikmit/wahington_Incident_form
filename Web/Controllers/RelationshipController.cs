@@ -13,7 +13,7 @@ namespace Web.Controllers
             IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> service,
             ILogger<RelationshipController> logger,
             IMapper mapper
-        ) : base(service, logger, mapper, "Relationship", "Relationship", false)
+        ) : base(service, logger, mapper, "Relationship", "Source", false)
         {
         }
 

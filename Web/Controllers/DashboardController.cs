@@ -56,13 +56,13 @@ namespace Web.Controllers
             // Build view model
             var viewModel = new DashboardViewModel
             {
-                SeverityLabels = severityData.Select(s => s.Name).ToList(),
-                SeverityCounts = severityData.Select(s => s.Count).ToList(),
-                SeverityColors = severityData.Select(s => s.Color).ToList(),
+                //SeverityLabels = severityData.Select(s => s.Name).ToList(),
+                //SeverityCounts = severityData.Select(s => s.Count).ToList(),
+                //SeverityColors = severityData.Select(s => s.Color).ToList(),
 
-                StatusLabels = statusData.Select(s => s.Name).ToList(),
-                StatusCounts = statusData.Select(s => s.Count).ToList(),
-                StatusColors = statusData.Select(s => s.Color).ToList()
+                //StatusLabels = statusData.Select(s => s.Name).ToList(),
+                //StatusCounts = statusData.Select(s => s.Count).ToList(),
+                //StatusColors = statusData.Select(s => s.Color).ToList()
             };
 
             return View(viewModel);

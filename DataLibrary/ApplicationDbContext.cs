@@ -99,7 +99,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<IncidentNote> IncidentNotes { get; set; }
     public DbSet<AssignResponseTeams> AssignResponseTeams { get; set; }
     public DbSet<IncidentHistory> IncidentHistories { get; set; }
-    
+    public DbSet<Policy> Policies { get; set; }
+
 
 
     [DbFunction("GetWeekNumber", "dbo")]

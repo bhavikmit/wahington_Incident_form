@@ -10,25 +10,21 @@
 	<ItemGroup>
 		<Compile Remove="Areas\Identity\Data\**" />
 		<Compile Remove="Areas\Pages\**" />
-		<Compile Remove="Views\Policy\**" />
 		<Compile Remove="wwwroot\css\themes\**" />
 		<Compile Remove="wwwroot\js\validation\bootstrap\**" />
 		<Compile Remove="wwwroot\js\validation\jquery\**" />
 		<Content Remove="Areas\Identity\Data\**" />
 		<Content Remove="Areas\Pages\**" />
-		<Content Remove="Views\Policy\**" />
 		<Content Remove="wwwroot\css\themes\**" />
 		<Content Remove="wwwroot\js\validation\bootstrap\**" />
 		<Content Remove="wwwroot\js\validation\jquery\**" />
 		<EmbeddedResource Remove="Areas\Identity\Data\**" />
 		<EmbeddedResource Remove="Areas\Pages\**" />
-		<EmbeddedResource Remove="Views\Policy\**" />
 		<EmbeddedResource Remove="wwwroot\css\themes\**" />
 		<EmbeddedResource Remove="wwwroot\js\validation\bootstrap\**" />
 		<EmbeddedResource Remove="wwwroot\js\validation\jquery\**" />
 		<None Remove="Areas\Identity\Data\**" />
 		<None Remove="Areas\Pages\**" />
-		<None Remove="Views\Policy\**" />
 		<None Remove="wwwroot\css\themes\**" />
 		<None Remove="wwwroot\js\validation\bootstrap\**" />
 		<None Remove="wwwroot\js\validation\jquery\**" />

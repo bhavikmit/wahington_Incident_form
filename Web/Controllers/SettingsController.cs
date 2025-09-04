@@ -9,17 +9,30 @@ namespace Web.Controllers
 {
     public class SettingsController : Controller
     {
-        IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> _iRelationshipService;
-        IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> _iEventTypeService;
-        ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> _iSeverityLevelService;
-        IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> _iStatusLegendService;
-        public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService, ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> iSeverityLevelService, IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> iStatusLegendService)
+        #region Init Service
+        private readonly IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> _iRelationshipService;
+        private readonly IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> _iEventTypeService;
+        private readonly ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> _iSeverityLevelService;
+        private readonly IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> _iStatusLegendService;
+        private readonly IAssetIdService<AssetIdModifyViewModel, AssetIdModifyViewModel, AssetIdDetailViewModel> _iAssetIdService;
+        private readonly IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> _iAssetTypeService;
+
+
+        #endregion
+
+        #region Ctor
+        public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService, ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> iSeverityLevelService, IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> iStatusLegendService, IAssetIdService<AssetIdModifyViewModel, AssetIdModifyViewModel, AssetIdDetailViewModel> iAssetIdService,
+            IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService)
         {
             _iRelationshipService = iRelationshipService;
             _iEventTypeService = iEventTypeService;
             _iSeverityLevelService = iSeverityLevelService;
             _iStatusLegendService = iStatusLegendService;
+            _iAssetIdService = iAssetIdService;
+            _iAssetTypeService = iAssetTypeService;
+
         }
+        #endregion
 
         public IActionResult Index()
         {
@@ -276,6 +289,7 @@ namespace Web.Controllers
         #endregion
 
         #region StatusLegend
+
         [HttpGet]
         public async Task<IActionResult> GetAllStatusLegend()
         {
@@ -357,5 +371,155 @@ namespace Web.Controllers
             }
         }
         #endregion
+
+        #region AssetIds
+        [HttpGet]
+        public async Task<IActionResult> GetAllAssetIds()
+        {
+            var model = await _iAssetIdService.GetAllAssetIds();
+            return PartialView("~/Views/Settings/AssetId/_ListAssetId.cshtml", model);
+        }
+        // inside SettingsController
+
+        [HttpGet]
+        public async Task<IActionResult> AddAssetId()
+        {
+            var model = new AssetIdModifyViewModel();
+            return PartialView("~/Views/Settings/AssetId/_AddAssetId.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAssetIdById(long id)
+        {
+            var model = await _iAssetIdService.GetAssetIdById(id);
+            return PartialView("~/Views/Settings/AssetId/_AddAssetId.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveAssetId([FromForm] AssetIdModifyViewModel asset)
+        {
+            if (asset == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long id = 0;
+                if (asset.Id > 0)
+                    id = await _iAssetIdService.UpdateAssetId(asset);
+                else
+                    id = await _iAssetIdService.SaveAssetId(asset);
+
+                if (id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save asset." });
+
+                var successMsg = "Asset saved successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteAssetIdById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                var deletedId = await _iAssetIdService.DeleteAssetId(id);
+
+                if (deletedId == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete asset." });
+
+                var successMsg = "Asset deleted successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+        #endregion
+
+        #region AssetTypes
+        [HttpGet]
+        public async Task<IActionResult> GetAllAssetTypes()
+        {
+            var model = await _iAssetTypeService.GetAllAssetTypes();
+            return PartialView("~/Views/Settings/AssetType/_ListAssetType.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddAssetType()
+        {
+            var model = new AssetTypeModifyViewModel();
+            return PartialView("~/Views/Settings/AssetType/_AddAssetType.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAssetTypeById(long id)
+        {
+            var model = await _iAssetTypeService.GetAssetTypeById(id);
+            return PartialView("~/Views/Settings/AssetType/_AddAssetType.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveAssetType([FromForm] AssetTypeModifyViewModel assetType)
+        {
+            if (assetType == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long id = 0;
+                if (assetType.Id > 0)
+                    id = await _iAssetTypeService.UpdateAssetType(assetType);
+                else
+                    id = await _iAssetTypeService.SaveAssetType(assetType);
+
+                if (id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save asset type." });
+
+                return Ok(new { success = true, data = "Asset type saved successfully!" });
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteAssetTypeById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                var deletedId = await _iAssetTypeService.DeleteAssetType(id);
+
+                if (deletedId == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete asset type." });
+
+                return Ok(new { success = true, data = "Asset type deleted successfully!" });
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        } 
+        #endregion
     }
 }
+

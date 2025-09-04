@@ -328,7 +328,8 @@
             margin: 0;
         }
 
-    .btnAddNew, .btnAddNewSource, .btnAddNewEvent, .btnAddNewseverityLevl, .btnAddNewstatusLegend {
+    .btnAddNew, .btnAddNewSource, .btnAddNewEvent, .btnAddNewseverityLevl, .btnAddNewstatusLegend,
+    .btnAddNewAsset, .btnAddNewAssetType {
         background-color: #f54e00;
         color: #fff;
         border: none;
@@ -467,105 +468,27 @@
                 <div id="asset" class="tab-content">
                     <div class="d-flex justify-content-between">
                         <h3>Asset IDs</h3>
-                        <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
+                        <button class="btn btn-primary btnAddNewAsset"><i class="fa-solid fa-plus"></i> Add New</button>
                     </div>
-                    <div class="list-item addItem">
-                        <div class="input-container">
-                            <input type="text" placeholder="Enter ID...">
-                            <button class="btn check"><i class="fa-solid fa-check"></i></button>
-                            <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
+                    <div id="addAsset">
                     </div>
-                    <div class="list-item">
-                        <div class="input-container EditInput">
-                            <input type="text" value="Valve">
-                        </div>
-
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
+                    <div id="assetList">
                     </div>
 
-                    <div class="list-item">
-                        <span>Meter</span>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
-                    </div>
-
-                    <div class="list-item">
-                        <span>Other</span>
-                        <div class="actions">
-                            <i class="fa-solid fa-pen edit"></i>
-                            <i class="fa-solid fa-trash delete"></i>
-                        </div>
-                    </div>
-
-                    <div class="list-item">
-                        <span>Pipeline</span>
-                        <div class="actions">
-                            <i class="fa-solid fa-pen edit"></i>
-                            <i class="fa-solid fa-trash delete"></i>
-                        </div>
-                    </div>
                 </div>
                 <div id="type" class="tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Asset Type</h3>
-                        <button class="btn btn-primary btnAddNew">
+                        <button class="btn btn-primary btnAddNewAssetType">
                             <i class="fa-solid fa-plus"></i> Add New
                         </button>
                     </div>
-
-                    <!-- Add New Form -->
-                    <div class="list-item addItem">
-                        <div class="input-container type">
-                            <input type="text" placeholder="Enter asset name...">
-                            <input type="text" placeholder="Enter color...">
-
-                            <div class="actions">
-                                <button class="btn check"><i class="fa-solid fa-check"></i></button>
-                                <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
-                        </div>
+                    <div id="addAssetType">
                     </div>
-
-                    <!-- Example Saved Item -->
-                    <div class="list-item">
-                        <div class="input-container EditInput">
-                            <input type="text" value="type1">
-                            <input type="text" value="#000000">
-
-                        </div>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="item-info">
-                            <strong>Type 1</strong></>
-                            <p>#000000</p>
-                        </div>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
-                    </div>
-
-                    <div class="list-item">
-                        <div class="item-info">
-                            <strong>Type 2</strong></>
-                            <p>#ffffff</p>
-                        </div>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
+                    <div id="assetTypeList">
                     </div>
                 </div>
+
                 <div id="status" class="tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Status Legend</h3>

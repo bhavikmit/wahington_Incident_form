@@ -53,9 +53,9 @@ namespace Web.Controllers
             var response = await _assetTypeService.GetAll<AssetTypeDetailViewModel>(new AssetTypeSearchViewModel() { DisablePagination = true });
             var assetTypesResponse = response as IRepositoryResponseWithModel<PaginatedResultModel<AssetTypeDetailViewModel>>;
             var assetTypes = assetTypesResponse?.ReturnModel.Items ?? new List<AssetTypeDetailViewModel>();
-            var assetTree = await _assetTypeService.GetHirearchy();
+            //var assetTree = await _assetTypeService.GetHirearchy();
             ViewBag.AssetTypes = assetTypes;
-            ViewBag.AssetTree = assetTree;
+            //ViewBag.AssetTree = assetTree;
             return await base.Index();
         }
 
@@ -92,11 +92,11 @@ namespace Web.Controllers
             var response = await _assetTypeService.GetAll<AssetTypeDetailViewModel>(new AssetTypeSearchViewModel() { DisablePagination = true });
             var assetTypesResponse = response as IRepositoryResponseWithModel<PaginatedResultModel<AssetTypeDetailViewModel>>;
             var assetTypes = assetTypesResponse?.ReturnModel.Items ?? new List<AssetTypeDetailViewModel>();
-            var assetTree = await _assetTypeService.GetHirearchy();
-            var dataTableColumns = AppendDynamicColumns(assetTypes, assetTree, vm.DatatableColumns);
+            //var assetTree = await _assetTypeService.GetHirearchy();
+            //var dataTableColumns = AppendDynamicColumns(assetTypes, assetTree, vm.DatatableColumns);
             ViewBag.AssetTypes = assetTypes;
-            ViewBag.AssetTree = assetTree;
-            ViewBag.AssetsDatatableColumns = dataTableColumns;
+            //ViewBag.AssetTree = assetTree;
+            //ViewBag.AssetsDatatableColumns = dataTableColumns;
             var html = "";
             html += @"
                     <div class=""col d-flex justify-content-end"">

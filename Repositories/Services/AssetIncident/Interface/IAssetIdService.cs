@@ -1,6 +1,10 @@
-﻿using System;
-using Models.Common.Interfaces;
+﻿using Models.Common.Interfaces;
+
 using Repositories.Interfaces;
+
+using System;
+
+using ViewModels;
 using ViewModels.Shared;
 
 namespace Repositories.Common
@@ -11,5 +15,10 @@ namespace Repositories.Common
         where CreateViewModel : class, IBaseCrudViewModel, new()
         where UpdateViewModel : class, IBaseCrudViewModel, IIdentitifier, new()
     {
+        Task<List<AssetIdModifyViewModel>> GetAllAssetIds();
+        Task<long> SaveAssetId(AssetIdModifyViewModel viewModel);
+        Task<long> UpdateAssetId(AssetIdModifyViewModel viewModel);
+        Task<AssetIdModifyViewModel> GetAssetIdById(long id);
+        Task<long> DeleteAssetId(long id);
     }
 }

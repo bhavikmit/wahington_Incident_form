@@ -1,9 +1,4 @@
-﻿@using System.Web
-@using ViewModels
-@model SettingViewModel
-
-
-@{
+﻿@{
     ViewBag.Title = "Settings";
 }
 
@@ -333,7 +328,7 @@
             margin: 0;
         }
 
-    .btnAddNew {
+    .btnAddNew, .btnAddNewSource {
         background-color: #f54e00;
         color: #fff;
         border: none;
@@ -434,14 +429,13 @@
             <!-- Content -->
             <div class="content">
                 <div id="source" class="tab-content active">
-                    @* @await Html.PartialAsync("~/Views/Settings/Source/_AddSource.cshtml") *@
-
                     <div class="d-flex justify-content-between">
                         <h3>Source</h3>
                         <button class="btn btn-primary btnAddNewSource"><i class="fa-solid fa-plus"></i> Add New</button>
                     </div>
 
-                    @await Html.PartialAsync("~/Views/Settings/Source/_ListSource.cshtml", Model.RelationshipList)
+                    <div id="sourceList">
+                    </div>
                 </div>
                 <div id="event" class="tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -751,6 +745,10 @@
         </div>
     </div>
 </div>
+
+
+<script src="~/js/custom/loader/loader.js"></script>
+<script src="~/js/views/setting/setting.js"></script>
 
 <script>
     // Vertical tab switching

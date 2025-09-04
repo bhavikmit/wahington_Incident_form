@@ -8,7 +8,7 @@ namespace ViewModels
 {
     public class SettingViewModel
     {
-        public RelationshipModifyViewModel Relationship { get; set; } = default!;
-        public List<RelationshipModifyViewModel> RelationshipList { get; set; } = default!;
+        public RelationshipModifyViewModel Relationship { get; set; } = new();
+        public List<RelationshipModifyViewModel> RelationshipList { get; set; } = new ();
     }
 }

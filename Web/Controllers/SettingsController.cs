@@ -10,9 +10,11 @@ namespace Web.Controllers
     public class SettingsController : Controller
     {
         IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> _iRelationshipService;
-        public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService)
+        IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> _iEventTypeService;
+        public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService)
         {
             _iRelationshipService = iRelationshipService;
+            _iEventTypeService = iEventTypeService;
         }
 
         public IActionResult Index()
@@ -20,6 +22,7 @@ namespace Web.Controllers
             return View();
         }
 
+        #region Source
         [HttpGet]
         public async Task<IActionResult> GetAllRelationships()
         {
@@ -100,6 +103,90 @@ namespace Web.Controllers
                     new { success = false, message = "An unexpected error occurred." });
             }
         }
+        #endregion
 
+
+        #region EventType
+        [HttpGet]
+        public async Task<IActionResult> GetAllEventTypes()
+        {
+            var model = await _iEventTypeService.GetAllEventTypes();
+            return PartialView("~/Views/Settings/EventType/_ListEventType.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddEventType()
+        {
+            var model = new EventTypeModifyViewModel();
+            return PartialView("~/Views/Settings/EventType/_AddEventType.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEventTypeById(long id)
+        {
+            var model = await _iEventTypeService.GetEventTypeById(id);
+            return PartialView("~/Views/Settings/EventType/_AddEventType.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveEventType([FromForm] EventTypeModifyViewModel eventType)
+        {
+            if (eventType == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (eventType.Id > 0)
+                {
+                    Id = await _iEventTypeService.UpdateEventType(eventType);
+                }
+                else
+                {
+                    Id = await _iEventTypeService.SaveEventType(eventType);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save event type." });
+
+                var successMsg = $"Source event type successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteEventTypeById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (id > 0)
+                {
+                    Id = await _iEventTypeService.DeleteEventType(id);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete relation." });
+
+                var successMsg = $"Event Type deleted successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+        #endregion
     }
 }

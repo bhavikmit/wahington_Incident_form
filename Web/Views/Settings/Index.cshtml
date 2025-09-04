@@ -328,7 +328,7 @@
             margin: 0;
         }
 
-    .btnAddNew, .btnAddNewSource {
+    .btnAddNew, .btnAddNewSource, .btnAddNewEvent {
         background-color: #f54e00;
         color: #fff;
         border: none;
@@ -441,54 +441,14 @@
                 <div id="event" class="tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Event Type</h3>
-                        <button class="btn btn-primary btnAddNew">
+                        <button class="btn btn-primary btnAddNewEvent">
                             <i class="fa-solid fa-plus"></i> Add New
                         </button>
                     </div>
 
-                    <!-- Add New Form -->
-                    <div class="list-item addItem">
-                        <div class="input-container type">
-                            <input type="text" placeholder="Event name...">
-                            <textarea type="text" placeholder="Event description..."></textarea>
-                            <div class="actions">
-                                <button class="btn check"><i class="fa-solid fa-check"></i></button>
-                                <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
-                        </div>
+                    <div id="addEventType">
                     </div>
-
-                    <!-- Example Saved Item -->
-                    <div class="list-item">
-                        <div class="input-container EditInput">
-                            <input type="text" value="Gas Leak">
-                            <textarea type="text" value="Handles odor, hissing, visible damage incidents"></textarea>
-                        </div>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="item-info">
-                            <strong>Gas Leak</strong>
-                            <p>Handles odor, hissing, visible damage incidents</p>
-                        </div>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
-                    </div>
-
-                    <div class="list-item">
-                        <div class="item-info">
-                            <strong>Water in Line</strong>
-                            <p>Water contamination in gas line</p>
-                        </div>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
+                    <div id="eventTypeList">
                     </div>
                 </div>
                 <div id="severity" class="tab-content">

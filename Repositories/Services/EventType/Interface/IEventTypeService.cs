@@ -1,5 +1,8 @@
 ﻿using Models.Common.Interfaces;
+
 using Repositories.Interfaces;
+
+using ViewModels;
 using ViewModels.Shared;
 
 namespace Repositories.Common
@@ -10,5 +13,10 @@ namespace Repositories.Common
         where CreateViewModel : class, IBaseCrudViewModel, new()
         where UpdateViewModel : class, IBaseCrudViewModel, IIdentitifier, new()
     {
+        Task<List<EventTypeModifyViewModel>> GetAllEventTypes();
+        Task<long> SaveEventType(EventTypeModifyViewModel viewModel);
+        Task<long> UpdateEventType(EventTypeModifyViewModel viewModel);
+        Task<EventTypeModifyViewModel> GetEventTypeById(long Id);
+        Task<long> DeleteEventType(long id);
     }
 }

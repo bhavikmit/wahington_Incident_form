@@ -328,7 +328,7 @@
             margin: 0;
         }
 
-    .btnAddNew, .btnAddNewSource, .btnAddNewEvent, .btnAddNewseverityLevl {
+    .btnAddNew, .btnAddNewSource, .btnAddNewEvent, .btnAddNewseverityLevl, .btnAddNewstatusLegend {
         background-color: #f54e00;
         color: #fff;
         border: none;
@@ -569,56 +569,14 @@
                 <div id="status" class="tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Status Legend</h3>
-                        <button class="btn btn-primary btnAddNew">
+                        <button class="btn btn-primary btnAddNewstatusLegend">
                             <i class="fa-solid fa-plus"></i> Add New
                         </button>
                     </div>
 
-                    <!-- Add New Form -->
-                    <div class="list-item addItem">
-                        <div class="input-container type">
-                            <input type="text" placeholder="Enter status name...">
-                            <input type="text" placeholder="Enter color...">
-
-                            <div class="actions">
-                                <button class="btn check"><i class="fa-solid fa-check"></i></button>
-                                <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
-                        </div>
+                    <div id="addstatusLegend">
                     </div>
-
-                    <!-- Example Saved Item -->
-                    <div class="list-item">
-                        <div class="input-container EditInput">
-                            <input type="text" value="Status 1">
-                            <input type="text" value="#000000">
-
-                        </div>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="item-info">
-                            <strong>Status 1</strong></>
-                            <p>#000000</p>
-                        </div>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
-                    </div>
-
-                    <div class="list-item">
-                        <div class="item-info">
-                            <strong>Status 2</strong></>
-                            <p>#ffffff</p>
-                        </div>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
+                    <div id="statusLegendList">
                     </div>
                 </div>
                 <div id="teams" class="tab-content">

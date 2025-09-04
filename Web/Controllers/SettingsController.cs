@@ -12,11 +12,13 @@ namespace Web.Controllers
         IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> _iRelationshipService;
         IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> _iEventTypeService;
         ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> _iSeverityLevelService;
-        public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService, ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> iSeverityLevelService)
+        IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> _iStatusLegendService;
+        public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService, ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> iSeverityLevelService, IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> iStatusLegendService)
         {
             _iRelationshipService = iRelationshipService;
             _iEventTypeService = iEventTypeService;
             _iSeverityLevelService = iSeverityLevelService;
+            _iStatusLegendService = iStatusLegendService;
         }
 
         public IActionResult Index()
@@ -262,6 +264,89 @@ namespace Web.Controllers
                         new { success = false, message = "Failed to delete severity level." });
 
                 var successMsg = $"Severity level deleted successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+        #endregion
+
+        #region StatusLegend
+        [HttpGet]
+        public async Task<IActionResult> GetAllStatusLegend()
+        {
+            var model = await _iStatusLegendService.GetAllStatusLegends();
+            return PartialView("~/Views/Settings/StatusLegend/_ListStatusLegend.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddStatusLegend()
+        {
+            var model = new StatusLegendModifyViewModel();
+            return PartialView("~/Views/Settings/StatusLegend/_AddStatusLegend.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStatusLegendById(long id)
+        {
+            var model = await _iStatusLegendService.GetStatusLegendById(id);
+            return PartialView("~/Views/Settings/StatusLegend/_AddStatusLegend.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveStatusLegend([FromForm] StatusLegendModifyViewModel statusLegend)
+        {
+            if (statusLegend == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (statusLegend.Id > 0)
+                {
+                    Id = await _iStatusLegendService.UpdateStatusLegend(statusLegend);
+                }
+                else
+                {
+                    Id = await _iStatusLegendService.SaveStatusLegend(statusLegend);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save status legend." });
+
+                var successMsg = $"Status legend saved successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteStatusLegendById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (id > 0)
+                {
+                    Id = await _iStatusLegendService.DeleteStatusLegend(id);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete status legend." });
+
+                var successMsg = $"Status legend deleted successfully!";
 
                 return Ok(new { success = true, data = successMsg });
             }

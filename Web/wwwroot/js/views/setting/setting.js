@@ -15,10 +15,9 @@
             GetAllSeverity();
         }
         else if (tab === "status") {
-            GetAllStatus();
+            GetAllStatusLegend();
         }
     });
-
 
     $(document).off("click", ".btnAddNewSource");
     $(document).on("click", ".btnAddNewSource", function (e) {
@@ -122,6 +121,60 @@
 
         //e.preventDefault();
         DeleteEventTypeItem(id);
+    });
+
+
+    $(document).off("click", ".btnAddNewstatusLegend");
+    $(document).on("click", ".btnAddNewstatusLegend", function (e) {
+        e.preventDefault();
+        AddStatusLegend();
+    });
+
+    $(document).off("click", ".cancelstatusLegend");
+    $(document).on("click", ".cancelstatusLegend", function (e) {
+        e.preventDefault();
+        $("#addstatusLegend").empty().html('');
+        $('li.active').trigger('click')
+    });
+
+    $(document).off("click", ".savestatusLegend");
+    $(document).on("click", ".savestatusLegend", function (e) {
+        e.preventDefault();
+        var isValid = true;
+
+        $("#savestatusLegendDiv").find("input[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            } else {
+                clearError($field);
+            }
+        });
+
+        // ✅ only run once after validation check
+        if (isValid) {
+            SaveStatusLegend();
+        }
+    });
+
+
+    $(document).off("click", ".editStatusLegend");
+    $(document).on("click", ".editStatusLegend", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetStatusLegendById(id);
+    });
+
+    $(document).off("click", ".deleteStatusLegend");
+    $(document).on("click", ".deleteStatusLegend", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+
+        //e.preventDefault();
+        DeleteStatusLegendItem(id);
     });
 
 
@@ -517,7 +570,7 @@ function DeleteEventTypeItem(id) {   // <-- accept id
 
 
 
-// Start SeverityLevel
+// Start Severity Level
 async function GetAllSeverity() {
     try {
 
@@ -673,6 +726,168 @@ function DeleteSeverityItem(id) {   // <-- accept id
     }).then(function (result) {
         if (result.isConfirmed) {   // ✅ correct way
             DeleteSeverityById(id);
+        }
+    });
+}
+// End Severity Level
+
+
+// Start Statuslegend
+async function GetAllStatusLegend() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetAllStatusLegend", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load Status legend list");
+
+        const content = await response.text();
+        $("#statusLegendList").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading Status legend list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+async function AddStatusLegend() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/AddStatusLegend", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to add Status legend");
+
+        const content = await response.text();
+        $("#addstatusLegend").empty().html(content);
+
+    } catch (error) {
+        console.error("Failed to add Status legend:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+async function GetStatusLegendById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetStatusLegendById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to get status Legend");
+
+        const content = await response.text();
+        $("#addstatusLegend").empty().html(content);
+
+    } catch (error) {
+        console.error("Failed to get status Legend:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+async function DeleteStatusLegendById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/DeleteStatusLegendById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to delete status legend.");
+
+        SwalSuccessAlert("status legend deleted successfully!");
+        GetAllStatusLegend();
+
+    } catch (error) {
+        console.error("Failed to delete status legend:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+async function SaveStatusLegend() {
+    try {
+
+        let form = [];
+        let formData = new FormData();
+        let obj = $("#NewstatusLegendForm")[0];
+
+        // Serialize other fields
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+            form.push({ name: val.name, value: val.value });
+        });
+
+
+        showLoader($(".setting"));
+
+        //console.log(formData);
+        console.log(form);
+
+        // Send request
+        let response = await fetch("/Settings/SaveStatusLegend", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addstatusLegend").html("");
+            SwalSuccessAlert(result.data);
+            GetAllStatusLegend();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save Status Legend.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving Status Legend!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+function DeleteStatusLegendItem(id) {   // <-- accept id
+    let confirmBtnText = "Yes, delete it!";
+    let cancelBtnText = "No, cancel!";
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmBtnText,
+        cancelButtonText: cancelBtnText,
+        confirmButtonClass: 'btn btn-success me-2',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {   // ✅ correct way
+            DeleteStatusLegendById(id);
         }
     });
 }

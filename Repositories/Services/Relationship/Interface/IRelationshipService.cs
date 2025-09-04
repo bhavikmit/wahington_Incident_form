@@ -16,6 +16,10 @@ namespace Repositories.Common
         where UpdateViewModel : class, IBaseCrudViewModel, IIdentitifier, new()
     {
         Task<List<RelationshipModifyViewModel>> GetAllRelationships();
+        Task<long> SaveRelation(RelationshipModifyViewModel viewModel);
+        Task<long> UpdateRelation(RelationshipModifyViewModel viewModel);
+        Task<RelationshipModifyViewModel> GetRelationById(long Id);
+        Task<long> DeleteRelation(long id);
     }
 }
     

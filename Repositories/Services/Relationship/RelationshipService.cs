@@ -5,6 +5,9 @@ using Centangle.Common.ResponseHelpers.Models;
 using DataLibrary;
 
 using DocumentFormat.OpenXml.Drawing.Diagrams;
+using DocumentFormat.OpenXml.Vml.Office;
+
+using Enums;
 
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -47,22 +50,22 @@ namespace Repositories.Common
             _logger = logger;
         }
 
-        public override async Task<Expression<Func<Relationship, bool>>> SetQueryFilter(IBaseSearchModel filters)
-        {
-            var searchFilters = filters as RelationshipSearchViewModel;
+        //public override async Task<Expression<Func<Relationship, bool>>> SetQueryFilter(IBaseSearchModel filters)
+        //{
+        //    var searchFilters = filters as RelationshipSearchViewModel;
 
-            return x =>
-                        (
-                            (
-                                string.IsNullOrEmpty(searchFilters.Search.value)
-                                ||
-                                x.Name.ToLower().Contains(searchFilters.Search.value.ToLower())
-                            )
-                        )
-                        &&
-                        (string.IsNullOrEmpty(searchFilters.Name) || x.Name.ToLower().Contains(searchFilters.Name.ToLower()))
-                        ;
-        }
+        //    return x =>
+        //                (
+        //                    (
+        //                        string.IsNullOrEmpty(searchFilters.Search.value)
+        //                        ||
+        //                        x.Name.ToLower().Contains(searchFilters.Search.value.ToLower())
+        //                    )
+        //                )
+        //                &&
+        //                (string.IsNullOrEmpty(searchFilters.Name) || x.Name.ToLower().Contains(searchFilters.Name.ToLower()))
+        //                ;
+        //}
 
         public async Task<List<RelationshipModifyViewModel>> GetAllRelationships()
         {
@@ -87,6 +90,127 @@ namespace Repositories.Common
                 return new List<RelationshipModifyViewModel>()!;
             }
             return relationships;
+        }
+        public async Task<long> SaveRelation(RelationshipModifyViewModel viewModel)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                // Map ViewModel → Entity
+                var relationship = new Relationship
+                {
+                    Name = viewModel.Name
+                };
+
+                // Save
+                await _db.Relationships.AddAsync(relationship);
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return relationship.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error SaveRelation.");
+                return 0;
+            }
+        }
+        public async Task<long> UpdateRelation(RelationshipModifyViewModel viewModel)
+        {
+            try
+            {
+
+                var relation = await _db.Relationships.Where(p => p.Id == viewModel.Id).FirstOrDefaultAsync();
+
+                if (relation == null)
+                {
+                    await SaveRelation(viewModel);
+                }
+
+                // Save within transaction
+                await using var transaction = await _db.Database.BeginTransactionAsync();
+
+                relation.Name = viewModel.Name;
+
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+
+                return relation.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error SaveRelation.");
+                return 0;
+            }
+        }
+        public async Task<RelationshipModifyViewModel> GetRelationById(long Id)
+        {
+            var relationshipView = new RelationshipModifyViewModel();
+
+            try
+            {
+                var relationship = await _db.Relationships.FirstOrDefaultAsync(p => p.Id == Id);
+
+                if (relationship == null)
+                {
+                    return new RelationshipModifyViewModel();
+                }
+
+                relationshipView.Name = relationship.Name;
+                relationshipView.Id = relationship.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetById.");
+                return new RelationshipModifyViewModel();
+            }
+
+            return relationshipView;
+        }
+        public async Task<long> DeleteRelation(long Id)
+        {
+            try
+            {
+
+                var relation = await _db.Relationships.Where(p => p.Id == Id).FirstOrDefaultAsync();
+
+                if (relation == null)
+                {
+                    return 0;
+                }
+
+                // Save within transaction
+                await using var transaction = await _db.Database.BeginTransactionAsync();
+
+                relation.IsDeleted = true;
+
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+
+                return relation.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error DeleteRelation.");
+                return 0;
+            }
         }
     }
 }

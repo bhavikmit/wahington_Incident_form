@@ -416,13 +416,13 @@
             <div class="sidebar">
                 <h3>Configuration</h3>
                 <ul>
-                    <li class="active" data-tab="source"><i class="fa-solid fa-user-group"></i> Source</li>
-                    <li data-tab="event"><i class="fa-regular fa-file-lines"></i> Event Types</li>
-                    <li data-tab="severity"><i class="fa-solid fa-triangle-exclamation"></i> Severity Levels</li>
-                    <li data-tab="asset"><i class="fa-solid fa-barcode"></i> Asset IDs</li>
-                    <li data-tab="type"><i class="fa-solid fa-building"></i> Asset Types</li>
-                    <li data-tab="status"><i class="fa-solid fa-palette"></i> Status Legend</li>
-                    <li data-tab="teams"><i class="fa-brands fa-teamspeak"></i> Assign Response Teams</li>
+                    <li class="active settingAllTab" data-tab="source"><i class="fa-solid fa-user-group"></i> Source</li>
+                    <li class="settingAllTab" data-tab="event"><i class="fa-regular fa-file-lines"></i> Event Types</li>
+                    <li class="settingAllTab" ata-tab="severity"><i class="fa-solid fa-triangle-exclamation"></i> Severity Levels</li>
+                    <li class="settingAllTab" data-tab="asset"><i class="fa-solid fa-barcode"></i> Asset IDs</li>
+                    <li class="settingAllTab" data-tab="type"><i class="fa-solid fa-building"></i> Asset Types</li>
+                    <li class="settingAllTab" data-tab="status"><i class="fa-solid fa-palette"></i> Status Legend</li>
+                    <li class="settingAllTab" data-tab="teams"><i class="fa-brands fa-teamspeak"></i> Assign Response Teams</li>
                 </ul>
             </div>
 
@@ -433,7 +433,8 @@
                         <h3>Source</h3>
                         <button class="btn btn-primary btnAddNewSource"><i class="fa-solid fa-plus"></i> Add New</button>
                     </div>
-
+                    <div id="addSource">
+                    </div>
                     <div id="sourceList">
                     </div>
                 </div>

@@ -124,6 +124,61 @@
         DeleteEventTypeItem(id);
     });
 
+
+    $(document).off("click", ".btnAddNewseverityLevl");
+    $(document).on("click", ".btnAddNewseverityLevl", function (e) {
+        e.preventDefault();
+        AddSeverity();
+    });
+
+    $(document).off("click", ".cancelSeverityLevel");
+    $(document).on("click", ".cancelSeverityLevel", function (e) {
+        e.preventDefault();
+        $("#addseverityLevl").empty().html('');
+        $('li.active').trigger('click')
+    });
+
+    $(document).off("click", ".saveSeverityLevel");
+    $(document).on("click", ".saveSeverityLevel", function (e) {
+        e.preventDefault();
+        var isValid = true;
+
+        $("#saveSeverityLevelDiv").find("input[data-val-required], textarea[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            } else {
+                clearError($field);
+            }
+        });
+
+        // ✅ only run once after validation check
+        if (isValid) {
+            SaveSeverity();
+        }
+    });
+
+
+    $(document).off("click", ".editSeverityLevel");
+    $(document).on("click", ".editSeverityLevel", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetSeverityById(id);
+    });
+
+    $(document).off("click", ".deleteSeverityLevel");
+    $(document).on("click", ".deleteSeverityLevel", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+
+        //e.preventDefault();
+        DeleteSeverityItem(id);
+    });
+
+
     // Show error: red border + message
     function showError($field) {
         $field.css("border", "1px solid red");
@@ -161,7 +216,6 @@ async function GetAllRelationships() {
         hideLoader($(".setting"));
     }
 }
-
 async function AddRelationships() {
     try {
 
@@ -186,7 +240,6 @@ async function AddRelationships() {
         hideLoader($(".setting"));
     }
 }
-
 async function GetRelationshipById(id) {
     try {
 
@@ -211,7 +264,6 @@ async function GetRelationshipById(id) {
         hideLoader($(".setting"));
     }
 }
-
 async function DeleteRelationshipById(id) {
     try {
 
@@ -236,7 +288,6 @@ async function DeleteRelationshipById(id) {
         hideLoader($(".setting"));
     }
 }
-
 async function SaveRelationships() {
     try {
 
@@ -328,7 +379,6 @@ async function GetAllEventTypes() {
         hideLoader($(".setting"));
     }
 }
-
 async function AddEventType() {
     try {
 
@@ -353,7 +403,6 @@ async function AddEventType() {
         hideLoader($(".setting"));
     }
 }
-
 async function GetEventTypeById(id) {
     try {
 
@@ -378,7 +427,6 @@ async function GetEventTypeById(id) {
         hideLoader($(".setting"));
     }
 }
-
 async function DeleteEventTypeById(id) {
     try {
 
@@ -403,7 +451,6 @@ async function DeleteEventTypeById(id) {
         hideLoader($(".setting"));
     }
 }
-
 async function SaveEventType() {
     try {
 
@@ -466,5 +513,167 @@ function DeleteEventTypeItem(id) {   // <-- accept id
         }
     });
 }
-
 // End Event Type
+
+
+
+// Start SeverityLevel
+async function GetAllSeverity() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetAllSeverity", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load severity level list");
+
+        const content = await response.text();
+        $("#severityLevlList").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading severity level list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+async function AddSeverity() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/AddSeverity", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to add severity level");
+
+        const content = await response.text();
+        $("#addseverityLevl").empty().html(content);
+
+    } catch (error) {
+        console.error("Failed to add severity level:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+async function GetSeverityById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetSeverityById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to get severity level");
+
+        const content = await response.text();
+        $("#addseverityLevl").empty().html(content);
+
+    } catch (error) {
+        console.error("Failed to get severity level:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+async function DeleteSeverityById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/DeleteSeverityById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to delete severity level.");
+
+        SwalSuccessAlert("Severity level deleted successfully!");
+        GetAllSeverity();
+
+    } catch (error) {
+        console.error("Failed to delete severity level:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+async function SaveSeverity() {
+    try {
+
+        let form = [];
+        let formData = new FormData();
+        let obj = $("#NewSeverityLevelForm")[0];
+
+        // Serialize other fields
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+            form.push({ name: val.name, value: val.value });
+        });
+
+
+        showLoader($(".setting"));
+
+        //console.log(formData);
+        console.log(form);
+
+        // Send request
+        let response = await fetch("/Settings/SaveSeverity", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addseverityLevl").html("");
+            SwalSuccessAlert(result.data);
+            GetAllSeverity();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save severity level.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving severity level!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+function DeleteSeverityItem(id) {   // <-- accept id
+    let confirmBtnText = "Yes, delete it!";
+    let cancelBtnText = "No, cancel!";
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmBtnText,
+        cancelButtonText: cancelBtnText,
+        confirmButtonClass: 'btn btn-success me-2',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {   // ✅ correct way
+            DeleteSeverityById(id);
+        }
+    });
+}
+// End Severity Level

@@ -1,4 +1,9 @@
-﻿@{
+﻿@using System.Web
+@using ViewModels
+@model SettingViewModel
+
+
+@{
     ViewBag.Title = "Settings";
 }
 
@@ -272,7 +277,7 @@
     }
 
         .addItem .input-container input,
-        .input-container.EditInput input ,
+        .input-container.EditInput input,
         .input-container textarea {
             flex: 1;
             padding: 10px 14px;
@@ -280,20 +285,21 @@
             border-radius: 8px;
             font-size: 14px;
             outline: none;
-            width:100%;
+            width: 100%;
         }
 
     .input-container.type input,
     .input-container.EditInput input {
-        margin-bottom:12px;
+        margin-bottom: 12px;
     }
-        .addItem .input-container.type{
-            display:block; 
-        }
+
+    .addItem .input-container.type {
+        display: block;
+    }
 
     .input-container.EditInput,
-    .input-container.EditInput input ,
-    .input-container textarea{
+    .input-container.EditInput input,
+    .input-container textarea {
         width: 100%;
     }
 
@@ -357,11 +363,11 @@
             background-color: #111827;
         }
 
-    .statusDot{
-        width:20px;
-        height:20px;
-        border-radius:100%;
-        background:green;
+    .statusDot {
+        width: 20px;
+        height: 20px;
+        border-radius: 100%;
+        background: green;
     }
 </style>
 
@@ -408,11 +414,7 @@
 
 <div class="setting">
     <div class="container-fluid">
-        @* <div class="SettingHeader d-flex justify-content-end">
-            <button class="save-btn btn btn-primary">
-                <i class="fa fa-floppy-disk"></i> Save Changes
-            </button>
-        </div> *@
+
 
         <div class="settings-container">
             <!-- Sidebar -->
@@ -432,51 +434,14 @@
             <!-- Content -->
             <div class="content">
                 <div id="source" class="tab-content active">
+                    @* @await Html.PartialAsync("~/Views/Settings/Source/_AddSource.cshtml") *@
+
                     <div class="d-flex justify-content-between">
                         <h3>Source</h3>
-                        <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
-                    </div>
-                    <div class="list-item addItem">
-                        <div class="input-container">
-                            <input type="text" placeholder="Enter source...">
-                            <button class="btn check"><i class="fa-solid fa-check"></i></button>
-                            <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="input-container EditInput">
-                            <input type="text" value="jason">
-                        </div>
-
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
+                        <button class="btn btn-primary btnAddNewSource"><i class="fa-solid fa-plus"></i> Add New</button>
                     </div>
 
-                    <div class="list-item">
-                        <span>Contractor</span>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
-                    </div>
-
-                    <div class="list-item">
-                        <span>Public</span>
-                        <div class="actions">
-                            <i class="fa-solid fa-pen edit"></i>
-                            <i class="fa-solid fa-trash delete"></i>
-                        </div>
-                    </div>
-
-                    <div class="list-item">
-                        <span>Internal Employee</span>
-                        <div class="actions">
-                            <i class="fa-solid fa-pen edit"></i>
-                            <i class="fa-solid fa-trash delete"></i>
-                        </div>
-                    </div>
+                    @await Html.PartialAsync("~/Views/Settings/Source/_ListSource.cshtml", Model.RelationshipList)
                 </div>
                 <div id="event" class="tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -502,7 +467,7 @@
                     <div class="list-item">
                         <div class="input-container EditInput">
                             <input type="text" value="Gas Leak">
-                            <textarea type="text" value="Handles odor, hissing, visible damage incidents"></textarea> 
+                            <textarea type="text" value="Handles odor, hissing, visible damage incidents"></textarea>
                         </div>
                         <div class="actions">
                             <i class="fa fa-pen edit"></i>
@@ -644,7 +609,7 @@
                         <div class="input-container type">
                             <input type="text" placeholder="Enter asset name...">
                             <input type="text" placeholder="Enter color...">
-                            
+
                             <div class="actions">
                                 <button class="btn check"><i class="fa-solid fa-check"></i></button>
                                 <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
@@ -657,7 +622,7 @@
                         <div class="input-container EditInput">
                             <input type="text" value="type1">
                             <input type="text" value="#000000">
-                            
+
                         </div>
                         <div class="actions">
                             <i class="fa fa-pen edit"></i>
@@ -742,27 +707,27 @@
                     </div>
                 </div>
                 <div id="teams" class="tab-content">
-                        <div class="d-flex justify-content-between">
-                            <h3>Assign Response Teams</h3>
-                            <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
+                    <div class="d-flex justify-content-between">
+                        <h3>Assign Response Teams</h3>
+                        <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
+                    </div>
+                    <div class="list-item addItem">
+                        <div class="input-container">
+                            <input type="text" placeholder="Enter Name...">
+                            <button class="btn check"><i class="fa-solid fa-check"></i></button>
+                            <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
                         </div>
-                        <div class="list-item addItem">
-                            <div class="input-container">
-                                <input type="text" placeholder="Enter Name...">
-                                <button class="btn check"><i class="fa-solid fa-check"></i></button>
-                                <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="input-container EditInput">
+                            <input type="text" value="Jason">
                         </div>
-                        <div class="list-item">
-                            <div class="input-container EditInput">
-                                <input type="text" value="Jason">
-                            </div>
 
-                            <div class="actions">
-                                <i class="fa fa-pen edit"></i>
-                                <i class="fa fa-trash delete"></i>
-                            </div>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
                         </div>
+                    </div>
 
                     <div class="list-item">
                         <span>Hubert</span>
@@ -780,7 +745,7 @@
                         </div>
                     </div>
 
-                   
+
                 </div>
             </div>
         </div>

@@ -1,0 +1,39 @@
+﻿@using System.Web
+@using ViewModels
+@model List<RelationshipModifyViewModel>
+
+
+@foreach (var relationship in Model)
+{
+    <div class="list-item">
+        <span>@relationship.Name</span>
+        <div class="actions">
+            <i class="fa fa-pen edit"></i>
+            <i class="fa fa-trash delete"></i>
+        </div>
+    </div>
+}
+
+@* <div class="list-item">
+    <span>Contractor</span>
+    <div class="actions">
+        <i class="fa fa-pen edit"></i>
+        <i class="fa fa-trash delete"></i>
+    </div>
+</div>
+
+<div class="list-item">
+    <span>Public</span>
+    <div class="actions">
+        <i class="fa-solid fa-pen edit"></i>
+        <i class="fa-solid fa-trash delete"></i>
+    </div>
+</div>
+
+<div class="list-item">
+    <span>Internal Employee</span>
+    <div class="actions">
+        <i class="fa-solid fa-pen edit"></i>
+        <i class="fa-solid fa-trash delete"></i>
+    </div>
+</div> *@

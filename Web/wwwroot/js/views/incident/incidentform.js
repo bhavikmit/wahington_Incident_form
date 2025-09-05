@@ -1,5 +1,6 @@
 ﻿$(function () {
 
+
     $("#statusSelect").val('');
     $("#severitySelect").val('');
 
@@ -327,7 +328,7 @@
             GetIncidentList(statusID, severityID, description);
         }
         else {
-            GetIncidentList(statusID, severityID,"");
+            GetIncidentList(statusID, severityID, "");
         }
     });
 

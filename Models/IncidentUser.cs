@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models
 {
-    public class User : BaseDBModel
+    public class IncidentUser : BaseDBModel
     {
         public long TeamId { get; set; }
 

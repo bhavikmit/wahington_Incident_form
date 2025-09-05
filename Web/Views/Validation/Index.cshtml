@@ -556,7 +556,8 @@
             text-decoration: underline;
         }
         /***********response team************/
-    .teams-details-sec .info-box {
+    .teams-details-sec .info-box ,
+    .policies-details-sec .info-box {
         background: #eff6ff;
         border: 1px solid #bfdbfe;
         padding: 15px;
@@ -741,18 +742,7 @@
     }
 
     /*****************Policies******************/
-    .section-header {
-        background: #eef6ff;
-        border: 1px solid #dbeafe;
-        padding: 15px 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        color: #1e3a8a;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+    
 
     .progress-box {
         background: #fff;
@@ -761,6 +751,7 @@
         padding: 15px 20px;
         margin-bottom: 20px;
     }
+
 
         .progress-box label {
             font-size: 14px;
@@ -840,16 +831,17 @@
 
     .task-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: 1fr 1fr;
         gap: 15px;
     }
 
-    .task-card {
+    .policies-details-sec .task-card {
         background: #fff;
         border: 1px solid #e5e7eb;
         border-radius: 8px;
         padding: 15px;
         transition: 0.2s ease-in-out;
+        width:100%;
     }
 
         .task-card:hover {
@@ -859,22 +851,24 @@
 
         .task-card h5 {
             margin: 0 0 8px 0;
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 600;
             color: #111827;
+            line-height:normal;
         }
 
         .task-card p {
-            margin: 0 0 12px 0;
+            margin: 0 0 8px 0;
             font-size: 14px;
             color: #374151;
+            line-height:normal;
         }
 
         .task-card a {
             color: #2563eb;
             font-size: 14px;
             text-decoration: none;
-            font-weight: 500;
+            font-weight: 700;
         }
 
         .task-card a:hover {
@@ -888,17 +882,7 @@
         color: #111827;
     }
 
-    .task-card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        padding: 15px 20px;
-        margin-bottom: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 20px;
-    }
+  
 
     .task-info {
         flex: 1;
@@ -1006,7 +990,7 @@
     <div class="validation-center">
 
         <!-- Stats Cards -->
-        <div class="row g-3 mb-4 topCard" style="display:none;" >
+        <div class="row g-3 mb-4 topCard" >
             <div class="col-md-4">
                 <div class="stat-card d-flex align-items-center justify-content-start">
                     <div class="icon pending">
@@ -1046,7 +1030,7 @@
         </div>
 
         <!-- Incident List -->
-        <div class="card shadow-sm IncidentList" style="display:none;">
+        <div class="card shadow-sm IncidentList" >
             <div class="card-header bg-white fw-bold">Incidents Pending Validation</div>
             <div class="list-group list-group-flush">
 
@@ -1105,7 +1089,7 @@
 
             </div>
         </div>
-        <div class="card shadow-sm recentValidated mt-4" style="display:none;" >
+        <div class="card shadow-sm recentValidated mt-4"  >
             <div class="card-header bg-white fw-bold">Recently Validated</div>
             <div class="list-group list-group-flush">
 
@@ -1179,6 +1163,7 @@
                     <div class="step-label">Communication</div>
                 </div>
             </div>
+
 
 
     <!-- Step Content -->
@@ -1454,115 +1439,121 @@
    
     @* <div class=" shadow-sm step-content d-none" id="step-4">
          <div class="details-sec policies-details-sec p-6">
-                    <div class="section-header">
+                    <div class="info-box">
                         <i class="fa-solid fa-book"></i>
                         Policies & Procedures
+                        <small>Select and customize the policies and procedures for this incident response. Assign teams to each task.</small>
                     </div>
 
                    
                     <div class="progress-box">
-                        <label>Overall Progress</label>
+                        <div class="label-percentage d-flex align-item-center justify-content-between">
+                            <label>Overall Progress</label>
+                            <div class="progress-label">0%</div>
+                        </div>
                         <div class="progress-bar">
                             <span style="width:0%;"></span>
                         </div>
-                        <div class="progress-label">0%</div>
+                        
                     </div>
 
-                    
-                    <div class="form-box">
-                        <h4>Add Policies</h4>
-                        <input type="text" placeholder="Task title...">
-                        <textarea placeholder="Task description..."></textarea>
-                        <div class="form-actions">
-                            <button class="btn btn-add">Add Task</button>
-                            <button class="btn btn-cancel">Cancel</button>
+                    <div class="Bordercard">
+                        <div class="polices-task-add d-flex align-items-center justify-content-between">
+                            <h4>Add Policies</h4>
+                            <div class="add-task"><i class="fa fa-plus">Add Task</i></div>
                         </div>
-                    </div>
-
-                    
-                    <div class="task-grid">
-                        <div class="task-card">
-                            <h5>Initial Site Assessment</h5>
-                            <p>Conduct preliminary safety assessment and secure the area</p>
-                            <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                        </div>
-
-                        <div class="task-card">
-                            <h5>Gas Detection and Monitoring</h5>
-                            <p>Deploy gas detection equipment and establish monitoring protocols</p>
-                            <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                        </div>
-
-                        <div class="task-card">
-                            <h5>Evacuation Procedures</h5>
-                            <p>Implement evacuation protocols if required based on safety assessment</p>
-                            <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                        </div>
-
-                        <div class="task-card">
-                            <h5>Utility Isolation</h5>
-                            <p>Isolate affected utilities and establish safe work zone</p>
-                            <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                        </div>
-
-                        <div class="task-card">
-                            <h5>Repair and Restoration</h5>
-                            <p>Execute repair operations and restore utility services</p>
-                            <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                        </div>
-
-                        <div class="task-card">
-                            <h5>Documentation and Reporting</h5>
-                            <p>Compile incident data and submit reports for compliance</p>
-                            <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                        </div>
-                    </div>
-                    
-
-                    <div class="section-title">Selected Policies & Tasks</div>
-
-                    
-                    <div class="task-card">
-                        <div class="task-info">
-                            <h4>Gas Detection and Monitoring</h4>
-                            <p>Deploy gas detection equipment and establish monitoring protocols</p>
-                            <div class="assigned-teams">Assigned Teams:</div>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox"> Safety Team</label>
-                                <label><input type="checkbox" checked> Transmission Team</label>
+                        <div class="form-box">
+                            <input type="text" placeholder="Task title...">
+                            <textarea placeholder="Task description..."></textarea>
+                            <div class="form-actions">
+                                <button class="btn btn-add">Add Task</button>
+                                <button class="btn btn-cancel">Cancel</button>
                             </div>
                         </div>
-                        <div class="task-actions">
-                            <select>
-                                <option>Not Started</option>
-                                <option>In Progress</option>
-                                <option>Completed</option>
-                            </select>
-                            <a href="#" class="remove-link">Remove</a>
+
+                    
+                        <div class="task-grid">
+                            <div class="task-card">
+                                <h5>Initial Site Assessment</h5>
+                                <p>Conduct preliminary safety assessment and secure the area</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+
+                            <div class="task-card">
+                                <h5>Gas Detection and Monitoring</h5>
+                                <p>Deploy gas detection equipment and establish monitoring protocols</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+
+                            <div class="task-card">
+                                <h5>Evacuation Procedures</h5>
+                                <p>Implement evacuation protocols if required based on safety assessment</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+
+                            <div class="task-card">
+                                <h5>Utility Isolation</h5>
+                                <p>Isolate affected utilities and establish safe work zone</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+
+                            <div class="task-card">
+                                <h5>Repair and Restoration</h5>
+                                <p>Execute repair operations and restore utility services</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+
+                            <div class="task-card">
+                                <h5>Documentation and Reporting</h5>
+                                <p>Compile incident data and submit reports for compliance</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
                         </div>
+                    
                     </div>
+                    <div class="Bordercard">
+                        <div class="section-title">Selected Policies & Tasks</div>
+                        <div class="task-card">
+                            <div class="task-info">
+                                <h4>Gas Detection and Monitoring</h4>
+                                <p>Deploy gas detection equipment and establish monitoring protocols</p>
+                                <div class="assigned-teams">Assigned Teams:</div>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox"> Safety Team</label>
+                                    <label><input type="checkbox" checked> Transmission Team</label>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <select>
+                                    <option>Not Started</option>
+                                    <option>In Progress</option>
+                                    <option>Completed</option>
+                                </select>
+                                <a href="#" class="remove-link">Remove</a>
+                            </div>
+                        </div>
 
                    
-                    <div class="task-card">
-                        <div class="task-info">
-                            <h4>Initial Site Assessment</h4>
-                            <p>Conduct preliminary safety assessment and secure the area</p>
-                            <div class="assigned-teams">Assigned Teams:</div>
-                            <div class="checkbox-group">
-                                <label><input type="checkbox" checked> Safety Team</label>
-                                <label><input type="checkbox"> Transmission Team</label>
+                        <div class="task-card">
+                            <div class="task-info">
+                                <h4>Initial Site Assessment</h4>
+                                <p>Conduct preliminary safety assessment and secure the area</p>
+                                <div class="assigned-teams">Assigned Teams:</div>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" checked> Safety Team</label>
+                                    <label><input type="checkbox"> Transmission Team</label>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <select>
+                                    <option>Not Started</option>
+                                    <option>In Progress</option>
+                                    <option>Completed</option>
+                                </select>
+                                <a href="#" class="remove-link">Remove</a>
                             </div>
                         </div>
-                        <div class="task-actions">
-                            <select>
-                                <option>Not Started</option>
-                                <option>In Progress</option>
-                                <option>Completed</option>
-                            </select>
-                            <a href="#" class="remove-link">Remove</a>
-                        </div>
                     </div>
-
 
          </div>
     </div> *@

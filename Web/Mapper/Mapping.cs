@@ -720,7 +720,11 @@ namespace Models.Mapper
             CreateMap<TimesheetBriefViewModel, Timesheet>().ReverseMap();
             CreateMap<TimesheetBreakdownUpdateViewModel, TimesheetWebUpdateViewModel>().ReverseMap();
 
-
+            // IncidentTeam
+            CreateMap<IncidentTeamModifyViewModel, IncidentTeam>().ReverseMap();
+            CreateMap<IncidentTeamDetailViewModel, IncidentTeam>().ReverseMap();
+            CreateMap<IncidentTeamBriefViewModel, IncidentTeam>().ReverseMap();
+            CreateMap<IncidentTeamModifyViewModel, IncidentTeamDetailViewModel>().ReverseMap();
             //StatusLegend
             CreateMap<StatusLegendModifyViewModel, StatusLegend>().ReverseMap();
             CreateMap<StatusLegendDetailViewModel, StatusLegend>().ReverseMap();

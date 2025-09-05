@@ -16,13 +16,13 @@ namespace Web.Controllers
         private readonly IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> _iStatusLegendService;
         private readonly IAssetIdService<AssetIdModifyViewModel, AssetIdModifyViewModel, AssetIdDetailViewModel> _iAssetIdService;
         private readonly IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> _iAssetTypeService;
-
+        private readonly IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> _iIncidentTeamService;
 
         #endregion
 
         #region Ctor
         public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService, ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> iSeverityLevelService, IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> iStatusLegendService, IAssetIdService<AssetIdModifyViewModel, AssetIdModifyViewModel, AssetIdDetailViewModel> iAssetIdService,
-            IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService)
+            IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService, IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> iIncidentTeamService)
         {
             _iRelationshipService = iRelationshipService;
             _iEventTypeService = iEventTypeService;
@@ -30,7 +30,7 @@ namespace Web.Controllers
             _iStatusLegendService = iStatusLegendService;
             _iAssetIdService = iAssetIdService;
             _iAssetTypeService = iAssetTypeService;
-
+            _iIncidentTeamService = iIncidentTeamService;
         }
         #endregion
 
@@ -518,8 +518,83 @@ namespace Web.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { success = false, message = "An unexpected error occurred." });
             }
-        } 
+        }
         #endregion
+        #region IncidentTeams
+        [HttpGet]
+        public async Task<IActionResult> GetAllIncidentTeams()
+        {
+            var model = await _iIncidentTeamService.GetAllIncidentTeams();
+            return PartialView("~/Views/Settings/IncidentTeam/_ListIncidentTeam.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddIncidentTeam()
+        {
+            var model = new IncidentTeamModifyViewModel();
+            return PartialView("~/Views/Settings/IncidentTeam/_AddIncidentTeam.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetIncidentTeamById(long id)
+        {
+            var model = await _iIncidentTeamService.GetIncidentTeamById(id);
+            return PartialView("~/Views/Settings/IncidentTeam/_AddIncidentTeam.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveIncidentTeam([FromForm] IncidentTeamModifyViewModel incidentTeam)
+        {
+            if (incidentTeam == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long id = 0;
+                if (incidentTeam.Id > 0)
+                    id = await _iIncidentTeamService.UpdateIncidentTeam(incidentTeam);
+                else
+                    id = await _iIncidentTeamService.SaveIncidentTeam(incidentTeam);
+
+                if (id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save incident team." });
+
+                var successMsg = "Incident team saved successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteIncidentTeamById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                var deletedId = await _iIncidentTeamService.DeleteIncidentTeam(id);
+
+                if (deletedId == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete incident team." });
+
+                var successMsg = "Incident team deleted successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+        #endregion
+
     }
 }
 

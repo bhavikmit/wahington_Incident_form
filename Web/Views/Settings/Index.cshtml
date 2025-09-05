@@ -329,7 +329,7 @@
         }
 
     .btnAddNew, .btnAddNewSource, .btnAddNewEvent, .btnAddNewseverityLevl, .btnAddNewstatusLegend,
-    .btnAddNewAsset, .btnAddNewAssetType {
+    .btnAddNewAsset, .btnAddNewAssetType, .btnAddNewIncidentTeam {
         background-color: #f54e00;
         color: #fff;
         border: none;
@@ -423,7 +423,7 @@
                     <li class="settingAllTab" data-tab="asset"><i class="fa-solid fa-barcode"></i> Asset IDs</li>
                     <li class="settingAllTab" data-tab="type"><i class="fa-solid fa-building"></i> Asset Types</li>
                     <li class="settingAllTab" data-tab="status"><i class="fa-solid fa-palette"></i> Status Legend</li>
-                    <li class="settingAllTab" data-tab="teams"><i class="fa-brands fa-teamspeak"></i> Assign Response Teams</li>
+                    <li class="settingAllTab" data-tab="teams"><i class="fa-brands fa-teamspeak"></i>Teams</li>
                 </ul>
             </div>
 
@@ -504,45 +504,15 @@
                 </div>
                 <div id="teams" class="tab-content">
                     <div class="d-flex justify-content-between">
-                        <h3>Assign Response Teams</h3>
-                        <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
-                    </div>
-                    <div class="list-item addItem">
-                        <div class="input-container">
-                            <input type="text" placeholder="Enter Name...">
-                            <button class="btn check"><i class="fa-solid fa-check"></i></button>
-                            <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
-                    </div>
-                    <div class="list-item">
-                        <div class="input-container EditInput">
-                            <input type="text" value="Jason">
-                        </div>
-
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
+                        <h3>Teams</h3>
+                        <button class="btn btn-primary btnAddNewIncidentTeam"><i class="fa-solid fa-plus"></i> Add New</button>
                     </div>
 
-                    <div class="list-item">
-                        <span>Hubert</span>
-                        <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
-                        </div>
+                    <div id="addIncidentTeam">
                     </div>
-
-                    <div class="list-item">
-                        <span>Hardik</span>
-                        <div class="actions">
-                            <i class="fa-solid fa-pen edit"></i>
-                            <i class="fa-solid fa-trash delete"></i>
-                        </div>
+                    <div id="incidentTeamList">
                     </div>
-
-
-                </div>
+               </div>
             </div>
         </div>
     </div>

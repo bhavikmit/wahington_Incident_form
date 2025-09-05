@@ -1,0 +1,23 @@
+﻿@using System.Web
+@using ViewModels
+@model List<IncidentTeamModifyViewModel>
+
+@if (Model != null && Model.Count > 0)
+{
+    @foreach (var team in Model)
+    {
+        <div class="list-item">
+            <span>@team.Name</span>
+            <div class="actions">
+                <i class="fa fa-pen edit editIncidentTeam" id="@team.Id"></i>
+                <i class="fa fa-trash delete deleteIncidentTeam" id="@team.Id"></i>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="list-item">
+        <span>No Teams found.</span>
+    </div>
+}

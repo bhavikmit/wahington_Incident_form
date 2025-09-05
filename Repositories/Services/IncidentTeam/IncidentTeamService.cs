@@ -1,44 +1,33 @@
 ﻿using AutoMapper;
-
 using Centangle.Common.ResponseHelpers.Models;
-
 using DataLibrary;
-
-using DocumentFormat.OpenXml.Drawing.Diagrams;
-using DocumentFormat.OpenXml.Vml.Office;
-
-using Enums;
-
+using Enums; // ActiveStatus enum
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 using Models;
 using Models.Common.Interfaces;
-
-using Pagination;
-
-using Repositories.Common;
-
-using System.Linq.Expressions;
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ViewModels;
-using ViewModels.Incident;
 using ViewModels.Shared;
 
-namespace Repositories.Services
+namespace Repositories.Common
 {
     public class IncidentTeamService<CreateViewModel, UpdateViewModel, DetailViewModel>
-        : BaseService<IncidentTeam, CreateViewModel, UpdateViewModel, DetailViewModel>,
-          IIncidentTeamService<CreateViewModel, UpdateViewModel, DetailViewModel>
-        where DetailViewModel : class, IBaseCrudViewModel, new()
-        where CreateViewModel : class, IBaseCrudViewModel, new()
-        where UpdateViewModel : class, IBaseCrudViewModel, IIdentitifier, new()
+     : BaseService<IncidentTeam, CreateViewModel, UpdateViewModel, DetailViewModel>,
+       IIncidentTeamService<CreateViewModel, UpdateViewModel, DetailViewModel>
+     where DetailViewModel : class, IBaseCrudViewModel, new()
+     where CreateViewModel : class, IBaseCrudViewModel, new()
+     where UpdateViewModel : class, IBaseCrudViewModel, IIdentitifier, new()
     {
         private readonly ModelStateDictionary _modelState;
         private readonly ApplicationDbContext _db;
         private readonly ILogger<IncidentTeamService<CreateViewModel, UpdateViewModel, DetailViewModel>> _logger;
+
         public IncidentTeamService(
             ApplicationDbContext db,
             ILogger<IncidentTeamService<CreateViewModel, UpdateViewModel, DetailViewModel>> logger,
@@ -52,167 +41,163 @@ namespace Repositories.Services
             _logger = logger;
         }
 
-        //public override async Task<Expression<Func<IncidentTeam, bool>>> SetQueryFilter(IBaseSearchModel filters)
-        //{
-        //    var searchFilters = filters as IncidentTeamSearchViewModel;
+        public async Task<List<IncidentTeamModifyViewModel>> GetAllIncidentTeams()
+        {
+            var list = new List<IncidentTeamModifyViewModel>();
+            try
+            {
+                var teams = await _db.IncidentTeams
+                    .Where(t => !t.IsDeleted)
+                    .ToListAsync();
 
-        //    return x =>
-        //                (
-        //                    (
-        //                        string.IsNullOrEmpty(searchFilters.Search.value)
-        //                        ||
-        //                        x.Name.ToLower().Contains(searchFilters.Search.value.ToLower())
-        //                    )
-        //                )
-        //                &&
-        //                (string.IsNullOrEmpty(searchFilters.Name) || x.Name.ToLower().Contains(searchFilters.Name.ToLower()))
-        //                ;
-        //}
+                foreach (var t in teams)
+                {
+                    list.Add(new IncidentTeamModifyViewModel
+                    {
+                        Id = t.Id,
+                        Name = t.Name
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetAllIncidentTeams.");
+                return new List<IncidentTeamModifyViewModel>();
+            }
 
-        //public async Task<List<IncidentTeamModifyViewModel>> GetAllIncidentTeams()
-        //{
-        //    List<IncidentTeamModifyViewModel> IncidentTeams = new();
-        //    try
-        //    {
+            return list;
+        }
 
-        //        var reslations = await _db.IncidentTeams.Where(p => !p.IsDeleted).ToListAsync();
+        public async Task<long> SaveIncidentTeam(IncidentTeamModifyViewModel viewModel)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                var now = DateTime.UtcNow;
+                var userId = 0L; // replace with actual user id from auth context if available
 
-        //        foreach (var relation in reslations)
-        //        {
-        //            IncidentTeams.Add(new IncidentTeamModifyViewModel()
-        //            {
-        //                Id = relation.Id,
-        //                Name = relation.Name
-        //            });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error GetAllIncidentTeams.");
-        //        return new List<IncidentTeamModifyViewModel>()!;
-        //    }
-        //    return IncidentTeams;
-        //}
-        //public async Task<long> SaveRelation(IncidentTeamModifyViewModel viewModel)
-        //{
-        //    await using var transaction = await _db.Database.BeginTransactionAsync();
-        //    try
-        //    {
-        //        // Map ViewModel → Entity
-        //        var IncidentTeam = new IncidentTeam
-        //        {
-        //            Name = viewModel.Name
-        //        };
+                var team = new IncidentTeam
+                {
+                    Name = viewModel.Name,
+                    IsDeleted = false,
+                    ActiveStatus = ActiveStatus.Active,
+                    CreatedOn = now,
+                    CreatedBy = userId,
+                    UpdatedOn = now,
+                    UpdatedBy = userId
+                };
 
-        //        // Save
-        //        await _db.IncidentTeams.AddAsync(IncidentTeam);
-        //        await _db.SaveChangesAsync();
-        //        await transaction.CommitAsync();
+                await _db.IncidentTeams.AddAsync(team);
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
 
-        //        return IncidentTeam.Id;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await transaction.RollbackAsync();
-        //        _logger.LogError(ex, "Error SaveRelation.");
-        //        return 0;
-        //    }
-        //}
-        //public async Task<long> UpdateRelation(IncidentTeamModifyViewModel viewModel)
-        //{
-        //    try
-        //    {
+                return team.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error SaveIncidentTeam.");
+                return 0;
+            }
+        }
 
-        //        var relation = await _db.IncidentTeams.Where(p => p.Id == viewModel.Id).FirstOrDefaultAsync();
+        public async Task<long> UpdateIncidentTeam(IncidentTeamModifyViewModel viewModel)
+        {
+            try
+            {
+                var team = await _db.IncidentTeams
+                    .FirstOrDefaultAsync(t => t.Id == viewModel.Id);
 
-        //        if (relation == null)
-        //        {
-        //            await SaveRelation(viewModel);
-        //        }
+                if (team == null)
+                {
+                    // if not found, create new
+                    return await SaveIncidentTeam(viewModel);
+                }
 
-        //        // Save within transaction
-        //        await using var transaction = await _db.Database.BeginTransactionAsync();
+                await using var transaction = await _db.Database.BeginTransactionAsync();
 
-        //        relation.Name = viewModel.Name;
+                team.Name = viewModel.Name;
+                team.UpdatedOn = DateTime.UtcNow;
+                // set UpdatedBy if available
 
-        //        try
-        //        {
-        //            await _db.SaveChangesAsync();
-        //            await transaction.CommitAsync();
-        //        }
-        //        catch
-        //        {
-        //            await transaction.RollbackAsync();
-        //            throw;
-        //        }
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
 
-        //        return relation.Id;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error SaveRelation.");
-        //        return 0;
-        //    }
-        //}
-        //public async Task<IncidentTeamModifyViewModel> GetRelationById(long Id)
-        //{
-        //    var IncidentTeamView = new IncidentTeamModifyViewModel();
+                return team.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error UpdateIncidentTeam.");
+                return 0;
+            }
+        }
 
-        //    try
-        //    {
-        //        var IncidentTeam = await _db.IncidentTeams.FirstOrDefaultAsync(p => p.Id == Id);
+        public async Task<IncidentTeamModifyViewModel> GetIncidentTeamById(long id)
+        {
+            try
+            {
+                var team = await _db.IncidentTeams
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(t => t.Id == id);
 
-        //        if (IncidentTeam == null)
-        //        {
-        //            return new IncidentTeamModifyViewModel();
-        //        }
+                if (team == null)
+                    return new IncidentTeamModifyViewModel();
 
-        //        IncidentTeamView.Name = IncidentTeam.Name;
-        //        IncidentTeamView.Id = IncidentTeam.Id;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error GetById.");
-        //        return new IncidentTeamModifyViewModel();
-        //    }
+                return new IncidentTeamModifyViewModel
+                {
+                    Id = team.Id,
+                    Name = team.Name
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetIncidentTeamById.");
+                return new IncidentTeamModifyViewModel();
+            }
+        }
 
-        //    return IncidentTeamView;
-        //}
-        //public async Task<long> DeleteRelation(long Id)
-        //{
-        //    try
-        //    {
+        public async Task<long> DeleteIncidentTeam(long id)
+        {
+            try
+            {
+                var team = await _db.IncidentTeams
+                    .FirstOrDefaultAsync(t => t.Id == id);
 
-        //        var relation = await _db.IncidentTeams.Where(p => p.Id == Id).FirstOrDefaultAsync();
+                if (team == null)
+                    return 0;
 
-        //        if (relation == null)
-        //        {
-        //            return 0;
-        //        }
+                await using var transaction = await _db.Database.BeginTransactionAsync();
 
-        //        // Save within transaction
-        //        await using var transaction = await _db.Database.BeginTransactionAsync();
+                team.IsDeleted = true;
+                team.UpdatedOn = DateTime.UtcNow;
+                // set UpdatedBy if available
 
-        //        relation.IsDeleted = true;
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
 
-        //        try
-        //        {
-        //            await _db.SaveChangesAsync();
-        //            await transaction.CommitAsync();
-        //        }
-        //        catch
-        //        {
-        //            await transaction.RollbackAsync();
-        //            throw;
-        //        }
-
-        //        return relation.Id;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error DeleteRelation.");
-        //        return 0;
-        //    }
-        //}
+                return team.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error DeleteIncidentTeam.");
+                return 0;
+            }
+        }
     }
 }

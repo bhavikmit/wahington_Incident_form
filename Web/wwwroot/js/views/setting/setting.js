@@ -24,6 +24,9 @@
         else if (tab === "type") {
             GetAllAssetTypes();
         }
+        else if (tab === "teams") {
+            GetAllIncidentTeams();
+        }
     });
     // end setting tabs
 
@@ -248,7 +251,6 @@
         AddAssetId();
     });
 
-    // === AssetId Handlers ===
     $(document).off("click", ".cancelAsset");
     $(document).on("click", ".cancelAsset", function (e) {
         e.preventDefault();
@@ -289,6 +291,54 @@
         var id = $(this).attr("id");
         DeleteAssetItem(id);
     });
+
+    // === IncidentTeam Handlers ===
+    $(document).off("click", ".btnAddNewIncidentTeam");
+    $(document).on("click", ".btnAddNewIncidentTeam", function (e) {
+        e.preventDefault();
+        AddIncidentTeam();
+    });
+
+    $(document).off("click", ".cancelIncidentTeam");
+    $(document).on("click", ".cancelIncidentTeam", function (e) {
+        e.preventDefault();
+        $("#addIncidentTeam").empty().html('');
+        $('li.active').trigger('click');
+    });
+
+    $(document).on("click", ".saveIncidentTeam", function (e) {
+        e.preventDefault();
+        var isValid = true;
+        $("#saveIncidentTeamDiv").find("input[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            } else {
+                clearError($field);
+            }
+        });
+
+        if (isValid) {
+            SaveIncidentTeam();
+        }
+    });
+
+    $(document).off("click", ".editIncidentTeam");
+    $(document).on("click", ".editIncidentTeam", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetIncidentTeamById(id);
+    });
+
+    $(document).off("click", ".deleteIncidentTeam");
+    $(document).on("click", ".deleteIncidentTeam", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        DeleteIncidentTeamItem(id);
+    });
+
 
     // === AssetType Handlers ===
     $(document).off("click", ".btnAddNewAssetType");
@@ -1144,3 +1194,71 @@ function DeleteAssetTypeItem(id) {
     }).then(function (result) { if (result.isConfirmed) { DeleteAssetTypeById(id); } });
 }
 
+async function GetAllIncidentTeams() {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/GetAllIncidentTeams", { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
+        if (!response.ok) throw new Error("Failed to load incident team list");
+        const content = await response.text();
+        $("#incidentTeamList").empty().html(content);
+    } catch (error) { console.error("Error loading incident team list:", error); }
+    finally { hideLoader($(".setting")); }
+}
+
+async function AddIncidentTeam() {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/AddIncidentTeam", { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
+        if (!response.ok) throw new Error("Failed to load incident team form");
+        const content = await response.text();
+        $("#addIncidentTeam").empty().html(content);
+    } catch (error) { console.error("Error loading incident team form:", error); }
+    finally { hideLoader($(".setting")); }
+}
+
+async function GetIncidentTeamById(id) {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/GetIncidentTeamById?id=" + id, { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
+        if (!response.ok) throw new Error("Failed to load incident team");
+        const content = await response.text();
+        $("#addIncidentTeam").empty().html(content);
+    } catch (error) { console.error("Error loading incident team:", error); }
+    finally { hideLoader($(".setting")); }
+}
+
+async function DeleteIncidentTeamById(id) {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/DeleteIncidentTeamById?id=" + id, { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
+        if (!response.ok) throw new Error("Failed to delete incident team");
+        SwalSuccessAlert("Incident team deleted successfully!");
+        GetAllIncidentTeams();
+    } catch (error) { console.error("Error deleting incident team:", error); }
+    finally { hideLoader($(".setting")); }
+}
+
+async function SaveIncidentTeam() {
+    try {
+        let form = [], formData = new FormData(), obj = $("#NewIncidentTeamForm")[0];
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) { formData.append(val.name, val.value); form.push({ name: val.name, value: val.value }); });
+        showLoader($(".setting"));
+        let response = await fetch("/Settings/SaveIncidentTeam", { method: "POST", body: formData });
+        let result = await response.json();
+        if (result.success) {
+            $("#addIncidentTeam").html("");
+            SwalSuccessAlert(result.data);
+            GetAllIncidentTeams();
+        } else { SwalErrorAlert(result.message || "Failed to save incident team."); }
+    } catch (error) { SwalErrorAlert("Error while saving incident team!"); console.error(error); }
+    finally { hideLoader($(".setting")); }
+}
+
+function DeleteIncidentTeamItem(id) {
+    Swal.fire({
+        title: 'Are you sure?', text: "You won't be able to revert this!", icon: 'warning',
+        showCancelButton: true, confirmButtonText: "Yes, delete it!", cancelButtonText: "No, cancel!",
+        confirmButtonClass: 'btn btn-success me-2', cancelButtonClass: 'btn btn-danger', buttonsStyling: false
+    }).then(function (result) { if (result.isConfirmed) { DeleteIncidentTeamById(id); } });
+}

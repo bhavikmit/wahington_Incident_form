@@ -309,8 +309,8 @@
 <div class="dashboard">
     <div class="container-fluid ">
         <div class="DashboardHeader">
-            <h4 class="fw-bold">Map & Analytics</h4>
-            <p class="text-muted">Visual representation of incident data and analytics</p>
+            <h4 class="fw-bold" style="display:none">Map & Analytics</h4>
+            <p class="text-muted" style="display:none">Visual representation of incident data and analytics</p>
         </div>
 
         <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
@@ -348,7 +348,7 @@
                             <h6 class="fw-bold anakyticsTitle">Incident Analytics</h6>
                             <span class="text-muted small"><i class="fa fa-arrow-trend-up"></i>(@Model.IncidentDashboard.TotalIncidentCount) total incidents analyzed</span>
                         </div>
-                        <p class="text-muted">Visual breakdown of incident data and trends</p>
+                        <p class="text-muted" style="display:none">Visual breakdown of incident data and trends</p>
                         <div class="row">
                             @foreach (var item in Model.IncidentDashboard.ListIncidentDashboardSeverityReportViewModel)
                             {
@@ -425,6 +425,57 @@
                             </div>
                         </div>
 
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card p-4">
+                                    <h6 class="fw-bold chartTitle">Active Incidents by Asset Type</h6>
+                                    <div class="chart-container">
+                                        <canvas id="asseTypeChart" width="180" height="180"></canvas>
+                                        <div class="chart-center">
+                                            <div>@Model.IncidentDashboard.TotalAssetTypeCount</div>
+                                            <small>Total</small>
+                                        </div>
+                                    </div>
+                                    <ul class="chart-legend p-0 mt-2">
+                                        @foreach (var item in Model.IncidentDashboard.ListIncidentDashboardAssetTypeReportViewModel)
+                                        {
+                                            <li class="d-flex align-items-center justify-content-between InfoCount">
+                                                <div class="dot-name">
+                                                    <div class="legend-dot" style="background:@item.color"></div> @item.name
+                                                </div>
+                                                <div class="count">@item.count (@item.AssetTypePercentage %)</div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card p-4">
+                                    <h6 class="fw-bold chartTitle">Incidents by Event Type</h6>
+                                    <div class="chart-container">
+                                        <canvas id="eventTypeChart" width="180" height="180"></canvas>
+                                        <div class="chart-center">
+                                            <div>@Model.IncidentDashboard.TotalEventTypeCount</div>
+                                            <small>Total</small>
+                                        </div>
+                                    </div>
+                                    <ul class="chart-legend p-0 mt-2">
+                                        @foreach (var item in Model.IncidentDashboard.ListIncidentDashboardEventTypeReportViewModel)
+                                        {
+
+                                            <li class="d-flex align-items-center justify-content-between InfoCount">
+                                                <div class="dot-name">
+                                                    <div class="legend-dot" style="background:@item.color"></div>
+                                                    @item.name
+                                                </div>
+                                                <div class="count">@item.count (@item.EventTypePercentage%)</div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -441,6 +492,8 @@
             // Convert server-side model into JS object
             var severityData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.IncidentDashboard.ListIncidentDashboardSeverityReportViewModel));
             var statusData   = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.IncidentDashboard.ListIncidentDashboardStatusReport));
+            var assetTypeData   = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.IncidentDashboard.ListIncidentDashboardAssetTypeReportViewModel));
+            var eventData   = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.IncidentDashboard.ListIncidentDashboardEventTypeReportViewModel));
 
             // Helper function to render a doughnut chart
             function renderDoughnutChart(canvasId, chartData) {
@@ -469,6 +522,8 @@
             // Build both charts from model
             renderDoughnutChart("severityChart", severityData);
             renderDoughnutChart("statusChart", statusData);
+            renderDoughnutChart("asseTypeChart", assetTypeData);
+            renderDoughnutChart("eventTypeChart", eventData);
         });
     </script>
 }

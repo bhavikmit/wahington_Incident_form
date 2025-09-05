@@ -1,5 +1,6 @@
 ﻿@using System.Web
 @model ViewModels.CRUD.CrudListViewModel
+<div class="container-fluid">
 <div class="table_and_filters_wrap">
         @await Html.PartialAsync("~/Views/Shared/Crud/ListView/Common/_Search.cshtml", Model)
             @await Html.PartialAsync("~/Views/Shared/Crud/ListView/Common/_Header.cshtml", Model)
@@ -11,4 +12,5 @@
                     </div>
                 </div>
             </div>
+</div>
 </div>

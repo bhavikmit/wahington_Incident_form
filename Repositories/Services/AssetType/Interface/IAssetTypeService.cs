@@ -15,6 +15,12 @@ namespace Repositories.Common
         where CreateViewModel : class, IBaseCrudViewModel, new()
         where UpdateViewModel : class, IBaseCrudViewModel, IIdentitifier, new()
     {
-        Task<List<AssetTypeTreeViewModel>> GetHirearchy();
+        //Task<List<AssetTypeTreeViewModel>> GetHirearchy();
+
+        Task<List<AssetTypeModifyViewModel>> GetAllAssetTypes();
+        Task<long> SaveAssetType(AssetTypeModifyViewModel viewModel);
+        Task<long> UpdateAssetType(AssetTypeModifyViewModel viewModel);
+        Task<AssetTypeModifyViewModel> GetAssetTypeById(long id);
+        Task<long> DeleteAssetType(long id);
     }
 }

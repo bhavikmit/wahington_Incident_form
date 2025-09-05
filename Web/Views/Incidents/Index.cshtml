@@ -244,50 +244,50 @@
     }
 
     /********************View Incident css***************************/
-    #viewIncidentModal .badge-status {
+    #incidentDetailsModal .badge-status {
         background-color: #dc3545;
         font-size: 0.875rem;
         padding: 0.4rem 0.8rem;
     }
 
-    #viewIncidentModal .badge-severity {
+    #incidentDetailsModal .badge-severity {
         background-color: #28a745;
         font-size: 0.875rem;
         padding: 0.4rem 0.8rem;
     }
 
-    #viewIncidentModal .badge-unknown {
+    #incidentDetailsModal .badge-unknown {
         background-color: #e5e7eb;
         color: #374151;
     }
 
-    #viewIncidentModal .badge-yes {
+    #incidentDetailsModal .badge-yes {
         background-color: #28a745;
     }
 
-    #viewIncidentModal .badge-no {
+    #incidentDetailsModal .badge-no {
         background-color: #c6f6d5;
         color: #155724;
     }
 
-    #viewIncidentModal .asset-badge {
+    #incidentDetailsModal .asset-badge {
         background-color: #e5e7eb;
         color: #374151;
         margin-right: 0.25rem;
         font-size: 0.8rem;
     }
 
-    #viewIncidentModal .section-title {
+    #incidentDetailsModal .section-title {
         font-weight: 600;
         font-size: 19px;
         margin-bottom: 0.75rem;
     }
 
-    #viewIncidentModal .info-label {
+    #incidentDetailsModal .info-label {
         font-weight: 500;
     }
 
-    #viewIncidentModal .card,
+    #incidentDetailsModal .card,
     #noteIncidentModal .card,
     #historyIncidentModal .card {
         border-radius: 6px;
@@ -583,7 +583,7 @@
     .incident-photos {
         display: flex;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 7px;
     }
 
     .photo-thumb {
@@ -973,9 +973,9 @@
          $('#addIncidentModal').on('shown.bs.modal', function () {
           $(this).find('.modal-dialog').css('max-width', '1200px');
         });
-         $('#viewIncidentModal').on('shown.bs.modal', function () {
-          $(this).find('.modal-dialog').css('max-width', '1200px');
-        });
+       $('#incidentDetailsModal').on('shown.bs.modal', function () {
+         $(this).find('.modal-dialog').css('max-width', '1200px');
+       });
          $('#noteIncidentModal').on('shown.bs.modal', function () {
           $(this).find('.modal-dialog').css('max-width', '1200px');
         });

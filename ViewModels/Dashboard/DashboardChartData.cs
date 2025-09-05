@@ -53,9 +53,16 @@ namespace ViewModels.Dashboard
         public List<IncidentDashboardStatusReportViewModel> ListIncidentDashboardStatusReport { get; set; } = new();
         public List<IncidentDashboardSeverityReportViewModel> ListIncidentDashboardSeverityReportViewModel { get; set; } = new();
 
+        public List<IncidentDashboardEventTypeReportViewModel> ListIncidentDashboardEventTypeReportViewModel { get; set; } = new();
+
+        public List<IncidentDashboardAssetTypeReportViewModel> ListIncidentDashboardAssetTypeReportViewModel { get; set; } = new();
+
+
         public long TotalIncidentCount { get; set; } = default!;
         public long TotalSeverityCount { get; set; } = default!;
         public long TotalStatusLegendCount { get; set; } = default!;
+        public long TotalEventTypeCount { get; set; } = default!;
+        public long TotalAssetTypeCount { get; set; } = default!;
         public decimal ResponsePercentage { get; set; } = default!;
     }
 
@@ -72,5 +79,20 @@ namespace ViewModels.Dashboard
         public string color { get; set; } = default!;
         public long count { get; set; } = default!;
         public decimal SeverityPercentage { get; set; } = default!;
+    }
+
+    public class IncidentDashboardEventTypeReportViewModel
+    {
+        public string name { get; set; } = default!;
+        public string color { get; set; } = default!;
+        public long count { get; set; } = default!;
+        public decimal EventTypePercentage { get; set; } = default!;
+    }
+    public class IncidentDashboardAssetTypeReportViewModel
+    {
+        public string name { get; set; } = default!;
+        public string color { get; set; } = default!;
+        public long count { get; set; } = default!;
+        public decimal AssetTypePercentage { get; set; } = default!;
     }
 }

@@ -1,6 +1,10 @@
-﻿using System;
-using Models.Common.Interfaces;
+﻿using Models.Common.Interfaces;
+
 using Repositories.Interfaces;
+
+using System;
+
+using ViewModels;
 using ViewModels.Shared;
 
 namespace Repositories.Common
@@ -11,6 +15,11 @@ namespace Repositories.Common
         where CreateViewModel : class, IBaseCrudViewModel, new()
         where UpdateViewModel : class, IBaseCrudViewModel, IIdentitifier, new()
     {
+        Task<List<StatusLegendModifyViewModel>> GetAllStatusLegends();
+        Task<long> SaveStatusLegend(StatusLegendModifyViewModel viewModel);
+        Task<long> UpdateStatusLegend(StatusLegendModifyViewModel viewModel);
+        Task<StatusLegendModifyViewModel> GetStatusLegendById(long Id);
+        Task<long> DeleteStatusLegend(long id);
     }
 }
     

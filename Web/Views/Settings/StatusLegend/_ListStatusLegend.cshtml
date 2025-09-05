@@ -1,0 +1,26 @@
+﻿@using System.Web
+@using ViewModels
+@model List<StatusLegendModifyViewModel>
+
+@if (Model != null && Model.Count > 0)
+{
+    @foreach (var sl in Model)
+    {
+        <div class="list-item">
+            <div class="item-info">
+                <strong>@sl.Name</strong>
+                <p>@sl.Color</p>
+            </div>
+            <div class="actions">
+                <i class="fa fa-pen edit editStatusLegend" id="@sl.Id"></i>
+                <i class="fa fa-trash delete deleteStatusLegend" id="@sl.Id"></i>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="list-item">
+        <span>No status legend found.</span>
+    </div>
+}

@@ -40,6 +40,7 @@ public class IncidentNoteService : IIncidentNoteService
         var viewModel = new IncidentNotesModalViewModel
         {
             IncidentId = incidentId,
+            IncidentNumber = incident.IncidentID,
             Notes = notes,
             Status = incident.StatusLegend?.Name ?? "Unknown",
             Severity = incident.SeverityLevel?.Name ?? "Unknown",

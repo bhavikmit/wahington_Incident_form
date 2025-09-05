@@ -100,6 +100,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<AssignResponseTeams> AssignResponseTeams { get; set; }
     public DbSet<IncidentHistory> IncidentHistories { get; set; }
     public DbSet<Policy> Policies { get; set; }
+    public DbSet<IncidentTeam> IncidentTeams { get; set; }
 
 
 

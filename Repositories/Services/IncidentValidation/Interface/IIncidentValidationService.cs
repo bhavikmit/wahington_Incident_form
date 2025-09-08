@@ -14,6 +14,6 @@ namespace Repositories.Common
 {
     public interface IIncidentValidationService
     {
-      
+        Task<List<IncidentValidationPendingViewModel>> GetValidationPendingList();
     }
 }

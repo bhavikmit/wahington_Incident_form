@@ -17,12 +17,12 @@ namespace ViewModels.Incident
 
     public class ValidationWorkflowViewModel : BaseIncidentValidationViewModel
     {
-        public IncidentValidationCountViewModel IVCount { get; set; } = default!;
-        public IncidentValidationDetailViewModel IVDetails { get; set; } = default!;
-        public IncidentValidationViewModel IVValidation { get; set; } = default!;
-        public List<IncidentValidationPendingViewModel> IVPendingList { get; set; } = default!;
-        public List<RecentlyIncidentValidationViewModel> IVRecentlyList { get; set; } = default!;
-        public List<IncidentResponseTeamViewModel> IVResponseTeamList { get; set; } = default!;
+        public IncidentValidationCountViewModel IVCount { get; set; } = new();
+        public IncidentValidationDetailViewModel IVDetails { get; set; } = new();
+        public IncidentValidationViewModel IVValidation { get; set; } = new();
+        public List<IncidentValidationPendingViewModel> IVPendingList { get; set; } = new();
+        public List<RecentlyIncidentValidationViewModel> IVRecentlyList { get; set; } = new();
+        public List<IncidentResponseTeamViewModel> IVResponseTeamList { get; set; } = new();
     }
 
     public class IncidentValidationCountViewModel : BaseIncidentValidationViewModel
@@ -37,13 +37,15 @@ namespace ViewModels.Incident
         public string EventType { get; set; } = default!;
         public string IncidentLocation { get; set; } = default!;
         public string Severity { get; set; } = default!;
-        public DateTime IncidentDate { get; set; }
+        public string Description { get; set; } = default!;
+        public string IncidentDate { get; set; } = default!;
     }
     public class RecentlyIncidentValidationViewModel : BaseIncidentValidationViewModel
     {
         public string EventType { get; set; } = default!;
         public string Status { get; set; } = default!;
-        public DateTime IncidentDate { get; set; }
+        public string StatusColor { get; set; } = default!;
+        public string IncidentDate { get; set; } = default!;
     }
     public class IncidentValidationDetailViewModel : BaseIncidentValidationViewModel
     {

@@ -1,0 +1,34 @@
+﻿@using System.Web
+@using ViewModels.Incident
+@model ValidationWorkflowViewModel
+
+
+<div class="card shadow-sm recentValidated mt-4">
+    <div class="card-header bg-white fw-bold">Recently Validated</div>
+    <div class="list-group list-group-flush">
+
+        @if (Model != null && Model.IVRecentlyList.Count > 0)
+        {
+            @foreach (var item in Model.IVRecentlyList)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-center validated-item">
+                    <div class="list-group-card-info">
+                        <div class="list-group-header mb-1 d-flex align-items-center">
+                            <h4 class="mb-0">@item.IncidentId</h4>
+                            <span class="badge text-dark" style="background-color:@item.StatusColor">@item.Status</span>
+                            <small class="text-muted">@item.IncidentDate</small>
+                        </div>
+                        <p class="mb-0 text-muted">@item.EventType</p>
+                    </div>
+                    <small class="text-muted">03:57 PM</small>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center validated-item">
+                No recently validation
+            </div>
+        }
+    </div>
+</div>

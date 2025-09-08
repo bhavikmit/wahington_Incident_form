@@ -210,6 +210,7 @@ namespace Web.Extensions
             services.AddScoped<IIncidentNoteService, IncidentNoteService>();
             services.AddScoped<IIncidentHistoryService, IncidentHistoryService>();
             services.AddScoped<IIncidentDashboardService, IncidentDashboardService>();
+            services.AddScoped<IncidentValidationService, IncidentValidationService>();
             services.AddScoped(typeof(IPolicyService<,,>), typeof(PolicyService<,,>));
             services.AddScoped(typeof(IIncidentTeamService<,,>), typeof(IncidentTeamService<,,>));
             services.AddDefaultCorrelationId();

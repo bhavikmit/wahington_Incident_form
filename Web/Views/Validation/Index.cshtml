@@ -1,4 +1,8 @@
-﻿<style>
+﻿@using System.Web
+@using ViewModels.Incident
+@model ValidationWorkflowViewModel
+
+<style>
     /*****************Header style***************************/
     .header {
         background: #ffffff;
@@ -986,6 +990,7 @@
         </div>
     </div>
 </header>
+
 <div class="container-fluid">
     <div class="validation-center">
 
@@ -997,7 +1002,7 @@
                         <i class="fa-regular fa-clock text-danger fs-3"></i>
                     </div>
                     <div>
-                        <h4 class="mb-0 fw-bold text-danger">3</h4>
+                        <h4 class="mb-0 fw-bold text-danger">@Model.IVCount.PendingValidationCount</h4>
                         <small class="text-muted">Pending Validation</small>
                     </div>
                     
@@ -1030,97 +1035,10 @@
         </div>
 
         <!-- Incident List -->
-        <div class="card shadow-sm IncidentList" >
-            <div class="card-header bg-white fw-bold">Incidents Pending Validation</div>
-            <div class="list-group list-group-flush">
+        @await Html.PartialAsync("~/Views/Validation/_PendingValidation.cshtml", Model)
 
-                <!-- Incident Item -->
-                <div class="list-group-item d-flex justify-content-between align-items-start incident-item">
-                    <div class="list-group-card-info">
-                        <div class="list-group-header mb-1 d-flex align-items-center">
-                            <h4 class="mb-0">INC-0002</h4>
-                            <span class="badge bg-warning text-dark">Moderate</span>
-                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
-                        </div>
-                        <div class="mb-1 fw-semibold descri">Third-Party Damage</div>
-                        <p class="mb-0 text-muted">3721 Service Ave, City, ST 12345</p>
-                        <p class="text-muted mb-0 ">Sample incident description 2</p>
-                    </div>
-                    <button class="btn btn-primary align-self-center">
-                        <i class="fa-regular fa-circle-check"></i> Validate
-                    </button>
-                </div>
-
-                <!-- Incident Item -->
-                <div class="list-group-item d-flex justify-content-between align-items-start incident-item">
-                    <div class="list-group-card-info">
-                        <div class="list-group-header mb-1 d-flex align-items-center">
-                            <h4 class="mb-0">INC-0002</h4>
-                            <span class="badge bg-danger text-dark">High</span>
-                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
-                        </div>
-                        
-                        <p class="mb-1 fw-semibold descri">Equipment Failure</p>
-                        <p class="mb-0 text-muted">1139 Service Ave, City, ST 12345</p>
-                        <small class="text-muted mb-0">Sample incident description 13</small>
-                    </div>
-                    <button class="btn btn-primary align-self-center">
-                        <i class="fa-regular fa-circle-check"></i> Validate
-                    </button>
-                </div>
-
-                <!-- Incident Item -->
-                <div class="list-group-item d-flex justify-content-between align-items-start incident-item">
-                    <div class="list-group-card-info">
-                        <div class="list-group-header mb-1 d-flex align-items-center">
-                            <h4 class="mb-0">INC-0015</h4>
-                            <span class="badge bg-success text-dark">Low</span>
-                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
-                        </div>
-
-                        <p class="mb-1 fw-semibold descri">Gas Leak</p>
-                        <p class="mb-0 text-muted">5573 Service Ave, City, ST 12345</p>
-                        <small class="text-muted mb-0">Sample incident description 15</small>
-                    </div>
-                    <button class="btn btn-primary align-self-center">
-                        <i class="fa-regular fa-circle-check"></i> Validate
-                    </button>
-                </div>
-
-            </div>
-        </div>
-        <div class="card shadow-sm recentValidated mt-4"  >
-            <div class="card-header bg-white fw-bold">Recently Validated</div>
-            <div class="list-group list-group-flush">
-
-                <!-- Validated Incident -->
-                <div class="list-group-item d-flex justify-content-between align-items-center validated-item">
-                    <div class="list-group-card-info">
-                        <div class="list-group-header mb-1 d-flex align-items-center">
-                            <h4 class="mb-0">INC-0002</h4>
-                            <span class="badge bg-orange text-dark">Validated</span>
-                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
-                        </div>
-                        <p class="mb-0 text-muted">Third-Party Damage</p>
-                    </div>
-                    <small class="text-muted">03:57 PM</small>
-                </div>
-
-                <!-- Validated Incident -->
-                <div class="list-group-item d-flex justify-content-between align-items-center validated-item">
-                    <div class="list-group-card-info">
-                        <div class="list-group-header mb-1 d-flex align-items-center">
-                            <h4 class="mb-0">INC-0215</h4>
-                            <span class="badge bg-orange text-dark">Validated</span>
-                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
-                        </div>
-                        <p class="mb-0 text-muted">Third-Party Damage</p>
-                    </div>
-                    <small class="text-muted">03:57 PM</small>
-                </div>
-
-            </div>
-        </div>
+        <!-- Recently Validated -->
+        @await Html.PartialAsync("~/Views/Validation/_RecentlyValidated.cshtml", Model)
 
         <div class="workflow" style="display:block">
 

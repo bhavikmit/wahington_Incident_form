@@ -1,0 +1,1649 @@
+﻿<style>
+    /*****************Header style***************************/
+    .header {
+        background: #ffffff;
+        padding: 16px;
+        box-shadow: 0px 0px 14px #efefef;
+    }
+
+    .logo-section .title h2 {
+        font-weight: 800;
+        font-size: 28px;
+        margin-bottom: 0;
+        line-height: normal;
+        color: #494949;
+    }
+
+    .logo-section .title span {
+        color: darkgrey;
+    }
+
+    .profile .sidebar-account.dropdown-toggle::before {
+        display: none;
+    }
+
+    .icon {
+        position: relative;
+        font-size: 18px;
+        color: #666;
+        cursor: pointer;
+        margin-right: 16px;
+    }
+
+    .notification-dot {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 8px;
+        height: 8px;
+        background-color: red;
+        border-radius: 50%;
+    }
+
+    .profile {
+        width: 34px;
+        height: 34px;
+        background: #f54e00;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .profile i.fa {
+            color: #ffffff;
+        }
+
+    .header .logo {
+        background-color: #ededed;
+        color: #f54e00;
+        border-radius: 12px;
+        padding: 10px;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+    }
+
+    .header .dropdown-toggle::before {
+        display: none;
+    }
+    /*****************************/
+    .validation-center h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .stat-card {
+        background: #fff;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease;
+    }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+    .incident-item {
+        padding: 24px;
+        border-left: 4px solid transparent;
+        transition: 0.2s ease-in-out;
+    }
+
+        .incident-item:hover {
+            background: #f9f9f9;
+            border-left: 4px solid #0d6efd;
+        }
+
+    .btn-primary {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 6px 14px;
+    }
+
+    .validation-center{
+        padding:20px 0;
+    }
+    .topCard .icon{
+        margin-right:16px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .topCard .icon i.fa {
+        vertical-align:middle;
+    }
+    .topCard .icon.pending{
+            background: #fee2e2;
+    }
+    .topCard .icon.validated{
+            background: #dcfce7;
+    }
+
+    .topCard .icon.priority {
+            background: #FFEDD5;
+    }
+
+    .IncidentList .card-header ,
+    .recentValidated .card-header {
+        padding:16px 18px;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .list-group-header h4{
+        font-size:18px;
+        font-weight:800;
+        line-height:normal;
+    }
+
+    .list-group-header{
+        gap:10px;
+    }
+    .list-group-header .badge{
+            font-size: 16px;
+            color:#ffffff !important;
+    }
+
+    .descri{
+        font-size:16px;
+    }
+
+    .list-group-card-info p{
+        font-size:14px;
+    }
+
+    .validated-item {
+        padding: 1rem 1.2rem;
+        transition: 0.2s ease-in-out;
+    }
+
+        .validated-item:hover {
+            background: #f9f9f9;
+        }
+
+    .badge.bg-orange {
+        background-color: #f54e00; /* Tailwind orange-500 */
+        color: #fff;
+        font-size: 15px;
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .badge.bg-orange i {
+        margin-right: 4px;
+    }
+    /*****************steps page design****************************/
+    .titleofWorkflow p {
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+
+    .titleofWorkflow h3 {
+        line-height: normal;
+    }
+/*************************Stepper Design****************************/
+    /* Step Navigation */
+
+    .steps {
+        background: #fff;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .steps .step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        color: #888;
+        font-size: 0.9rem;
+        transition: 0.3s ease;
+    }
+
+    .steps .step i {
+        display: block;
+        font-size:20px;
+        margin-bottom: 0;
+    }
+
+    .steps .step.active {
+        color: #f54e00;
+        font-weight: 600;
+    }
+
+   .steps .step.active .step-icon{
+       background:#f54e00;
+        border: 2px solid #f54e00;
+        color:#ffffff;
+   }
+
+    .steps .step.completed .step-icon{
+        background: #198754;
+        border: 2px solid #198754;
+        color: #ffffff;
+    }
+
+    .steps .step.completed {
+        color: #198754;
+        font-weight: 600;
+    }
+
+    .steps .step::after {
+        content: '';
+        position: absolute;
+        top: 20px;
+        right: -50%;
+        width: 100%;
+        height: 2px;
+        background: #d1d5db;
+        z-index: 1;
+    }
+
+    .steps .step:last-child::after {
+        display: none;
+    }
+
+    .steps .step.completed::after {
+        background: #198754;
+    }
+
+    .step-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 8px auto;
+        font-size: 18px;
+        color: #6c757d;
+        background: #fff;
+        z-index: 999;
+        position: relative;
+    }
+
+    .step-label {
+        font-size: 14px;
+        color: #6c757d;
+    }
+
+    .step.active .step-label {
+        color: #f54e00;
+        font-weight: 600;
+    }
+
+    .step.completed .step-label {
+        color: #198754;
+        font-weight: 600;
+    }
+
+    .btnNext {
+        margin-left: auto;
+    }
+    /* Buttons */
+    #prevBtn, #nextBtn {
+        border-radius: 8px;
+        font-weight: 500;
+        padding: 8px 18px;
+    }
+
+   .details-sec {
+        background:#ffffff;
+        border-radius: 10px;
+        padding:20px;
+    }
+    .detailCard{
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* two equal columns */
+        gap: 24px;
+    }
+    .Stepcard {
+        
+        background: #f8f9fa;
+        padding:16px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+        .Stepcard h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+    .info-item {
+        margin-bottom: 15px;
+    }
+
+        .info-item i {
+            color: #444;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+    .info-title {
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .info-sub {
+        font-size: 14px;
+        color: #6c757d;
+        margin-left: 28px;
+        display: block;
+    }
+
+    .map-link {
+        color: #2563eb;
+        font-size: 14px;
+        text-decoration: none;
+        margin-left: 28px;
+    }
+
+        .map-link:hover {
+            text-decoration: underline;
+        }
+
+    .assets span {
+        background: #e0e7ff;
+        color: #2563eb;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 13px;
+        margin-right: 6px;
+    }
+
+
+    .info-item {
+        margin-bottom: 10px;
+    }
+
+        .info-item i {
+            color: #444;
+            margin-right: 8px;
+            font-size: 15px;
+        }
+
+    .info-title {
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+        margin-top: 5px;
+    }
+
+        .badge.orange {
+            background: #f59e0b;
+        }
+
+        .badge.red {
+            background: #dc2626;
+        }
+
+    .desc-box {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 14px;
+        color: #374151;
+    }
+
+    .safty .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .box {
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        background: #fff;
+    }
+
+        .box.green {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+        }
+
+        .box.gray {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+        }
+
+        .box .label {
+            font-size: 14px;
+            color: #374151;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .box .value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #065f46;
+        }
+
+        .box.gray .value {
+            color: #111827;
+        }
+
+    .Bordercard {
+        background: #ffffff;
+        padding: 16px;
+        border:1px solid #eee;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+        .Bordercard h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+        .form-group label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+    select, textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 14px;
+        background: #fff;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    small {
+        font-size: 12px;
+        color: #6b7280;
+        display: block;
+        margin-top: 4px;
+    }
+
+    .btn-danger {
+        display: inline-block;
+        width: 100%;
+        padding: 6px 12px;
+        text-align: center;
+        border-radius: 6px;
+        background: #f97316;
+        color: #fff;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        font-size: 15px;
+        margin-bottom: 15px;
+    }
+
+        .btn-danger i {
+            margin-right: 8px;
+        }
+
+    .alert {
+        background: #fff7ed;
+        border: 1px solid #fdba74;
+        padding: 4px 14px;
+        border-radius: 6px;
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+        .alert strong {
+            color: #b45309;
+        }
+
+    .location-preview {
+        background: #f3f4f6;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+        .location-preview i {
+            font-size: 22px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            display: block;
+            width:100%
+        }
+
+        .location-preview p {
+            margin: 0;
+            color: #374151;
+            font-size: 14px;
+        }
+
+    .map-link {
+        color: #2563eb;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 6px;
+    }
+
+        .map-link:hover {
+            text-decoration: underline;
+        }
+        /***********response team************/
+    .teams-details-sec .info-box ,
+    .policies-details-sec .info-box {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #1e40af;
+        margin-bottom: 15px;
+        line-height:normal;
+    }
+
+    .teams-details-sec .selected-box {
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+        .teams-details-sec .selected-box strong {
+            display: block;
+            margin-bottom: 8px;
+            color: #065f46;
+        }
+
+    .teams-details-sec .tag {
+        display: inline-block;
+        background: #d1fae5;
+        color: #065f46;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 13px;
+        margin: 3px;
+        font-weight: 500;
+    }
+
+    .team-card {
+        background: #ffffff;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        transition: 0.2s;
+    }
+
+        .team-card.selected {
+            background: #ffebeb;
+            border: 1px solid #f54e00;
+        }
+
+            .team-card.selected .team-icon {
+            background: #f54e00;
+            color:#ffffff;
+        }
+        .team-card.selected .team-icon i{
+          color:#ffffff;
+        }
+
+    .team-left {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .team-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: #ededed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #bcbcbc;
+        font-size: 20px;
+        margin-right: 15px;
+    }
+
+   
+
+    .team-info h4 {
+        font-size: 16px;
+        margin: 0;
+        margin-bottom: 4px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+
+    .teams-details-sec .badge {
+        font-size: 12px;
+        padding: 3px 8px;
+        border-radius: 12px;
+        margin-left: 8px;
+    }
+
+    .teams-details-sec .badge.blue {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+
+        .teams-details-sec .badge.green {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .teams-details-sec .badge.orange {
+            background: #ffedd5;
+            color: #9a3412;
+        }
+
+    .phone {
+        font-size: 14px;
+        color: #374151;
+        margin: 6px 0;
+    }
+
+    .specializations {
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+        .specializations span {
+            background: #f3f4f6;
+            border-radius: 12px;
+            padding: 3px 8px;
+            font-size: 12px;
+            margin-right: 6px;
+        }
+
+    .check-icon {
+        font-size: 18px;
+        color: #3b82f6;
+    }
+
+    .uncheck-icon {
+        font-size: 18px;
+        color: #d1d5db;
+    }
+
+    .team-info p{
+        font-size:14px;
+        font-weight:800;
+        line-height:normal;
+    }
+    .summary-card{
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 20px 30px;
+    }
+ .summary-card {
+     
+     
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      max-width: 100%;
+    }
+
+    .summary h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 0;
+    }
+
+    .summary-item {
+      flex: 1;
+    }
+
+    .summary-item label {
+      font-size: 14px;
+      color: #374151;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .summary-item .value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    /*****************Policies******************/
+    
+
+    .progress-box {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+    }
+
+
+        .progress-box label {
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+            color: #374151;
+        }
+
+    .progress-bar {
+        background: #f3f4f6;
+        border-radius: 6px;
+        height: 12px;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .progress-bar span {
+            display: block;
+            height: 100%;
+            width: 0%;
+            background: #3b82f6;
+        }
+
+    .progress-label {
+        font-size: 13px;
+        text-align: right;
+        margin-top: 5px;
+        color: #111827;
+    }
+
+    .form-box {
+        background: #f9fbff;
+        border: 1px solid #dbeafe;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+        .form-box h4 {
+            margin: 0 0 15px 0;
+            font-weight: 600;
+        }
+
+        .form-box input,
+        .form-box textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+    .form-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .btn-add {
+        background: #16a34a;
+        color: #fff;
+    }
+
+    .btn-cancel {
+        background: #374151;
+        color: #fff;
+    }
+
+    .task-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .policies-details-sec .task-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 15px;
+        transition: 0.2s ease-in-out;
+        width:100%;
+    }
+
+        .task-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .task-card h5 {
+            margin: 0 0 8px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            line-height:normal;
+        }
+
+        .task-card p {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            color: #374151;
+            line-height:normal;
+        }
+
+        .task-card a {
+            color: #2563eb;
+            font-size: 14px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .task-card a:hover {
+            text-decoration: underline;
+        }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #111827;
+    }
+
+  
+
+    .task-info {
+        flex: 1;
+    }
+
+        .task-info h4 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .task-info p {
+            margin: 6px 0 10px 0;
+            font-size: 14px;
+            color: #374151;
+        }
+
+    .assigned-teams {
+        font-size: 14px;
+        color: #111827;
+        margin-bottom: 6px;
+        font-weight: 500;
+    }
+
+    .checkbox-group {
+        display: flex;
+        gap: 15px;
+        font-size: 14px;
+        color: #111827;
+    }
+
+    .task-actions {
+        text-align: right;
+        min-width: 160px;
+    }
+
+        .task-actions select {
+            padding: 6px 10px;
+            font-size: 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            width: 120px;
+        }
+
+    .remove-link {
+        display: block;
+        font-size: 14px;
+        color: #dc2626;
+        cursor: pointer;
+        text-decoration: none;
+        margin-top: 4px;
+    }
+
+        .remove-link:hover {
+            text-decoration: underline;
+        }
+</style>
+
+<header class="header validation-header d-flex align-items-center justify-content-between">
+    <!-- Left section -->
+    <div class="logo-section d-flex align-items-center">
+        <div class="logo"><i class="fa-regular fa-circle-check"></i></div>
+        <div class="title">
+            <h2>Validation</h2>
+            <span>Review and validate submitted incidents</span>
+        </div>
+    </div>
+
+    <!-- Right section -->
+    <div class="right-section d-flex align-items-center">
+
+        <div class="icon">
+            <i class="fa-regular fa-bell"></i>
+            <span class="notification-dot"></span>
+        </div>
+        <a class="icon" href="/Settings"><i class="fa fa-gear"></i></a>
+        <div class="profile">
+            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3 " id="dropdownUser2"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-user"></i>
+
+            </a>
+            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3"
+                style="background-color: white;">
+                <li class="dropdown-item">
+                    <a class="nav-link d-flex align-items-center" href="/Identity/Account/Manage/ChangePassword">
+                        <i class="fa fa-lock"></i>
+                        <span class="menu-text">Change Password</span>
+                    </a>
+                </li>
+
+                <li class="dropdown-item">
+                    <a class="nav-link d-flex align-items-center" href="/Identity/Account/Logout">
+                        <i class="fa fa-user"></i>
+                        <span class="menu-text">Log Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<div class="container-fluid">
+    <div class="validation-center">
+
+        <!-- Stats Cards -->
+        <div class="row g-3 mb-4 topCard" >
+            <div class="col-md-4">
+                <div class="stat-card d-flex align-items-center justify-content-start">
+                    <div class="icon pending">
+                        <i class="fa-regular fa-clock text-danger fs-3"></i>
+                    </div>
+                    <div>
+                        <h4 class="mb-0 fw-bold text-danger">3</h4>
+                        <small class="text-muted">Pending Validation</small>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card d-flex align-items-center justify-content-start">
+                    <div class="icon validated">
+                        <i class="fa-regular fa-circle-check text-success fs-3"></i>
+                    </div>
+                    <div>
+                        <h4 class="mb-0 fw-bold text-success">2</h4>
+                        <small class="text-muted">Validated Today</small>
+                    </div>
+                  
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card d-flex align-items-center justify-content-start">
+                    <div class="icon priority">
+                        <i class="fa-solid fa-triangle-exclamation text-warning fs-3"></i>
+                    </div>
+                    <div>
+                        <h4 class="mb-0 fw-bold text-warning">1</h4>
+                        <small class="text-muted">High Priority</small>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Incident List -->
+        <div class="card shadow-sm IncidentList" >
+            <div class="card-header bg-white fw-bold">Incidents Pending Validation</div>
+            <div class="list-group list-group-flush">
+
+                <!-- Incident Item -->
+                <div class="list-group-item d-flex justify-content-between align-items-start incident-item">
+                    <div class="list-group-card-info">
+                        <div class="list-group-header mb-1 d-flex align-items-center">
+                            <h4 class="mb-0">INC-0002</h4>
+                            <span class="badge bg-warning text-dark">Moderate</span>
+                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
+                        </div>
+                        <div class="mb-1 fw-semibold descri">Third-Party Damage</div>
+                        <p class="mb-0 text-muted">3721 Service Ave, City, ST 12345</p>
+                        <p class="text-muted mb-0 ">Sample incident description 2</p>
+                    </div>
+                    <button class="btn btn-primary align-self-center">
+                        <i class="fa-regular fa-circle-check"></i> Validate
+                    </button>
+                </div>
+
+                <!-- Incident Item -->
+                <div class="list-group-item d-flex justify-content-between align-items-start incident-item">
+                    <div class="list-group-card-info">
+                        <div class="list-group-header mb-1 d-flex align-items-center">
+                            <h4 class="mb-0">INC-0002</h4>
+                            <span class="badge bg-danger text-dark">High</span>
+                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
+                        </div>
+                        
+                        <p class="mb-1 fw-semibold descri">Equipment Failure</p>
+                        <p class="mb-0 text-muted">1139 Service Ave, City, ST 12345</p>
+                        <small class="text-muted mb-0">Sample incident description 13</small>
+                    </div>
+                    <button class="btn btn-primary align-self-center">
+                        <i class="fa-regular fa-circle-check"></i> Validate
+                    </button>
+                </div>
+
+                <!-- Incident Item -->
+                <div class="list-group-item d-flex justify-content-between align-items-start incident-item">
+                    <div class="list-group-card-info">
+                        <div class="list-group-header mb-1 d-flex align-items-center">
+                            <h4 class="mb-0">INC-0015</h4>
+                            <span class="badge bg-success text-dark">Low</span>
+                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
+                        </div>
+
+                        <p class="mb-1 fw-semibold descri">Gas Leak</p>
+                        <p class="mb-0 text-muted">5573 Service Ave, City, ST 12345</p>
+                        <small class="text-muted mb-0">Sample incident description 15</small>
+                    </div>
+                    <button class="btn btn-primary align-self-center">
+                        <i class="fa-regular fa-circle-check"></i> Validate
+                    </button>
+                </div>
+
+            </div>
+        </div>
+        <div class="card shadow-sm recentValidated mt-4"  >
+            <div class="card-header bg-white fw-bold">Recently Validated</div>
+            <div class="list-group list-group-flush">
+
+                <!-- Validated Incident -->
+                <div class="list-group-item d-flex justify-content-between align-items-center validated-item">
+                    <div class="list-group-card-info">
+                        <div class="list-group-header mb-1 d-flex align-items-center">
+                            <h4 class="mb-0">INC-0002</h4>
+                            <span class="badge bg-orange text-dark">Validated</span>
+                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
+                        </div>
+                        <p class="mb-0 text-muted">Third-Party Damage</p>
+                    </div>
+                    <small class="text-muted">03:57 PM</small>
+                </div>
+
+                <!-- Validated Incident -->
+                <div class="list-group-item d-flex justify-content-between align-items-center validated-item">
+                    <div class="list-group-card-info">
+                        <div class="list-group-header mb-1 d-flex align-items-center">
+                            <h4 class="mb-0">INC-0215</h4>
+                            <span class="badge bg-orange text-dark">Validated</span>
+                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
+                        </div>
+                        <p class="mb-0 text-muted">Third-Party Damage</p>
+                    </div>
+                    <small class="text-muted">03:57 PM</small>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="workflow" style="display:block">
+
+    <!-- Header -->
+    <div class="mb-4 titleofWorkflow">
+        <h3 class="fw-bold">Validation Workflow - INC-0003</h3>
+        <p class="text-muted">Manager validation and response coordination</p>
+    </div>
+
+    <!-- Step Navigation -->
+            <div class="steps mb-4 d-flex justify-content-between">
+                <div class="step active" data-step="1">
+                    <div class="step-icon">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <div class="step-label">Incident Details</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="step-label">Validation</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-icon">
+                        <i class="fa-solid fa-people-group"></i>
+                    </div>
+                    <div class="step-label">Response Teams</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-icon">
+                    <i class="fa-regular fa-circle-check"></i>
+                    </div>
+                    <div class="step-label">Policies & Procedures</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-icon">
+                    <i class="fa-regular fa-comment-dots"></i>
+                    </div>
+                    <div class="step-label">Communication</div>
+                </div>
+            </div>
+
+
+
+    <!-- Step Content -->
+    <div class="shadow-sm step-content" id="step-1">
+        <div class="details-sec incident-details-sec p-6">
+            <div class="detailCard">
+                <div class="Stepcard callerInfo ">
+                    <h3>Caller Information</h3>
+
+                    <div class="info-item">
+                        <i class="fa-regular fa-user"></i>
+                        <span class="info-title">Caller 5</span>
+                        <span class="info-sub">Customer</span>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-phone"></i>
+                        <span class="info-title">555-506-6247</span>
+                        <span class="info-sub">Primary contact</span>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span class="info-title">Caller Address</span>
+                        <span class="info-sub">3598 Main St, City, ST 12345</span>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span class="info-title">Call Time</span>
+                        <span class="info-sub">Sep 05, 2025 12:14 AM</span>
+                    </div>
+                </div>
+
+                <!-- Incident Location -->
+                <div class="Stepcard incidentLoc ">
+                    <h3>Incident Location</h3>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span class="info-title">Address</span>
+                        <span class="info-sub">284 Service Ave, City, ST 12345</span>
+                        <a href="#" class="map-link"><i class="fa-solid fa-map"></i> View on Map</a>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-road"></i>
+                        <span class="info-title">Nearest Intersection</span>
+                        <span class="info-sub">Main St & Service Ave</span>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-cube"></i>
+                        <span class="info-title">Affected Assets</span>
+                        <div class="assets">
+                            <span>PIPE-001</span>
+                            <span>VALVE-123</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="Stepcard incidentDetail mt-4">
+                        <h3>Incident Details</h3>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="info-item">
+                                    
+                                    <span class="info-title">Event Type</span>
+                                </div>
+                                <div>Third-Party Damage</div>
+                            </div>
+
+                            <div class="col">
+                                <div class="info-item">
+                                    
+                                    <span class="info-title">Reported Severity</span>
+                                </div>
+                                <span class="badge orange">Moderate</span>
+                            </div>
+
+                            <div class="col">
+                                <div class="info-item">
+                                    
+                                    <span class="info-title">Current Status</span>
+                                </div>
+                                <span class="badge red">Submitted</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            
+                            <span class="info-title">Description</span>
+                        </div>
+                        <div class="desc-box">
+                            Sample incident description 1
+                        </div>
+                    </div>
+            <div class="Stepcard mt-4 safty">
+                <h3>Safety Assessment</h3>
+
+                <div class="grid">
+                    <div class="box gray">
+                        <span class="label">Gas Odor Present</span>
+                        <span class="value">Unknown</span>
+                    </div>
+
+                    <div class="box green">
+                        <span class="label">Hissing Sound</span>
+                        <span class="value">No</span>
+                    </div>
+
+                    <div class="box green">
+                        <span class="label">Visible Damage/Fire</span>
+                        <span class="value">No</span>
+                    </div>
+
+                    <div class="box green">
+                        <span class="label">People Injured</span>
+                        <span class="value">No</span>
+                    </div>
+
+                    <div class="box green">
+                        <span class="label">Evacuation Required</span>
+                        <span class="value">No</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class=" shadow-sm step-content d-none" id="step-2">
+        <div class="details-sec validation-details-sec p-6">
+             <div class="detailCard">
+                <div class="Bordercard">
+                    <h3>Validate Incident</h3>
+
+                    <div class="form-group">
+                        <label>Confirmed Severity Level <span style="color:red">*</span></label>
+                        <select>
+                            <option>Select confirmed severity</option>
+                            <option>Low</option>
+                            <option>Moderate</option>
+                            <option>High</option>
+                            <option>Critical</option>
+                        </select>
+                        <small>Original severity: <strong>Moderate</strong></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Discovery Perimeter <span style="color:red">*</span></label>
+                        <select>
+                            <option>Select radius</option>
+                            <option>50m</option>
+                            <option>100m</option>
+                            <option>200m</option>
+                        </select>
+                        <small>This creates a safety perimeter around the incident location</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Validation Notes</label>
+                        <textarea placeholder="Add validation notes, observations, or additional context..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Right: Actions -->
+                        <div class="Bordercard">
+                    <h3>Alternative Actions</h3>
+                    <button class="btn-danger"><i class="fa-solid fa-circle-xmark"></i> Mark as False Alarm</button>
+                    <div class="alert">
+                        <strong>False Alarm:</strong> Use this option if the incident report is determined to be invalid, duplicate, or does not require emergency response.
+                    </div>
+
+                    <h3>Location Preview</h3>
+                    <div class="location-preview">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <p>284 Service Ave, City, ST 12345</p>
+                        <a href="#" class="map-link">View Full Map</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    
+    <div class=" shadow-sm step-content d-none" id="step-3">
+         <div class="details-sec teams-details-sec p-6">
+                
+            <div class="responseCard">
+                <div class="info-box">
+                    <i class="fa-solid fa-people-group"></i>
+                    Response Team Assignment <br>
+                    <small>Select the appropriate response teams based on the incident type and severity. Multiple teams can be assigned.</small>
+                </div>
+
+                <!-- Selected Teams -->
+                <div class="selected-box" id="selectedBox">
+                    <strong id="selectedCount">0 Teams Selected</strong>
+                    <div id="selectedTags"></div>
+                </div>
+                <div class="team-card" data-name="Distribution Emergency Team">
+                    <div class="team-left">
+                        <div class="team-icon"><i class="fa-solid fa-user-group"></i></div>
+                        <div class="team-info">
+                            <h4>Distribution Emergency Team <span class="badge blue">Distribution</span></h4>
+                            <div class="phone"><i class="fa-solid fa-phone"></i> 555-DIST-001</div>
+                            <p class="mb-0">Specializations:</p>
+                            <div class="specializations">
+                                <span>Gas Leaks</span>
+                                <span>Valve Repairs</span>
+                                <span>Meter Issues</span>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="fa-regular fa-circle uncheck-icon"></i>
+                </div>
+
+                <div class="team-card" data-name="Transmission Response Unit">
+                    <div class="team-left">
+                        <div class="team-icon"><i class="fa-solid fa-user-group"></i></div>
+                        <div class="team-info">
+                            <h4>Transmission Response Unit <span class="badge green">Transmission</span></h4>
+                            <div class="phone"><i class="fa-solid fa-phone"></i> 555-TRANS-001</div>
+                            <p class="mb-0">Specializations:</p>
+                            <div class="specializations">
+                                <span>Pipeline Repairs</span>
+                                <span>High Pressure Systems</span>
+                                <span>Compressor Issues</span>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="fa-regular fa-circle uncheck-icon"></i>
+                </div>
+
+                <div class="team-card " data-name="Emergency Contractors">
+                    <div class="team-left">
+                        <div class="team-icon"><i class="fa-solid fa-user-group"></i></div>
+                        <div class="team-info">
+                            <h4>Emergency Contractors <span class="badge orange">Contractors</span></h4>
+                            <div class="phone"><i class="fa-solid fa-phone"></i> 555-CONTRACT-001</div>
+                            <p class="mb-0">Specializations:</p>
+                            <div class="specializations">
+                                <span>Excavation</span>
+                                <span>Third-Party Damage</span>
+                                <span>Heavy Equipment</span>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="fa-regular fa-circle uncheck-icon"></i>
+                </div>
+
+                <div class="summary">
+                            <h3>Assignment Summary</h3>
+                            <div class="summary-card">
+                                
+                                <div class="summary-item">
+
+                                    <label>Teams Assigned</label>
+                                    <div class="value">3</div>
+                                </div>
+                                <div class="summary-item right">
+                                    <label>Estimated Response Time</label>
+                                    <div class="value">15-30 min</div>
+                                </div>
+                            </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+   
+    @* <div class=" shadow-sm step-content d-none" id="step-4">
+         <div class="details-sec policies-details-sec p-6">
+                    <div class="info-box">
+                        <i class="fa-solid fa-book"></i>
+                        Policies & Procedures
+                        <small>Select and customize the policies and procedures for this incident response. Assign teams to each task.</small>
+                    </div>
+
+                   
+                    <div class="progress-box">
+                        <div class="label-percentage d-flex align-item-center justify-content-between">
+                            <label>Overall Progress</label>
+                            <div class="progress-label">0%</div>
+                        </div>
+                        <div class="progress-bar">
+                            <span style="width:0%;"></span>
+                        </div>
+                        
+                    </div>
+
+                    <div class="Bordercard">
+                        <div class="polices-task-add d-flex align-items-center justify-content-between">
+                            <h4>Add Policies</h4>
+                            <div class="add-task"><i class="fa fa-plus">Add Task</i></div>
+                        </div>
+                        <div class="form-box">
+                            <input type="text" placeholder="Task title...">
+                            <textarea placeholder="Task description..."></textarea>
+                            <div class="form-actions">
+                                <button class="btn btn-add">Add Task</button>
+                                <button class="btn btn-cancel">Cancel</button>
+                            </div>
+                        </div>
+
+                    
+                        <div class="task-grid">
+                            <div class="task-card">
+                                <h5>Initial Site Assessment</h5>
+                                <p>Conduct preliminary safety assessment and secure the area</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+
+                            <div class="task-card">
+                                <h5>Gas Detection and Monitoring</h5>
+                                <p>Deploy gas detection equipment and establish monitoring protocols</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+
+                            <div class="task-card">
+                                <h5>Evacuation Procedures</h5>
+                                <p>Implement evacuation protocols if required based on safety assessment</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+
+                            <div class="task-card">
+                                <h5>Utility Isolation</h5>
+                                <p>Isolate affected utilities and establish safe work zone</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+
+                            <div class="task-card">
+                                <h5>Repair and Restoration</h5>
+                                <p>Execute repair operations and restore utility services</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+
+                            <div class="task-card">
+                                <h5>Documentation and Reporting</h5>
+                                <p>Compile incident data and submit reports for compliance</p>
+                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                            </div>
+                        </div>
+                    
+                    </div>
+                    <div class="Bordercard">
+                        <div class="section-title">Selected Policies & Tasks</div>
+                        <div class="task-card">
+                            <div class="task-info">
+                                <h4>Gas Detection and Monitoring</h4>
+                                <p>Deploy gas detection equipment and establish monitoring protocols</p>
+                                <div class="assigned-teams">Assigned Teams:</div>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox"> Safety Team</label>
+                                    <label><input type="checkbox" checked> Transmission Team</label>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <select>
+                                    <option>Not Started</option>
+                                    <option>In Progress</option>
+                                    <option>Completed</option>
+                                </select>
+                                <a href="#" class="remove-link">Remove</a>
+                            </div>
+                        </div>
+
+                   
+                        <div class="task-card">
+                            <div class="task-info">
+                                <h4>Initial Site Assessment</h4>
+                                <p>Conduct preliminary safety assessment and secure the area</p>
+                                <div class="assigned-teams">Assigned Teams:</div>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" checked> Safety Team</label>
+                                    <label><input type="checkbox"> Transmission Team</label>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <select>
+                                    <option>Not Started</option>
+                                    <option>In Progress</option>
+                                    <option>Completed</option>
+                                </select>
+                                <a href="#" class="remove-link">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+
+         </div>
+    </div> *@
+    <!-- Navigation Buttons -->
+    <div class="d-flex justify-content-between mt-3">
+        <button class="btn btn-light btnPrevious" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+        <button class="btn btn-primary btnNext" id="nextBtn">Next <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+</div>
+
+
+    </div>
+
+</div>
+<!----------------Step next previous script---------------------->
+@section Scripts {
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+
+        function showStep(step) {
+            document.querySelectorAll(".step-content").forEach(el => el.classList.add("d-none"));
+            document.querySelector(`#step-${step}`)?.classList.remove("d-none");
+
+            document.querySelectorAll(".steps .step").forEach((el, idx) => {
+                el.classList.remove("active", "completed");
+                if (idx + 1 < step) el.classList.add("completed");
+                if (idx + 1 === step) el.classList.add("active");
+            });
+
+            document.getElementById("prevBtn").style.display = (step === 1) ? "none" : "inline-block";
+            document.getElementById("nextBtn").innerHTML = (step === totalSteps)
+                ? '<i class="fa-solid fa-check"></i> Finish'
+                : 'Next <i class="fa-solid fa-arrow-right"></i>';
+        }
+
+        document.getElementById("nextBtn").addEventListener("click", () => {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+
+        document.getElementById("prevBtn").addEventListener("click", () => {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        showStep(currentStep);
+    </script>
+}
+
+<script>
+    const teamCards = document.querySelectorAll(".team-card");
+    const selectedBox = document.getElementById("selectedBox");
+    const selectedCount = document.getElementById("selectedCount");
+    const selectedTags = document.getElementById("selectedTags");
+
+    function updateSelectedTeams() {
+      const selected = document.querySelectorAll(".team-card.selected");
+      selectedCount.textContent = `${selected.length} Team${selected.length !== 1 ? "s" : ""} Selected`;
+
+      selectedTags.innerHTML = "";
+      selected.forEach(card => {
+        const tag = document.createElement("span");
+        tag.classList.add("tag");
+        tag.textContent = card.dataset.name;
+        selectedTags.appendChild(tag);
+      });
+    }
+
+    teamCards.forEach(card => {
+      card.addEventListener("click", () => {
+        card.classList.toggle("selected");
+
+        const icon = card.querySelector("i:last-child");
+        if (card.classList.contains("selected")) {
+          icon.classList.remove("fa-circle", "uncheck-icon");
+          icon.classList.add("fa-circle-check", "check-icon");
+        } else {
+          icon.classList.remove("fa-circle-check", "check-icon");
+          icon.classList.add("fa-circle", "uncheck-icon");
+        }
+
+        updateSelectedTeams();
+      });
+    });
+
+    // Initialize
+    updateSelectedTeams();
+</script>

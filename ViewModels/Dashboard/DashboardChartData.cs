@@ -56,6 +56,7 @@ namespace ViewModels.Dashboard
         public List<IncidentDashboardEventTypeReportViewModel> ListIncidentDashboardEventTypeReportViewModel { get; set; } = new();
 
         public List<IncidentDashboardAssetTypeReportViewModel> ListIncidentDashboardAssetTypeReportViewModel { get; set; } = new();
+        public List<IncidentLocationMapViewModel> ListIncidentLocationMapViewModel { get; set; } = new();
 
 
         public long TotalIncidentCount { get; set; } = default!;
@@ -94,5 +95,17 @@ namespace ViewModels.Dashboard
         public string color { get; set; } = default!;
         public long count { get; set; } = default!;
         public decimal AssetTypePercentage { get; set; } = default!;
+    }
+    public class IncidentLocationMapViewModel
+    {
+        public double lat { get; set; }
+        public double lon { get; set; }
+        public string severity { get; set; } = default!;
+        public string color { get; set; } = default!;
+        public string incidentloc { get; set; } = default!;
+        public string calleraddress { get; set; } = default!;
+        public string callername { get; set; } = default!;
+        public string incidentid { get; set; } = default!;
+        public string callerphone { get; set; } = default!;
     }
 }

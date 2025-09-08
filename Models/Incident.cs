@@ -50,5 +50,7 @@ namespace Models
         public bool IsSameCallerAddress { get; set; }
         public bool IsOtherEvent { get; set; }
         public string? OtherEventDetail { get; set; }
+        public double Lat { get; set; }
+        public double Lng { get; set; }
     }
 }

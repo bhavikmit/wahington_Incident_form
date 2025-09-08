@@ -7,6 +7,7 @@
         <input type="hidden" value="@Model.Id" name="Id" id="statusLegend_@Model.Id" />
         <div class="input-container type">
             <input type="text" placeholder="status name..." asp-for="Name" />
+            <textarea type="text" placeholder="status description..." asp-for="Description"></textarea>   @* <- added *@
             <input type="text" placeholder="status color..." asp-for="Color" />
             <div class="actions">
                 <button class="btn check savestatusLegend"><i class="fa-solid fa-check"></i></button>

@@ -1,21 +1,14 @@
 ﻿using AutoMapper;
-
 using Centangle.Common.ResponseHelpers.Models;
-
 using DataLibrary;
-
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 using Models;
 using Models.Common.Interfaces;
-
 using Pagination;
-
 using System.Linq.Expressions;
-
 using ViewModels;
 using ViewModels.Shared;
 
@@ -45,65 +38,51 @@ namespace Repositories.Common
             _logger = logger;
         }
 
-        //public override async Task<Expression<Func<StatusLegend, bool>>> SetQueryFilter(IBaseSearchModel filters)
-        //{
-        //    var searchFilters = filters as StatusLegendSearchViewModel;
-
-        //    return x =>
-        //                (
-        //                    (
-        //                        string.IsNullOrEmpty(searchFilters.Search.value)
-        //                        ||
-        //                        x.Name.ToLower().Contains(searchFilters.Search.value.ToLower())
-        //                    )
-        //                )
-        //                &&
-        //                (string.IsNullOrEmpty(searchFilters.Name) || x.Name.ToLower().Contains(searchFilters.Name.ToLower()))
-        //                ;
-        //}
-
         public async Task<List<StatusLegendModifyViewModel>> GetAllStatusLegends()
         {
-            List<StatusLegendModifyViewModel> statusLegend = new();
+            var statusLegend = new List<StatusLegendModifyViewModel>();
             try
             {
-                var StatusLegendList = await _db.StatusLegends.Where(p => !p.IsDeleted).ToListAsync();
+                var statusLegendList = await _db.StatusLegends.Where(p => !p.IsDeleted).ToListAsync();
 
-                foreach (var StatusLegend in StatusLegendList)
+                foreach (var statu in statusLegendList)
                 {
                     statusLegend.Add(new StatusLegendModifyViewModel()
                     {
-                        Id = StatusLegend.Id,
-                        Name = StatusLegend.Name,
-                        Color = StatusLegend.Color,
+                        Id = statu.Id,
+                        Name = statu.Name,
+                        Color = statu.Color,
+                        Description = statu.Description    // <- added
                     });
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error GetAllStatusLegend.");
-                return new List<StatusLegendModifyViewModel>()!;
+                return new List<StatusLegendModifyViewModel>();
             }
             return statusLegend;
         }
+
         public async Task<long> SaveStatusLegend(StatusLegendModifyViewModel viewModel)
         {
             await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
                 // Map ViewModel → Entity
-                var StatusLegend = new StatusLegend
+                var statusLegend = new StatusLegend
                 {
                     Name = viewModel.Name,
-                    Color = viewModel.Color
+                    Color = viewModel.Color,
+                    Description = viewModel.Description    // <- added
                 };
 
                 // Save
-                await _db.StatusLegends.AddAsync(StatusLegend);
+                await _db.StatusLegends.AddAsync(statusLegend);
                 await _db.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return StatusLegend.Id;
+                return statusLegend.Id;
             }
             catch (Exception ex)
             {
@@ -112,23 +91,25 @@ namespace Repositories.Common
                 return 0;
             }
         }
+
         public async Task<long> UpdateStatusLegend(StatusLegendModifyViewModel viewModel)
         {
             try
             {
+                var statusLegend = await _db.StatusLegends.Where(p => p.Id == viewModel.Id).FirstOrDefaultAsync();
 
-                var StatusLegend = await _db.StatusLegends.Where(p => p.Id == viewModel.Id).FirstOrDefaultAsync();
-
-                if (StatusLegend == null)
+                if (statusLegend == null)
                 {
-                    await SaveStatusLegend(viewModel);
+                    return await SaveStatusLegend(viewModel);
                 }
 
                 // Save within transaction
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
-                StatusLegend.Name = viewModel.Name;
-                StatusLegend.Color = viewModel.Color;
+                statusLegend.Name = viewModel.Name;
+                statusLegend.Color = viewModel.Color;
+                statusLegend.Description = viewModel.Description; // <- added
+
                 try
                 {
                     await _db.SaveChangesAsync();
@@ -140,7 +121,7 @@ namespace Repositories.Common
                     throw;
                 }
 
-                return StatusLegend.Id;
+                return statusLegend.Id;
             }
             catch (Exception ex)
             {
@@ -148,22 +129,24 @@ namespace Repositories.Common
                 return 0;
             }
         }
+
         public async Task<StatusLegendModifyViewModel> GetStatusLegendById(long Id)
         {
-            var StatusLegendView = new StatusLegendModifyViewModel();
+            var statusLegendView = new StatusLegendModifyViewModel();
 
             try
             {
-                var StatusLegend = await _db.StatusLegends.FirstOrDefaultAsync(p => p.Id == Id);
+                var statusLegend = await _db.StatusLegends.FirstOrDefaultAsync(p => p.Id == Id);
 
-                if (StatusLegend == null)
+                if (statusLegend == null)
                 {
                     return new StatusLegendModifyViewModel();
                 }
 
-                StatusLegendView.Name = StatusLegend.Name;
-                StatusLegendView.Color = StatusLegend.Color;
-                StatusLegendView.Id = StatusLegend.Id;
+                statusLegendView.Name = statusLegend.Name;
+                statusLegendView.Color = statusLegend.Color;
+                statusLegendView.Description = statusLegend.Description; // <- added
+                statusLegendView.Id = statusLegend.Id;
             }
             catch (Exception ex)
             {
@@ -171,16 +154,16 @@ namespace Repositories.Common
                 return new StatusLegendModifyViewModel();
             }
 
-            return StatusLegendView;
+            return statusLegendView;
         }
+
         public async Task<long> DeleteStatusLegend(long Id)
         {
             try
             {
+                var statusLegend = await _db.StatusLegends.Where(p => p.Id == Id).FirstOrDefaultAsync();
 
-                var StatusLegend = await _db.StatusLegends.Where(p => p.Id == Id).FirstOrDefaultAsync();
-
-                if (StatusLegend == null)
+                if (statusLegend == null)
                 {
                     return 0;
                 }
@@ -188,7 +171,7 @@ namespace Repositories.Common
                 // Save within transaction
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
-                StatusLegend.IsDeleted = true;
+                statusLegend.IsDeleted = true;
 
                 try
                 {
@@ -201,7 +184,7 @@ namespace Repositories.Common
                     throw;
                 }
 
-                return StatusLegend.Id;
+                return statusLegend.Id;
             }
             catch (Exception ex)
             {

@@ -2,7 +2,6 @@
 using Models.Common.Interfaces;
 using ViewModels.Shared;
 using Enums;
-using ViewModels;
 
 namespace ViewModels
 {
@@ -11,7 +10,12 @@ namespace ViewModels
         [Display(Name = "Status Legend", Prompt = "Status Legend")]
         public string Name { get; set; }
 
-        [Display(Name = "Color", Prompt = "Color")]
+        [Required(ErrorMessage = "Description is required.")]
+        [Display(Name = "Description", Prompt = "Description")]
+        public string? Description { get; set; }   // <- added
+
+        [Required(ErrorMessage = "Color is required.")]
+        [Display(Name = "Color", Prompt = "Color (Hex Code or Name)")]
         public string Color { get; set; }
     }
 }

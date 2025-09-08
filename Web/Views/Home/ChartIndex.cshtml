@@ -4,6 +4,16 @@
     ViewData["Title"] = "Administrator Dashboard";
 }
 
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+<link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
+<script src="https://js.arcgis.com/4.27/"></script>
+
+
+
 <style>
     .chart-container {
         background-color: transparent;
@@ -304,8 +314,6 @@
     </div>
 </header>
 
-
-
 <div class="dashboard">
     <div class="container-fluid ">
         <div class="DashboardHeader">
@@ -336,7 +344,8 @@
                                 <input type="text" id="addressInput" class="form-control" placeholder="Enter US address" />
                                 <button class="btn btn-primary mt-2" id="showOnMap">Show on Map</button>
                             </div>
-                            <div id="map" style="height:400px; border:1px solid #ccc; border-radius:8px;"></div>
+                            @* <div id="map" style="height:400px; border:1px solid #ccc; border-radius:8px;"></div> *@
+                            <div id="map" style="height:800px; width:100%;"></div>
                         </div>
 
 
@@ -524,6 +533,118 @@
             renderDoughnutChart("statusChart", statusData);
             renderDoughnutChart("asseTypeChart", assetTypeData);
             renderDoughnutChart("eventTypeChart", eventData);
+        });
+    </script>
+
+    <script>
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/Graphic",
+            "esri/layers/GraphicsLayer"
+        ], function (Map, MapView, Graphic, GraphicsLayer) {
+
+            console.log("ArcGIS modules loaded ✔");
+
+            var map = new Map({
+                basemap: "streets-navigation-vector"
+            });
+
+            var incidents = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.IncidentDashboard.ListIncidentLocationMapViewModel));
+            var firstObj = incidents[0];
+
+            window.view = new MapView({
+                container: "map",
+                map: map,
+                center: [firstObj.lon, firstObj.lat],
+                zoom: 2
+            });
+
+            var graphicsLayer = new GraphicsLayer();
+            window.graphicsLayer = graphicsLayer;
+            map.add(graphicsLayer);
+
+            incidents.forEach(function (incident) {
+                var point = {
+                    type: "point",
+                    longitude: incident.lon,
+                    latitude: incident.lat
+                };
+
+                var symbol = {
+                    type: "simple-marker",
+                    color: incident.color,
+                    outline: { color: "white", width: 1 }
+                };
+
+                var attributes = {
+                    Severity: incident.severity,
+                    IncidentID: incident.incidentid,
+                    Location: incident.incidentloc,
+                    CallerName: incident.callername,
+                    CallerPhone: incident.callerphone,
+                    CallerAddress: incident.calleraddress
+                };
+
+                var popupTemplate = {
+                    title: "Incident Details - {IncidentID}",
+                    content: `
+                        <b>Severity:</b> {Severity}<br>
+                        <b>Location:</b> {Location}<br>
+                        <b>Caller Name:</b> {CallerName}<br>
+                        <b>Caller Phone:</b> {CallerPhone}<br>
+                        <b>Caller Address:</b> {CallerAddress}
+                    `
+                };
+
+                var graphic = new Graphic({
+                    geometry: point,
+                    symbol: symbol,
+                    attributes: attributes,
+                    popupTemplate: popupTemplate
+                });
+                graphicsLayer.add(graphic);
+            });
+
+        });
+    </script>
+
+    <script>
+        $(function () {
+            var incidents = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.IncidentDashboard.ListIncidentLocationMapViewModel));
+
+            var locations = incidents.map(x => ({
+                label: x.incidentloc,
+                value: x.incidentloc,
+                lat: x.lat,
+                lon: x.lon
+            }));
+
+            $("#addressInput").autocomplete({
+                source: locations,
+                select: function (event, ui) {
+                    $("#addressInput").data("selectedIncident", ui.item);
+                }
+            });
+
+            $("#showOnMap").click(function () {
+            var val = $("#addressInput").val().trim();
+            var incident = $("#addressInput").data("selectedIncident");
+
+            if (val && incident) {
+                // If input has value, zoom to selected incident
+                window.view.goTo({
+                    center: [incident.lon, incident.lat],
+                    zoom: 10
+                });
+            } else {
+                // If input empty, reset to show all incidents
+                if (window.graphicsLayer) {
+                    window.view.goTo(window.graphicsLayer.graphics);
+                }
+            }
+        });
+
         });
     </script>
 }

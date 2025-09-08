@@ -231,6 +231,21 @@ namespace Repositories.Common
                 var eventTypes = await _db.EventTypes.ToListAsync();
                 var assetIncidents = await _db.AssetIncidents.ToListAsync();
 
+
+                var incidentLocation = incidents.Select(p => new IncidentLocationMapViewModel
+                {
+                    lat = p.Lat,
+                    lon = p.Lng,
+                    severity = p.SeverityLevel.Name,
+                    color = p.SeverityLevel.Color,
+                    incidentloc = p.LocationAddress,
+                    calleraddress = p.CallerAddress,
+                    callername = p.CallerName,
+                    callerphone = p.CallerPhoneNumber,
+                    incidentid = p.IncidentID
+                }).ToList();
+
+
                 // Define static colors for events
                 var chartColors = new Dictionary<int, string>
                                 {
@@ -258,20 +273,6 @@ namespace Repositories.Common
                         name = statusLegends.FirstOrDefault(s => s.Id == g.Key)?.Name ?? "Unknown",
                         count = g.Count()
                     }).OrderByDescending(p => p.count).ToList();
-
-                // 🔹 Event grouping
-                //var eventData = incidents
-                //    .SelectMany(i => (i.EventTypeIds ?? "")
-                //        .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                //        .Select(id => int.Parse(id)))
-                //    .GroupBy(id => id)
-                //    .Select(g => new IncidentDashboardEventTypeReportViewModel
-                //    {
-                //        color = chartColors.ContainsKey(g.Key) ? chartColors[g.Key] : "#808080",
-                //        name = eventTypes.FirstOrDefault(e => e.Id == g.Key)?.Name ?? $"Event {g.Key}",
-                //        count = g.Count()
-                //    }).OrderByDescending(p => p.count).ToList();
-
 
                 var eventOtherData = incidents
                         .SelectMany(i =>
@@ -329,6 +330,9 @@ namespace Repositories.Common
                         color = chartColors.ContainsKey(g.Key) ? chartColors[g.Key] : "#808080"
                     }).OrderByDescending(p => p.count).ToList();
 
+
+
+
                 // Totals
                 var totalIncidentCount = incidents.Count;
                 var totalSeverity = severityData.Sum(x => x.count);
@@ -371,6 +375,7 @@ namespace Repositories.Common
                         TotalStatusLegendCount = totalStatus,
                         TotalEventTypeCount = totalEvent,
                         TotalAssetTypeCount = totalAssetType,
+                        ListIncidentLocationMapViewModel = incidentLocation
                     }
                 };
             }

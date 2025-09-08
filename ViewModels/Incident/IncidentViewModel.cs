@@ -121,4 +121,10 @@ namespace ViewModels.Incident
         public long statusId { get; set; }
         public string description { get; set; }
     }
+
+    public class GeocodeResult
+    {
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+    }
 }

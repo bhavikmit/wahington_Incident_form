@@ -204,7 +204,6 @@ namespace Web.Extensions
             services.AddScoped(typeof(ISeverityLevelService<,,>), typeof(SeverityLevelService<,,>));
             services.AddScoped(typeof(IAssetIdService<,,>), typeof(AssetIdService<,,>));
 
-
             services.AddScoped(typeof(IStatusLegendService<,,>), typeof(StatusLegendService<,,>));
             services.AddScoped(typeof(IAssignResponseTeamsService<,,>),typeof(AssignResponseTeamsService<,,>));
             services.AddScoped<IIncidentService, IncidentService>();
@@ -212,6 +211,7 @@ namespace Web.Extensions
             services.AddScoped<IIncidentHistoryService, IncidentHistoryService>();
             services.AddScoped<IIncidentDashboardService, IncidentDashboardService>();
             services.AddScoped(typeof(IPolicyService<,,>), typeof(PolicyService<,,>));
+            services.AddScoped(typeof(IIncidentTeamService<,,>), typeof(IncidentTeamService<,,>));
             services.AddDefaultCorrelationId();
         }
     }

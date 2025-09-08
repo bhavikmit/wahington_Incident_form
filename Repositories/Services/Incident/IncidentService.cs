@@ -7,6 +7,8 @@ using Centangle.Common.ResponseHelpers.Models;
 
 using DataLibrary;
 
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 
 using Enums;
@@ -30,6 +32,7 @@ using Repositories.Shared.UserInfoServices.Interface;
 
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using ViewModels;
@@ -42,15 +45,11 @@ namespace Repositories.Common
     {
         private readonly ApplicationDbContext _db;
         private readonly ILogger<IncidentService> _logger;
-        private readonly IMapper _mapper;
-        private readonly IFileHelper _fileHelper;
 
-        public IncidentService(ApplicationDbContext db, ILogger<IncidentService> logger, IMapper mapper, IFileHelper fileHelper)
+        public IncidentService(ApplicationDbContext db, ILogger<IncidentService> logger)
         {
             _db = db;
             _logger = logger;
-            _mapper = mapper;
-            _fileHelper = fileHelper;
         }
 
         public async Task<IncidentViewModel> GetIncidentDropDown()
@@ -134,6 +133,8 @@ namespace Repositories.Common
             await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
+                var latLong = await GetLatLngFromAddress(viewModel.incidentiLocation.Address);
+
                 // Generate IncidentID once
                 var totalIncidentCount = await _db.Incidents.IgnoreQueryFilters().CountAsync();
                 var incidentId = $"INC-{(totalIncidentCount + 1):D4}";
@@ -177,7 +178,10 @@ namespace Repositories.Common
                     IsSameCallerAddress = viewModel.incidentiLocation.IsSameCallerAddress,
 
                     ImageUrl = viewModel.incidentSupportingInfoViewModel?.ImageUrl,
-                    SupportInfoNotes = viewModel.incidentSupportingInfoViewModel?.Notes
+                    SupportInfoNotes = viewModel.incidentSupportingInfoViewModel?.Notes,
+
+                    Lat = latLong?.Lat ?? 0,
+                    Lng = latLong?.Lng ?? 0,
                 };
 
                 // Save
@@ -206,6 +210,8 @@ namespace Repositories.Common
                 {
                     return await SaveIncident(viewModel);
                 }
+
+                var latLong = await GetLatLngFromAddress(viewModel.incidentiLocation.Address);
 
                 // Save file if available
                 var file = viewModel.incidentSupportingInfoViewModel?.File;
@@ -254,6 +260,9 @@ namespace Repositories.Common
                 incident.ImageUrl = support?.ImageUrl ?? incident.ImageUrl;
                 incident.SupportInfoNotes = support?.Notes;
 
+                incident.Lat = latLong?.Lat ?? 0;
+                incident.Lng = latLong?.Lng ?? 0;
+
                 // Save within transaction
                 await using var transaction = await _db.Database.BeginTransactionAsync();
                 try
@@ -275,7 +284,6 @@ namespace Repositories.Common
                 return string.Empty;
             }
         }
-
 
         public async Task<List<IncidentGridViewModel>> GetIncidentList(FilterRequest request)
         {
@@ -434,8 +442,6 @@ namespace Repositories.Common
                 return null;
             }
         }
-
-
 
         public async Task<IncidentViewModel> GetById(long incidentId)
         {
@@ -606,6 +612,55 @@ namespace Repositories.Common
                 return new IncidentViewModel();
             }
         }
+
+        public async Task<GeocodeResult?> GetLatLngFromAddress(string address)
+        {
+            if (string.IsNullOrWhiteSpace(address))
+                return new GeocodeResult
+                {
+                    Lat = 0,
+                    Lng = 0
+                };
+
+            try
+            {
+
+                using var client = new HttpClient();
+                string url = $"https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates" +
+                             $"?f=json&SingleLine={Uri.EscapeDataString(address)}";
+
+                var response = await client.GetStringAsync(url);
+
+                using var doc = JsonDocument.Parse(response);
+                var candidates = doc.RootElement.GetProperty("candidates");
+
+                if (candidates.GetArrayLength() > 0)
+                {
+                    var location = candidates[0].GetProperty("location");
+                    return new GeocodeResult
+                    {
+                        Lat = location.GetProperty("y").GetDouble(),
+                        Lng = location.GetProperty("x").GetDouble()
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetLatLngFromAddress.");
+                return new GeocodeResult
+                {
+                    Lat = 0,
+                    Lng = 0
+                };
+            }
+            return new GeocodeResult
+            {
+                Lat = 0,
+                Lng = 0
+            };
+        }
+
 
         #region private methods
         private bool TryParseCallTime(string callTime, out DateTime dateTime)

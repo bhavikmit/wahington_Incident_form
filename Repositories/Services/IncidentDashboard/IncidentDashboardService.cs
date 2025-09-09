@@ -56,6 +56,7 @@ namespace Repositories.Common
             try
             {
                 var incidents = await _db.Incidents.Where(i => !i.IsDeleted).ToListAsync();
+                var incidentsStatus = await _db.Incidents.Include(p => p.StatusLegend).Where(i => !i.IsDeleted).ToListAsync();
 
                 var severityData = incidents
                     .GroupBy(i => i.SeverityLevelId)
@@ -206,6 +207,11 @@ namespace Repositories.Common
                         TotalStatusLegendCount = totalStatus,
                         TotalEventTypeCount = totalEvent,
                         TotalAssetTypeCount = totalAssetType,
+                        TotalSubmittedCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Submitted.ToString()),
+                        TotalStartedCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Started.ToString()),
+                        TotalDispatchedCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Dispatched.ToString()),
+                        TotalCompletedCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Completed.ToString()),
+                        TotalCancelledCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Cancelled.ToString()),
                     }
                 };
             }
@@ -220,10 +226,23 @@ namespace Repositories.Common
         {
             try
             {
+                List<IncidentRecentViewModel> incidentRecents = new();
+
                 // Pull incidents in memory (only once)
-                var incidents = await _db.Incidents
+                var incidents = await _db.Incidents.Include(p => p.StatusLegend).Include(p => p.SeverityLevel)
                     .Where(i => !i.IsDeleted)
                     .ToListAsync();
+                foreach (var item in incidents.OrderByDescending(p => p.Id).Take(5).ToList())
+                {
+                    incidentRecents.Add(new IncidentRecentViewModel()
+                    {
+                        eventtype = await GetEventTypes(item.EventTypeIds ?? string.Empty),
+                        incidentId = item.IncidentID,
+                        incidentloc = item.LocationAddress,
+                        incidentstatus = item.StatusLegend.Name,
+                        severity = item.SeverityLevel.Name
+                    });
+                }
 
                 // Preload lookup tables in memory (avoid multiple DB hits)
                 var severityLevels = await _db.SeverityLevels.ToListAsync();
@@ -331,8 +350,6 @@ namespace Repositories.Common
                     }).OrderByDescending(p => p.count).ToList();
 
 
-
-
                 // Totals
                 var totalIncidentCount = incidents.Count;
                 var totalSeverity = severityData.Sum(x => x.count);
@@ -375,7 +392,13 @@ namespace Repositories.Common
                         TotalStatusLegendCount = totalStatus,
                         TotalEventTypeCount = totalEvent,
                         TotalAssetTypeCount = totalAssetType,
-                        ListIncidentLocationMapViewModel = incidentLocation
+                        ListIncidentLocationMapViewModel = incidentLocation,
+                        TotalSubmittedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Submitted.ToString()),
+                        TotalStartedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Started.ToString()),
+                        TotalDispatchedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Dispatched.ToString()),
+                        TotalCompletedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Completed.ToString()),
+                        TotalCancelledCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Cancelled.ToString()),
+                        ListIncidentRecentViewModel = incidentRecents
                     }
                 };
             }
@@ -386,5 +409,23 @@ namespace Repositories.Common
             }
         }
 
+        private async Task<string> GetEventTypes(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+                return string.Empty;
+
+            var idArray = ids.Split(",", StringSplitOptions.RemoveEmptyEntries)
+                             .Select(id => long.TryParse(id.Trim(), out var val) ? val : (long?)null)
+                             .Where(val => val.HasValue)
+                             .Select(val => val.Value)
+                             .ToList();
+
+            var eventTypes = await _db.EventTypes
+                                      .Where(a => idArray.Contains(a.Id))
+                                      .Select(a => a.Name)
+                                      .ToListAsync();
+
+            return string.Join(",", eventTypes);
+        }
     }
 }

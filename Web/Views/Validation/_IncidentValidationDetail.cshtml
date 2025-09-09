@@ -309,45 +309,16 @@
                             </div>
                         </div>
 
-
                         <div class="task-grid">
-                            <div class="task-card">
-                                <h5>Initial Site Assessment</h5>
-                                <p>Conduct preliminary safety assessment and secure the area</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-
-                            <div class="task-card">
-                                <h5>Gas Detection and Monitoring</h5>
-                                <p>Deploy gas detection equipment and establish monitoring protocols</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-
-                            <div class="task-card">
-                                <h5>Evacuation Procedures</h5>
-                                <p>Implement evacuation protocols if required based on safety assessment</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-
-                            <div class="task-card">
-                                <h5>Utility Isolation</h5>
-                                <p>Isolate affected utilities and establish safe work zone</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-
-                            <div class="task-card">
-                                <h5>Repair and Restoration</h5>
-                                <p>Execute repair operations and restore utility services</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-
-                            <div class="task-card">
-                                <h5>Documentation and Reporting</h5>
-                                <p>Compile incident data and submit reports for compliance</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
+                            @foreach (var item in Model.IVPolicyList)
+                            {
+                                <div class="task-card">
+                                    <h5>@item.Name</h5>
+                                    <p>@item.Description</p>
+                                    <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                                </div>
+                            }
                         </div>
-
                     </div>
                     <div class="Bordercard selectPoliciesTask">
                         <div class="section-title">Selected Policies & Tasks</div>
@@ -430,9 +401,6 @@
                             <textarea id="message" placeholder="Enter your message..."></textarea>
                         </div>
 
-                        @* <div class="attachments">
-                            <button class="attach-btn"><i class="fa-solid fa-paperclip"></i> Attach Files</button>
-                        </div> *@
                         <div class="file-upload-container">
                             <!-- Hidden file input -->
                             <input type="file" id="fileInput" name="attachfile" style="display: none;" multiple>
@@ -443,11 +411,7 @@
                             </button>
 
                             <!-- File preview list -->
-
                             <div class="file-name " id="fileList"></div>
-                            @* <button class="remove-btn">Remove</button> *@
-
-                            @*  <div class="file-list" id="fileList"></div> *@
                         </div>
 
 

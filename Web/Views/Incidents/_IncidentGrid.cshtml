@@ -30,7 +30,10 @@
             {
                 <tr id="@item.Id">
                     <td>
-                        <input type="checkbox" class="rowCheckbox" value="@item.Id" />
+                        @if (item.StatusLegend == StatusLegendEnum.Submitted.ToString())
+                        {
+                            <input type="checkbox" class="rowCheckbox" value="@item.Id" />
+                        }
                     </td>
                     <td style="text-align:center !important">
                         <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.StatusLegendColor"></span>

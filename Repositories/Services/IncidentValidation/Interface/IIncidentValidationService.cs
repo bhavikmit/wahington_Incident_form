@@ -20,5 +20,6 @@ namespace Repositories.Common
         Task<IncidentValidationViewModel> GetIncidentValidationAlarm(long id);
         Task<IncidentValidationDetailViewModel> GetIncidentValidationDetail(long id);
         Task<List<IncidentResponseTeamViewModel>> GetIncidentValidationResponseTeam();
+        Task<List<IncidentPolicyViewModel>> GetIncidentValidationPolicy();
     }
 }

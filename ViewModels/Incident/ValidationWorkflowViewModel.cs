@@ -23,6 +23,7 @@ namespace ViewModels.Incident
         public List<IncidentValidationPendingViewModel> IVPendingList { get; set; } = new();
         public List<RecentlyIncidentValidationViewModel> IVRecentlyList { get; set; } = new();
         public List<IncidentResponseTeamViewModel> IVResponseTeamList { get; set; } = new();
+        public List<IncidentPolicyViewModel> IVPolicyList { get; set; } = new();
     }
 
     public class IncidentValidationCountViewModel : BaseIncidentValidationViewModel
@@ -82,7 +83,6 @@ namespace ViewModels.Incident
     {
         public List<SelectListItem> severityLevels { get; set; } = new();
         public string severityLevel { get; set; } = default!;
-        //public decimal? DiscoveryPerimeter { get; set; } = default!;
         public double Lat { get; set; } = default!;
         public double Long { get; set; } = default!;
         public string ValidationNotes { get; set; } = default!;
@@ -102,6 +102,7 @@ namespace ViewModels.Incident
 
     public class IncidentPolicyViewModel
     {
+        public long PolicyId { get; set; } = default!;
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
     }

@@ -258,6 +258,33 @@ namespace Repositories.Common
                 return new List<IncidentResponseTeamViewModel>();
             }
         }
+
+        public async Task<List<IncidentPolicyViewModel>> GetIncidentValidationPolicy()
+        {
+            List<IncidentPolicyViewModel> incidentPolicies = new();
+
+            try
+            {
+                var policies = await _db.Policies.Where(p => !p.IsDeleted).ToListAsync();
+
+                foreach (var item in policies)
+                {
+                    incidentPolicies.Add(new IncidentPolicyViewModel()
+                    {
+                        PolicyId = item.Id,
+                        Name = item.Name,
+                        Description = item.Description
+                    });
+                }
+
+                return incidentPolicies;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetIncidentValidationPolicy.");
+                return new List<IncidentPolicyViewModel>();
+            }
+        }
         #region private event
         private async Task<string> GetEventTypes(string ids)
         {

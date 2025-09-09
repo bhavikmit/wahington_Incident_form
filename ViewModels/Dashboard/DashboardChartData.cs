@@ -57,6 +57,7 @@ namespace ViewModels.Dashboard
 
         public List<IncidentDashboardAssetTypeReportViewModel> ListIncidentDashboardAssetTypeReportViewModel { get; set; } = new();
         public List<IncidentLocationMapViewModel> ListIncidentLocationMapViewModel { get; set; } = new();
+        public List<IncidentRecentViewModel> ListIncidentRecentViewModel { get; set; } = new();
 
 
         public long TotalIncidentCount { get; set; } = default!;
@@ -65,6 +66,11 @@ namespace ViewModels.Dashboard
         public long TotalEventTypeCount { get; set; } = default!;
         public long TotalAssetTypeCount { get; set; } = default!;
         public decimal ResponsePercentage { get; set; } = default!;
+        public long TotalSubmittedCount { get; set; } = default!;
+        public long TotalStartedCount { get; set; } = default!;
+        public long TotalDispatchedCount { get; set; } = default!;
+        public long TotalCompletedCount { get; set; } = default!;
+        public long TotalCancelledCount { get; set; } = default!;
     }
 
     public class IncidentDashboardStatusReportViewModel
@@ -107,5 +113,13 @@ namespace ViewModels.Dashboard
         public string callername { get; set; } = default!;
         public string incidentid { get; set; } = default!;
         public string callerphone { get; set; } = default!;
+    }
+    public class IncidentRecentViewModel
+    {
+        public string incidentId { get; set; } = default!;
+        public string incidentloc { get; set; } = default!;
+        public string eventtype { get; set; } = default!;
+        public string severity { get; set; } = default!;
+        public string incidentstatus { get; set; } = default!;
     }
 }

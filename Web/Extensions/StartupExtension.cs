@@ -1,27 +1,42 @@
 ﻿using Authorization.Providers;
+
 using BoilerPlate.Authorization;
 using BoilerPlate.Authorization.Handlers;
+
 using Centangle.Common.ResponseHelpers.Models;
+
 using CorrelationId.DependencyInjection;
+
 using DataLibrary;
+
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+
 using Helpers.File;
+
 using IdentityManager;
+
 using IdentityProvider.Seed;
+
 using IdentityStore;
+
 using Interfaces;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;    
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+
 using Models;
 using Models.Mapper;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+
 using NotificationWorkerService.Interface;
 using NotificationWorkerService.Repository;
+
 using Repositories;
 using Repositories.Common;
 using Repositories.Common.AdministratorService;
@@ -40,6 +55,8 @@ using Repositories.Common.TechnicianService;
 using Repositories.Common.TechnicianService.Interface;
 using Repositories.Common.Users;
 using Repositories.Common.Users.Interface;
+using Repositories.Services.ArcGis;
+using Repositories.Services.ArcGis.Interface;
 using Repositories.Services.AttachmentService;
 using Repositories.Services.AttachmentService.Interface;
 using Repositories.Services.AuthenticationService;
@@ -57,7 +74,9 @@ using Repositories.Shared.NotificationServices;
 using Repositories.Shared.NotificationServices.Interface;
 using Repositories.Shared.UserInfoServices;
 using Repositories.Shared.UserInfoServices.Interface;
+
 using Repository;
+
 using ViewModels.Dashboard;
 using ViewModels.Dashboard.interfaces;
 using ViewModels.Report.Factory.interfaces;
@@ -210,7 +229,10 @@ namespace Web.Extensions
             services.AddScoped<IIncidentNoteService, IncidentNoteService>();
             services.AddScoped<IIncidentHistoryService, IncidentHistoryService>();
             services.AddScoped<IIncidentDashboardService, IncidentDashboardService>();
+            services.AddScoped<IncidentValidationService, IncidentValidationService>();
             services.AddScoped(typeof(IPolicyService<,,>), typeof(PolicyService<,,>));
+            services.AddScoped<IArcGisGeocodingService, ArcGisGeocodingService>();
+            services.AddHttpClient<ArcGisGeocodingService>();
             services.AddScoped(typeof(IIncidentTeamService<,,>), typeof(IncidentTeamService<,,>));
             services.AddDefaultCorrelationId();
         }

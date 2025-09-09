@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
 using Repositories.Common;
+using Repositories.Services.ArcGis;
+using Repositories.Services.ArcGis.Interface;
 
 using System.Threading.Tasks;
 
@@ -13,9 +15,12 @@ namespace Web.Controllers
     public class IncidentsController : Controller
     {
         private readonly IIncidentService _iIncidentService;
-        public IncidentsController(IIncidentService incidentService)
+        private readonly IArcGisGeocodingService _iArcGisGeocodingService;
+
+        public IncidentsController(IIncidentService incidentService, IArcGisGeocodingService iArcGisGeocodingService)
         {
             _iIncidentService = incidentService;
+            _iArcGisGeocodingService = iArcGisGeocodingService;
         }
 
         public async Task<ActionResult> Index()
@@ -104,6 +109,21 @@ namespace Web.Controllers
         {
             var model = await _iIncidentService.GetIncidentDetailsById(id);
             return PartialView("_IncidentAllDetails", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Suggest(string text)
+        {
+            var results = await _iArcGisGeocodingService.GetSuggestionsAsync(text);
+            return Json(results);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Resolve(string magicKey)
+        {
+            var result = await _iArcGisGeocodingService.GetCoordinatesAsync(magicKey);
+            if (result == null) return NotFound();
+            return Json(result);
         }
     }
 }

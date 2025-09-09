@@ -1,0 +1,505 @@
+﻿@using System.Web
+@using Microsoft.AspNetCore.Html
+@using ViewModels.Incident
+@model ValidationWorkflowViewModel
+
+
+<div class="container-fluid">
+    <div class="validation-center">
+        <div class="workflow">
+
+            <!-- Header -->
+            <div class="mb-4 titleofWorkflow">
+                <h3 class="fw-bold">Validation Workflow - @Model.IVDetails.IncidentId</h3>
+                <p class="text-muted">Manager validation and response coordination</p>
+            </div>
+
+            <!-- Step Navigation -->
+            <div class="steps mb-4 d-flex justify-content-between">
+                <div class="step active" data-step="1">
+                    <div class="step-icon">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <div class="step-label">Incident Details</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <div class="step-label">Validation</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-icon">
+                        <i class="fa-solid fa-people-group"></i>
+                    </div>
+                    <div class="step-label">Response Teams</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-icon">
+                        <i class="fa-regular fa-circle-check"></i>
+                    </div>
+                    <div class="step-label">Policies & Procedures</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-icon">
+                        <i class="fa-regular fa-comment-dots"></i>
+                    </div>
+                    <div class="step-label">Communication</div>
+                </div>
+            </div>
+
+
+
+            <!-- Step Content -->
+            <div class="shadow-sm step-content" id="step-1">
+                <div class="details-sec incident-details-sec p-6">
+                    <div class="detailCard">
+                        <div class="Stepcard callerInfo ">
+                            <h3>Caller Information</h3>
+
+                            <div class="info-item">
+                                <i class="fa-regular fa-user"></i>
+                                <span class="info-title">Caller Name</span>
+                                <span class="info-sub">@Model.IVDetails.CallerName</span>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fa-solid fa-phone"></i>
+                                <span class="info-title">@Model.IVDetails.CallerContact</span>
+                                <span class="info-sub">Primary contact</span>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span class="info-title">Caller Address</span>
+                                <span class="info-sub">@Model.IVDetails.CallerAddress</span>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fa-regular fa-calendar"></i>
+                                <span class="info-title">Call Time</span>
+                                <span class="info-sub">@Model.IVDetails.CallerDateTime</span>
+                            </div>
+                        </div>
+
+                        <!-- Incident Location -->
+                        <div class="Stepcard incidentLoc ">
+                            <h3>Incident Location</h3>
+
+                            <div class="info-item">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <span class="info-title">Address</span>
+                                <span class="info-sub">@Model.IVDetails.IncidentLocation</span>
+                                <a href="#" class="map-link" onclick="openmap('@Model.IVDetails.Lat','@Model.IVDetails.Long')"><i class="fa-solid fa-map"></i> View on Map</a>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fa-solid fa-road"></i>
+                                <span class="info-title">Nearest Intersection</span>
+                                <span class="info-sub" @Model.IVDetails.NearestIntersection</span>
+                            </div>
+
+                            <div class="info-item">
+                                <i class="fa-solid fa-cube"></i>
+                                <span class="info-title">Affected Assets</span>
+                                <div class="assets">
+                                    @foreach (var item in Model.IVDetails.AffectedAssets)
+                                    {
+                                        <span>@item</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="Stepcard incidentDetail mt-4">
+                        <h3>Incident Details</h3>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="info-item">
+
+                                    <span class="info-title">Event Type</span>
+                                </div>
+                                <div>@Model.IVDetails.EventType</div>
+                            </div>
+
+                            <div class="col">
+                                <div class="info-item">
+
+                                    <span class="info-title">Reported Severity</span>
+                                </div>
+                                <span class="badge orange" style="background-color: @Model.IVDetails.SeverityColor !important">@Model.IVDetails.Severity</span>
+                            </div>
+
+                            <div class="col">
+                                <div class="info-item">
+
+                                    <span class="info-title">Current Status</span>
+                                </div>
+                                <span class="badge red" style="background-color: @Model.IVDetails.IncidentStatusColor !important">@Model.IVDetails.IncidentStatus</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+
+                            <span class="info-title">Description</span>
+                        </div>
+                        <div class="desc-box">
+                            @Model.IVDetails.DescriptionIssue
+                        </div>
+                    </div>
+                    <div class="Stepcard mt-4 safty">
+                        <h3>Safety Assessment</h3>
+
+                        <div class="grid">
+                            @RenderBox("Gas Odor Present", Model.IVDetails.GasPresent)
+                            @RenderBox("Hissing Sound", Model.IVDetails.HissingPresent)
+                            @RenderBox("Visible Damage/Fire", Model.IVDetails.VisibleDamagePresent)
+                            @RenderBox("People Injured", Model.IVDetails.PeopleInjured)
+                            @RenderBox("Evacuation Required", Model.IVDetails.EvacuationRequired)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shadow-sm step-content d-none" id="step-2">
+                <div class="details-sec validation-details-sec p-6">
+                    <div class="detailCard">
+                        <div class="Bordercard">
+                            <h3>Validate Incident</h3>
+
+                            <div class="form-group">
+                                <label>Confirmed Severity Level <span style="color:red">*</span></label>
+                                <select class="form-select" id="RadiusId" required asp-for="@Model.IVValidation.severityLevelId">
+                                    <option value="" selected>Select confirmed severity</option>
+                                    @foreach (var item in Model.IVValidation.severityLevels)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                                <small>Original severity: <strong>@Model.IVValidation.severityLevel</strong></small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Discovery Perimeter <span style="color:red">*</span></label>
+                                <select class="form-select" id="RadiusId" required asp-for="@Model.IVValidation.RadiusId">
+                                    <option value="" selected>Select radius</option>
+                                    <option value="1">50m</option>
+                                    <option value="2">100m</option>
+                                    <option value="3">200m</option>
+                                </select>
+                                <small>This creates a safety perimeter around the incident location</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Validation Notes</label>
+                                <textarea asp-for="@Model.IVValidation.ValidationNotes" placeholder="Add validation notes, observations, or additional context..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Right: Actions -->
+                        <div class="Bordercard">
+                            <h3>Alternative Actions</h3>
+                            <button class="btn-danger" data-bs-toggle="modal" data-bs-target="#AlarmModal"><i class="fa-solid fa-circle-xmark"></i> Mark as False Alarm</button>
+                            <div class="alert">
+                                <strong>False Alarm:</strong> Use this option if the incident report is determined to be invalid, duplicate, or does not require emergency response.
+                            </div>
+
+                            <h3>Location Preview</h3>
+                            <div class="location-preview">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <p>@Model.IVValidation.IncidentLocation</p>
+                                <a href="#" class="map-link" onclick="openmap('@Model.IVValidation.Lat','@Model.IVValidation.Long')">View Full Map</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class=" shadow-sm step-content d-none" id="step-3">
+                <div class="details-sec teams-details-sec p-6">
+
+                    <div class="responseCard">
+                        <div class="info-box">
+                            <i class="fa-solid fa-people-group"></i>
+                            Response Team Assignment <br>
+                            <small>Select the appropriate response teams based on the incident type and severity. Multiple teams can be assigned.</small>
+                        </div>
+
+                        <!-- Selected Teams -->
+                        <div class="selected-box" id="selectedBox">
+                            <strong id="selectedCount">0 Teams Selected</strong>
+                            <div id="selectedTags"></div>
+                        </div>
+
+
+                        @foreach (var item in Model.IVResponseTeamList)
+                        {
+                            <div class="team-card" data-name="@item.Name" data-id="@item.ReponseTeamId">
+                                <div class="team-left">
+                                    <div class="team-icon"><i class="fa-solid fa-user-group"></i></div>
+                                    <div class="team-info">
+                                        <h4>@item.Name <span class="badge blue">@item.Tag</span></h4>
+                                        <div class="phone"><i class="fa-solid fa-phone"></i> @item.Contact</div>
+                                        <p class="mb-0">Specializations:</p>
+                                        <div class="specializations">
+                                            @foreach (var itemSpe in item.Specializations)
+                                            {
+                                                <span>@itemSpe</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <i class="fa-regular fa-circle uncheck-icon"></i>
+                            </div>
+                        }
+
+                        <div class="summary">
+                            <h3>Assignment Summary</h3>
+                            <div class="summary-card">
+
+                                <div class="summary-item">
+
+                                    <label>Teams Assigned</label>
+                                    <div class="value" id="teamAssigned">0</div>
+                                </div>
+                                <div class="summary-item right">
+                                    <label>Estimated Response Time</label>
+                                    <div class="value" id="estResponseTeam">N/A</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class=" shadow-sm step-content d-none" id="step-4">
+                <div class="details-sec policies-details-sec p-6">
+                    <div class="info-box">
+                        <i class="fa-solid fa-book"></i>
+                        Policies & Procedures
+                        <small>Select and customize the policies and procedures for this incident response. Assign teams to each task.</small>
+                    </div>
+
+
+                    <div class="progress-box">
+                        <div class="label-percentage d-flex align-item-center justify-content-between">
+                            <label>Overall Progress</label>
+                            <div class="progress-label">0%</div>
+                        </div>
+                        <div class="progress-bar">
+                            <span style="width:0%;"></span>
+                        </div>
+
+                    </div>
+
+                    <div class="Bordercard">
+                        <div class="polices-task-add d-flex align-items-center justify-content-between">
+                            <h4>Add Policies</h4>
+                            <div class="add-task"><i class="fa fa-plus">Add Task</i></div>
+                        </div>
+                        <div class="form-box">
+                            <input type="text" placeholder="Task title...">
+                            <textarea placeholder="Task description..."></textarea>
+                            <div class="form-actions">
+                                <button class="btn btn-add">Add Task</button>
+                                <button class="btn btn-cancel">Cancel</button>
+                            </div>
+                        </div>
+
+                        <div class="task-grid">
+                            @foreach (var item in Model.IVPolicyList)
+                            {
+                                <div class="task-card">
+                                    <h5>@item.Name</h5>
+                                    <p>@item.Description</p>
+                                    <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="Bordercard selectPoliciesTask">
+                        <div class="section-title">Selected Policies & Tasks</div>
+                        <div class="task-card">
+                            <div class="task-info">
+                                <h4>Gas Detection and Monitoring</h4>
+                                <p>Deploy gas detection equipment and establish monitoring protocols</p>
+                                <div class="assigned-teams">Assigned Teams:</div>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox"> Safety Team</label>
+                                    <label><input type="checkbox" checked> Transmission Team</label>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <select>
+                                    <option>Not Started</option>
+                                    <option>In Progress</option>
+                                    <option>Completed</option>
+                                </select>
+                                <a href="#" class="remove-link">Remove</a>
+                            </div>
+                        </div>
+
+
+                        <div class="task-card">
+                            <div class="task-info">
+                                <h4>Initial Site Assessment</h4>
+                                <p>Conduct preliminary safety assessment and secure the area</p>
+                                <div class="assigned-teams">Assigned Teams:</div>
+                                <div class="checkbox-group">
+                                    <label><input type="checkbox" checked> Safety Team</label>
+                                    <label><input type="checkbox"> Transmission Team</label>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <select>
+                                    <option>Not Started</option>
+                                    <option>In Progress</option>
+                                    <option>Completed</option>
+                                </select>
+                                <a href="#" class="remove-link">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class=" shadow-sm step-content d-none" id="step-5">
+                <div class="details-sec communication-detail-sec p-6">
+                    <div class="info-box">
+                        <i class="fa-regular fa-comment-dots"></i>
+                        Communication Center
+                        <small>
+                            Communicate with response teams, add notes, and share files related to this incident.
+                        </small>
+                    </div>
+
+                    <div class="Bordercard newCommunication">
+                        <h3>New Communication</h3>
+
+                        <div class="form-grid">
+                            <div>
+                                <label for="msgType">Message Type</label>
+                                <select id="msgType">
+                                    <option>Internal Note</option>
+                                    <option>Email</option>
+                                    <option>SMS</option>
+                                </select>
+                            </div>
+                            <div class="recipients">
+                                <label><input type="checkbox"> Contractors</label>
+                                <label><input type="checkbox"> Transmission Team</label>
+                                <label><input type="checkbox"> Emergency Team</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="message">Message</label>
+                            <textarea id="message" placeholder="Enter your message..."></textarea>
+                        </div>
+
+                        <div class="file-upload-container">
+                            <!-- Hidden file input -->
+                            <input type="file" id="fileInput" name="attachfile" style="display: none;" multiple>
+
+                            <!-- Button to trigger file input -->
+                            <button class="attach-btn btn-upload" onclick="document.getElementById('fileInput').click()">
+                                <i class="fa-solid fa-paperclip"></i> Attach Files
+                            </button>
+
+                            <!-- File preview list -->
+                            <div class="file-name " id="fileList"></div>
+                        </div>
+
+
+
+                        <button class="send-btn"><i class="fa-regular fa-paper-plane"></i> Send Communication</button>
+                    </div>
+                    <div class="Bordercard communicationHistory">
+                        <h3>Communication History</h3>
+
+                        <!-- File Entry -->
+                        <div class="entry file">
+                            <div class="left">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="details">
+                                    <div class="top">
+                                        Current Manager <span class="label">File</span>
+                                    </div>
+                                    <div>tes123</div>
+                                    <div class="attachments">
+                                        <strong>Attachments:</strong> <i class="fas fa-paperclip"></i>
+                                        <a href="#">constr.png</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="timestamp">Sep 05, 07:05 PM</div>
+                        </div>
+
+                        <!-- Note Entry -->
+                        <div class="entry note">
+                            <div class="left">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-comment"></i>
+                                </div>
+                                <div class="details">
+                                    <div class="top">
+                                        Current Manager <span class="label">Note</span>
+                                    </div>
+                                    <div>test233</div>
+                                </div>
+                            </div>
+                            <div class="timestamp">Sep 05, 07:05 PM</div>
+                        </div>
+
+                        <!-- Note Entry -->
+                        <div class="entry note">
+                            <div class="left">
+                                <div class="icon-wrapper">
+                                    <i class="fas fa-comment"></i>
+                                </div>
+                                <div class="details">
+                                    <div class="top">
+                                        Current Manager <span class="label">Note</span>
+                                    </div>
+                                    <div>tst</div>
+                                </div>
+                            </div>
+                            <div class="timestamp">Sep 05, 07:05 PM</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-light btnPrevious" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Previous</button>
+                <button class="btn btn-primary btnNext" id="nextBtn">Next <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+@functions {
+    string GetBoxClass(string value)
+    {
+        return value == "Yes" ? "red" :
+               value == "No" ? "green" :
+                                "gray";
+    }
+
+    IHtmlContent RenderBox(string label, string value)
+    {
+        var boxClass = GetBoxClass(value);
+        return new HtmlString($@"
+            <div class='box {boxClass}'>
+                <span class='label'>{label}</span>
+                <span class='value'>{value}</span>
+            </div>");
+    }
+}

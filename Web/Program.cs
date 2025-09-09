@@ -1,11 +1,17 @@
+using CorrelationId;
+
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Identity.Web.UI;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using Web.Extensions;
-using Microsoft.Extensions.FileProviders;
-using CorrelationId;
+
 using NotificationWorkerService;
+
+using Repositories.Services.ArcGis;
+
+using Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +42,8 @@ builder.Services.AddSession(options =>
 
 builder.Services.ConfigureDependencies();
 builder.Services.AddHostedService<NotificationWorker>();
+
+
 Microsoft.Extensions.Configuration.ConfigurationManager configuration = builder.Configuration; // allows both to access and to set up the config
 
 var app = builder.Build();

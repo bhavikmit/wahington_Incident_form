@@ -269,17 +269,18 @@
         margin-bottom: 16px;
     }
     /****************map style*********************/
-    .titleLocation{
-        font-size:20px;
-        line-height:normal;
-        font-weight:700;
+    .titleLocation {
+        font-size: 20px;
+        line-height: normal;
+        font-weight: 700;
     }
 
-    .titleDescription{
-        font-size:16px;
-        line-height:normal;
-        margin-top:6px;
+    .titleDescription {
+        font-size: 16px;
+        line-height: normal;
+        margin-top: 6px;
     }
+
     .incident-locations {
         background: white;
         border-radius: 10px;
@@ -288,15 +289,16 @@
         border: 1px solid #e0e0e0;
     }
 
-    .statusLegendInfo{
-        font-size:16px;
-        font-weight:700;
-        line-height:normal;
+    .statusLegendInfo {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: normal;
     }
 
-    .statusLegendInfo i.fa{
-        margin-right:6px;
-    }
+        .statusLegendInfo i.fa {
+            margin-right: 6px;
+        }
+
     .status-legend {
         display: flex;
         flex-wrap: wrap;
@@ -325,7 +327,7 @@
         color: #dc2626;
     }
 
-    
+
     .dispatched {
         color: #facc15;
     }
@@ -351,14 +353,14 @@
     }
 
         .incident-card .status-badge {
-           
             color: white;
             font-size: 12px;
             padding: 4px 12px;
             border-radius: 20px;
             float: right;
         }
-        .incident-card .started{
+
+        .incident-card .started {
             background-color: #3b82f6;
         }
 
@@ -382,14 +384,14 @@
             margin: 0;
             font-size: 16px;
             font-weight: 800;
-            line-height:normal;
+            line-height: normal;
         }
 
         .incident-card p {
             margin: 4px 0;
             color: #4b5563;
-            font-size:14px;
-            line-height:normal;
+            font-size: 14px;
+            line-height: normal;
         }
 
     .incident-list {
@@ -399,18 +401,18 @@
         border: 1px solid #e0e0e0;
     }
 
-    .recentList{
-        height:350px;
-        overflow:auto;
+    .recentList {
+        height: 350px;
+        overflow: auto;
     }
 
-        .incident-list h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
-            line-height:normal;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom:16px;
-        }
+    .incident-list h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        line-height: normal;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 16px;
+    }
 
     .incident-item {
         display: flex;
@@ -443,8 +445,8 @@
 
     .incident-info p {
         color: #4b5563;
-        font-size:14px;
-        line-height:normal;
+        font-size: 14px;
+        line-height: normal;
     }
 
     .incident-severity {
@@ -528,26 +530,19 @@
                                 <i class="fa fa-layer-group"></i>Status Legend
                             </div>
                             <div class="status-legend">
-                                <div class="legend-item"><i class="fa-solid fa-circle submitted"></i><span>Submitted (3)</span></div>
-                                <div class="legend-item"><i class="fa-solid fa-circle started"></i><span>Started (2)</span></div>
-                                <div class="legend-item"><i class="fa-solid fa-circle dispatched"></i><span>Dispatched (1)</span></div>
-                                <div class="legend-item"><i class="fa-solid fa-circle completed"></i><span>Completed (3)</span></div>
-                                <div class="legend-item"><i class="fa-solid fa-circle cancelled"></i><span>Cancelled (2)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle submitted"></i><span>Submitted (@Model.IncidentDashboard.TotalSubmittedCount)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle started"></i><span>Started (@Model.IncidentDashboard.TotalStartedCount)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle dispatched"></i><span>Dispatched (@Model.IncidentDashboard.TotalDispatchedCount)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle completed"></i><span>Completed (@Model.IncidentDashboard.TotalCompletedCount)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle cancelled"></i><span>Cancelled (@Model.IncidentDashboard.TotalCancelledCount)</span></div>
                             </div>
                         </div>
                         <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
-                            @* <div class="mb-3">
-                                <label class="form-label">Enter Address</label>
-                                <input type="text" id="addressInput" class="form-control" placeholder="Enter US address" />
-                                <button class="btn btn-primary mt-2" id="showOnMap">Show on Map</button>
-                            </div> *@
-                           
-                            @* <div id="map" style="height:400px; border:1px solid #ccc; border-radius:8px;"></div> *@
                             <div id="map" style="height:500px; width:100%;"></div>
                         </div>
 
                         <!-- Top Incident Card -->
-                        <div class="incident-card">
+                        <div class="incident-card" style="display:none">
                             <h3>INC-0001 <span class="status-badge started">Started</span></h3>
                             <p>8204 Service Ave, City, ST 12345</p>
                             <p>Gas Leak - Moderate</p>
@@ -557,76 +552,31 @@
                         <div class="incident-list">
                             <h3>Recent Incidents on Map</h3>
                             <div class="recentList">
-                                <div class="incident-item">
-                                    <div class="incident-details">
-                                        <i class="fa-solid fa-circle started incident-icon"></i>
-                                        <div class="incident-info">
-                                            <h4>INC-0001</h4>
-                                            <p>8204 Service Ave, City, ST 12345</p>
-                                            <p>Gas Leak</p>
+                                @if (Model.IncidentDashboard.ListIncidentRecentViewModel.Count > 0)
+                                {
+                                    @foreach (var item in Model.IncidentDashboard.ListIncidentRecentViewModel)
+                                    {
+                                        <div class="incident-item">
+                                            <div class="incident-details">
+                                                <i class="fa-solid fa-circle started incident-icon"></i>
+                                                <div class="incident-info">
+                                                    <h4>@item.incidentId</h4>
+                                                    <p>@item.incidentloc</p>
+                                                    <p>@item.eventtype</p>
+                                                </div>
+                                            </div>
+                                            <div class="incident-severity">@item.severity</div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="incident-item">
+                                        <div class="incident-details">
+                                            No recent incident found.
                                         </div>
                                     </div>
-                                    <div class="incident-severity">Moderate</div>
-                                </div>
-
-                                <div class="incident-item">
-                                    <div class="incident-details">
-                                        <i class="fa-solid fa-circle validated incident-icon"></i>
-                                        <div class="incident-info">
-                                            <h4>INC-0002</h4>
-                                            <p>2580 Service Ave, City, ST 12345</p>
-                                            <p>Equipment Failure</p>
-                                        </div>
-                                    </div>
-                                    <div class="incident-severity">High</div>
-                                </div>
-
-                                <div class="incident-item">
-                                    <div class="incident-details">
-                                        <i class="fa-solid fa-circle submitted incident-icon"></i>
-                                        <div class="incident-info">
-                                            <h4>INC-0003</h4>
-                                            <p>1380 Service Ave, City, ST 12345</p>
-                                            <p>Third-Party Damage</p>
-                                        </div>
-                                    </div>
-                                    <div class="incident-severity">Low</div>
-                                </div>
-                                <div class="incident-item">
-                                    <div class="incident-details">
-                                        <i class="fa-solid fa-circle started incident-icon"></i>
-                                        <div class="incident-info">
-                                            <h4>INC-0001</h4>
-                                            <p>8204 Service Ave, City, ST 12345</p>
-                                            <p>Gas Leak</p>
-                                        </div>
-                                    </div>
-                                    <div class="incident-severity">Moderate</div>
-                                </div>
-
-                                <div class="incident-item">
-                                    <div class="incident-details">
-                                        <i class="fa-solid fa-circle validated incident-icon"></i>
-                                        <div class="incident-info">
-                                            <h4>INC-0002</h4>
-                                            <p>2580 Service Ave, City, ST 12345</p>
-                                            <p>Equipment Failure</p>
-                                        </div>
-                                    </div>
-                                    <div class="incident-severity">High</div>
-                                </div>
-
-                                <div class="incident-item">
-                                    <div class="incident-details">
-                                        <i class="fa-solid fa-circle submitted incident-icon"></i>
-                                        <div class="incident-info">
-                                            <h4>INC-0003</h4>
-                                            <p>1380 Service Ave, City, ST 12345</p>
-                                            <p>Third-Party Damage</p>
-                                        </div>
-                                    </div>
-                                    <div class="incident-severity">Low</div>
-                                </div>
+                                }
                             </div>
                         </div>
 

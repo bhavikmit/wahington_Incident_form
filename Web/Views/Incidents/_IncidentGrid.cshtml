@@ -47,7 +47,7 @@
                             <span class="badge rounded-pill badge-unknown px-3 py-2">Unknown</span>
                         }
                     </td>
-                  
+
                     <td style="text-wrap:auto">@item.EventTypeId</td>
                     <td>
                         <div class="event-type">
@@ -80,9 +80,29 @@
                         <a href="javascript:void(0);"
                            class="btnIcon eyeIcon view-incident"
                            data-id="@item.Id"
-                           title="View">
+                           title="View Details">
                             <i class="fa fa-eye"></i>
                         </a>
+
+                        @if (item.StatusLegend == StatusLegendEnum.Submitted.ToString())
+                        {
+                            <a href="/Validation/Index/@item.Id"
+                               class="validateIncident"
+                               data-incident-id="@item.Id"
+                               title="Validate Incident">
+                                <i class="fa fa-info-circle"></i>
+                            </a>
+                        }
+                        @if (item.StatusLegend == StatusLegendEnum.Dispatched.ToString() || item.StatusLegend == StatusLegendEnum.Started.ToString())
+                        {
+                            <a href="javascript:void(0);"
+                               class="viewProgress"
+                               data-id="@item.Id"
+                               title="View Progress">
+                                <i class="fa fa-bars-progress"></i>
+                            </a>
+                        }
+
                         <a href="javascript:void(0);"
                            class="btnIcon noteIcon note-incident"
                            title="Notes"
@@ -97,7 +117,7 @@
                             <i class="fa fa-repeat"></i>
                         </a>
 
-                        <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit"><i class="fa fa-pencil"></i></a>
+                        <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit Incident"><i class="fa fa-pencil"></i></a>
                     </td>
                 </tr>
             }

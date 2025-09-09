@@ -68,6 +68,7 @@ namespace Repositories.Common
                         EventType = await GetEventTypes(item.EventTypeIds ?? string.Empty),
                         Id = item.Id,
                         Severity = item.SeverityLevel.Name,
+                        SeverityColor = item.SeverityLevel.Color,
                         Description = item?.DescriptionIssue,
                         IncidentId = item.IncidentID,
                         IncidentLocation = item.LocationAddress,
@@ -115,6 +116,149 @@ namespace Repositories.Common
                 return new List<RecentlyIncidentValidationViewModel>();
             }
         }
+
+        public async Task<long> GetHighPriorityIncidentCount()
+        {
+            try
+            {
+                return await _db.Incidents
+                    .Where(p => !p.IsDeleted
+                                && p.StatusLegendId != (int)StatusLegendEnum.Started
+                                && p.SeverityLevel.Name == SeverityEnum.High.ToString())
+                    .LongCountAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetHighPriorityIncidentCount.");
+                return 0;
+            }
+        }
+
+        public async Task<IncidentValidationDetailViewModel> GetIncidentValidationDetail(long id)
+        {
+            try
+            {
+                var incident = await _db.Incidents
+                    .Include(p => p.SeverityLevel)
+                    .Include(p => p.StatusLegend)
+                    .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
+
+                if (incident == null)
+                {
+                    return new IncidentValidationDetailViewModel();
+                }
+
+                // Run async calls in parallel
+                var eventTypesTask = await GetEventTypes(incident.EventTypeIds ?? string.Empty);
+                var assetsTask = await GetAssets(incident.AssetIds ?? string.Empty);
+
+
+                return new IncidentValidationDetailViewModel
+                {
+                    Id = incident.Id,
+                    CallerAddress = incident.CallerAddress,
+                    CallerContact = incident.CallerPhoneNumber,
+                    CallerDateTime = GetDate(incident.CallTime.ToString()),
+                    CallerName = incident.CallerName,
+                    EventType = eventTypesTask,
+                    IncidentId = incident.IncidentID,
+                    IncidentLocation = incident.LocationAddress,
+                    NearestIntersection = incident.Landmark,
+                    AffectedAssets = assetsTask,
+                    Lat = incident.Lat,
+                    Long = incident.Lng,
+                    IncidentStatus = incident.StatusLegend?.Name,
+                    IncidentStatusColor = incident.StatusLegend?.Color,
+                    Severity = incident.SeverityLevel?.Name,
+                    SeverityColor = incident.SeverityLevel?.Color,
+                    DescriptionIssue = incident.DescriptionIssue,
+                    EvacuationRequired = GetIndicator(incident.EvacuationRequiredId),
+                    GasPresent = GetIndicator(incident.GasPresentId),
+                    HissingPresent = GetIndicator(incident.HissingPresentId),
+                    PeopleInjured = GetIndicator(incident.PeopleInjuredId),
+                    VisibleDamagePresent = GetIndicator(incident.VisibleDamagePresentId),
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetIncidentValidationDetail.");
+                return new IncidentValidationDetailViewModel();
+            }
+        }
+
+        public async Task<IncidentValidationViewModel> GetIncidentValidationAlarm(long id)
+        {
+            try
+            {
+                var incidentTask = await _db.Incidents
+                    .Include(p => p.SeverityLevel)
+                    .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
+
+                var severityLevelsTask = await _db.SeverityLevels
+                    .Where(it => !it.IsDeleted)
+                    .OrderBy(it => it.Name)
+                    .Select(it => new SelectListItem
+                    {
+                        Value = it.Id.ToString(),
+                        Text = !string.IsNullOrWhiteSpace(it.Description)
+                               ? it.Name + " - " + it.Description
+                               : it.Name
+                    })
+                    .ToListAsync();
+
+
+                if (incidentTask == null)
+                {
+                    return new IncidentValidationViewModel { severityLevels = severityLevelsTask };
+                }
+
+                return new IncidentValidationViewModel
+                {
+                    Id = incidentTask.Id,
+                    IncidentId = incidentTask.IncidentID,
+                    IncidentLocation = incidentTask.LocationAddress,
+                    severityLevels = severityLevelsTask,
+                    severityLevel = incidentTask.SeverityLevel?.Name,
+                    Lat = incidentTask.Lat,
+                    Long = incidentTask.Lng
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetIncidentValidationAlarm.");
+                return new IncidentValidationViewModel();
+            }
+        }
+
+        public async Task<List<IncidentResponseTeamViewModel>> GetIncidentValidationResponseTeam()
+        {
+            List<IncidentResponseTeamViewModel> incidentResponseTeams = new();
+
+            try
+            {
+                var responseTeams = await _db.AssignResponseTeams.Where(p => !p.IsDeleted).ToListAsync();
+
+                foreach (var item in responseTeams)
+                {
+                    incidentResponseTeams.Add(new IncidentResponseTeamViewModel()
+                    {
+                        ReponseTeamId = item.Id,
+                        Name = item.Name,
+                        Contact = item.ContactNumber,
+                        Tag = item.Category,
+                        Specializations = item.SpecializationsList
+                    });
+                }
+
+                return incidentResponseTeams;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetIncidentValidationResponseTeam.");
+                return new List<IncidentResponseTeamViewModel>();
+            }
+        }
+        #region private event
         private async Task<string> GetEventTypes(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))
@@ -145,5 +289,32 @@ namespace Repositories.Common
         {
             return DateTime.TryParse(callTime, out dateTime);
         }
+        private async Task<List<string>> GetAssets(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+                return new List<string>();
+
+            var idArray = ids.Split(",", StringSplitOptions.RemoveEmptyEntries)
+                             .Select(id => long.TryParse(id.Trim(), out var val) ? val : (long?)null)
+                             .Where(val => val.HasValue)
+                             .Select(val => val.Value)
+                             .ToList();
+
+            var assetNames = await _db.AssetIncidents
+                                      .Where(a => idArray.Contains(a.Id))
+                                      .Select(a => a.Name)
+                                      .ToListAsync();
+
+            return assetNames;
+        }
+        private string GetIndicator(long? value) =>
+           value switch
+           {
+               1 => "Yes",
+               0 => "No",
+               2 => "N/A",
+               _ => string.Empty
+           };
+        #endregion
     }
 }

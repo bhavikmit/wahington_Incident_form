@@ -1,7 +1,6 @@
 $(function () {
     // $(document).off("click", "#global_search_clear");
     $(document).on("click", "#global_search_clear", function (e) {
-        debugger;
         e.preventDefault();
         $("#Search_value").val("");
         $(".search-form-btn").click();

@@ -37,6 +37,7 @@ namespace ViewModels.Incident
         public string EventType { get; set; } = default!;
         public string IncidentLocation { get; set; } = default!;
         public string Severity { get; set; } = default!;
+        public string SeverityColor { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string IncidentDate { get; set; } = default!;
     }
@@ -52,14 +53,23 @@ namespace ViewModels.Incident
         public string CallerName { get; set; } = default!;
         public string CallerContact { get; set; } = default!;
         public string CallerAddress { get; set; } = default!;
-        public DateTime CallerDateTime { get; set; } = default!;
+        public string CallerDateTime { get; set; } = default!;
         public string IncidentLocation { get; set; } = default!;
         public string NearestIntersection { get; set; } = default!;
         public string EventType { get; set; } = default!;
         public string Severity { get; set; } = default!;
+        public string DescriptionIssue { get; set; } = default!;
+        public string SeverityColor { get; set; } = default!;
         public string IncidentStatus { get; set; } = default!;
-        public List<string> AffectedAssets { get; set; } = default!;
-        public List<SafetyAssessment> SafetyAssessments { get; set; } = default!;
+        public string IncidentStatusColor { get; set; } = default!;
+        public double Lat { get; set; } = default!;
+        public double Long { get; set; } = default!;
+        public List<string> AffectedAssets { get; set; } = new();
+        public string GasPresent { get; set; } = default!;
+        public string HissingPresent { get; set; } = default!;
+        public string VisibleDamagePresent { get; set; } = default!;
+        public string PeopleInjured { get; set; } = default!;
+        public string EvacuationRequired { get; set; } = default!;
     }
 
     public class SafetyAssessment
@@ -68,21 +78,26 @@ namespace ViewModels.Incident
         public string AssetStatus { get; set; } = default!;
     }
 
-    public class IncidentValidationViewModel
+    public class IncidentValidationViewModel : BaseIncidentValidationViewModel
     {
         public List<SelectListItem> severityLevels { get; set; } = new();
-        public long? severityLevelId { get; set; } = default!;
-        public decimal? DiscoveryPerimeter { get; set; } = default!;
+        public string severityLevel { get; set; } = default!;
+        //public decimal? DiscoveryPerimeter { get; set; } = default!;
+        public double Lat { get; set; } = default!;
+        public double Long { get; set; } = default!;
         public string ValidationNotes { get; set; } = default!;
+        public long RadiusId { get; set; } = default!;
+        public long severityLevelId { get; set; } = default!;
         public string IncidentLocation { get; set; } = default!;
     }
 
     public class IncidentResponseTeamViewModel
     {
+        public long ReponseTeamId { get; set; } = default!;
         public string Name { get; set; } = default!;
         public string Tag { get; set; } = default!;
         public string Contact { get; set; } = default!;
-        public List<string> Specializations { get; set; } = default!;
+        public List<string> Specializations { get; set; } = new();
     }
 
     public class IncidentPolicyViewModel

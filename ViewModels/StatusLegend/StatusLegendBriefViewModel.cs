@@ -7,16 +7,17 @@ namespace ViewModels
     {
         public StatusLegendBriefViewModel() : base(true, "The Status legend field is required.")
         {
-
         }
 
         public StatusLegendBriefViewModel(bool isValidationEnabled, string errorMessage) : base(isValidationEnabled, errorMessage)
         {
-
         }
 
         [DisplayName("Status Legend")]
         public string? Name { get; set; }
+
+        [DisplayName("Description")]
+        public string? Description { get; set; }   // <- added
 
         [DisplayName("Color")]
         public string? Color { get; set; }
@@ -25,7 +26,7 @@ namespace ViewModels
         {
             get
             {
-                return Name;
+                return $"{Name} - {Description} ({Color})";
             }
         }
     }

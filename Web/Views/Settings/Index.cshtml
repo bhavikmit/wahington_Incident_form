@@ -114,14 +114,17 @@
             background-color: forestgreen;
         }
 
-    .settings-container {
+    .settings-container ,
+    .team-container {
         display: flex;
         gap: 20px;
         padding: 0 20px 20px;
+        margin:20px 0;
     }
 
         /* Sidebar */
-        .settings-container .sidebar {
+        .settings-container .sidebar ,
+        .team-container .sidebar {
             width: 250px;
             background: #fff;
             border-radius: 12px;
@@ -129,19 +132,22 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-            .settings-container .sidebar h3 {
+            .settings-container .sidebar h3 ,
+            .team-container .sidebar h3 {
                 margin: 0 0 15px 20px;
                 font-size: 16px;
                 font-weight: bold;
             }
 
-            .settings-container .sidebar ul {
+            .settings-container .sidebar ul ,
+            .team-container .sidebar ul {
                 list-style: none;
                 margin: 0;
                 padding: 0;
             }
 
-                .settings-container .sidebar ul li {
+                .settings-container .sidebar ul li ,
+                .team-container .sidebar ul li {
                     padding: 12px 20px;
                     display: flex;
                     align-items: center;
@@ -151,18 +157,21 @@
                     cursor: pointer;
                 }
 
-                    .settings-container .sidebar ul li.active {
+                    .settings-container .sidebar ul li.active ,
+                    .team-container .sidebar ul li.active {
                         background-color: #ffddcc;
                         font-weight: bold;
                         color: #f54e00;
                         border-left: 4px solid #f54e00;
                     }
 
-                    .settings-container .sidebar ul li:hover {
+                    .settings-container .sidebar ul li:hover ,
+                    .team-container .sidebar ul li:hover {
                         background-color: #f3f4f6;
                     }
 
-            .settings-container .sidebar i {
+            .settings-container .sidebar i ,
+            .team-container .sidebar i {
                 font-size: 16px;
             }
 
@@ -244,8 +253,10 @@
         }
 
     .actions {
-        display: flex;
+        /* display: flex; */
         gap: 12px;
+        justify-content: center;
+        align-items:flex-start;
     }
 
         .actions i {
@@ -329,7 +340,7 @@
         }
 
     .btnAddNew, .btnAddNewSource, .btnAddNewEvent, .btnAddNewseverityLevl, .btnAddNewstatusLegend,
-    .btnAddNewAsset, .btnAddNewAssetType, .btnAddNewIncidentTeam {
+    .btnAddNewAsset, .btnAddNewAssetType {
         background-color: #f54e00;
         color: #fff;
         border: none;
@@ -364,6 +375,733 @@
         height: 20px;
         border-radius: 100%;
         background: green;
+    }
+
+    .hidden {
+        display: none;
+    }
+    /*************************User management style****************************/
+    .user-management .header ,
+    .team-management .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .backIcon {
+        display: flex;
+        align-items: center;
+        margin-right: 15px;
+    }
+
+        .user-management .header h2 ,
+        .team-management .header h2 {
+            margin: 0;
+            font-size: 22px;
+            line-height:normal;
+        }
+
+        .user-management .header p ,
+        .team-management .header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+    .user-management .backIcon i.fa{
+        font-size: 18px;
+        color:#f54e00;
+    }
+
+    .user-management .btn-add ,
+    .team-management .btn-add {
+        background: #f54e00;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    /* Stats cards */
+    .user-management .stats {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 25px;
+    }
+
+    .topCard .icon {
+        margin-right: 16px;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+        .topCard .icon i.fa {
+            vertical-align: middle;
+        }
+
+        .topCard .icon.pending {
+            background: #fee2e2;
+        }
+
+        .topCard .icon.validated {
+            background: #dcfce7;
+        }
+        .topCard .icon.total {
+            background: #ffdccc;
+        }
+
+        .topCard .text-total {
+            color: #f54e00;
+        }
+
+        .topCard .icon.priority {
+            background: #FFEDD5;
+        }
+
+    .user-management .stat-card {
+        
+        background: #fff;
+        padding: 1rem;
+        border-radius: 12px;
+        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease;
+    }
+
+    
+    .stat-card:hover {
+        transform: translateY(-3px);
+    }
+
+        .user-management .stat-card i {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .user-management .stat-card h3 {
+            margin: 5px 0;
+            font-size: 22px;
+        }
+
+        .user-management  .stat-card p {
+            margin: 0;
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+    /* Table */
+    .user-table {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+    }  
+    .user-table .table-responsive{
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+    }
+   
+        .user-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-table th, .user-table td {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 14px;
+            border-bottom: none; 
+        }
+        .user-table tr{
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .user-table th {
+            background: #f9fafb;
+            font-weight: 600;
+            color: #374151;
+        }
+
+    /* User info */
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .user-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #9333ea);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 16px;
+    }
+
+    .user-info small {
+        color: #6b7280;
+    }
+
+    /* Badges */
+    .role-badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+        color: #111827;
+    }
+
+    .role-admin {
+        background: #f3e8ff;
+        color: #9333ea;
+    }
+
+    .role-dispatch {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .role-service {
+        background: #dcfce7;
+        color: #15803d;
+    }
+
+    .role-team {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    /* Status */
+    .status {
+        background: #dcfce7;
+        color: #15803d;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    /* Actions */
+    .actions i {
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .fa-pen {
+        color: #2563eb;
+    }
+
+    .fa-trash {
+        color: #ef4444;
+    }
+
+    #addUserModal .modal-footer .add-btn{
+        margin-bottom:0;
+    }
+    /*****************Role and permission******************/
+    .role-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+       
+    }
+
+    .Bordercard {
+        background: #ffffff;
+        padding: 16px;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        /* box-shadow: 0 2px 5px rgba(0,0,0,0.05); */
+    }
+
+    .rolePermission h2{
+        font-size:18px;
+        line-height:normal;
+        margin-bottom:10px;
+    }
+
+    .rolePermission{
+        margin-top:20px;
+    }
+
+    .role-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        /* box-shadow: 0 2px 6px rgba(0,0,0,0.08); */
+        border: 1px solid #eee;
+    }
+
+        .role-card p{
+            font-size: 14px;
+            font-weight: 400;
+            color: grey;
+            margin-bottom: 5px;
+        }
+
+        .role-card h4{
+            font-size:12px;
+            font-weight:700;
+            line-height:normal;
+        }
+    .role-title {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .service-center {
+        background: #e6f7ec;
+        color: #2a8b4c;
+    }
+
+    .dispatch {
+        background: #e6f0ff;
+        color: #3056d3;
+    }
+
+    .service-teams {
+        background: #fff4e6;
+        color: #d9822b;
+    }
+
+    .master-admin {
+        background: #f5e6ff;
+        color: #7d3fc2;
+    }
+
+    .permissions {
+        margin-top: 10px;
+        margin-bottom:0;
+        list-style: none;
+        padding: 0;
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        
+
+    }
+
+        .permissions li {
+            margin: 0 0 2px 0;
+            font-size: 12px;
+            line-height:normal;
+        }
+
+            .permissions li i {
+                margin-right: 6px;
+            }
+
+        .permissions .allowed {
+            color: green;
+        }
+
+        .permissions .denied {
+            color: #888;
+        }
+        /***********************Add user modal style************************/
+    form {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        margin-top: 5px;
+    }
+
+    .modal-footer button i.fa{
+        padding-right:6px;
+    }
+
+    .permissions-box {
+        grid-column: span 2;
+        background-color: #f0f6ff;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        border: 1px solid #d9e7f5;
+    }
+
+        .permissions-box h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 18px;
+            line-height: normal;
+        }
+        .permissions-box p {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: normal;
+        }
+
+        .permissions-box ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .permissions-box li {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            line-height: normal;
+        }
+
+    .allowed i {
+        color: green;
+        margin-right: 8px;
+    }
+
+    .denied i {
+        color: gray;
+        margin-right: 8px;
+    }
+
+    .buttons {
+        grid-column: span 2;
+        text-align: right;
+        margin-top: 20px;
+    }
+
+    .cancel-btn,
+    .add-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        cursor: pointer;
+    }
+
+    .cancel-btn {
+        background-color: #444d5b;
+        color: white;
+        margin-right: 10px;
+    }
+
+    .add-btn {
+        background-color: #00a859;
+        color: white;
+        
+    }
+    /*********************team management style****************************/ 
+    .teamRightSec .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 15px;
+    }
+
+    .teamRightSec .card {
+        background: white;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+        .teamRightSec .card h4 {
+            margin: 0;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .teamRightSec .card h4 .fa-pen {
+                color: #2563eb;
+                cursor: pointer;
+            }
+
+            .teamRightSec .card h4 .fa-trash {
+                color: red;
+                cursor: pointer;
+            }
+
+        .teamRightSec .card p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+    .specializations span {
+        background: #e4ecff;
+        color: #2563eb;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        margin: 3px 4px 0 0;
+        display: inline-block;
+    }
+    /*******add team***/
+    .form-container {
+        background: #f0f6ff;
+        border: 1px solid #cdddfc;
+        border-radius: 12px;
+        padding: 20px;
+        max-width: 600px;
+    }
+
+        .form-container h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+    .addNewTeam .form-control, .addNewTeam select {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #d0d7e2;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        outline: none;
+    }
+
+    .addNewTeam label {
+        font-size: 14px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .addNewTeam .specialization-link {
+        color: #2563eb;
+        font-size: 13px;
+        cursor: pointer;
+        margin-bottom: 15px;
+        display: inline-block;
+    }
+
+    .addNewTeam .btn {
+        padding: 10px 18px;
+        font-size: 14px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .addNewTeam .btn-green {
+        background: #22c55e;
+        color: white;
+        margin-right: 10px;
+    }
+
+    .addNewTeam .btn-gray {
+        background: #4b5563;
+        color: white;
+    }
+    /*************aadd new user and user list style*****************/
+    .userRightSec .form-container {
+        background: #eaf3ff;
+        border: 1px solid #cdddfc;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .userRightSec .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .userRightSec .form-control {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #d0d7e2;
+        border-radius: 8px;
+        outline: none;
+    }
+
+    .userRightSec label {
+        font-size: 14px;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .userRightSec .btn {
+        padding: 10px 18px;
+        font-size: 14px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .userRightSec .btn-green {
+        background: #22c55e;
+        color: white;
+    }
+
+    .userRightSec .btn-gray {
+        background: #4b5563;
+        color: white;
+        margin-right: 10px;
+    }
+    /* Table */
+    .userRightSec table {
+        width: 100%;
+        background: white;
+        border-collapse: collapse;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .userRightSec th, .userRightSec td {
+        text-align: left;
+        padding: 12px;
+        font-size: 14px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .userRightSec th {
+        background: #f9fafb;
+        font-weight: bold;
+    }
+
+    .userRightSec tr:last-child td {
+        border-bottom: none;
+    }
+
+    .userRightSec .team-badge {
+        background: #e4ecff;
+        color: #2563eb;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    .userRightSec .actions i {
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .userRightSec .fa-pen {
+        color: #2563eb;
+    }
+
+    .userRightSec .fa-trash {
+        color: red;
+    }
+    /******************Policies , add new policies style************************/
+    .policiesRightSec .add-task-btn {
+        background: #22c55e;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        text-decoration: none;
+        float: right;
+    }
+
+    .policiesRightSec .add-task-btn i {
+            margin-right: 6px;
+        }
+    /* Form container */
+    .policiesRightSec .form-container {
+        background: #ecfdf5;
+        border: 1px solid #bbf7d0;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .policiesRightSec .form-control, .policiesRightSec textarea {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        border: 1px solid #d0d7e2;
+        border-radius: 8px;
+        outline: none;
+        margin-bottom: 12px;
+    }
+
+    .policiesRightSec textarea {
+        resize: vertical;
+        height: 80px;
+    }
+
+    .policiesRightSec .btn {
+        padding: 10px 18px;
+        font-size: 14px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .policiesRightSec .btn-green {
+        background: #22c55e;
+        color: white;
+        margin-right: 10px;
+    }
+
+    .policiesRightSec .btn-gray {
+        background: #4b5563;
+        color: white;
+    }
+    /* Task list */
+    .policiesRightSec .task-item {
+        background: #f9fafb;
+        padding: 15px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+
+    .policiesRightSec .task-info {
+        display: flex;
+        gap: 12px;
+    }
+
+    .policiesRightSec .task-info i {
+            color: #9ca3af;
+            cursor: move;
+            margin-top: 4px;
+        }
+
+    .policiesRightSec  .task-text strong {
+        font-size: 14px;
+    }
+
+    .policiesRightSec  .task-text small {
+        display: block;
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 2px;
+    }
+
+    .policiesRightSec .task-actions i {
+        color: red;
+        cursor: pointer;
     }
 </style>
 
@@ -412,7 +1150,7 @@
     <div class="container-fluid">
 
 
-        <div class="settings-container">
+        <div class="settings-container" id="mainContainer">
             <!-- Sidebar -->
             <div class="sidebar">
                 <h3>Configuration</h3>
@@ -423,12 +1161,16 @@
                     <li class="settingAllTab" data-tab="asset"><i class="fa-solid fa-barcode"></i> Asset IDs</li>
                     <li class="settingAllTab" data-tab="type"><i class="fa-solid fa-building"></i> Asset Types</li>
                     <li class="settingAllTab" data-tab="status"><i class="fa-solid fa-palette"></i> Status Legend</li>
-                    <li class="settingAllTab" data-tab="teams"><i class="fa-brands fa-teamspeak"></i>Teams</li>
+                    <li class="settingAllTab" data-tab="teams"><i class="fa-brands fa-teamspeak"></i> Assign Response Teams</li>
+                    <li class="settingAllTab" data-tab="user" onclick="showContent('user')"><i class="fa fa-user-circle"></i> User Management</li>
+                    <li class="settingAllTab" data-tab="teamManagement" onclick="showContent('team')">
+                        <i class="fa-solid fa-people-group"></i> Team Management
+                    </li>
                 </ul>
             </div>
 
             <!-- Content -->
-            <div class="content">
+            <div class="content" id="rightContent">
                 <div id="source" class="tab-content active">
                     <div class="d-flex justify-content-between">
                         <h3>Source</h3>
@@ -504,20 +1246,666 @@
                 </div>
                 <div id="teams" class="tab-content">
                     <div class="d-flex justify-content-between">
-                        <h3>Teams</h3>
-                        <button class="btn btn-primary btnAddNewIncidentTeam"><i class="fa-solid fa-plus"></i> Add New</button>
+                        <h3>Assign Response Teams</h3>
+                        <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
+                    </div>
+                    <div class="list-item addItem">
+                        <div class="input-container">
+                            <input type="text" placeholder="Enter Name...">
+                            <button class="btn check"><i class="fa-solid fa-check"></i></button>
+                            <button class="btn cancel"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    </div>
+                    <div class="list-item">
+                        <div class="input-container EditInput">
+                            <input type="text" value="Jason">
+                        </div>
+
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
                     </div>
 
-                    <div id="addIncidentTeam">
+                    <div class="list-item">
+                        <span>Hubert</span>
+                        <div class="actions">
+                            <i class="fa fa-pen edit"></i>
+                            <i class="fa fa-trash delete"></i>
+                        </div>
                     </div>
-                    <div id="incidentTeamList">
+
+                    <div class="list-item">
+                        <span>Hardik</span>
+                        <div class="actions">
+                            <i class="fa-solid fa-pen edit"></i>
+                            <i class="fa-solid fa-trash delete"></i>
+                        </div>
                     </div>
-               </div>
+
+
+                </div>
+                
             </div>
+
+        </div>
+        <div class="user-management hidden" id="userManagement">
+            <div class="header">
+                <div class="d-flex align-item-center">
+                    <div onclick="backToMain()" class="backIcon"><i class="fa fa-arrow-left-long"></i></div>
+                    <div class="title-info">
+                        <h2 class="mb-0">User Management</h2>
+                        <p>Manage system users and their role-based permissions</p>
+                    </div>
+                </div>
+                <button class="btn-add btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="fa-solid fa-plus"></i> Add User</button>
+            </div>
+
+
+            <div class="row g-3 mb-4 topCard">
+                <div class="col-md-3">
+                    <div class="stat-card d-flex align-items-center justify-content-start">
+                        <div class="icon total">
+                            <i class="fa-regular fa-user"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0 fw-bold text-total">3</h4>
+                            <small class="text-muted">Total Users</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card d-flex align-items-center justify-content-start">
+                        <div class="icon validated">
+                            <i class="fa-regular fa-circle-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0 fw-bold text-success">4</h4>
+                            <small class="text-muted">Active Users</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card d-flex align-items-center justify-content-start">
+                        <div class="icon pending">
+                            <i class="fa-regular fa-circle-xmark"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0 fw-bold text-danger">3</h4>
+                            <small class="text-muted">Inactive Users</small>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stat-card d-flex align-items-center justify-content-start">
+                        <div class="icon priority">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0 fw-bold text-warning">2</h4>
+                            <small class="text-muted">Admins</small>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Table -->
+            <div class="user-table">
+                <div class="table table-responsive">
+                    <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Role</th>
+                            <th>Department</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+                                    <div>
+                                        <strong>Master Admin</strong><br>
+                                        <small>admin@company.com</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge role-admin">Master Admin</span></td>
+                            <td>Administration</td>
+                            <td>
+                                <i class="fa-regular fa-envelope"></i> admin@company.com<br>
+                                <i class="fa-solid fa-phone"></i> 555-0100
+                            </td>
+                            <td><span class="status">Active</span></td>
+                            <td><i class="fa-regular fa-calendar"></i> Sep 08, 12:45 PM</td>
+                            <td class="actions">
+                                <i class="fa-solid fa-pen"></i>
+                                <i class="fa-solid fa-trash"></i>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+                                    <div>
+                                        <strong>John Smith</strong><br>
+                                        <small>john.smith@company.com</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge role-dispatch">Dispatch</span></td>
+                            <td>Operations</td>
+                            <td>
+                                <i class="fa-regular fa-envelope"></i> john.smith@company.com<br>
+                                <i class="fa-solid fa-phone"></i> 555-0102
+                            </td>
+                            <td><span class="status">Active</span></td>
+                            <td><i class="fa-regular fa-calendar"></i> Sep 08, 10:45 AM</td>
+                            <td class="actions">
+                                <i class="fa-solid fa-pen"></i>
+                                <i class="fa-solid fa-trash"></i>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+                                    <div>
+                                        <strong>Sarah Johnson</strong><br>
+                                        <small>sarah.johnson@company.com</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge role-service">Service Center</span></td>
+                            <td>Customer Service</td>
+                            <td>
+                                <i class="fa-regular fa-envelope"></i> sarah.johnson@company.com<br>
+                                <i class="fa-solid fa-phone"></i> 555-0101
+                            </td>
+                            <td><span class="status">Active</span></td>
+                            <td><i class="fa-regular fa-calendar"></i> Sep 08, 08:45 AM</td>
+                            <td class="actions">
+                                <i class="fa-solid fa-pen"></i>
+                                <i class="fa-solid fa-trash"></i>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+                                    <div>
+                                        <strong>Mike Wilson</strong><br>
+                                        <small>mike.wilson@company.com</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge role-team">Service Teams</span></td>
+                            <td>Field Operations</td>
+                            <td>
+                                <i class="fa-regular fa-envelope"></i> mike.wilson@company.com<br>
+                                <i class="fa-solid fa-phone"></i> 555-0103
+                            </td>
+                            <td><span class="status">Active</span></td>
+                            <td><i class="fa-regular fa-calendar"></i> Sep 07, 12:45 PM</td>
+                            <td class="actions">
+                                <i class="fa-solid fa-pen"></i>
+                                <i class="fa-solid fa-trash"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+           
+            <!-------------Role and permisssion-------------->
+            <div class="Bordercard rolePermission p-4">
+                <h2>Role Permissions Reference</h2>
+
+            <div class="role-container">
+
+                <!-- Service Center -->
+                <div class="role-card">
+                    <div class="role-title service-center">Service Center</div>
+                    <p>Can create incidents and have read-only access to other pages. No settings access.</p>
+                    <h4>Permissions:</h4>
+                    <ul class="permissions">
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can manage settings</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can send alerts</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can view settings</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can complete tasks</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
+                    </ul>
+                </div>
+
+                <!-- Dispatch -->
+                <div class="role-card">
+                    <div class="role-title dispatch">Dispatch</div>
+                    <p>Can validate incidents, edit, communicate, send alerts. Can view and manage settings.</p>
+                    <h4>Permissions:</h4>
+                    <ul class="permissions">
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can edit incidents</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can manage settings</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can assign teams</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can validate incidents</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can view settings</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
+                    </ul>
+                </div>
+
+                <!-- Service Teams -->
+                <div class="role-card">
+                    <div class="role-title service-teams">Service Teams</div>
+                    <p>Can only view assigned incidents, submit notes and mark tasks complete. No settings or desktop access.</p>
+                    <h4>Permissions:</h4>
+                    <ul class="permissions">
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can create incidents</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can manage settings</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can send alerts</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> has desktop access</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can view all incidents</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can view settings</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
+                        <li class="denied"><i class="fa-solid fa-xmark"></i> can view reports</li>
+                    </ul>
+                </div>
+
+                <!-- Master Admin -->
+                <div class="role-card">
+                    <div class="role-title master-admin">Master Admin</div>
+                    <p>Full access to all functionality and system administration.</p>
+                    <h4>Permissions:</h4>
+                    <ul class="permissions">
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can edit incidents</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can manage settings</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can assign teams</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can validate incidents</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can view settings</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
+                        <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
+                    </ul>
+                </div>
+
+            </div>
+            </div>
+            
+
+        </div>
+        <div class="team-management hidden" id="teamManagement">
+            <div class="header">
+                <div>
+                    <button onclick="backToMain()"><i class="fa fa-arrow-left-long"></i></button>
+                    <h2>Team Management</h2>
+                    <p>Manage teams, users, and response policies</p>
+                </div>
+                <button class="btn-add" data-bs-toggle="modal" data-bs-target="#addTeamModal"><i class="fa-solid fa-plus"></i> Add Team</button>
+            </div>
+
+            <div class="team-container" id="teamContainer">
+                <!-- Sidebar -->
+                <div class="sidebar teamSiderbar">
+                    <h3>Sections</h3>
+                     <ul>
+                        <li class="active teamAllTab" data-tab="Iteams"><i class="fa-solid fa-user-group"></i> Teams</li>
+                        <li class="teamAllTab" data-tab="Iusers"><i class="fa-regular fa-file-lines"></i>Users</li>
+                        <li class="teamAllTab" data-tab="Ipolicies"><i class="fa-regular fa-file-lines"></i>Policies</li>
+                       
+                    </ul>
+                </div>
+
+
+                <!-- Content -->
+                <div class="content" id="rightContent">
+                    <div id="Iteams" class="tab-content active teamRightSec">
+                        <h3>Teams</h3>
+                        <div class="form-container addNewTeam">
+                            <h3>Add New Team</h3>
+
+                            <input type="text" class="form-control" placeholder="Team name (e.g., Distribution Emergency Team)">
+
+                            <select class="form-control">
+                                <option>Select Department</option>
+                                <option>Distribution</option>
+                                <option>Transmission</option>
+                                <option>Contractors</option>
+                                <option>Emergency</option>
+                                <option>Safety</option>
+                            </select>
+
+                            <input type="text" class="form-control" placeholder="Contact ID (e.g., 555-DIST-001)">
+
+                            <label>Specializations</label>
+                            <input type="text" class="form-control" placeholder="Enter specialization">
+
+                            <span class="specialization-link">+ Add more specialization</span>
+                            <br>
+                            <button class="btn btn-green">Add Team</button>
+                            <button class="btn btn-gray">Cancel</button>
+                        </div>
+                        <div class="cards">
+                            <div class="card">
+                                <h4>
+                                    Distribution Emergency Team
+                                    <span>
+                                        <i class="fa-solid fa-pen"></i>
+                                        <i class="fa-solid fa-trash"></i>
+                                    </span>
+                                </h4>
+                                <p><strong>Department:</strong> Distribution</p>
+                                <p><strong>Contact:</strong> 555-DIST-001</p>
+                                <p><strong>Specializations:</strong></p>
+                                <div class="specializations">
+                                    <span>Gas Leaks</span>
+                                    <span>Valve Repairs</span>
+                                    <span>Meter Issues</span>
+                                </div>
+                                <p>1 members</p>
+                            </div>
+
+                            <div class="card">
+                                <h4>
+                                    Transmission Response Unit
+                                    <span>
+                                        <i class="fa-solid fa-pen"></i>
+                                        <i class="fa-solid fa-trash"></i>
+                                    </span>
+                                </h4>
+                                <p><strong>Department:</strong> Transmission</p>
+                                <p><strong>Contact:</strong> 555-TRANS-001</p>
+                                <p><strong>Specializations:</strong></p>
+                                <div class="specializations">
+                                    <span>Pipeline Repairs</span>
+                                    <span>High Pressure Systems</span>
+                                    <span>Compressor Issues</span>
+                                </div>
+                                <p>1 members</p>
+                            </div>
+
+                            <div class="card">
+                                <h4>
+                                    Emergency Contractors
+                                    <span>
+                                        <i class="fa-solid fa-pen"></i>
+                                        <i class="fa-solid fa-trash"></i>
+                                    </span>
+                                </h4>
+                                <p><strong>Department:</strong> Contractors</p>
+                                <p><strong>Contact:</strong> 555-CONTRACT-001</p>
+                                <p><strong>Specializations:</strong></p>
+                                <div class="specializations">
+                                    <span>Excavation</span>
+                                    <span>Third-Party Damage</span>
+                                    <span>Heavy Equipment</span>
+                                </div>
+                                <p>0 members</p>
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div id="Iusers" class="tab-content userRightSec">
+                        <h2>Users</h2>
+
+                        <!-- Form -->
+                        <div class="form-container">
+                            <h3>Add New User</h3>
+                            <div class="form-grid">
+                                <div>
+                                    <label>Team *</label>
+                                    <select class="form-control">
+                                        <option>Select team</option>
+                                        <option>Distribution Emergency Team</option>
+                                        <option>Transmission Response Unit</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>First Name *</label>
+                                    <input type="text" class="form-control" placeholder="First name">
+                                </div>
+                                <div>
+                                    <label>Last Name *</label>
+                                    <input type="text" class="form-control" placeholder="Last name">
+                                </div>
+                                <div>
+                                    <label>Telephone</label>
+                                    <input type="text" class="form-control" placeholder="555-0123">
+                                </div>
+                                <div>
+                                    <label>Email Address</label>
+                                    <input type="email" class="form-control" placeholder="user@company.com">
+                                </div>
+                                <div>
+                                    <label>PIN (4 digits) *</label>
+                                    <input type="password" class="form-control" placeholder="1234" maxlength="4">
+                                </div>
+                                <div>
+                                    <label>Verify PIN *</label>
+                                    <input type="password" class="form-control" placeholder="1234" maxlength="4">
+                                </div>
+                            </div>
+                            <br>
+                            <button class="btn btn-gray">Cancel</button>
+                            <button class="btn btn-green">Add User</button>
+                        </div>
+
+                        <!-- Table -->
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>NAME</th>
+                                    <th>TEAM</th>
+                                    <th>CONTACT</th>
+                                    <th>PIN</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>John Smith</strong><br>
+                                        john.smith@company.com
+                                    </td>
+                                    <td><span class="team-badge">Distribution Emergency Team</span></td>
+                                    <td>555-0101</td>
+                                    <td>••••</td>
+                                    <td class="actions">
+                                        <i class="fa-solid fa-pen"></i>
+                                        <i class="fa-solid fa-trash"></i>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Sarah Johnson</strong><br>
+                                        sarah.johnson@company.com
+                                    </td>
+                                    <td><span class="team-badge">Transmission Response Unit</span></td>
+                                    <td>555-0102</td>
+                                    <td>••••</td>
+                                    <td class="actions">
+                                        <i class="fa-solid fa-pen"></i>
+                                        <i class="fa-solid fa-trash"></i>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="Ipolicies" class="tab-content policiesRightSec ">
+                        <h2>Policies</h2>
+                        <a href="#" class="add-task-btn"><i class="fa-solid fa-plus"></i> Add Task</a>
+                        <div style="clear:both;"></div>
+
+                        <!-- Add New Task Form -->
+                        <div class="form-container">
+                            <h3>Add New Task</h3>
+                            <input type="text" class="form-control" placeholder="Task title...">
+                            <textarea placeholder="Task description..."></textarea>
+                            <button class="btn btn-green">Add Task</button>
+                            <button class="btn btn-gray">Cancel</button>
+                        </div>
+
+                        <!-- Task List -->
+                        <div class="task-item">
+                            <div class="task-info">
+                                <i class="fa-solid fa-grip-vertical"></i>
+                                <div class="task-text">
+                                    <strong>Log Incident</strong>
+                                    <small>Confirm location and severity in platform; set initial perimeter.</small>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <i class="fa-solid fa-trash"></i>
+                            </div>
+                        </div>
+
+                        <div class="task-item">
+                            <div class="task-info">
+                                <i class="fa-solid fa-grip-vertical"></i>
+                                <div class="task-text">
+                                    <strong>Notify & Dispatch</strong>
+                                    <small>Assign nearest qualified response team(s).</small>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <i class="fa-solid fa-trash"></i>
+                            </div>
+                        </div>
+
+                        <div class="task-item">
+                            <div class="task-info">
+                                <i class="fa-solid fa-grip-vertical"></i>
+                                <div class="task-text">
+                                    <strong>Prepare PPE & Equipment</strong>
+                                    <small>Ensure FR clothing, detection devices, SCBA if needed.</small>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <i class="fa-solid fa-trash"></i>
+                            </div>
+                        </div>
+
+                        <div class="task-item">
+                            <div class="task-info">
+                                <i class="fa-solid fa-grip-vertical"></i>
+                                <div class="task-text">
+                                    <strong>Travel to Site</strong>
+                                    <small>Mark "En Route" in platform.</small>
+                                </div>
+                            </div>
+                            <div class="task-actions">
+                                <i class="fa-solid fa-trash"></i>
+                            </div>
+                        </div>
+
+                    </div>
+                   
+
+                </div>
+
+            </div>
+
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" placeholder="Enter full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email" placeholder="user@company.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Role *</label>
+                        <select>
+                            <option>Service Center</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <input type="text" placeholder="Department name">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" placeholder="555-0123">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select>
+                            <option>Active</option>
+                        </select>
+                    </div>
+
+                    <div class="permissions-box">
+                        <h3>Role Permissions</h3>
+                        <p>Can create incidents and have read-only access to other pages. No settings access.</p>
+                        <ul>
+                            <li class="allowed"><i class="fas fa-check"></i> can create incidents</li>
+                            <li class="allowed"><i class="fas fa-check"></i> can view all incidents</li>
+                            <li class="denied"><i class="fas fa-times"></i> can assign teams</li>
+                            <li class="allowed"><i class="fas fa-check"></i> can view reports</li>
+                            <li class="denied"><i class="fas fa-times"></i> can validate incidents</li>
+                            <li class="denied"><i class="fas fa-times"></i> can manage settings</li>
+                            <li class="denied"><i class="fas fa-times"></i> can complete tasks</li>
+                            <li class="allowed"><i class="fas fa-check"></i> has desktop access</li>
+                            <li class="denied"><i class="fas fa-times"></i> can edit incidents</li>
+                            <li class="denied"><i class="fas fa-times"></i> can view settings</li>
+                            <li class="denied"><i class="fas fa-times"></i> can send alerts</li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer d-flex justify-content-end">
+                <button type="submit" class="add-btn"><i class="fas fa-check"></i>Add User</button>
+                <button type="button" class="cancel-btn" data-bs-dismiss="modal"><i class="fas fa-times"></i>Cancel</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/views/setting/setting.js"></script>
@@ -541,4 +1929,55 @@
             }
         });
     });
+
+
+        
+    /*****************for user*************** */
+    //     function showContent(type) {
+    //   if (type === 'user') {
+    //       console.log('hello');
+    //     document.getElementById('mainContainer').classList.add('hidden'); // hide sidebar + right
+    //     document.getElementById('userManagement').classList.remove('hidden'); // show user mgmt
+    //   } else {
+    //     document.getElementById('mainContainer').classList.remove('hidden');
+    //     document.getElementById('userManagement').classList.add('hidden');
+    //   }
+    // }
+
+    // function backToMain() {
+    //   document.getElementById('mainContainer').classList.remove('hidden');
+    //   document.getElementById('userManagement').classList.add('hidden');
+    // }
+        function showContent(type) {
+        if (type === 'user') {
+            document.getElementById('mainContainer').classList.add('hidden');
+            document.getElementById('userManagement').classList.remove('hidden');
+            document.getElementById('teamManagement').classList.add('hidden'); // hide team if open
+        } else if (type === 'team') {
+            document.getElementById('mainContainer').classList.add('hidden');
+            document.getElementById('userManagement').classList.add('hidden'); // hide user mgmt
+            document.getElementById('teamManagement').classList.remove('hidden'); // show team
+        } else {
+            document.getElementById('mainContainer').classList.remove('hidden');
+            document.getElementById('userManagement').classList.add('hidden');
+            document.getElementById('teamManagement').classList.add('hidden');
+        }
+    }
+
+        function backToMain() {
+        // Show main container
+        document.getElementById('mainContainer').classList.remove('hidden');
+        // Hide both user and team management sections
+        document.getElementById('userManagement').classList.add('hidden');
+        document.getElementById('teamManagement').classList.add('hidden');
+
+        // Reset active tab in sidebar
+        document.querySelectorAll(".sidebar ul li").forEach(el => el.classList.remove("active"));
+        document.querySelector('.sidebar ul li[data-tab="source"]').classList.add("active");
+
+        // Hide all tab content
+        document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
+        // Show source tab content
+        document.getElementById('source').classList.add("active");
+    }
 </script>

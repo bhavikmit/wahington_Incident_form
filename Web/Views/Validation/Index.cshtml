@@ -1,4 +1,8 @@
-﻿<style>
+﻿@using System.Web
+@using ViewModels.Incident
+@model ValidationWorkflowViewModel
+
+<style>
     /*****************Header style***************************/
     .header {
         background: #ffffff;
@@ -401,6 +405,11 @@
             background: #dc2626;
         }
 
+    .box.red {
+        background: rgb(241 205 205);
+    }
+
+
     .desc-box {
         background: #fff;
         border: 1px solid #e5e7eb;
@@ -730,9 +739,10 @@
         color: #d1d5db;
     }
 
-    .team-card.selected .uncheck-icon::before{
-        content:"/f058" !important;
+    .team-card.selected .uncheck-icon::before {
+        content: "/f058" !important;
     }
+
     .team-info p {
         font-size: 14px;
         font-weight: 800;
@@ -1335,6 +1345,9 @@
     }
 </style>
 
+<link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
+<script src="https://js.arcgis.com/4.27/"></script>
+
 <header class="header validation-header d-flex align-items-center justify-content-between">
     <!-- Left section -->
     <div class="logo-section d-flex align-items-center">
@@ -1378,704 +1391,13 @@
         </div>
     </div>
 </header>
-<div class="container-fluid">
-    <div class="validation-center">
 
-        <!-- Stats Cards -->
-        <div class="row g-3 mb-4 topCard" >
-            <div class="col-md-4">
-                <div class="stat-card d-flex align-items-center justify-content-start">
-                    <div class="icon pending">
-                        <i class="fa-regular fa-clock text-danger fs-3"></i>
-                    </div>
-                    <div>
-                        <h4 class="mb-0 fw-bold text-danger">3</h4>
-                        <small class="text-muted">Pending Validation</small>
-                    </div>
+<input type="hidden" id="hdn_Id" value="@Model.Id"/>
 
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stat-card d-flex align-items-center justify-content-start">
-                    <div class="icon validated">
-                        <i class="fa-regular fa-circle-check text-success fs-3"></i>
-                    </div>
-                    <div>
-                        <h4 class="mb-0 fw-bold text-success">2</h4>
-                        <small class="text-muted">Validated Today</small>
-                    </div>
+@* <div id="div_ValidationList">
+</div> *@
 
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stat-card d-flex align-items-center justify-content-start">
-                    <div class="icon priority">
-                        <i class="fa-solid fa-triangle-exclamation text-warning fs-3"></i>
-                    </div>
-                    <div>
-                        <h4 class="mb-0 fw-bold text-warning">1</h4>
-                        <small class="text-muted">High Priority</small>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-
-        <!-- Incident List -->
-        <div class="card shadow-sm IncidentList" >
-            <div class="card-header bg-white fw-bold">Incidents Pending Validation</div>
-            <div class="list-group list-group-flush">
-
-                <!-- Incident Item -->
-                <div class="list-group-item d-flex justify-content-between align-items-start incident-item">
-                    <div class="list-group-card-info">
-                        <div class="list-group-header mb-1 d-flex align-items-center">
-                            <h4 class="mb-0">INC-0002</h4>
-                            <span class="badge bg-warning text-dark">Moderate</span>
-                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
-                        </div>
-                        <div class="mb-1 fw-semibold descri">Third-Party Damage</div>
-                        <p class="mb-0 text-muted">3721 Service Ave, City, ST 12345</p>
-                        <p class="text-muted mb-0 ">Sample incident description 2</p>
-                    </div>
-                    <button class="btn btn-primary align-self-center">
-                        <i class="fa-regular fa-circle-check"></i> Validate
-                    </button>
-                </div>
-
-                <!-- Incident Item -->
-                <div class="list-group-item d-flex justify-content-between align-items-start incident-item">
-                    <div class="list-group-card-info">
-                        <div class="list-group-header mb-1 d-flex align-items-center">
-                            <h4 class="mb-0">INC-0002</h4>
-                            <span class="badge bg-danger text-dark">High</span>
-                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
-                        </div>
-
-                        <p class="mb-1 fw-semibold descri">Equipment Failure</p>
-                        <p class="mb-0 text-muted">1139 Service Ave, City, ST 12345</p>
-                        <small class="text-muted mb-0">Sample incident description 13</small>
-                    </div>
-                    <button class="btn btn-primary align-self-center">
-                        <i class="fa-regular fa-circle-check"></i> Validate
-                    </button>
-                </div>
-
-                <!-- Incident Item -->
-                <div class="list-group-item d-flex justify-content-between align-items-start incident-item">
-                    <div class="list-group-card-info">
-                        <div class="list-group-header mb-1 d-flex align-items-center">
-                            <h4 class="mb-0">INC-0015</h4>
-                            <span class="badge bg-success text-dark">Low</span>
-                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
-                        </div>
-
-                        <p class="mb-1 fw-semibold descri">Gas Leak</p>
-                        <p class="mb-0 text-muted">5573 Service Ave, City, ST 12345</p>
-                        <small class="text-muted mb-0">Sample incident description 15</small>
-                    </div>
-                    <button class="btn btn-primary align-self-center">
-                        <i class="fa-regular fa-circle-check"></i> Validate
-                    </button>
-                </div>
-
-            </div>
-        </div>
-        <div class="card shadow-sm recentValidated mt-4" >
-            <div class="card-header bg-white fw-bold">Recently Validated</div>
-            <div class="list-group list-group-flush">
-
-                <!-- Validated Incident -->
-                <div class="list-group-item d-flex justify-content-between align-items-center validated-item">
-                    <div class="list-group-card-info">
-                        <div class="list-group-header mb-1 d-flex align-items-center">
-                            <h4 class="mb-0">INC-0002</h4>
-                            <span class="badge bg-orange text-dark">Validated</span>
-                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
-                        </div>
-                        <p class="mb-0 text-muted">Third-Party Damage</p>
-                    </div>
-                    <small class="text-muted">03:57 PM</small>
-                </div>
-
-                <!-- Validated Incident -->
-                <div class="list-group-item d-flex justify-content-between align-items-center validated-item">
-                    <div class="list-group-card-info">
-                        <div class="list-group-header mb-1 d-flex align-items-center">
-                            <h4 class="mb-0">INC-0215</h4>
-                            <span class="badge bg-orange text-dark">Validated</span>
-                            <small class="text-muted">Sep 03, 2025 04:47 AM</small>
-                        </div>
-                        <p class="mb-0 text-muted">Third-Party Damage</p>
-                    </div>
-                    <small class="text-muted">03:57 PM</small>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="workflow" style="display:block">
-
-            <!-- Header -->
-            <div class="mb-4 titleofWorkflow">
-                <h3 class="fw-bold">Validation Workflow - INC-0003</h3>
-                <p class="text-muted">Manager validation and response coordination</p>
-            </div>
-
-            <!-- Step Navigation -->
-            <div class="steps mb-4 d-flex justify-content-between">
-                <div class="step active" data-step="1">
-                    <div class="step-icon">
-                        <i class="fa-regular fa-file-lines"></i>
-                    </div>
-                    <div class="step-label">Incident Details</div>
-                </div>
-                <div class="step" data-step="2">
-                    <div class="step-icon">
-                        <i class="fa-solid fa-triangle-exclamation"></i>
-                    </div>
-                    <div class="step-label">Validation</div>
-                </div>
-                <div class="step" data-step="3">
-                    <div class="step-icon">
-                        <i class="fa-solid fa-people-group"></i>
-                    </div>
-                    <div class="step-label">Response Teams</div>
-                </div>
-                <div class="step" data-step="4">
-                    <div class="step-icon">
-                        <i class="fa-regular fa-circle-check"></i>
-                    </div>
-                    <div class="step-label">Policies & Procedures</div>
-                </div>
-                <div class="step" data-step="5">
-                    <div class="step-icon">
-                        <i class="fa-regular fa-comment-dots"></i>
-                    </div>
-                    <div class="step-label">Communication</div>
-                </div>
-            </div>
-
-
-
-            <!-- Step Content -->
-            <div class="shadow-sm step-content" id="step-1">
-                <div class="details-sec incident-details-sec p-6">
-                    <div class="detailCard">
-                        <div class="Stepcard callerInfo ">
-                            <h3>Caller Information</h3>
-
-                            <div class="info-item">
-                                <i class="fa-regular fa-user"></i>
-                                <span class="info-title">Caller 5</span>
-                                <span class="info-sub">Customer</span>
-                            </div>
-
-                            <div class="info-item">
-                                <i class="fa-solid fa-phone"></i>
-                                <span class="info-title">555-506-6247</span>
-                                <span class="info-sub">Primary contact</span>
-                            </div>
-
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span class="info-title">Caller Address</span>
-                                <span class="info-sub">3598 Main St, City, ST 12345</span>
-                            </div>
-
-                            <div class="info-item">
-                                <i class="fa-regular fa-calendar"></i>
-                                <span class="info-title">Call Time</span>
-                                <span class="info-sub">Sep 05, 2025 12:14 AM</span>
-                            </div>
-                        </div>
-
-                        <!-- Incident Location -->
-                        <div class="Stepcard incidentLoc ">
-                            <h3>Incident Location</h3>
-
-                            <div class="info-item">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <span class="info-title">Address</span>
-                                <span class="info-sub">284 Service Ave, City, ST 12345</span>
-                                <a href="#" class="map-link"><i class="fa-solid fa-map"></i> View on Map</a>
-                            </div>
-
-                            <div class="info-item">
-                                <i class="fa-solid fa-road"></i>
-                                <span class="info-title">Nearest Intersection</span>
-                                <span class="info-sub">Main St & Service Ave</span>
-                            </div>
-
-                            <div class="info-item">
-                                <i class="fa-solid fa-cube"></i>
-                                <span class="info-title">Affected Assets</span>
-                                <div class="assets">
-                                    <span>PIPE-001</span>
-                                    <span>VALVE-123</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="Stepcard incidentDetail mt-4">
-                        <h3>Incident Details</h3>
-
-                        <div class="row">
-                            <div class="col">
-                                <div class="info-item">
-
-                                    <span class="info-title">Event Type</span>
-                                </div>
-                                <div>Third-Party Damage</div>
-                            </div>
-
-                            <div class="col">
-                                <div class="info-item">
-
-                                    <span class="info-title">Reported Severity</span>
-                                </div>
-                                <span class="badge orange">Moderate</span>
-                            </div>
-
-                            <div class="col">
-                                <div class="info-item">
-
-                                    <span class="info-title">Current Status</span>
-                                </div>
-                                <span class="badge red">Submitted</span>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-
-                            <span class="info-title">Description</span>
-                        </div>
-                        <div class="desc-box">
-                            Sample incident description 1
-                        </div>
-                    </div>
-                    <div class="Stepcard mt-4 safty">
-                        <h3>Safety Assessment</h3>
-
-                        <div class="grid">
-                            <div class="box gray">
-                                <span class="label">Gas Odor Present</span>
-                                <span class="value">Unknown</span>
-                            </div>
-
-                            <div class="box green">
-                                <span class="label">Hissing Sound</span>
-                                <span class="value">No</span>
-                            </div>
-
-                            <div class="box green">
-                                <span class="label">Visible Damage/Fire</span>
-                                <span class="value">No</span>
-                            </div>
-
-                            <div class="box green">
-                                <span class="label">People Injured</span>
-                                <span class="value">No</span>
-                            </div>
-
-                            <div class="box green">
-                                <span class="label">Evacuation Required</span>
-                                <span class="value">No</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class=" shadow-sm step-content d-none" id="step-2">
-                <div class="details-sec validation-details-sec p-6">
-                    <div class="detailCard">
-                        <div class="Bordercard">
-                            <h3>Validate Incident</h3>
-
-                            <div class="form-group">
-                                <label>Confirmed Severity Level <span style="color:red">*</span></label>
-                                <select>
-                                    <option>Select confirmed severity</option>
-                                    <option>Low</option>
-                                    <option>Moderate</option>
-                                    <option>High</option>
-                                    <option>Critical</option>
-                                </select>
-                                <small>Original severity: <strong>Moderate</strong></small>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Discovery Perimeter <span style="color:red">*</span></label>
-                                <select>
-                                    <option>Select radius</option>
-                                    <option>50m</option>
-                                    <option>100m</option>
-                                    <option>200m</option>
-                                </select>
-                                <small>This creates a safety perimeter around the incident location</small>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Validation Notes</label>
-                                <textarea placeholder="Add validation notes, observations, or additional context..."></textarea>
-                            </div>
-                        </div>
-
-                        <!-- Right: Actions -->
-                        <div class="Bordercard">
-                            <h3>Alternative Actions</h3>
-                            <button class="btn-danger" data-bs-toggle="modal" data-bs-target="#AlarmModal"><i class="fa-solid fa-circle-xmark"></i> Mark as False Alarm</button>
-                            <div class="alert">
-                                <strong>False Alarm:</strong> Use this option if the incident report is determined to be invalid, duplicate, or does not require emergency response.
-                            </div>
-
-                            <h3>Location Preview</h3>
-                            <div class="location-preview">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <p>284 Service Ave, City, ST 12345</p>
-                                <a href="#" class="map-link">View Full Map</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class=" shadow-sm step-content d-none" id="step-3">
-                <div class="details-sec teams-details-sec p-6">
-
-                    <div class="responseCard">
-                        <div class="info-box">
-                            <i class="fa-solid fa-people-group"></i>
-                            Response Team Assignment <br>
-                            <small>Select the appropriate response teams based on the incident type and severity. Multiple teams can be assigned.</small>
-                        </div>
-
-                        <!-- Selected Teams -->
-                        <div class="selected-box" id="selectedBox">
-                            <strong id="selectedCount">0 Teams Selected</strong>
-                            <div id="selectedTags"></div>
-                        </div>
-                        <div class="team-card" data-name="Distribution Emergency Team">
-                            <div class="team-left">
-                                <div class="team-icon"><i class="fa-solid fa-user-group"></i></div>
-                                <div class="team-info">
-                                    <h4>Distribution Emergency Team <span class="badge blue">Distribution</span></h4>
-                                    <div class="phone"><i class="fa-solid fa-phone"></i> 555-DIST-001</div>
-                                    <p class="mb-0">Specializations:</p>
-                                    <div class="specializations">
-                                        <span>Gas Leaks</span>
-                                        <span>Valve Repairs</span>
-                                        <span>Meter Issues</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <i class="fa-regular fa-circle uncheck-icon"></i>
-                        </div>
-
-                        <div class="team-card" data-name="Transmission Response Unit">
-                            <div class="team-left">
-                                <div class="team-icon"><i class="fa-solid fa-user-group"></i></div>
-                                <div class="team-info">
-                                    <h4>Transmission Response Unit <span class="badge green">Transmission</span></h4>
-                                    <div class="phone"><i class="fa-solid fa-phone"></i> 555-TRANS-001</div>
-                                    <p class="mb-0">Specializations:</p>
-                                    <div class="specializations">
-                                        <span>Pipeline Repairs</span>
-                                        <span>High Pressure Systems</span>
-                                        <span>Compressor Issues</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <i class="fa-regular fa-circle uncheck-icon"></i>
-                        </div>
-
-                        <div class="team-card " data-name="Emergency Contractors">
-                            <div class="team-left">
-                                <div class="team-icon"><i class="fa-solid fa-user-group"></i></div>
-                                <div class="team-info">
-                                    <h4>Emergency Contractors <span class="badge orange">Contractors</span></h4>
-                                    <div class="phone"><i class="fa-solid fa-phone"></i> 555-CONTRACT-001</div>
-                                    <p class="mb-0">Specializations:</p>
-                                    <div class="specializations">
-                                        <span>Excavation</span>
-                                        <span>Third-Party Damage</span>
-                                        <span>Heavy Equipment</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <i class="fa-regular fa-circle uncheck-icon"></i>
-                        </div>
-
-                        <div class="summary">
-                            <h3>Assignment Summary</h3>
-                            <div class="summary-card">
-
-                                <div class="summary-item">
-
-                                    <label>Teams Assigned</label>
-                                    <div class="value">3</div>
-                                </div>
-                                <div class="summary-item right">
-                                    <label>Estimated Response Time</label>
-                                    <div class="value">15-30 min</div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class=" shadow-sm step-content d-none" id="step-4">
-                <div class="details-sec policies-details-sec p-6">
-                    <div class="info-box">
-                        <i class="fa-solid fa-book"></i>
-                        Policies & Procedures
-                        <small>Select and customize the policies and procedures for this incident response. Assign teams to each task.</small>
-                    </div>
-
-
-                    <div class="progress-box">
-                        <div class="label-percentage d-flex align-item-center justify-content-between">
-                            <label>Overall Progress</label>
-                            <div class="progress-label">0%</div>
-                        </div>
-                        <div class="progress-bar">
-                            <span style="width:0%;"></span>
-                        </div>
-
-                    </div>
-
-                    <div class="Bordercard">
-                        <div class="polices-task-add d-flex align-items-center justify-content-between">
-                            <h4>Add Policies</h4>
-                            <div class="add-task"><i class="fa fa-plus">Add Task</i></div>
-                        </div>
-                        <div class="form-box">
-                            <input type="text" placeholder="Task title...">
-                            <textarea placeholder="Task description..."></textarea>
-                            <div class="form-actions">
-                                <button class="btn btn-add">Add Task</button>
-                                <button class="btn btn-cancel">Cancel</button>
-                            </div>
-                        </div>
-
-
-                        <div class="task-grid">
-                            <div class="task-card">
-                                <h5>Initial Site Assessment</h5>
-                                <p>Conduct preliminary safety assessment and secure the area</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-
-                            <div class="task-card">
-                                <h5>Gas Detection and Monitoring</h5>
-                                <p>Deploy gas detection equipment and establish monitoring protocols</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-
-                            <div class="task-card">
-                                <h5>Evacuation Procedures</h5>
-                                <p>Implement evacuation protocols if required based on safety assessment</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-
-                            <div class="task-card">
-                                <h5>Utility Isolation</h5>
-                                <p>Isolate affected utilities and establish safe work zone</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-
-                            <div class="task-card">
-                                <h5>Repair and Restoration</h5>
-                                <p>Execute repair operations and restore utility services</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-
-                            <div class="task-card">
-                                <h5>Documentation and Reporting</h5>
-                                <p>Compile incident data and submit reports for compliance</p>
-                                <a href="#"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="Bordercard selectPoliciesTask">
-                        <div class="section-title">Selected Policies & Tasks</div>
-                        <div class="task-card">
-                            <div class="task-info">
-                                <h4>Gas Detection and Monitoring</h4>
-                                <p>Deploy gas detection equipment and establish monitoring protocols</p>
-                                <div class="assigned-teams">Assigned Teams:</div>
-                                <div class="checkbox-group">
-                                    <label><input type="checkbox"> Safety Team</label>
-                                    <label><input type="checkbox" checked> Transmission Team</label>
-                                </div>
-                            </div>
-                            <div class="task-actions">
-                                <select>
-                                    <option>Not Started</option>
-                                    <option>In Progress</option>
-                                    <option>Completed</option>
-                                </select>
-                                <a href="#" class="remove-link">Remove</a>
-                            </div>
-                        </div>
-
-
-                        <div class="task-card">
-                            <div class="task-info">
-                                <h4>Initial Site Assessment</h4>
-                                <p>Conduct preliminary safety assessment and secure the area</p>
-                                <div class="assigned-teams">Assigned Teams:</div>
-                                <div class="checkbox-group">
-                                    <label><input type="checkbox" checked> Safety Team</label>
-                                    <label><input type="checkbox"> Transmission Team</label>
-                                </div>
-                            </div>
-                            <div class="task-actions">
-                                <select>
-                                    <option>Not Started</option>
-                                    <option>In Progress</option>
-                                    <option>Completed</option>
-                                </select>
-                                <a href="#" class="remove-link">Remove</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class=" shadow-sm step-content d-none" id="step-5">
-                <div class="details-sec communication-detail-sec p-6">
-                    <div class="info-box">
-                        <i class="fa-regular fa-comment-dots"></i>
-                        Communication Center
-                        <small>
-                            Communicate with response teams, add notes, and share files related to this incident.
-                        </small>
-                    </div>
-
-                    <div class="Bordercard newCommunication">
-                        <h3>New Communication</h3>
-
-                        <div class="form-grid">
-                            <div>
-                                <label for="msgType">Message Type</label>
-                                <select id="msgType">
-                                    <option>Internal Note</option>
-                                    <option>Email</option>
-                                    <option>SMS</option>
-                                </select>
-                            </div>
-                            <div class="recipients">
-                                <label><input type="checkbox"> Contractors</label>
-                                <label><input type="checkbox"> Transmission Team</label>
-                                <label><input type="checkbox"> Emergency Team</label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label for="message">Message</label>
-                            <textarea id="message" placeholder="Enter your message..."></textarea>
-                        </div>
-
-                        @* <div class="attachments">
-                            <button class="attach-btn"><i class="fa-solid fa-paperclip"></i> Attach Files</button>
-                        </div> *@
-                        <div class="file-upload-container">
-                            <!-- Hidden file input -->
-                            <input type="file" id="fileInput" name="attachfile" style="display: none;" multiple>
-
-                            <!-- Button to trigger file input -->
-                            <button class="attach-btn btn-upload" onclick="document.getElementById('fileInput').click()">
-                                <i class="fa-solid fa-paperclip"></i> Attach Files
-                            </button>
-
-                            <!-- File preview list -->
-
-                            <div class="file-name " id="fileList"></div>
-                            @* <button class="remove-btn">Remove</button> *@
-
-                            @*  <div class="file-list" id="fileList"></div> *@
-                        </div>
-
-
-
-                        <button class="send-btn"><i class="fa-regular fa-paper-plane"></i> Send Communication</button>
-                    </div>
-                    <div class="Bordercard communicationHistory">
-                        <h3>Communication History</h3>
-
-                        <!-- File Entry -->
-                        <div class="entry file">
-                            <div class="left">
-                                <div class="icon-wrapper">
-                                    <i class="fas fa-file-alt"></i>
-                                </div>
-                                <div class="details">
-                                    <div class="top">
-                                        Current Manager <span class="label">File</span>
-                                    </div>
-                                    <div>tes123</div>
-                                    <div class="attachments">
-                                        <strong>Attachments:</strong> <i class="fas fa-paperclip"></i>
-                                        <a href="#">constr.png</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="timestamp">Sep 05, 07:05 PM</div>
-                        </div>
-
-                        <!-- Note Entry -->
-                        <div class="entry note">
-                            <div class="left">
-                                <div class="icon-wrapper">
-                                    <i class="fas fa-comment"></i>
-                                </div>
-                                <div class="details">
-                                    <div class="top">
-                                        Current Manager <span class="label">Note</span>
-                                    </div>
-                                    <div>test233</div>
-                                </div>
-                            </div>
-                            <div class="timestamp">Sep 05, 07:05 PM</div>
-                        </div>
-
-                        <!-- Note Entry -->
-                        <div class="entry note">
-                            <div class="left">
-                                <div class="icon-wrapper">
-                                    <i class="fas fa-comment"></i>
-                                </div>
-                                <div class="details">
-                                    <div class="top">
-                                        Current Manager <span class="label">Note</span>
-                                    </div>
-                                    <div>tst</div>
-                                </div>
-                            </div>
-                            <div class="timestamp">Sep 05, 07:05 PM</div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Navigation Buttons -->
-            <div class="d-flex justify-content-between mt-3">
-                <button class="btn btn-light btnPrevious" id="prevBtn"><i class="fa-solid fa-arrow-left"></i> Previous</button>
-                <button class="btn btn-primary btnNext" id="nextBtn">Next <i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-        </div>
-
-
-    </div>
+<div id="div_ValidationDtl">
 </div>
 
 <div class="modal fade" id="AlarmModal" tabindex="-1" aria-labelledby="AlarmModalLabel" aria-hidden="true">
@@ -2120,7 +1442,7 @@
 </div>
 
 <!----------------Step next previous script---------------------->
-@section Scripts {
+@* @section Scripts {
     <script>
         let currentStep = 1;
         const totalSteps = 5;
@@ -2157,46 +1479,46 @@
 
         showStep(currentStep);
     </script>
-}
+} *@
 
 <script>
-    const teamCards = document.querySelectorAll(".team-card");
-    const selectedBox = document.getElementById("selectedBox");
-    const selectedCount = document.getElementById("selectedCount");
-    const selectedTags = document.getElementById("selectedTags");
+    // const teamCards = document.querySelectorAll(".team-card");
+    // const selectedBox = document.getElementById("selectedBox");
+    // const selectedCount = document.getElementById("selectedCount");
+    // const selectedTags = document.getElementById("selectedTags");
 
-    function updateSelectedTeams() {
-      const selected = document.querySelectorAll(".team-card.selected");
-      selectedCount.textContent = `${selected.length} Team${selected.length !== 1 ? "s" : ""} Selected`;
+    // function updateSelectedTeams() {
+    //   const selected = document.querySelectorAll(".team-card.selected");
+    //   selectedCount.textContent = `${selected.length} Team${selected.length !== 1 ? "s" : ""} Selected`;
 
-      selectedTags.innerHTML = "";
-      selected.forEach(card => {
-        const tag = document.createElement("span");
-        tag.classList.add("tag");
-        tag.textContent = card.dataset.name;
-        selectedTags.appendChild(tag);
-      });
-    }
+    //   selectedTags.innerHTML = "";
+    //   selected.forEach(card => {
+    //     const tag = document.createElement("span");
+    //     tag.classList.add("tag");
+    //     tag.textContent = card.dataset.name;
+    //     selectedTags.appendChild(tag);
+    //   });
+    // }
 
-    teamCards.forEach(card => {
-      card.addEventListener("click", () => {
-        card.classList.toggle("selected");
+    // teamCards.forEach(card => {
+    //   card.addEventListener("click", () => {
+    //     card.classList.toggle("selected");
 
-        const icon = card.querySelector("i:last-child");
-        if (card.classList.contains("selected")) {
-          icon.classList.remove("fa-circle", "uncheck-icon");
-          icon.classList.add("fa-circle-check", "check-icon");
-        } else {
-          icon.classList.remove("fa-circle-check", "check-icon");
-          icon.classList.add("fa-circle", "uncheck-icon");
-        }
+    //     const icon = card.querySelector("i:last-child");
+    //     if (card.classList.contains("selected")) {
+    //       icon.classList.remove("fa-circle", "uncheck-icon");
+    //       icon.classList.add("fa-circle-check", "check-icon");
+    //     } else {
+    //       icon.classList.remove("fa-circle-check", "check-icon");
+    //       icon.classList.add("fa-circle", "uncheck-icon");
+    //     }
 
-        updateSelectedTeams();
-      });
-    });
+    //     updateSelectedTeams();
+    //   });
+    // });
 
-    // Initialize
-    updateSelectedTeams();
+    // // Initialize
+    // updateSelectedTeams();
 
 
     //image uplaod and preview
@@ -2231,3 +1553,10 @@
       fileInput.dispatchEvent(new Event("change"));
     }
 </script>
+
+
+
+
+
+<script src="~/js/custom/loader/loader.js"></script>
+<script src="~/js/views/incident/incident-validation.js"></script>

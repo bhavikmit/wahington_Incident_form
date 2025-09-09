@@ -53,7 +53,7 @@
                             <span class="badge rounded-pill badge-unknown px-3 py-2">Unknown</span>
                         }
                     </td>
-                  
+
                     <td style="text-wrap:auto">@item.EventTypeId</td>
                     <td>
                         <div class="event-type">
@@ -86,19 +86,35 @@
                         <a href="javascript:void(0);"
                            class="btnIcon eyeIcon view-incident"
                            data-id="@item.Id"
-                           title="View">
+                           title="View Details">
                             <i class="fa-regular fa-eye"></i>
                         </a>
+
+                        @if (item.StatusLegend == StatusLegendEnum.Submitted.ToString())
+                        {
+
+                            <a href="/Validation/Index/@item.Id"
+                               class="btnIcon validateIcon validate-incident"
+                               title="Validate Incident" data-incident-id="@item.Id">
+                                <i class="fa-regular fa-circle-check"></i>
+                            </a>
+
+                        }
+                        @if (item.StatusLegend == StatusLegendEnum.Dispatched.ToString() || item.StatusLegend == StatusLegendEnum.Started.ToString())
+                        {
+                            <a href="/IncidentProgress/Index/@item.Id"
+                               class="viewProgress"
+                               data-id="@item.Id"
+                               title="View Progress">
+                                <i class="fa fa-bar-chart"></i>
+                            </a>
+                        }
+
                         <a href="javascript:void(0);"
                            class="btnIcon noteIcon note-incident"
                            title="Notes"
                            data-id="@item.Id">
                             <i class="fa-regular fa-message"></i>
-                        </a>
-                        <a href="javascript:void(0);"
-                           class="btnIcon validateIcon validate-incident"
-                           title="Validate">
-                            <i class="fa-regular fa-circle-check"></i>
                         </a>
 
                         <a href="javascript:void(0);"
@@ -108,7 +124,7 @@
                             <i class="fa-regular fa-clock"></i>
                         </a>
 
-                        <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit"><i class="fa-regular fa-edit"></i></a>
+                        <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit Incident"><i class="fa-regular fa-edit"></i></a>
                     </td>
                 </tr>
             }

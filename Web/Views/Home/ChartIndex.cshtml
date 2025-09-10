@@ -541,13 +541,6 @@
                             <div id="map" style="height:500px; width:100%;"></div>
                         </div>
 
-                        <!-- Top Incident Card -->
-                        <div class="incident-card" style="display:none">
-                            <h3>INC-0001 <span class="status-badge started">Started</span></h3>
-                            <p>8204 Service Ave, City, ST 12345</p>
-                            <p>Gas Leak - Moderate</p>
-                        </div>
-
                         <!-- Recent Incidents List -->
                         <div class="incident-list">
                             <h3>Recent Incidents on Map</h3>
@@ -558,8 +551,8 @@
                                     {
                                         <div class="incident-item">
                                             <div class="incident-details">
-                                                <i class="fa-solid fa-circle started incident-icon"></i>
-                                                <div class="incident-info">
+                                                <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.incidentstatusColor"></span>
+                                                <div class="incident-info" style="margin-left: 10px;">
                                                     <h4>@item.incidentId</h4>
                                                     <p>@item.incidentloc</p>
                                                     <p>@item.eventtype</p>

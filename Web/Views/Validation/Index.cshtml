@@ -1392,7 +1392,8 @@
     </div>
 </header>
 
-<input type="hidden" id="hdn_Id" value="@Model.Id"/>
+<input type="hidden" id="hdn_Id" value="@Model.Id" />
+<input type="hidden" id="hdn_user_name" value="@User.Identity.Name" />
 
 @* <div id="div_ValidationList">
 </div> *@
@@ -1433,7 +1434,6 @@
 
                 <div class="button-group">
                     <button class="btn btn-undo" data-bs-dismiss="modal"><i class="fa-solid fa-arrow-left"></i> Undo False Alarm</button>
-                    <button class="btn btn-confirm"><i class="fa-solid fa-circle-xmark"></i> Confirm False Alarm</button>
                     <button class="btn btn-cancel"><i class="fa-solid fa-xmark"></i> Cancel Incident</button>
                 </div>
             </div>

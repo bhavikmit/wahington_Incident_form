@@ -121,5 +121,6 @@ namespace ViewModels.Dashboard
         public string eventtype { get; set; } = default!;
         public string severity { get; set; } = default!;
         public string incidentstatus { get; set; } = default!;
+        public string incidentstatusColor { get; set; } = default!;
     }
 }

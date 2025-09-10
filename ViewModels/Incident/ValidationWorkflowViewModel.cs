@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,7 @@ namespace ViewModels.Incident
         public List<RecentlyIncidentValidationViewModel> IVRecentlyList { get; set; } = new();
         public List<IncidentResponseTeamViewModel> IVResponseTeamList { get; set; } = new();
         public List<IncidentPolicyViewModel> IVPolicyList { get; set; } = new();
+        public IncidentCommunicationViewModel IVCommunication { get; set; } = new();
     }
 
     public class IncidentValidationCountViewModel : BaseIncidentValidationViewModel
@@ -105,5 +107,41 @@ namespace ViewModels.Incident
         public long PolicyId { get; set; } = default!;
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
+        public List<SelectListItem> assignTeams { get; set; } = new();
+    }
+    public class IncidentCommunicationViewModel
+    {
+        public List<IFormFile>? File { get; set; }
+        public string Notes { get; set; } = default!;
+        public string? ImageUrl { get; set; } = default!;
+    }
+    public class IncidentSubmitViewModel : BaseIncidentValidationViewModel
+    {
+        public long ConfirmedSeverityLevelId { get; set; }
+        public long DiscoveryPerimeterId { get; set; }
+        public string ValidationNotes { get; set; } = default!;
+        public string AssignResponseTeams { get; set; } = default!;
+        public string listPolicyVM { get; set; } = default!;
+        public string listCommunicationVM { get; set; } = default!;
+        public bool IsMarkFalseAlarm { get; set; } = false;
+        public List<IncidentSubmitPolicyViewModel> listSubmitPolicyVM { get; set; } = new();
+        public List<IncidentSubmitCommunicationViewModel> listSubmitCommunicationVM { get; set; } = new();
+    }
+    public class IncidentSubmitPolicyViewModel
+    {
+        public long PolicyId { get; set; }
+        public long Status { get; set; }
+        public List<long> Teams { get; set; }= new();
+    }
+    public class IncidentSubmitCommunicationViewModel
+    {
+        public string UserName { get; set; } = default!;
+        public string Message { get; set; } = default!;
+        public string TimeStamp { get; set; } = default!;
+        public string Recipients { get; set; } = default!;
+        public long MessageType { get; set; }
+
+        // Files bind from FormData, not JSON
+        public List<IFormFile>? Files { get; set; }
     }
 }

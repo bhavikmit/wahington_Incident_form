@@ -15,6 +15,7 @@ using Helpers.Extensions;
 using Helpers.File;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -265,6 +266,8 @@ namespace Repositories.Common
 
             try
             {
+                var assignTeams = await _db.AssignResponseTeams.Where(p => !p.IsDeleted).ToListAsync();
+
                 var policies = await _db.Policies.Where(p => !p.IsDeleted).ToListAsync();
 
                 foreach (var item in policies)
@@ -273,7 +276,12 @@ namespace Repositories.Common
                     {
                         PolicyId = item.Id,
                         Name = item.Name,
-                        Description = item.Description
+                        Description = item.Description,
+                        assignTeams = assignTeams.Select(p => new SelectListItem()
+                        {
+                            Text = p.Name,
+                            Value = p.Id.ToString()
+                        }).ToList()
                     });
                 }
 
@@ -285,6 +293,57 @@ namespace Repositories.Common
                 return new List<IncidentPolicyViewModel>();
             }
         }
+
+        public async Task<long> SavePolicy(PolicyModifyViewModel request)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                // Map ViewModel → Entity
+                var policy = new Policy
+                {
+                    Name = request.Name,
+                    Description = request.Description
+                };
+
+                // Save
+                await _db.Policies.AddAsync(policy);
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return policy.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error SavePolicy.");
+                return 0;
+            }
+        }
+
+        public async Task<List<SelectListItem>> GetTeamsList()
+        {
+            List<SelectListItem> assignResponseTeams = new();
+            try
+            {
+                var assignResponses = await _db.AssignResponseTeams.Where(p => !p.IsDeleted)
+                             .ToListAsync();
+                assignResponseTeams = assignResponses.Select(p => new SelectListItem()
+                {
+                    Text = p.Name,
+                    Value = p.Id.ToString()
+                }).ToList();
+
+                return assignResponseTeams;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetTeamsList.");
+                return new List<SelectListItem>();
+            }
+        }
+
         #region private event
         private async Task<string> GetEventTypes(string ids)
         {

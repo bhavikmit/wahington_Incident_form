@@ -191,11 +191,13 @@
         }
 
     /* Tab visibility */
-    .tab-content {
+    .setting-tab-content ,
+    .team-tab-content {
         display: none;
     }
 
-        .tab-content.active {
+        .setting-tab-content.active ,
+        .team-tab-content.active {
             display: block;
         }
 
@@ -253,7 +255,7 @@
         }
 
     .actions {
-        /* display: flex; */
+        display: flex;
         gap: 12px;
         justify-content: center;
         align-items:flex-start;
@@ -391,7 +393,8 @@
         box-shadow: none;
     }
 
-    .backIcon {
+    .backIcon ,
+    .team-management .backIcon {
         display: flex;
         align-items: center;
         margin-right: 15px;
@@ -405,13 +408,14 @@
         }
 
         .user-management .header p ,
-        .team-management .header p {
+    .team-management .header p {
             margin: 5px 0 0;
             font-size: 14px;
             color: #6b7280;
         }
 
-    .user-management .backIcon i.fa{
+    .user-management .backIcon i.fa,
+    .team-management .backIcon i.fa {
         font-size: 18px;
         color:#f54e00;
     }
@@ -713,7 +717,7 @@
             color: #888;
         }
         /***********************Add user modal style************************/
-    form {
+    #addUserModal .modal-body form {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
@@ -824,13 +828,17 @@
         padding: 15px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
+    .teamRightSec .cardHeader{
+          display: flex;
+            justify-content: space-between;
+            align-items: center;
 
+    }
         .teamRightSec .card h4 {
             margin: 0;
             font-size: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            
+           
         }
 
             .teamRightSec .card h4 .fa-pen {
@@ -863,7 +871,10 @@
         border: 1px solid #cdddfc;
         border-radius: 12px;
         padding: 20px;
-        max-width: 600px;
+        /* max-width: 600px; */
+    }
+    .teamRightSec .cards{
+        margin-top:16px;
     }
 
         .form-container h3 {
@@ -887,6 +898,10 @@
         margin-bottom: 5px;
         display: block;
     }
+    .editDeIcons{
+        width:46px;
+    }
+
 
     .addNewTeam .specialization-link {
         color: #2563eb;
@@ -894,6 +909,7 @@
         cursor: pointer;
         margin-bottom: 15px;
         display: inline-block;
+        font-weight:800;
     }
 
     .addNewTeam .btn {
@@ -913,6 +929,26 @@
     .addNewTeam .btn-gray {
         background: #4b5563;
         color: white;
+    }
+
+    .teamRightSec .card p {
+         font-size:14px;
+         font-weight:400;
+        margin-top:0;
+        margin-bottom:6px;
+        color:grey;
+     }
+     .teamRightSec .card .lbl{
+         font-size:14px;
+         font-weight:700;
+      color:dimgrey;
+     }
+
+     .editDeIcons .fa-edit{
+        color:orange;
+    }
+     .editDeIcons .fa-trash-alt{
+        color:red;
     }
     /*************aadd new user and user list style*****************/
     .userRightSec .form-container {
@@ -1010,6 +1046,9 @@
     .userRightSec .fa-trash {
         color: red;
     }
+    .addCancelIcons{
+        margin-left:auto;
+    }
     /******************Policies , add new policies style************************/
     .policiesRightSec .add-task-btn {
         background: #22c55e;
@@ -1103,6 +1142,17 @@
         color: red;
         cursor: pointer;
     }
+    .addMoreSpecialization{
+        display: flex;
+        align-items: center;
+        
+    }
+    .addMoreSpecialization div{
+            margin-top: -10px;
+            margin-left: 6px;
+            color: red;
+        
+    }
 </style>
 
 <header class="header dashboard-header d-flex align-items-center justify-content-between">
@@ -1152,7 +1202,7 @@
 
         <div class="settings-container" id="mainContainer">
             <!-- Sidebar -->
-            <div class="sidebar">
+            <div class="sidebar settingsidebar">
                 <h3>Configuration</h3>
                 <ul>
                     <li class="active settingAllTab" data-tab="source"><i class="fa-solid fa-user-group"></i> Source</li>
@@ -1171,7 +1221,7 @@
 
             <!-- Content -->
             <div class="content" id="rightContent">
-                <div id="source" class="tab-content active">
+                <div id="source" class="setting-tab-content active">
                     <div class="d-flex justify-content-between">
                         <h3>Source</h3>
                         <button class="btn btn-primary btnAddNewSource"><i class="fa-solid fa-plus"></i> Add New</button>
@@ -1181,7 +1231,7 @@
                     <div id="sourceList">
                     </div>
                 </div>
-                <div id="event" class="tab-content">
+                <div id="event" class="setting-tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Event Type</h3>
                         <button class="btn btn-primary btnAddNewEvent">
@@ -1194,7 +1244,7 @@
                     <div id="eventTypeList">
                     </div>
                 </div>
-                <div id="severity" class="tab-content">
+                <div id="severity" class="setting-tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Severity Levels</h3>
                         <button class="btn btn-primary btnAddNewseverityLevl">
@@ -1207,7 +1257,7 @@
                     <div id="severityLevlList">
                     </div>
                 </div>
-                <div id="asset" class="tab-content">
+                <div id="asset" class="setting-tab-content">
                     <div class="d-flex justify-content-between">
                         <h3>Asset IDs</h3>
                         <button class="btn btn-primary btnAddNewAsset"><i class="fa-solid fa-plus"></i> Add New</button>
@@ -1218,7 +1268,7 @@
                     </div>
 
                 </div>
-                <div id="type" class="tab-content">
+                <div id="type" class="setting-tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Asset Type</h3>
                         <button class="btn btn-primary btnAddNewAssetType">
@@ -1231,7 +1281,7 @@
                     </div>
                 </div>
 
-                <div id="status" class="tab-content">
+                <div id="status" class="setting-tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Status Legend</h3>
                         <button class="btn btn-primary btnAddNewstatusLegend">
@@ -1244,7 +1294,7 @@
                     <div id="statusLegendList">
                     </div>
                 </div>
-                <div id="teams" class="tab-content">
+                <div id="teams" class="setting-tab-content">
                     <div class="d-flex justify-content-between">
                         <h3>Assign Response Teams</h3>
                         <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
@@ -1262,16 +1312,16 @@
                         </div>
 
                         <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
+                            <i class="fa-regular fa-edit edit"></i>
+                            <i class="far fa-trash-alt delete"></i>
                         </div>
                     </div>
 
                     <div class="list-item">
                         <span>Hubert</span>
                         <div class="actions">
-                            <i class="fa fa-pen edit"></i>
-                            <i class="fa fa-trash delete"></i>
+                            <i class="fa-regular fa-edit edit"></i>
+                            <i class="far fa-trash-alt delete"></i>
                         </div>
                     </div>
 
@@ -1562,13 +1612,15 @@
         </div>
         <div class="team-management hidden" id="teamManagement">
             <div class="header">
-                <div>
-                    <button onclick="backToMain()"><i class="fa fa-arrow-left-long"></i></button>
-                    <h2>Team Management</h2>
-                    <p>Manage teams, users, and response policies</p>
+                <div class="d-flex align-item-center">
+                    <div onclick="backToMain()" class="backIcon"><i class="fa fa-arrow-left-long"></i></div>
+                     <div class="title-info">
+                        <h2 class="mb-0">Team Management</h2>
+                        <p>Manage teams, users, and response policies</p>
+                    </div>
                 </div>
-                <button class="btn-add" data-bs-toggle="modal" data-bs-target="#addTeamModal"><i class="fa-solid fa-plus"></i> Add Team</button>
             </div>
+          
 
             <div class="team-container" id="teamContainer">
                 <!-- Sidebar -->
@@ -1576,7 +1628,7 @@
                     <h3>Sections</h3>
                      <ul>
                         <li class="active teamAllTab" data-tab="Iteams"><i class="fa-solid fa-user-group"></i> Teams</li>
-                        <li class="teamAllTab" data-tab="Iusers"><i class="fa-regular fa-file-lines"></i>Users</li>
+                        <li class="teamAllTab" data-tab="Iusers"><i class="fa-regular fa-user"></i>Users</li>
                         <li class="teamAllTab" data-tab="Ipolicies"><i class="fa-regular fa-file-lines"></i>Policies</li>
                        
                     </ul>
@@ -1585,8 +1637,11 @@
 
                 <!-- Content -->
                 <div class="content" id="rightContent">
-                    <div id="Iteams" class="tab-content active teamRightSec">
-                        <h3>Teams</h3>
+                    <div id="Iteams" class="team-tab-content active teamRightSec">
+                        <div class="d-flex align-item-center justify-content-between mb-2">
+                            <h3 class="mb-0">Teams</h3>
+                            <button class="btn-add"><i class="fa-solid fa-plus"></i> Add Team</button>
+                        </div>
                         <div class="form-container addNewTeam">
                             <h3>Add New Team</h3>
 
@@ -1605,24 +1660,28 @@
 
                             <label>Specializations</label>
                             <input type="text" class="form-control" placeholder="Enter specialization">
-
+                            <div class="d-flex align-item-center addMoreSpecialization">
+                                <input type="text" class="form-control" placeholder="Enter specialization">
+                                <div><i class="fa fa-close"></i></div>
+                            </div>
                             <span class="specialization-link">+ Add more specialization</span>
-                            <br>
+                            <div class="d-flex align-items-center addCancelIcons justify-content-end">
                             <button class="btn btn-green">Add Team</button>
                             <button class="btn btn-gray">Cancel</button>
+                            </div>
                         </div>
                         <div class="cards">
                             <div class="card">
-                                <h4>
-                                    Distribution Emergency Team
-                                    <span>
-                                        <i class="fa-solid fa-pen"></i>
-                                        <i class="fa-solid fa-trash"></i>
-                                    </span>
-                                </h4>
-                                <p><strong>Department:</strong> Distribution</p>
-                                <p><strong>Contact:</strong> 555-DIST-001</p>
-                                <p><strong>Specializations:</strong></p>
+                                <div class="cardHeader">
+                                    <h4>Distribution Emergency Team</h4>
+                                    <div class="editDeIcons">
+                                        <i class="fa-regular fa-edit"></i>
+                                        <i class="far fa-trash-alt"></i>
+                                    </div>
+                                </div>
+                                <p><span class="lbl">Department:</span> Distribution</p>
+                                <p><span class="lbl">Contact:</span> 555-DIST-001</p>
+                                <p><span class="lbl">Specializations:</span></p>
                                 <div class="specializations">
                                     <span>Gas Leaks</span>
                                     <span>Valve Repairs</span>
@@ -1632,16 +1691,17 @@
                             </div>
 
                             <div class="card">
-                                <h4>
-                                    Transmission Response Unit
-                                    <span>
-                                        <i class="fa-solid fa-pen"></i>
-                                        <i class="fa-solid fa-trash"></i>
-                                    </span>
-                                </h4>
-                                <p><strong>Department:</strong> Transmission</p>
-                                <p><strong>Contact:</strong> 555-TRANS-001</p>
-                                <p><strong>Specializations:</strong></p>
+                               
+                                <div class="cardHeader">
+                                    <h4>Transmission Response Unit</h4>
+                                    <div class="editDeIcons">
+                                        <i class="fa-regular fa-edit"></i>
+                                        <i class="far fa-trash-alt"></i>
+                                    </div>
+                                </div>
+                                <p><span class="lbl">Department:</span> Transmission</p>
+                                <p><span class="lbl">Contact:</span> 555-TRANS-001</p>
+                                <p><span class="lbl">Specializations:</span></p>
                                 <div class="specializations">
                                     <span>Pipeline Repairs</span>
                                     <span>High Pressure Systems</span>
@@ -1651,16 +1711,17 @@
                             </div>
 
                             <div class="card">
-                                <h4>
-                                    Emergency Contractors
-                                    <span>
-                                        <i class="fa-solid fa-pen"></i>
-                                        <i class="fa-solid fa-trash"></i>
-                                    </span>
-                                </h4>
-                                <p><strong>Department:</strong> Contractors</p>
-                                <p><strong>Contact:</strong> 555-CONTRACT-001</p>
-                                <p><strong>Specializations:</strong></p>
+                                <div class="cardHeader">
+                                    <h4>Emergency Contractors</h4>
+                                    <div class="editDeIcons">
+                                        <i class="fa-regular fa-edit"></i>
+                                        <i class="far fa-trash-alt"></i>
+                                    </div>
+                                </div>
+                               
+                                <p><span class="lbl">Department:</span> Contractors</p>
+                                <p><span class="lbl">Contact:</span> 555-CONTRACT-001</p>
+                                <p><span class="lbl">Specializations:</span></p>
                                 <div class="specializations">
                                     <span>Excavation</span>
                                     <span>Third-Party Damage</span>
@@ -1671,8 +1732,11 @@
                         </div>
                     </div>
                    
-                    <div id="Iusers" class="tab-content userRightSec">
-                        <h2>Users</h2>
+                    <div id="Iusers" class="team-tab-content userRightSec">
+                        <div class="d-flex align-item-center justify-content-between mb-2">
+                            <h3 class="mb-0">Users</h3>
+                            <button class="btn-add"><i class="fa-solid fa-plus"></i> Add User</button>
+                        </div>
 
                         <!-- Form -->
                         <div class="form-container">
@@ -1711,9 +1775,10 @@
                                     <input type="password" class="form-control" placeholder="1234" maxlength="4">
                                 </div>
                             </div>
-                            <br>
+                            <div class="d-flex align-items-center justify-content-end addCancelIcons">
                             <button class="btn btn-gray">Cancel</button>
                             <button class="btn btn-green">Add User</button>
+                            </div>
                         </div>
 
                         <!-- Table -->
@@ -1736,9 +1801,9 @@
                                     <td><span class="team-badge">Distribution Emergency Team</span></td>
                                     <td>555-0101</td>
                                     <td>••••</td>
-                                    <td class="actions">
-                                        <i class="fa-solid fa-pen"></i>
-                                        <i class="fa-solid fa-trash"></i>
+                                    <td class="editDeIcons">
+                                        <i class="fa-regular fa-edit"></i>
+                                        <i class="far fa-trash-alt"></i>
                                     </td>
                                 </tr>
                                 <tr>
@@ -1749,81 +1814,85 @@
                                     <td><span class="team-badge">Transmission Response Unit</span></td>
                                     <td>555-0102</td>
                                     <td>••••</td>
-                                    <td class="actions">
-                                        <i class="fa-solid fa-pen"></i>
-                                        <i class="fa-solid fa-trash"></i>
+                                    <td class="editDeIcons">
+                                        <i class="fa-regular fa-edit"></i>
+                                        <i class="far fa-trash-alt"></i>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div id="Ipolicies" class="tab-content policiesRightSec ">
-                        <h2>Policies</h2>
-                        <a href="#" class="add-task-btn"><i class="fa-solid fa-plus"></i> Add Task</a>
-                        <div style="clear:both;"></div>
+                    <div id="Ipolicies" class="team-tab-content policiesRightSec ">
+                        <div class="d-flex align-item-center justify-content-between mb-2">
+                            <h3 class="mb-0">Policy</h3>
+                            <button class="btn-add"><i class="fa-solid fa-plus"></i> Add Policy</button>
+                        </div>
 
                         <!-- Add New Task Form -->
                         <div class="form-container">
-                            <h3>Add New Task</h3>
+                            <h3>Add New Policy</h3>
                             <input type="text" class="form-control" placeholder="Task title...">
                             <textarea placeholder="Task description..."></textarea>
+                            <div class="d-flex align-item-center justify-content-end">
                             <button class="btn btn-green">Add Task</button>
                             <button class="btn btn-gray">Cancel</button>
+                            </div>
                         </div>
 
                         <!-- Task List -->
-                        <div class="task-item">
-                            <div class="task-info">
-                                <i class="fa-solid fa-grip-vertical"></i>
-                                <div class="task-text">
-                                    <strong>Log Incident</strong>
-                                    <small>Confirm location and severity in platform; set initial perimeter.</small>
+                        <div class="task-list" id="taskList">
+                            <div class="task-item drag-handle">
+                                <div class="task-info">
+                                    <i class="fa-solid fa-grip-vertical"></i>
+                                    <div class="task-text">
+                                        <strong>Log Incident</strong>
+                                        <small>Confirm location and severity in platform; set initial perimeter.</small>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <i class="far fa-trash-alt"></i>
                                 </div>
                             </div>
-                            <div class="task-actions">
-                                <i class="fa-solid fa-trash"></i>
-                            </div>
-                        </div>
 
-                        <div class="task-item">
-                            <div class="task-info">
-                                <i class="fa-solid fa-grip-vertical"></i>
-                                <div class="task-text">
-                                    <strong>Notify & Dispatch</strong>
-                                    <small>Assign nearest qualified response team(s).</small>
+                            <div class="task-item drag-handle">
+                                <div class="task-info">
+                                    <i class="fa-solid fa-grip-vertical"></i>
+                                    <div class="task-text">
+                                        <strong>Notify & Dispatch</strong>
+                                        <small>Assign nearest qualified response team(s).</small>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                     <i class="far fa-trash-alt"></i>
                                 </div>
                             </div>
-                            <div class="task-actions">
-                                <i class="fa-solid fa-trash"></i>
-                            </div>
-                        </div>
 
-                        <div class="task-item">
-                            <div class="task-info">
-                                <i class="fa-solid fa-grip-vertical"></i>
-                                <div class="task-text">
-                                    <strong>Prepare PPE & Equipment</strong>
-                                    <small>Ensure FR clothing, detection devices, SCBA if needed.</small>
+                            <div class="task-item drag-handle">
+                                <div class="task-info">
+                                    <i class="fa-solid fa-grip-vertical"></i>
+                                    <div class="task-text">
+                                        <strong>Prepare PPE & Equipment</strong>
+                                        <small>Ensure FR clothing, detection devices, SCBA if needed.</small>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                     <i class="far fa-trash-alt"></i>
                                 </div>
                             </div>
-                            <div class="task-actions">
-                                <i class="fa-solid fa-trash"></i>
-                            </div>
-                        </div>
 
-                        <div class="task-item">
-                            <div class="task-info">
-                                <i class="fa-solid fa-grip-vertical"></i>
-                                <div class="task-text">
-                                    <strong>Travel to Site</strong>
-                                    <small>Mark "En Route" in platform.</small>
+                            <div class="task-item drag-handle">
+                                <div class="task-info">
+                                    <i class="fa-solid fa-grip-vertical"></i>
+                                    <div class="task-text">
+                                        <strong>Travel to Site</strong>
+                                        <small>Mark "En Route" in platform.</small>
+                                    </div>
+                                </div>
+                                <div class="task-actions">
+                                    <i class="far fa-trash-alt"></i>
                                 </div>
                             </div>
-                            <div class="task-actions">
-                                <i class="fa-solid fa-trash"></i>
-                            </div>
                         </div>
-
                     </div>
                    
 
@@ -1909,17 +1978,24 @@
 
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/views/setting/setting.js"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script>
+    // Enable drag & drop sorting
+    new Sortable(document.getElementById("taskList"), {
+      animation: 150,
+      handle: ".drag-handle", // Only drag using handle
+    });
+</script>
 <script>
     // Vertical tab switching
-    document.querySelectorAll(".sidebar ul li").forEach(item => {
+    document.querySelectorAll(".settingsidebar ul li").forEach(item => {
         item.addEventListener("click", function () {
             // Remove active class from all tabs
-            document.querySelectorAll(".sidebar ul li").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".settingsidebar ul li").forEach(el => el.classList.remove("active"));
             this.classList.add("active");
 
             // Hide all tab contents
-            document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
+            document.querySelectorAll(".setting-tab-content").forEach(content => content.classList.remove("active"));
 
             // Show selected tab content
             const tabId = this.getAttribute("data-tab");
@@ -1929,6 +2005,25 @@
             }
         });
     });
+    document.querySelectorAll(".teamsidebar ul li").forEach(item => {
+        item.addEventListener("click", function () {
+            // Remove active class from all tabs
+            document.querySelectorAll(".teamsidebar ul li").forEach(el => el.classList.remove("active"));
+            this.classList.add("active");
+
+            // Hide all tab contents
+            document.querySelectorAll(".team-tab-content").forEach(content => content.classList.remove("active"));
+
+            // Show selected tab content
+            const tabId = this.getAttribute("data-tab");
+            const tabContent = document.getElementById(tabId);
+            if (tabContent) {
+                tabContent.classList.add("active");
+            }
+        });
+    });
+
+   
 
 
         
@@ -1980,4 +2075,8 @@
         // Show source tab content
         document.getElementById('source').classList.add("active");
     }
+
+
+
+
 </script>

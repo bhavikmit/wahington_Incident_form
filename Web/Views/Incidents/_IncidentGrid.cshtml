@@ -6,6 +6,9 @@
 <table class="table align-middle text-left">
     <thead class="table-light">
         <tr>
+            <th>
+                <input type="checkbox" id="selectAll" />
+            </th>
             <th>Status</th>
             <th>Severity</th>
             <th>Event Type</th>
@@ -26,6 +29,12 @@
             @foreach (var item in Model.incidentGridViewModel)
             {
                 <tr id="@item.Id">
+                    <td>
+                        @if (item.StatusLegend == StatusLegendEnum.Submitted.ToString())
+                        {
+                            <input type="checkbox" class="rowCheckbox" value="@item.Id" />
+                        }
+                    </td>
                     <td style="text-align:center !important">
                         <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.StatusLegendColor"></span>
                     </td>
@@ -81,25 +90,26 @@
                            class="btnIcon eyeIcon view-incident"
                            data-id="@item.Id"
                            title="View Details">
-                            <i class="fa fa-eye"></i>
+                            <i class="fa-regular fa-eye"></i>
                         </a>
 
                         @if (item.StatusLegend == StatusLegendEnum.Submitted.ToString())
                         {
+
                             <a href="/Validation/Index/@item.Id"
-                               class="validateIncident"
-                               data-incident-id="@item.Id"
-                               title="Validate Incident">
-                                <i class="fa fa-info-circle"></i>
+                               class="btnIcon validateIcon validate-incident"
+                               title="Validate Incident" data-incident-id="@item.Id">
+                                <i class="fa-regular fa-circle-check"></i>
                             </a>
+
                         }
                         @if (item.StatusLegend == StatusLegendEnum.Dispatched.ToString() || item.StatusLegend == StatusLegendEnum.Started.ToString())
                         {
-                            <a href="javascript:void(0);"
+                            <a href="/IncidentProgress/Index/@item.Id"
                                class="viewProgress"
                                data-id="@item.Id"
                                title="View Progress">
-                                <i class="fa fa-bars-progress"></i>
+                                <i class="fa fa-bar-chart"></i>
                             </a>
                         }
 
@@ -107,17 +117,17 @@
                            class="btnIcon noteIcon note-incident"
                            title="Notes"
                            data-id="@item.Id">
-                            <i class="fa fa-message"></i>
+                            <i class="fa-regular fa-message"></i>
                         </a>
 
                         <a href="javascript:void(0);"
                            class="btnIcon historyIcon"
                            data-id="@item.Id"
                            title="History">
-                            <i class="fa fa-repeat"></i>
+                            <i class="fa-regular fa-clock"></i>
                         </a>
 
-                        <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit Incident"><i class="fa fa-pencil"></i></a>
+                        <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit Incident"><i class="fa-regular fa-edit"></i></a>
                     </td>
                 </tr>
             }
@@ -130,3 +140,18 @@
         }
     </tbody>
 </table>
+<script>
+      document.getElementById("selectAll").addEventListener("change", function () {
+        let checkboxes = document.querySelectorAll(".rowCheckbox");
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+
+    // Optional: If all row checkboxes are checked manually, update header checkbox
+    document.querySelectorAll(".rowCheckbox").forEach(cb => {
+        cb.addEventListener("change", function () {
+            let all = document.querySelectorAll(".rowCheckbox").length;
+            let checked = document.querySelectorAll(".rowCheckbox:checked").length;
+            document.getElementById("selectAll").checked = (all === checked);
+        });
+    });
+</script>

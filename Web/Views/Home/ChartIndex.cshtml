@@ -268,6 +268,191 @@
     .chartTitle {
         margin-bottom: 16px;
     }
+    /****************map style*********************/
+    .titleLocation {
+        font-size: 20px;
+        line-height: normal;
+        font-weight: 700;
+    }
+
+    .titleDescription {
+        font-size: 16px;
+        line-height: normal;
+        margin-top: 6px;
+    }
+
+    .incident-locations {
+        background: white;
+        border-radius: 10px;
+        padding: 16px;
+        margin: 16px 0;
+        border: 1px solid #e0e0e0;
+    }
+
+    .statusLegendInfo {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: normal;
+    }
+
+        .statusLegendInfo i.fa {
+            margin-right: 6px;
+        }
+
+    .status-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+    }
+
+        .legend-item i {
+            font-size: 10px;
+            margin-right: 8px;
+        }
+
+        .legend-item span {
+            font-size: 14px;
+        }
+
+    .fa-circle {
+        color: #ccc;
+    }
+
+    .submitted {
+        color: #dc2626;
+    }
+
+
+    .dispatched {
+        color: #facc15;
+    }
+
+    .started {
+        color: #3b82f6;
+    }
+
+    .completed {
+        color: #003300;
+    }
+
+    .cancelled {
+        color: #6b7280;
+    }
+    /**************incident card ******************/
+    .incident-card {
+        background: white;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
+    }
+
+        .incident-card .status-badge {
+            color: white;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            float: right;
+        }
+
+        .incident-card .started {
+            background-color: #3b82f6;
+        }
+
+        .incident-card .submitted {
+            background-color: #dc2626;
+        }
+
+        .incident-card .dispatched {
+            background-color: #facc15;
+        }
+
+        .incident-card .completed {
+            background-color: #003300;
+        }
+
+        .incident-card .cancelled {
+            background-color: #6b7280;
+        }
+
+        .incident-card h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 800;
+            line-height: normal;
+        }
+
+        .incident-card p {
+            margin: 4px 0;
+            color: #4b5563;
+            font-size: 14px;
+            line-height: normal;
+        }
+
+    .incident-list {
+        background: white;
+        border-radius: 10px;
+        padding: 16px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .recentList {
+        height: 350px;
+        overflow: auto;
+    }
+
+    .incident-list h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+        line-height: normal;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 16px;
+    }
+
+    .incident-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+        .incident-item:last-child {
+            border-bottom: none;
+        }
+
+    .incident-details {
+        display: flex;
+        align-items: center;
+    }
+
+    .incident-icon {
+        font-size: 14px;
+        margin-right: 10px;
+    }
+
+    .incident-info h4 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: normal;
+    }
+
+    .incident-info p {
+        color: #4b5563;
+        font-size: 14px;
+        line-height: normal;
+    }
+
+    .incident-severity {
+        font-size: 14px;
+        color: #777;
+    }
 </style>
 
 <header class="header dashboard-header d-flex align-items-center justify-content-between">
@@ -338,14 +523,54 @@
                 <div class="tab-content mt-3">
                     <!-- Map Tab -->
                     <div class="tab-pane fade show active" id="mapTab" role="tabpanel">
-                        <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
-                            <div class="mb-3">
-                                <label class="form-label">Enter Address</label>
-                                <input type="text" id="addressInput" class="form-control" placeholder="Enter US address" />
-                                <button class="btn btn-primary mt-2" id="showOnMap">Show on Map</button>
+                        <h3 class="titleLocation">Incident Locations</h3>
+                        <p class="titleDescription">Interactive map showing all incident locations with status indicators</p>
+                        <div class="incident-locations">
+                            <div class="statusLegendInfo">
+                                <i class="fa fa-layer-group"></i>Status Legend
                             </div>
-                            @* <div id="map" style="height:400px; border:1px solid #ccc; border-radius:8px;"></div> *@
-                            <div id="map" style="height:800px; width:100%;"></div>
+                            <div class="status-legend">
+                                <div class="legend-item"><i class="fa-solid fa-circle submitted"></i><span>Submitted (@Model.IncidentDashboard.TotalSubmittedCount)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle started"></i><span>Started (@Model.IncidentDashboard.TotalStartedCount)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle dispatched"></i><span>Dispatched (@Model.IncidentDashboard.TotalDispatchedCount)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle completed"></i><span>Completed (@Model.IncidentDashboard.TotalCompletedCount)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle cancelled"></i><span>Cancelled (@Model.IncidentDashboard.TotalCancelledCount)</span></div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
+                            <div id="map" style="height:500px; width:100%;"></div>
+                        </div>
+
+                        <!-- Recent Incidents List -->
+                        <div class="incident-list">
+                            <h3>Recent Incidents on Map</h3>
+                            <div class="recentList">
+                                @if (Model.IncidentDashboard.ListIncidentRecentViewModel.Count > 0)
+                                {
+                                    @foreach (var item in Model.IncidentDashboard.ListIncidentRecentViewModel)
+                                    {
+                                        <div class="incident-item">
+                                            <div class="incident-details">
+                                                <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.incidentstatusColor"></span>
+                                                <div class="incident-info" style="margin-left: 10px;">
+                                                    <h4>@item.incidentId</h4>
+                                                    <p>@item.incidentloc</p>
+                                                    <p>@item.eventtype</p>
+                                                </div>
+                                            </div>
+                                            <div class="incident-severity">@item.severity</div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="incident-item">
+                                        <div class="incident-details">
+                                            No recent incident found.
+                                        </div>
+                                    </div>
+                                }
+                            </div>
                         </div>
 
 

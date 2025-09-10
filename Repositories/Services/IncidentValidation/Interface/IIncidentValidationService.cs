@@ -1,5 +1,8 @@
 ﻿using Centangle.Common.ResponseHelpers.Models;
 
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+using Models;
 using Models.Common.Interfaces;
 
 using Pagination;
@@ -20,5 +23,8 @@ namespace Repositories.Common
         Task<IncidentValidationViewModel> GetIncidentValidationAlarm(long id);
         Task<IncidentValidationDetailViewModel> GetIncidentValidationDetail(long id);
         Task<List<IncidentResponseTeamViewModel>> GetIncidentValidationResponseTeam();
+        Task<List<IncidentPolicyViewModel>> GetIncidentValidationPolicy();
+        Task<long> SavePolicy(PolicyModifyViewModel request);
+        Task<List<SelectListItem>> GetTeamsList();
     }
 }

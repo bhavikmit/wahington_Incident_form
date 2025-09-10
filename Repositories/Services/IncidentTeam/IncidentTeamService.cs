@@ -52,11 +52,24 @@ namespace Repositories.Common
 
                 foreach (var t in teams)
                 {
-                    list.Add(new IncidentTeamModifyViewModel
+                    var vm = new IncidentTeamModifyViewModel
                     {
                         Id = t.Id,
-                        Name = t.Name
-                    });
+                        Name = t.Name,
+                        Department = t.Department,
+                        Contact = t.Contact,
+                        Specializations = t.Specializations,
+                        SpecializationList = string.IsNullOrWhiteSpace(t.Specializations)
+                            ? new List<string>()
+                            : t.Specializations
+                                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                                .Select(s => s.Trim())
+                                .Where(s => !string.IsNullOrWhiteSpace(s))
+                                .Distinct(StringComparer.OrdinalIgnoreCase)
+                                .ToList()
+                    };
+
+                    list.Add(vm);
                 }
             }
             catch (Exception ex)
@@ -79,6 +92,9 @@ namespace Repositories.Common
                 var team = new IncidentTeam
                 {
                     Name = viewModel.Name,
+                    Department = viewModel.Department,
+                    Contact = viewModel.Contact,
+                    Specializations = NormalizeCsvFromList(viewModel.SpecializationList) ?? NormalizeCsv(viewModel.Specializations),
                     IsDeleted = false,
                     ActiveStatus = ActiveStatus.Active,
                     CreatedOn = now,
@@ -117,6 +133,10 @@ namespace Repositories.Common
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
                 team.Name = viewModel.Name;
+                team.Department = viewModel.Department;
+                team.Contact = viewModel.Contact;
+                // <-- use list-first approach here as well (fallback to CSV)
+                team.Specializations = NormalizeCsvFromList(viewModel.SpecializationList) ?? NormalizeCsv(viewModel.Specializations);
                 team.UpdatedOn = DateTime.UtcNow;
                 // set UpdatedBy if available
 
@@ -154,7 +174,18 @@ namespace Repositories.Common
                 return new IncidentTeamModifyViewModel
                 {
                     Id = team.Id,
-                    Name = team.Name
+                    Name = team.Name,
+                    Department = team.Department,
+                    Contact = team.Contact,
+                    Specializations = team.Specializations,
+                    SpecializationList = string.IsNullOrWhiteSpace(team.Specializations)
+                        ? new List<string>()
+                        : team.Specializations
+                            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                            .Select(s => s.Trim())
+                            .Where(s => !string.IsNullOrWhiteSpace(s))
+                            .Distinct(StringComparer.OrdinalIgnoreCase)
+                            .ToList()
                 };
             }
             catch (Exception ex)
@@ -198,6 +229,39 @@ namespace Repositories.Common
                 _logger.LogError(ex, "Error DeleteIncidentTeam.");
                 return 0;
             }
+        }
+
+        /// <summary>
+        /// Normalize CSV string: split by comma, trim entries, remove empties and duplicates, then rejoin.
+        /// Returns null if there are no valid items.
+        /// </summary>
+        private static string? NormalizeCsv(string? csv)
+        {
+            if (string.IsNullOrWhiteSpace(csv)) return null;
+
+            var items = csv
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                .Select(s => s.Trim())
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            return items.Count == 0 ? null : string.Join(",", items);
+        }
+
+        /// <summary>
+        /// Normalize from list: trim, remove empties and duplicates, then rejoin.
+        /// Returns null if there are no valid items.
+        /// </summary>
+        private static string? NormalizeCsvFromList(List<string>? list)
+        {
+            if (list == null || list.Count == 0) return null;
+            var items = list
+                .Select(s => s?.Trim())
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            return items.Count == 0 ? null : string.Join(",", items);
         }
     }
 }

@@ -1,15 +1,183 @@
 ﻿@using ViewModels
 @model IncidentTeamModifyViewModel
 
-<form id="NewIncidentTeamForm">
-    <div class="list-item addItem" id="saveIncidentTeamDiv">
+<form id="NewIncidentTeamForm" autocomplete="off" class="incident-team-form">
+    <div class="card p-4 mb-3" id="saveIncidentTeamDiv">
+        <h5 class="mb-3">Add New Team</h5>
 
-        <input type="hidden" value="@Model.Id" name="Id" id="incidentTeam_@Model.Id" />
+        <!-- Team name -->
+        <div class="mb-3">
+            <input type="hidden" asp-for="Id" name="Id" id="incidentTeam_@Model.Id" />
+            <input type="text" class="form-control form-control-lg" placeholder="Team name (e.g., Distribution Emergency Team)" asp-for="Name" data-val-required="Required" />
+        </div>
 
-        <div class="input-container">
-            <input type="text" placeholder="Enter incident team..." asp-for="Name" />
-            <button class="btn check saveIncidentTeam"><i class="fa-solid fa-check"></i></button>
-            <button class="btn cancel cancelIncidentTeam"><i class="fa-solid fa-xmark"></i></button>
+        <!-- Department -->
+        <div class="mb-3">
+            @{
+                var depts = new[] { "Distribution", "Transmission", "Contractors", "Emergency", "Safety" };
+            }
+            <select asp-for="Department" name="Department" id="departmentSelect" class="form-select form-select-lg" data-val-required="Required">
+                <option value="">Select Department</option>
+                @foreach (var d in depts)
+                {
+                    if (string.Equals(d, Model?.Department, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <option value="@d" selected="selected">@d</option>  
+                    }
+                    else
+                    {
+                        <option value="@d">@d</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <!-- Contact -->
+        <div class="mb-3">
+            <input type="text"
+                   class="form-control form-control-lg"
+                   placeholder="Contact ID (e.g., 555-EMERGENCY-001)"
+                   asp-for="Contact" id="contactInput" />
+            <span asp-validation-for="Contact" class="text-danger"></span>
+        </div>
+
+        <!-- Specializations label + quick input (ONLY input visible initially) -->
+        <label class="form-label fw-600">Specializations</label>
+        <div class="mb-2 d-flex gap-2">
+            <input type="text" id="specializationInput" class="form-control" placeholder="Enter specialization" />
+            <button type="button" id="addSpecializationBtn" class="btn btn-outline-orange">+ Add</button>
+        </div>
+
+        <!-- Dynamic list (render only existing items; do NOT render an empty default row) -->
+        <div id="specializationsList" class="mb-2">
+            @if (Model.SpecializationList != null && Model.SpecializationList.Any())
+            {
+                for (int i = 0; i < Model.SpecializationList.Count; i++)
+                {
+                    <div class="input-group mb-2 specialization-row">
+                        <input type="text" name="SpecializationList[@i]" value="@Model.SpecializationList[i]" class="form-control specialization-input" placeholder="Enter specialization" />
+                        <button type="button" class="btn btn-danger remove-specialization">Delete</button>
+                    </div>
+                }
+            }
+            <!-- IMPORTANT: If there are no saved items, we intentionally render NOTHING here.
+                 The user uses the quick input above to add the first item. -->
+        </div>
+
+        <span asp-validation-for="SpecializationList" class="text-danger"></span>
+
+        <!-- Buttons row: equal width -->
+        <div class="mt-3 d-flex gap-2">
+            <div class="flex-fill">
+                <button type="button" class="btn btn-orange w-100 saveIncidentTeam action-btn">
+                    <i class="fa-solid fa-check"></i> @(Model?.Id > 0 ? "Update Team" : "Add Team")
+                </button>
+            </div>
+            <div class="flex-fill">
+                <button type="button" class="btn btn-outline-secondary w-100 cancel cancelIncidentTeam action-btn">
+                    <i class="fa-solid fa-xmark"></i> Cancel
+                </button>
+            </div>
         </div>
     </div>
 </form>
+
+<style>
+    .incident-team-form .card {
+        background: #fdfaf8;
+        border-radius: 8px;
+        border: 1px solid #f5d9c8;
+    }
+
+    .incident-team-form .form-control, .incident-team-form .form-select {
+        height: 44px;
+    }
+
+    .btn-orange {
+        background-color: #f37021;
+        border-color: #f37021;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .btn-outline-orange {
+        border: 1px solid #f37021;
+        color: #f37021;
+        font-weight: 600;
+    }
+
+        .btn-outline-orange:hover {
+            background-color: #f37021;
+            color: #fff;
+        }
+
+    .action-btn {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 600;
+        border-radius: 6px;
+    }
+
+    .input-group .btn-danger {
+        margin-left: 8px;
+    }
+</style>
+
+<script>
+    (function () {
+        function reindexSpecializations() {
+            $("#specializationsList .specialization-row").each(function (i, row) {
+                $(row).find("input").attr("name", "SpecializationList[" + i + "]");
+            });
+        }
+
+        // Quick-add from small input: add a new row into #specializationsList
+        $("#addSpecializationBtn").off("click").on("click", function (e) {
+            e.preventDefault();
+            var raw = $("#specializationInput").val() || "";
+            raw = raw.toString().trim();
+            if (!raw) return;
+
+            // prevent adding exact duplicate (case-insensitive)
+            var dup = false;
+            $("#specializationsList .specialization-row input").each(function () {
+                if ($(this).val() && $(this).val().toString().trim().toLowerCase() === raw.toLowerCase()) {
+                    dup = true;
+                    return false;
+                }
+            });
+            if (dup) {
+                $("#specializationInput").val("").focus();
+                return;
+            }
+
+            var index = $("#specializationsList .specialization-row").length;
+            var safe = raw.replace(/"/g, '&quot;');
+            var row = `
+                <div class="input-group mb-2 specialization-row">
+                    <input type="text" name="SpecializationList[${index}]" value="${safe}" class="form-control specialization-input" />
+                    <button type="button" class="btn btn-danger remove-specialization">Delete</button>
+                </div>`;
+            $("#specializationsList").append(row);
+            $("#specializationInput").val("").focus();
+        });
+
+        // Enter key in quick input triggers add
+        $(document).off("keyup", "#specializationInput").on("keyup", "#specializationInput", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                $("#addSpecializationBtn").trigger("click");
+            }
+        });
+
+        // Remove row and reindex
+        $(document).off("click", ".remove-specialization").on("click", ".remove-specialization", function () {
+            $(this).closest(".specialization-row").remove();
+            reindexSpecializations();
+        });
+
+    
+</script>

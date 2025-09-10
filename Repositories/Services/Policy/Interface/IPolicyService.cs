@@ -1,6 +1,7 @@
 ﻿using System;
 using Models.Common.Interfaces;
 using Repositories.Interfaces;
+using ViewModels;
 using ViewModels.Shared;
 
 namespace Repositories.Common
@@ -11,5 +12,10 @@ namespace Repositories.Common
         where CreateViewModel : class, IBaseCrudViewModel, new()
         where UpdateViewModel : class, IBaseCrudViewModel, IIdentitifier, new()
     {
+        Task<List<PolicyModifyViewModel>> GetAllPolicies();
+        Task<long> SavePolicy(PolicyModifyViewModel viewModel);
+        Task<long> UpdatePolicy(PolicyModifyViewModel viewModel);
+        Task<PolicyModifyViewModel> GetPolicyById(long id);
+        Task<long> DeletePolicy(long id);
     }
 }

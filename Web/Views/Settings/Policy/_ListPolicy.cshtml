@@ -1,0 +1,31 @@
+﻿@using System.Web
+@using ViewModels
+@model List<PolicyModifyViewModel>
+
+@if (Model != null && Model.Count > 0)
+{
+    @foreach (var policy in Model)
+    {
+        <div class="task-item">
+                            <div class="task-info">
+                                <i class="fa-solid fa-grip-vertical"></i>
+                                <div class="task-text">
+                <strong>@policy.Name</strong>
+                <p>@policy.Description</p>
+                </div>
+            </div>
+            </div>
+            
+            <div class="actions">
+                <i class="fa fa-pen edit editPolicy" id="@policy.Id"></i>
+                <i class="fa fa-trash delete deletePolicy" id="@policy.Id"></i>
+            </div>
+    
+    }
+}
+else
+{
+    <div class="list-item">
+        <span>No policy found.</span>
+    </div>
+}

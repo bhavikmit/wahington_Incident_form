@@ -17,12 +17,12 @@ namespace Web.Controllers
         private readonly IAssetIdService<AssetIdModifyViewModel, AssetIdModifyViewModel, AssetIdDetailViewModel> _iAssetIdService;
         private readonly IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> _iAssetTypeService;
         private readonly IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> _iIncidentTeamService;
-
+        private readonly IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> _iPolicyService;
         #endregion
 
         #region Ctor
         public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService, ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> iSeverityLevelService, IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> iStatusLegendService, IAssetIdService<AssetIdModifyViewModel, AssetIdModifyViewModel, AssetIdDetailViewModel> iAssetIdService,
-            IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService, IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> iIncidentTeamService)
+            IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService, IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> iIncidentTeamService, IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService)
         {
             _iRelationshipService = iRelationshipService;
             _iEventTypeService = iEventTypeService;
@@ -31,6 +31,7 @@ namespace Web.Controllers
             _iAssetIdService = iAssetIdService;
             _iAssetTypeService = iAssetTypeService;
             _iIncidentTeamService = iIncidentTeamService;
+            _iPolicyService = iPolicyService;
         }
         #endregion
 
@@ -588,6 +589,90 @@ namespace Web.Controllers
                 return Ok(new { success = true, data = successMsg });
             }
             catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+        #endregion
+        #region Policy
+        [HttpGet]
+        public async Task<IActionResult> GetAllPolicies()
+        {
+            var model = await _iPolicyService.GetAllPolicies();
+            return PartialView("~/Views/Settings/Policy/_ListPolicy.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddPolicy()
+        {
+            var model = new PolicyModifyViewModel();
+            return PartialView("~/Views/Settings/Policy/_AddPolicy.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPolicyById(long id)
+        {
+            var model = await _iPolicyService.GetPolicyById(id);
+            return PartialView("~/Views/Settings/Policy/_AddPolicy.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SavePolicy([FromForm] PolicyModifyViewModel policy)
+        {
+            if (policy == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (policy.Id > 0)
+                {
+                    Id = await _iPolicyService.UpdatePolicy(policy);
+                }
+                else
+                {
+                    Id = await _iPolicyService.SavePolicy(policy);
+                }
+
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save policy." });
+
+                var successMsg = $"Policy saved successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeletePolicyById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (id > 0)
+                {
+                    Id = await _iPolicyService.DeletePolicy(id);
+                }
+
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete policy." });
+
+                var successMsg = $"Policy deleted successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { success = false, message = "An unexpected error occurred." });

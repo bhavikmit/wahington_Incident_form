@@ -24,11 +24,126 @@
         else if (tab === "type") {
             GetAllAssetTypes();
         }
-        else if (tab === "teams") {
-            GetAllIncidentTeams();
+        else if (tab === "teamManagement") {
+            //GetAllIncidentTeams();
+            //$(".teamAllTab.active").trigger("click");
+            $(".teamSiderbar ul li:eq(0)").trigger('click');
+            $(".teamSiderbar ul li:eq(0)").addClass("active");
         }
     });
     // end setting tabs
+   
+    $(document).off("click", ".teamAllTab");
+    $(document).on("click", ".teamAllTab", function (e) {
+        e.preventDefault();
+        var tab = $(this).attr("data-tab");
+
+        if (tab === "Ipolicies") {
+            // load list when policies tab clicked
+            GetAllPolicies();
+
+            // open add policy partial
+            $(document).off("click", ".btnAddNewPolicy");
+            $(document).on("click", ".btnAddNewPolicy", function (e) {
+                e.preventDefault();
+                AddPolicy();
+            });
+
+            // cancel inside partial
+            $(document).off("click", ".cancelPolicy");
+            $(document).on("click", ".cancelPolicy", function (e) {
+                e.preventDefault();
+                $("#addPolicy").empty().html('');
+                $('li.active').trigger('click');
+            });
+
+            // delete policy
+            $(document).off("click", ".deletePolicy");
+            $(document).on("click", ".deletePolicy", function (e) {
+                e.preventDefault();
+                var id = $(this).attr("id");
+                DeletePolicyById(id);
+            });
+
+            // edit policy
+            $(document).off("click", ".editPolicy");
+            $(document).on("click", ".editPolicy", function (e) {
+                e.preventDefault();
+                var id = $(this).attr("id");
+                GetPolicyById(id);
+            });
+
+            // save policy (client-side required check + submit)
+            $(document).off("click", ".savePolicy");
+            $(document).on("click", ".savePolicy", function (e) {
+                e.preventDefault();
+                var isValid = true;
+
+                $("#savePolicyDiv").find("input[data-val-required], textarea[data-val-required]").each(function () {
+                    var $field = $(this);
+                    var value = $.trim($field.val());
+                    if (value === "") {
+                        isValid = false;
+                        showError($field);
+                    } else {
+                        clearError($field);
+                    }
+                });
+
+                if (isValid) {
+                    SavePolicy();
+                }
+            });
+        } else if (tab === "Iteams") {
+            GetAllIncidentTeams();
+            $(document).off("click", ".btnAddNewIncidentTeam");
+            $(document).on("click", ".btnAddNewIncidentTeam", function (e) {
+                e.preventDefault();
+                AddIncidentTeam();
+            });
+
+            $(document).off("click", ".cancelIncidentTeam");
+            $(document).on("click", ".cancelIncidentTeam", function (e) {
+                e.preventDefault();
+                $("#addIncidentTeam").empty().html('');
+                $('li.active').trigger('click');
+            });
+
+            $(document).on("click", ".saveIncidentTeam", function (e) {
+                e.preventDefault();
+                var isValid = true;
+                $("#saveIncidentTeamDiv").find("input[data-val-required]").each(function () {
+                    var $field = $(this);
+                    var value = $.trim($field.val());
+                    if (value === "") {
+                        isValid = false;
+                        showError($field);
+                    } else {
+                        clearError($field);
+                    }
+                });
+
+                if (isValid) {
+                    SaveIncidentTeam();
+                }
+            });
+
+            $(document).off("click", ".editIncidentTeam");
+            $(document).on("click", ".editIncidentTeam", function (e) {
+                e.preventDefault();
+                var id = $(this).attr("id");
+                GetIncidentTeamById(id);
+            });
+
+            $(document).off("click", ".deleteIncidentTeam");
+            $(document).on("click", ".deleteIncidentTeam", function (e) {
+                e.preventDefault();
+                var id = $(this).attr("id");
+                DeleteIncidentTeamItem(id);
+            });
+        }
+    });
+
 
     // Start Source
     $(document).off("click", ".btnAddNewSource");
@@ -292,87 +407,7 @@
         DeleteAssetItem(id);
     });
 
-    // === IncidentTeam Handlers ===
-    $(document).off("click", ".btnAddNewIncidentTeam");
-    $(document).on("click", ".btnAddNewIncidentTeam", function (e) {
-        e.preventDefault();
-        AddIncidentTeam();
-    });
-
-    $(document).off("click", ".cancelIncidentTeam");
-    $(document).on("click", ".cancelIncidentTeam", function (e) {
-        e.preventDefault();
-        $("#addIncidentTeam").empty().html('');
-        $('li.active').trigger('click');
-    });
-
-    $(document).on("click", ".saveIncidentTeam", function (e) {
-        e.preventDefault();
-        var isValid = true;
-        $("#saveIncidentTeamDiv").find("input[data-val-required]").each(function () {
-            var $field = $(this);
-            var value = $.trim($field.val());
-            if (value === "") {
-                isValid = false;
-                showError($field);
-            } else {
-                clearError($field);
-            }
-        });
-
-        if (isValid) {
-            SaveIncidentTeam();
-        }
-    });
-
-    $(document).off("click", ".editIncidentTeam");
-    $(document).on("click", ".editIncidentTeam", function (e) {
-        e.preventDefault();
-        var id = $(this).attr("id");
-        GetIncidentTeamById(id);
-    });
-
-    $(document).off("click", ".deleteIncidentTeam");
-    $(document).on("click", ".deleteIncidentTeam", function (e) {
-        e.preventDefault();
-        var id = $(this).attr("id");
-        DeleteIncidentTeamItem(id);
-    });
-
-
-    // === AssetType Handlers ===
-    $(document).off("click", ".btnAddNewAssetType");
-    $(document).on("click", ".btnAddNewAssetType", function (e) {
-        e.preventDefault();
-        AddAssetType();
-    });
-
-    $(document).off("click", ".cancelAssetType");
-    $(document).on("click", ".cancelAssetType", function (e) {
-        e.preventDefault();
-        $("#addAssetType").empty().html('');
-        $('li.active').trigger('click')
-    });
-
-
-    $(document).on("click", ".saveAssetType", function (e) {
-        e.preventDefault();
-        var isValid = true;
-        $("#saveAssetTypeDiv").find("input[data-val-required]").each(function () {
-            var $field = $(this);
-            var value = $.trim($field.val());
-            if (value === "") {
-                isValid = false;
-                showError($field);
-            } else {
-                clearError($field);
-            }
-        });
-
-        if (isValid) {
-            SaveAssetType();
-        }
-    });
+   
 
     $(document).off("click", ".editAssetType");
     $(document).on("click", ".editAssetType", function (e) {
@@ -1194,6 +1229,11 @@ function DeleteAssetTypeItem(id) {
     }).then(function (result) { if (result.isConfirmed) { DeleteAssetTypeById(id); } });
 }
 
+// ----------------- setting.js (paste/replace) -----------------
+
+// Utility functions: showLoader/hideLoader/alerts assumed present in your project
+
+// === AJAX loaders ===
 async function GetAllIncidentTeams() {
     try {
         showLoader($(".setting"));
@@ -1201,6 +1241,7 @@ async function GetAllIncidentTeams() {
         if (!response.ok) throw new Error("Failed to load incident team list");
         const content = await response.text();
         $("#incidentTeamList").empty().html(content);
+        $("#Iteams").addClass("active");
     } catch (error) { console.error("Error loading incident team list:", error); }
     finally { hideLoader($(".setting")); }
 }
@@ -1212,6 +1253,7 @@ async function AddIncidentTeam() {
         if (!response.ok) throw new Error("Failed to load incident team form");
         const content = await response.text();
         $("#addIncidentTeam").empty().html(content);
+        if (typeof InitIncidentTeamPartial === "function") InitIncidentTeamPartial();
     } catch (error) { console.error("Error loading incident team form:", error); }
     finally { hideLoader($(".setting")); }
 }
@@ -1223,6 +1265,7 @@ async function GetIncidentTeamById(id) {
         if (!response.ok) throw new Error("Failed to load incident team");
         const content = await response.text();
         $("#addIncidentTeam").empty().html(content);
+        if (typeof InitIncidentTeamPartial === "function") InitIncidentTeamPartial();
     } catch (error) { console.error("Error loading incident team:", error); }
     finally { hideLoader($(".setting")); }
 }
@@ -1236,6 +1279,113 @@ async function DeleteIncidentTeamById(id) {
         GetAllIncidentTeams();
     } catch (error) { console.error("Error deleting incident team:", error); }
     finally { hideLoader($(".setting")); }
+}
+
+async function SaveIncidentTeam() {
+    try {
+        // run client-side validation before anything else
+        if (!validateIncidentTeamForm()) {
+            // validation plugin already shows messages; show a friendly toast as well if you like
+            SwalErrorAlert("Please fix validation errors before submitting.");
+            return;
+        }
+
+        // ensure correct indexing of dynamic list names
+        if (typeof window.reindexIncidentSpecializations === "function") {
+            window.reindexIncidentSpecializations();
+        }
+
+        let formData = new FormData(), obj = $("#NewIncidentTeamForm")[0];
+        if (!obj) { SwalErrorAlert("Form not found!"); return; }
+        let params = $(obj).serializeArray();
+
+        $.each(params, function (i, val) {
+            console.log("adding to formData", val.name, "=", val.value); // Debug log (optional)
+            formData.append(val.name, val.value);
+        });
+
+        showLoader($(".setting"));
+        let response = await fetch("/Settings/SaveIncidentTeam", { method: "POST", body: formData });
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addIncidentTeam").html("");
+            SwalSuccessAlert(result.data);
+            GetAllIncidentTeams();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save incident team.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving incident team!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+function validateIncidentTeamForm() {
+    // ensure form exists
+    const $form = $("#NewIncidentTeamForm");
+    if (!$form || $form.length === 0) {
+        console.warn("NewIncidentTeamForm not found for validation.");
+        return false;
+    }
+
+    // If the plugin hasn't been initialized, initialize with rules.
+    // Calling .validate() multiple times is safe; .form() simply validates current state.
+    $form.validate({
+        rules: {
+            // use the actual name attributes of your inputs. Update if different.
+            Name: { required: true, minlength: 3 },
+            Description: { required: true }
+        },
+        messages: {
+            Name: { required: "Team name is required", minlength: "At least 3 characters" },
+            Description: { required: "Description is required" }
+        },
+        errorClass: "text-danger",
+        errorElement: "span",
+        // place errors next to bootstrap form-control (adjust selectors if using different markup)
+        errorPlacement: function (error, element) {
+            // if using bootstrap input-group or custom layout, adjust accordingly
+            if (element.parent(".input-group").length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        highlight: function (element) {
+            $(element).addClass("is-invalid");
+        },
+        unhighlight: function (element) {
+            $(element).removeClass("is-invalid");
+        }
+    });
+
+    // validate and return boolean
+    return $form.valid();
+}
+
+/*
+ * Recommended: call this inside your partial init function so validation rules attach
+ * when the partial is loaded via AddIncidentTeam / GetIncidentTeamById.
+ *
+ * Example partial initializer:
+ */
+function InitIncidentTeamPartial() {
+    // attach validation rules to the partial form
+    validateIncidentTeamForm();
+
+    // any other init code: bind events for dynamic specializations, datepickers, etc.
+    // e.g. $("#NewIncidentTeamForm").on("submit", function(e){ e.preventDefault(); SaveIncidentTeam(); });
+}
+
+function DeleteIncidentTeamItem(id) {
+    Swal.fire({
+        title: 'Are you sure?', text: "You won't be able to revert this!", icon: 'warning',
+        showCancelButton: true, confirmButtonText: "Yes, delete it!", cancelButtonText: "No, cancel!",
+        customClass: { confirmButton: 'btn btn-success me-2', cancelButton: 'btn btn-danger' },
+        buttonsStyling: false
+    }).then(function (result) { if (result.isConfirmed) { DeleteIncidentTeamById(id); } });
 }
 
 async function SaveIncidentTeam() {
@@ -1262,3 +1412,160 @@ function DeleteIncidentTeamItem(id) {
         confirmButtonClass: 'btn btn-success me-2', cancelButtonClass: 'btn btn-danger', buttonsStyling: false
     }).then(function (result) { if (result.isConfirmed) { DeleteIncidentTeamById(id); } });
 }
+async function GetAllPolicies() {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetAllPolicies", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load policy list");
+
+        const content = await response.text();
+        $("#policyList").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading policy list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function AddPolicy() {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/AddPolicy", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load add policy partial");
+
+        const content = await response.text();
+        $("#addPolicy").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading add policy partial:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetPolicyById(id) {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetPolicyById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load policy item");
+
+        const content = await response.text();
+        $("#addPolicy").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading policy item:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function DeletePolicyById(id) {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/DeletePolicyById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to delete policy");
+
+        SwalSuccessAlert("Policy deleted successfully!");
+        GetAllPolicies();
+
+    } catch (error) {
+        console.error("Error deleting policy:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SavePolicy() {
+    try {
+        let form = [];
+        let formData = new FormData();
+        let obj = $("#NewPolicyForm")[0];
+
+        // Serialize other fields
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+            form.push({ name: val.name, value: val.value });
+        });
+
+        showLoader($(".setting"));
+
+        console.log(form);
+
+        // Send request
+        let response = await fetch("/Settings/SavePolicy", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addPolicy").html("");
+            SwalSuccessAlert(result.data);
+            GetAllPolicies();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save policy.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving policy!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+function DeletePolicyItem(id) {
+    let confirmBtnText = "Yes, delete it!";
+    let cancelBtnText = "No, cancel!";
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmBtnText,
+        cancelButtonText: cancelBtnText,
+        confirmButtonClass: 'btn btn-success me-2',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            DeletePolicyById(id);
+        }
+    });
+}
+// End Policy

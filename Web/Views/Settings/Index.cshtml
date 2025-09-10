@@ -340,7 +340,7 @@
         }
 
     .btnAddNew, .btnAddNewSource, .btnAddNewEvent, .btnAddNewseverityLevl, .btnAddNewstatusLegend,
-    .btnAddNewAsset, .btnAddNewAssetType {
+    .btnAddNewAsset, .btnAddNewAssetType.btnAddNewPolicy {
         background-color: #f54e00;
         color: #fff;
         border: none;
@@ -1161,6 +1161,7 @@
                     <li class="settingAllTab" data-tab="asset"><i class="fa-solid fa-barcode"></i> Asset IDs</li>
                     <li class="settingAllTab" data-tab="type"><i class="fa-solid fa-building"></i> Asset Types</li>
                     <li class="settingAllTab" data-tab="status"><i class="fa-solid fa-palette"></i> Status Legend</li>
+                  @*  <li class="settingAllTab" data-tab="policy"><i class="fa-solid fa-gavel"></i> Policies</li> *@
                     <li class="settingAllTab" data-tab="teams"><i class="fa-brands fa-teamspeak"></i> Assign Response Teams</li>
                     <li class="settingAllTab" data-tab="user" onclick="showContent('user')"><i class="fa fa-user-circle"></i> User Management</li>
                     <li class="settingAllTab" data-tab="teamManagement" onclick="showContent('team')">
@@ -1244,6 +1245,19 @@
                     <div id="statusLegendList">
                     </div>
                 </div>
+               @*  <div id="policy" class="tab-content">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Policy</h3>
+                        <button class="btn btn-primary btnAddNewPolicy">
+                            <i class="fa-solid fa-plus"></i> Add New
+                        </button>
+                    </div>
+
+                    <div id="addPolicy">
+                    </div>
+                    <div id="policyList">
+                    </div>
+                </div> *@
                 <div id="teams" class="tab-content">
                     <div class="d-flex justify-content-between">
                         <h3>Assign Response Teams</h3>
@@ -1575,19 +1589,27 @@
                 <div class="sidebar teamSiderbar">
                     <h3>Sections</h3>
                      <ul>
-                        <li class="active teamAllTab" data-tab="Iteams"><i class="fa-solid fa-user-group"></i> Teams</li>
+                        <li class="teamAllTab active" data-tab="Iteams"><i class="fa-solid fa-user-group"></i> Teams</li>
                         <li class="teamAllTab" data-tab="Iusers"><i class="fa-regular fa-file-lines"></i>Users</li>
                         <li class="teamAllTab" data-tab="Ipolicies"><i class="fa-regular fa-file-lines"></i>Policies</li>
-                       
                     </ul>
                 </div>
 
 
                 <!-- Content -->
-                <div class="content" id="rightContent">
+                <div class="content" id="rightContent"> 
                     <div id="Iteams" class="tab-content active teamRightSec">
                         <h3>Teams</h3>
-                        <div class="form-container addNewTeam">
+                        <button class="btn btn-primary btnAddNewIncidentTeam">
+                        <i class="fa-solid fa-plus"></i> Add New Team
+                        </button>
+                        <div id="addIncidentTeam">
+                        </div>
+                        <div id="incidentTeamList">               
+                        </div>
+                    </div>
+              
+                        @* <div class="form-container addNewTeam">
                             <h3>Add New Team</h3>
 
                             <input type="text" class="form-control" placeholder="Team name (e.g., Distribution Emergency Team)">
@@ -1611,7 +1633,7 @@
                             <button class="btn btn-green">Add Team</button>
                             <button class="btn btn-gray">Cancel</button>
                         </div>
-                        <div class="cards">
+                       @*  <div class="cards">
                             <div class="card">
                                 <h4>
                                     Distribution Emergency Team
@@ -1668,10 +1690,10 @@
                                 </div>
                                 <p>0 members</p>
                             </div>
-                        </div>
-                    </div>
-                   
-                    <div id="Iusers" class="tab-content userRightSec">
+                        </div> *@
+                @* </div>
+ *@
+                <div id="Iusers" class="tab-content userRightSec">
                         <h2>Users</h2>
 
                         <!-- Form -->
@@ -1759,19 +1781,30 @@
                     </div>
                     <div id="Ipolicies" class="tab-content policiesRightSec ">
                         <h2>Policies</h2>
-                        <a href="#" class="add-task-btn"><i class="fa-solid fa-plus"></i> Add Task</a>
-                        <div style="clear:both;"></div>
+                        <button class="btn btn-primary btnAddNewPolicy">
+                            <i class="fa-solid fa-plus"></i> Add Task
+                        </button>
+                        <div id="addPolicy">
+                        </div> 
+                        <div id="policyList">
+                        </div>
+                     </div>
 
+
+                      @*   <a href="#" class="add-task-btn btnAddNewPolicy"><i class="fa-solid fa-plus"></i> Add Task</a>
+                        <div style="clear:both;"></div>
+ *@
                         <!-- Add New Task Form -->
-                        <div class="form-container">
+                        @* <div class="form-container">
                             <h3>Add New Task</h3>
                             <input type="text" class="form-control" placeholder="Task title...">
                             <textarea placeholder="Task description..."></textarea>
-                            <button class="btn btn-green">Add Task</button>
+                            <button class="btn btn-green btnAddNewPolicy">Add Task</button>
                             <button class="btn btn-gray">Cancel</button>
-                        </div>
+                        </div> *@
+                       
 
-                        <!-- Task List -->
+                       @*  <!-- Task List -->
                         <div class="task-item">
                             <div class="task-info">
                                 <i class="fa-solid fa-grip-vertical"></i>
@@ -1824,7 +1857,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> *@
                    
 
                 </div>

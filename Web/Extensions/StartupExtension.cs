@@ -222,7 +222,7 @@ namespace Web.Extensions
             services.AddScoped(typeof(IEventTypeService<,,>), typeof(EventTypeService<,,>));
             services.AddScoped(typeof(ISeverityLevelService<,,>), typeof(SeverityLevelService<,,>));
             services.AddScoped(typeof(IAssetIdService<,,>), typeof(AssetIdService<,,>));
-
+            services.AddScoped(typeof(IUserManagementService<,,>), typeof(UserManagementService<,,>));
             services.AddScoped(typeof(IStatusLegendService<,,>), typeof(StatusLegendService<,,>));
             services.AddScoped(typeof(IAssignResponseTeamsService<,,>),typeof(AssignResponseTeamsService<,,>));
             services.AddScoped<IIncidentService, IncidentService>();

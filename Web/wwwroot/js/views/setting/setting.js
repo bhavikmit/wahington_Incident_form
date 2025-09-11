@@ -25,130 +25,14 @@
             GetAllAssetTypes();
         }
         else if (tab === "teamManagement") {
-            //GetAllIncidentTeams();
-            //$(".teamAllTab.active").trigger("click");
             $(".teamsidebar ul li:eq(0)").trigger('click');
             $(".teamsidebar ul li:eq(0)").addClass("active");
         }
+        else if (tab === "user") {
+            GetAllUserManagement();
+        }
     });
-    // end setting tabs
-   
-    //$(document).off("click", ".teamAllTab");
-    //$(document).on("click", ".teamAllTab", function (e) {
-    //    e.preventDefault();
-    //    var tab = $(this).attr("data-tab");
 
-    //    if (tab === "Ipolicies") {
-    //        // load list when policies tab clicked
-    //        GetAllPolicies();
-
-
-    //        // open add policy partial
-    //        $(document).off("click", ".btnAddNewPolicy");
-    //        $(document).on("click", ".btnAddNewPolicy", function (e) {
-    //            e.preventDefault();
-    //            AddPolicy();
-    //        });
-
-    //        $(document).off("click", ".cancelPolicy");
-    //        $(document).on("click", ".cancelPolicy", function (e) {
-    //            e.preventDefault();
-
-    //            $("#addPolicy").empty();
-
-              
-    //            GetAllPolicies();
-
-                
-    //            $('.teamAllTab[data-tab="Ipolicies"]').addClass('active').siblings().removeClass('active');
-    //        });
-
-    //        // delete policy
-    //        $(document).off("click", ".deletePolicy");
-    //        $(document).on("click", ".deletePolicy", function (e) {
-    //            e.preventDefault();
-    //            var id = $(this).attr("id");
-    //            DeletePolicyById(id);
-    //        });
-
-    //        // edit policy
-    //        $(document).off("click", ".editPolicy");
-    //        $(document).on("click", ".editPolicy", function (e) {
-    //            e.preventDefault();
-    //            var id = $(this).attr("id");
-    //            GetPolicyById(id);
-    //        });
-
-    //        // save policy (client-side required check + submit)
-    //        $(document).off("click", ".savePolicy");
-    //        $(document).on("click", ".savePolicy", function (e) {
-    //            e.preventDefault();
-    //            var isValid = true;
-
-    //            $("#savePolicyDiv").find("input[data-val-required], textarea[data-val-required]").each(function () {
-    //                var $field = $(this);
-    //                var value = $.trim($field.val());
-    //                if (value === "") {
-    //                    isValid = false;
-    //                    showError($field);
-    //                } else {
-    //                    clearError($field);
-    //                }
-    //            });
-
-    //            if (isValid) {
-    //                SavePolicy();
-    //            }
-    //        });
-    //    } else if (tab === "Iteams") {
-    //        GetAllIncidentTeams();
-    //        $(document).off("click", ".btnAddNewIncidentTeam");
-    //        $(document).on("click", ".btnAddNewIncidentTeam", function (e) {
-    //            e.preventDefault();
-    //            AddIncidentTeam();
-    //        });
-
-    //        $(document).off("click", ".cancelIncidentTeam");
-    //        $(document).on("click", ".cancelIncidentTeam", function (e) {
-    //            e.preventDefault();
-    //            $("#addIncidentTeam").empty().html('');
-    //            $('li.active').trigger('click');
-    //        });
-
-    //        $(document).on("click", ".saveIncidentTeam", function (e) {
-    //            e.preventDefault();
-    //            var isValid = true;
-    //            $("#saveIncidentTeamDiv").find("input[data-val-required]").each(function () {
-    //                var $field = $(this);
-    //                var value = $.trim($field.val());
-    //                if (value === "") {
-    //                    isValid = false;
-    //                    showError($field);
-    //                } else {
-    //                    clearError($field);
-    //                }
-    //            });
-
-    //            if (isValid) {
-    //                SaveIncidentTeam();
-    //            }
-    //        });
-
-    //        $(document).off("click", ".editIncidentTeam");
-    //        $(document).on("click", ".editIncidentTeam", function (e) {
-    //            e.preventDefault();
-    //            var id = $(this).attr("id");
-    //            GetIncidentTeamById(id);
-    //        });
-
-    //        $(document).off("click", ".deleteIncidentTeam");
-    //        $(document).on("click", ".deleteIncidentTeam", function (e) {
-    //            e.preventDefault();
-    //            var id = $(this).attr("id");
-    //            DeleteIncidentTeamItem(id);
-    //        });
-    //    }
-    //});
     $(document).off("click", ".teamAllTab");
     $(document).on("click", ".teamAllTab", function (e) {
         e.preventDefault();
@@ -160,169 +44,11 @@
         else if (tab === "Iteams") {
             GetAllIncidentTeams();
         }
-        // add other tabs here if needed
+        else if (tab === "user") {
+            GetAllUserManagement();
+        }
     });
-    //policy
-     //open add policy partial
-            $(document).off("click", ".btnAddNewPolicy");
-            $(document).on("click", ".btnAddNewPolicy", function (e) {
-                e.preventDefault();
-                AddPolicy();
-            });
-
-            $(document).off("click", ".cancelPolicy");
-            $(document).on("click", ".cancelPolicy", function (e) {
-                e.preventDefault();
-
-                $("#addPolicy").empty();
-
-
-                GetAllPolicies();
-
-
-                $('.teamAllTab[data-tab="Ipolicies"]').addClass('active').siblings().removeClass('active');
-            });
-
-            // delete policy
-            $(document).off("click", ".deletePolicy");
-            $(document).on("click", ".deletePolicy", function (e) {
-                e.preventDefault();
-                var id = $(this).attr("id");
-                DeletePolicyById(id);
-            });
-
-            // edit policy
-            $(document).off("click", ".editPolicy");
-            $(document).on("click", ".editPolicy", function (e) {
-                e.preventDefault();
-                var id = $(this).attr("id");
-                GetPolicyById(id);
-            });
-
-            // save policy (client-side required check + submit)
-            $(document).off("click", ".savePolicy");
-            $(document).on("click", ".savePolicy", function (e) {
-                e.preventDefault();
-                var isValid = true;
-
-                $("#savePolicyDiv").find("input[data-val-required], textarea[data-val-required]").each(function () {
-                    var $field = $(this);
-                    var value = $.trim($field.val());
-                    if (value === "") {
-                        isValid = false;
-                        showError($field);
-                    } else {
-                        clearError($field);
-                    }
-                });
-
-                if (isValid) {
-                    SavePolicy();
-                }
-            }); // open add policy partial
-            $(document).off("click", ".btnAddNewPolicy");
-            $(document).on("click", ".btnAddNewPolicy", function (e) {
-                e.preventDefault();
-                AddPolicy();
-            });
-
-            $(document).off("click", ".cancelPolicy");
-            $(document).on("click", ".cancelPolicy", function (e) {
-                e.preventDefault();
-
-                $("#addPolicy").empty();
-
-
-                GetAllPolicies();
-
-
-                $('.teamAllTab[data-tab="Ipolicies"]').addClass('active').siblings().removeClass('active');
-            });
-
-            // delete policy
-            $(document).off("click", ".deletePolicy");
-            $(document).on("click", ".deletePolicy", function (e) {
-                e.preventDefault();
-                var id = $(this).attr("id");
-                DeletePolicyById(id);
-            });
-
-            // edit policy
-            $(document).off("click", ".editPolicy");
-            $(document).on("click", ".editPolicy", function (e) {
-                e.preventDefault();
-                var id = $(this).attr("id");
-                GetPolicyById(id);
-            });
-
-            // save policy (client-side required check + submit)
-            $(document).off("click", ".savePolicy");
-            $(document).on("click", ".savePolicy", function (e) {
-                e.preventDefault();
-                var isValid = true;
-
-                $("#savePolicyDiv").find("input[data-val-required], textarea[data-val-required]").each(function () {
-                    var $field = $(this);
-                    var value = $.trim($field.val());
-                    if (value === "") {
-                        isValid = false;
-                        showError($field);
-                    } else {
-                        clearError($field);
-                    }
-                });
-
-                if (isValid) {
-                    SavePolicy();
-                }
-            });
-    //teams
-    
-            $(document).on("click", ".btnAddNewIncidentTeam", function (e) {
-                e.preventDefault();
-                AddIncidentTeam();
-            });
-
-            $(document).off("click", ".cancelIncidentTeam");
-            $(document).on("click", ".cancelIncidentTeam", function (e) {
-                e.preventDefault();
-                $("#addIncidentTeam").empty().html('');
-                $('li.active').trigger('click');
-            });
-
-            $(document).on("click", ".saveIncidentTeam", function (e) {
-                e.preventDefault();
-                var isValid = true;
-                $("#saveIncidentTeamDiv").find("input[data-val-required]").each(function () {
-                    var $field = $(this);
-                    var value = $.trim($field.val());
-                    if (value === "") {
-                        isValid = false;
-                        showError($field);
-                    } else {
-                        clearError($field);
-                    }
-                });
-
-                if (isValid) {
-                    SaveIncidentTeam();
-                }
-            });
-
-            $(document).off("click", ".editIncidentTeam");
-            $(document).on("click", ".editIncidentTeam", function (e) {
-                e.preventDefault();
-                var id = $(this).attr("id");
-                GetIncidentTeamById(id);
-            });
-
-            $(document).off("click", ".deleteIncidentTeam");
-            $(document).on("click", ".deleteIncidentTeam", function (e) {
-                e.preventDefault();
-                var id = $(this).attr("id");
-                DeleteIncidentTeamItem(id);
-            });
-
+    // end setting tabs
 
     // Start Source
     $(document).off("click", ".btnAddNewSource");
@@ -330,6 +56,50 @@
         e.preventDefault();
         AddRelationships();
     });
+
+    $(document).off("click", ".btnAddNewUserManagement");
+    $(document).on("click", ".btnAddNewUserManagement", function (e) {
+        e.preventDefault();
+        AddUserManagement();
+    });
+
+    $(document).off("click", ".cancelusermanagement");
+    $(document).on("click", ".cancelusermanagement", function (e) {
+        e.preventDefault();
+        $("#addUserManagement").empty().html('');
+        $('li.active').trigger('click')
+    });
+
+    $(document).off("click", ".deleteusermanagement");
+    $(document).on("click", ".deleteusermanagement", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        DeleteUserManagement(id);
+    });
+
+    $(document).on("click", ".saveusermanagement", function (e) {
+        e.preventDefault();
+        var isValid = true;
+        if ($("#RoleId").val() === "" || $("#RoleId").val() === null) {
+            SwalErrorAlert("Please Select Role");
+            isValid = false;
+        }
+        $("#addUserModal").find("input[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            } else {
+                clearError($field);
+            }
+        });
+
+        if (isValid) {
+            SaveUserManagement();
+        }
+    });
+
 
     $(document).off("click", ".cancelSource");
     $(document).on("click", ".cancelSource", function (e) {
@@ -1748,3 +1518,64 @@ function DeletePolicyItem(id) {
     });
 }
 // End Policy
+
+async function GetAllUserManagement() {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/GetAllUserManagement", { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
+        if (!response.ok) throw new Error("Failed to load User Management");
+        const content = await response.text();
+        $("#UserManagementlist").empty().html(content);
+    } catch (error) { console.error("Error loading User Management list:", error); }
+    finally { hideLoader($(".setting")); }
+}
+
+async function AddUserManagement() {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/AddUserManagement", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load User Management");
+        const content = await response.text();       
+        $("#addUserManagement").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading User Management:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveUserManagement() {
+    try {
+        let form = [], formData = new FormData(), obj = $("#NewUserManagementForm")[0];
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) { formData.append(val.name, val.value); form.push({ name: val.name, value: val.value }); });
+        showLoader($(".setting"));
+        let response = await fetch("/Settings/SaveUserManagement", { method: "POST", body: formData });
+        let result = await response.json();
+        if (result.success) {
+            $("#addUserManagement").html("");
+            SwalSuccessAlert(result.data);
+            GetAllUserManagement();
+        } else { SwalErrorAlert(result.message || "Failed to save usermanagement."); }
+    } catch (error) { SwalErrorAlert("Error while saving usermanagement!"); console.error(error); }
+    finally { hideLoader($(".setting")); }
+}
+
+async function DeleteUserManagement(id) {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/DeleteUserManagementById?id=" + id, { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
+        if (!response.ok) throw new Error("Failed to delete usermanagement");
+        SwalSuccessAlert("User Management deleted successfully!");
+        GetAllUserManagement();
+    } catch (error) { console.error("Error deleting usermanagement:", error); }
+    finally { hideLoader($(".setting")); }
+}

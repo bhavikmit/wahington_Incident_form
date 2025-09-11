@@ -1,0 +1,16 @@
+﻿@using System.Web
+@using ViewModels
+@model PolicyModifyViewModel
+
+@Html.AntiForgeryToken()
+
+<form id="NewPolicyForm">
+    <div class="form-container">
+        <h3>Add New Policy</h3>
+        <input type="hidden" value="@Model.Id" name="Id" id="policy_@Model.Id" />
+        <input type="text" class="form-control" placeholder="Policy name..." asp-for="Name" />
+        <textarea placeholder="Policy description..." asp-for="Description"></textarea>
+        <button type="submit" class="btn btn-green savePolicy">Add Policy</button>
+        <button type="button" class="btn btn-gray cancelPolicy">Cancel</button>
+    </div>
+</form>

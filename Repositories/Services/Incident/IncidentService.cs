@@ -200,6 +200,7 @@ namespace Repositories.Common
                     VisibleDamagePresentId = viewModel.incidentEnvironmentalViewModel?.VisibleDamageID,
                     PeopleInjuredId = viewModel.incidentEnvironmentalViewModel?.PeopleInjuredID,
                     GasPresentId = viewModel.incidentEnvironmentalViewModel?.GasodorpresentID,
+                    EmergencyResponseNotifiedId = viewModel.incidentEnvironmentalViewModel?.EmergencyResponseNotifiedID,
 
                     Landmark = viewModel.incidentiLocation?.Landmark,
                     LocationAddress = viewModel.incidentiLocation?.Address,
@@ -278,6 +279,7 @@ namespace Repositories.Common
                 incident.VisibleDamagePresentId = env?.VisibleDamageID;
                 incident.PeopleInjuredId = env?.PeopleInjuredID;
                 incident.GasPresentId = env?.GasodorpresentID;
+                incident.EmergencyResponseNotifiedId = env?.EmergencyResponseNotifiedID;
 
                 var loc = viewModel.incidentiLocation;
                 incident.Landmark = loc?.Landmark;
@@ -513,6 +515,7 @@ namespace Repositories.Common
                 incidentViewModel.incidentEnvironmentalViewModel.EvacuationRequiredID = incident.EvacuationRequiredId;
                 incidentViewModel.incidentEnvironmentalViewModel.VisibleDamageID = incident.VisibleDamagePresentId;
                 incidentViewModel.incidentEnvironmentalViewModel.GasodorpresentID = incident.GasPresentId;
+                incidentViewModel.incidentEnvironmentalViewModel.EmergencyResponseNotifiedID = incident.EmergencyResponseNotifiedId;
 
                 incidentViewModel.incidentSupportingInfoViewModel.ImageUrl = incident.ImageUrl;
                 incidentViewModel.incidentSupportingInfoViewModel.Notes = incident.SupportInfoNotes;
@@ -563,6 +566,8 @@ namespace Repositories.Common
                         IncidentNumber = incident.IncidentID,
                         CreatedOn = incident.CreatedOn,
                         UpdatedOn = incident.UpdatedOn,
+                        CreatedOnDate = GetDate(Convert.ToString(incident.CreatedOn)),
+                        CreatedOnTime = GetTime(Convert.ToString(incident.CreatedOn)),
                     },
 
                     incidentCellerInformation = new IncidentCellerInformationViewModel
@@ -572,7 +577,9 @@ namespace Repositories.Common
                         CallerAddress = incident.CallerAddress,
                         CallTime = incident.CallTime,
                         RelationshipId = incident.RelationshipId,
-                        RelationshipName = incident.Relationship?.Name ?? string.Empty
+                        RelationshipName = incident.Relationship?.Name ?? string.Empty,
+                        CallDateInFormat = GetDate(Convert.ToString(incident.CallTime)),
+                        CallTimeInFormat = GetTime(Convert.ToString(incident.CallTime)),
                     },
 
                     incidentiLocation = new IncidentiLocationViewModel
@@ -592,12 +599,14 @@ namespace Repositories.Common
                         VisibleDamageID = incident.VisibleDamagePresentId,
                         PeopleInjuredID = incident.PeopleInjuredId,
                         EvacuationRequiredID = incident.EvacuationRequiredId,
+                        EmergencyResponseNotifiedID = incident.EmergencyResponseNotifiedId,
 
                         GasOdorText = GetIndicator(incident.GasPresentId),
                         HissingSoundText = GetIndicator(incident.HissingPresentId),
                         VisibleDamageText = GetIndicator(incident.VisibleDamagePresentId),
                         PeopleInjuredText = GetIndicator(incident.PeopleInjuredId),
-                        EvacuationRequiredText = GetIndicator(incident.EvacuationRequiredId)
+                        EvacuationRequiredText = GetIndicator(incident.EvacuationRequiredId),
+                        EmergencyResponseNotifiedText = GetIndicator(incident.EmergencyResponseNotifiedId)
                     },
 
                     incidentSupportingInfoViewModel = new IncidentSupportingInfoViewModel

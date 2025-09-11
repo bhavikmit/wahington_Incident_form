@@ -74,15 +74,15 @@
         var isValid = true;
 
         if (!$("#IsOtherEvent").is(":checked")) {
-            if ($(".eventCheck input[type='radio']:checked").length === 0) {
+            if ($(".eventCheck input[type='checkbox']:checked").length === 0) {
                 isValid = false;
-                $(".eventCheck input[type='radio']").css("outline", "2px solid red");
+                $(".eventCheck input[type='checkbox']").css("outline", "2px solid red");
             } else {
-                $(".eventCheck input[type='radio']").css("outline", "none");
+                $(".eventCheck input[type='checkbox']").css("outline", "none");
             }
         }
         else {
-            $(".eventCheck input[type='radio']").css("outline", "none");
+            $(".eventCheck input[type='checkbox']").css("outline", "none");
             var OtherEventDetailText = $("#OtherEventDetail").val();
             if (OtherEventDetailText == "") {
                 isValid = false;
@@ -308,7 +308,7 @@
     $(document).on("change", "#IsOtherEvent", function (e) {
         if ($(this).is(":checked")) {
             $(".OtherEventDetail").show();
-            $(".eventCheck input[type='radio']").prop("checked", false);
+            $(".eventCheck input[type='checkbox']").prop("checked", false);
         }
         else {
             $("#OtherEventDetail").val('');
@@ -332,9 +332,9 @@
         }
     });
 
-    $(document).off("change", ".eventCheck input[type='radio']");
-    $(document).on("change", ".eventCheck input[type='radio']", function () {
-        if ($(".eventCheck input[type='radio']:checked").length > 0) {
+    $(document).off("change", ".eventCheck input[type='checkbox']");
+    $(document).on("change", ".eventCheck input[type='checkbox']", function () {
+        if ($(".eventCheck input[type='checkbox']:checked").length > 0) {
             $(".OtherEventDetail").hide();
             $("#OtherEventDetail").val('');
             $("#IsOtherEvent").prop("checked", false); // uncheck if needed
@@ -468,7 +468,7 @@ async function SaveIncidentForm() {
                 assetIds.push(val.value);
                 form.push({ name: val.name, value: val.value });
             }
-            else if (val.name === "eventTypes.Id") {
+            else if (val.name === "incidentDetails.EventTypeIds") {
                 eventTypeIds.push(val.value);
                 form.push({ name: val.name, value: val.value });
             }

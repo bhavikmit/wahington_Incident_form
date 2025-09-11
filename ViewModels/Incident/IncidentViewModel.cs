@@ -37,6 +37,8 @@ namespace ViewModels.Incident
         public long? RelationshipId { get; set; } = default!;
         public DateTime CallTime { get; set; } = default!;
         public string RelationshipName { get; set; } = string.Empty;
+        public string CallDateInFormat { get; set; } = string.Empty;
+        public string CallTimeInFormat { get; set; } = string.Empty;
     }
     public class IncidentiLocationViewModel
     {
@@ -63,12 +65,14 @@ namespace ViewModels.Incident
         public long? VisibleDamageID { get; set; } = default!;
         public long? PeopleInjuredID { get; set; } = default!;
         public long? EvacuationRequiredID { get; set; } = default!;
+        public long? EmergencyResponseNotifiedID { get; set; } = default!;
         // ✅ Friendly
         public string GasOdorText { get; set; } = string.Empty;
         public string HissingSoundText { get; set; } = string.Empty;
         public string VisibleDamageText { get; set; } = string.Empty;
         public string PeopleInjuredText { get; set; } = string.Empty;
         public string EvacuationRequiredText { get; set; } = string.Empty;
+        public string EmergencyResponseNotifiedText { get; set; } = string.Empty;
     }
     public class IncidentSupportingInfoViewModel
     {
@@ -87,6 +91,8 @@ namespace ViewModels.Incident
         public string IncidentNumber { get; set; } = string.Empty;
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
+        public string CreatedOnDate { get; set; }
+        public string CreatedOnTime { get; set; }
     }
 
     public class IncidentGridViewModel

@@ -149,7 +149,32 @@
                 </div>
             </div>
         </div>
-
+        <div class="col-md-12">
+            <div class="mb-3 d-flex align-items-center justify-content-start indicators">
+                <label class="form-label d-block">Emergency Response Notified?</label>
+                <div class="selectRadio">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="incidentEnvironmentalViewModel.EmergencyResponseNotifiedID" id="evacYes" value="1" asp-for="incidentEnvironmentalViewModel.EmergencyResponseNotifiedID">
+                        <label class="form-check-label" for="evacYes">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        @if (Model.Id > 0)
+                        {
+                            <input class="form-check-input" type="radio" name="incidentEnvironmentalViewModel.EmergencyResponseNotifiedID" id="evacNo" value="0" asp-for="incidentEnvironmentalViewModel.EmergencyResponseNotifiedID">
+                        }
+                        else
+                        {
+                            <input class="form-check-input" type="radio" checked name="incidentEnvironmentalViewModel.EmergencyResponseNotifiedID" id="evacNo" value="0" asp-for="incidentEnvironmentalViewModel.EmergencyResponseNotifiedID">
+                        }
+                        <label class="form-check-label" for="evacNo">No</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="incidentEnvironmentalViewModel.EmergencyResponseNotifiedID" id="evacUnknown" value="2" asp-for="incidentEnvironmentalViewModel.EmergencyResponseNotifiedID">
+                        <label class="form-check-label" for="evacUnknown">N/A</label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 

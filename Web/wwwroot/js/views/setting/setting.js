@@ -27,8 +27,8 @@
         else if (tab === "teamManagement") {
             //GetAllIncidentTeams();
             //$(".teamAllTab.active").trigger("click");
-            $(".teamSiderbar ul li:eq(0)").trigger('click');
-            $(".teamSiderbar ul li:eq(0)").addClass("active");
+            $(".teamsidebar ul li:eq(0)").trigger('click');
+            $(".teamsidebar ul li:eq(0)").addClass("active");
         }
     });
     // end setting tabs
@@ -41,6 +41,7 @@
         if (tab === "Ipolicies") {
             // load list when policies tab clicked
             GetAllPolicies();
+
 
             // open add policy partial
             $(document).off("click", ".btnAddNewPolicy");

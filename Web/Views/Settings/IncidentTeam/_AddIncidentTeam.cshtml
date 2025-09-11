@@ -22,7 +22,7 @@
                 {
                     if (string.Equals(d, Model?.Department, StringComparison.OrdinalIgnoreCase))
                     {
-                        <option value="@d" selected="selected">@d</option>  
+                        <option value="@d" selected="selected">@d</option>
                     }
                     else
                     {
@@ -130,20 +130,19 @@
     (function () {
         function reindexSpecializations() {
             $("#specializationsList .specialization-row").each(function (i, row) {
-                $(row).find("input").attr("name", "SpecializationList[" + i + "]");
+                $(row).find("input.specialization-input").attr("name", "SpecializationList[" + i + "]");
             });
         }
 
         // Quick-add from small input: add a new row into #specializationsList
         $("#addSpecializationBtn").off("click").on("click", function (e) {
             e.preventDefault();
-            var raw = $("#specializationInput").val() || "";
-            raw = raw.toString().trim();
+            var raw = ($("#specializationInput").val() || "").toString().trim();
             if (!raw) return;
 
             // prevent adding exact duplicate (case-insensitive)
             var dup = false;
-            $("#specializationsList .specialization-row input").each(function () {
+            $("#specializationsList .specialization-row input.specialization-input").each(function () {
                 if ($(this).val() && $(this).val().toString().trim().toLowerCase() === raw.toLowerCase()) {
                     dup = true;
                     return false;
@@ -155,14 +154,29 @@
             }
 
             var index = $("#specializationsList .specialization-row").length;
-            var safe = raw.replace(/"/g, '&quot;');
-            var row = `
-                <div class="input-group mb-2 specialization-row">
-                    <input type="text" name="SpecializationList[${index}]" value="${safe}" class="form-control specialization-input" />
-                    <button type="button" class="btn btn-danger remove-specialization">Delete</button>
-                </div>`;
-            $("#specializationsList").append(row);
+
+            // Build row with jQuery to avoid HTML parsing issues
+            var $row = $("<div>").addClass("input-group mb-2 specialization-row");
+            var $input = $("<input>")
+                .attr({
+                    type: "text",
+                    name: "SpecializationList[" + index + "]",
+                    value: raw
+                })
+                .addClass("form-control specialization-input");
+            var $btn = $("<button>")
+                .attr("type", "button")
+                .addClass("btn btn-danger remove-specialization")
+                .text("Delete");
+
+            $row.append($input).append($btn);
+            $("#specializationsList").append($row);
+
+            // clear input and focus
             $("#specializationInput").val("").focus();
+
+            // reindex (just in case) — keeps indices continuous
+            reindexSpecializations();
         });
 
         // Enter key in quick input triggers add
@@ -179,5 +193,10 @@
             reindexSpecializations();
         });
 
-    
+        // If there are existing rows rendered by server, ensure they are indexed properly on load
+        $(function () {
+            reindexSpecializations();
+        });
+
+    })();
 </script>

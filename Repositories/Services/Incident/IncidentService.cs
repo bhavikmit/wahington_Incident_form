@@ -533,6 +533,8 @@ namespace Repositories.Common
                         IncidentNumber = incident.IncidentID,
                         CreatedOn = incident.CreatedOn,
                         UpdatedOn = incident.UpdatedOn,
+                        CreatedOnDate = GetDate(Convert.ToString(incident.CreatedOn)),
+                        CreatedOnTime = GetTime(Convert.ToString(incident.CreatedOn)),
                     },
 
                     incidentCellerInformation = new IncidentCellerInformationViewModel
@@ -542,7 +544,9 @@ namespace Repositories.Common
                         CallerAddress = incident.CallerAddress,
                         CallTime = incident.CallTime,
                         RelationshipId = incident.RelationshipId,
-                        RelationshipName = incident.Relationship?.Name ?? string.Empty
+                        RelationshipName = incident.Relationship?.Name ?? string.Empty,
+                        CallDateInFormat = GetDate(Convert.ToString(incident.CallTime)),
+                        CallTimeInFormat = GetTime(Convert.ToString(incident.CallTime)),
                     },
 
                     incidentiLocation = new IncidentiLocationViewModel

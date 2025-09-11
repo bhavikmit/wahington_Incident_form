@@ -333,7 +333,7 @@
     }
 
     .started {
-        color: #3b82f6;
+        color: #FFA500;
     }
 
     .completed {
@@ -531,8 +531,8 @@
                             </div>
                             <div class="status-legend">
                                 <div class="legend-item"><i class="fa-solid fa-circle submitted"></i><span>Submitted (@Model.IncidentDashboard.TotalSubmittedCount)</span></div>
-                                <div class="legend-item"><i class="fa-solid fa-circle started"></i><span>Started (@Model.IncidentDashboard.TotalStartedCount)</span></div>
-                                <div class="legend-item"><i class="fa-solid fa-circle dispatched"></i><span>Dispatched (@Model.IncidentDashboard.TotalDispatchedCount)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle started"></i><span>Validated (@Model.IncidentDashboard.TotalValidatedCount)</span></div>
+                                @* <div class="legend-item"><i class="fa-solid fa-circle dispatched"></i><span>Dispatched (@Model.IncidentDashboard.TotalDispatchedCount)</span></div> *@
                                 <div class="legend-item"><i class="fa-solid fa-circle completed"></i><span>Completed (@Model.IncidentDashboard.TotalCompletedCount)</span></div>
                                 <div class="legend-item"><i class="fa-solid fa-circle cancelled"></i><span>Cancelled (@Model.IncidentDashboard.TotalCancelledCount)</span></div>
                             </div>
@@ -808,18 +808,27 @@
                     Location: incident.incidentloc,
                     CallerName: incident.callername,
                     CallerPhone: incident.callerphone,
-                    CallerAddress: incident.calleraddress
+                    CallerAddress: incident.calleraddress,
+                    EventType:incident.eventtype,
+                    AssetType:incident.assettype,
+                    Description:incident.description,
+                    Intersection:incident.intersection,
+                    Perimeter:incident.perimeter,
                 };
 
-                var popupTemplate = {
-                    title: "Incident Details - {IncidentID}",
-                    content: `
-                        <b>Severity:</b> {Severity}<br>
-                        <b>Location:</b> {Location}<br>
-                        <b>Caller Name:</b> {CallerName}<br>
-                        <b>Caller Phone:</b> {CallerPhone}<br>
-                        <b>Caller Address:</b> {CallerAddress}
-                    `
+            var popupTemplate = {
+                title: "Incident Details:",
+                content: `
+                    <b>Incident Number:</b> {IncidentID}<br>
+                    <b>Severity:</b> {Severity}<br>
+                    <b>Event Type:</b> {EventType}<br>
+                    <b>Asset Type:</b> {AssetType}<br>
+                    <b>Description:</b> {Description}<br>
+                    <b>Intersection:</b> {Intersection}<br>
+                    <b>Location:</b> {Location}<br>
+                    <b>Images:</b> <br>
+                    <b>Perimeter :</b> {Perimeter}<br>
+                `
                 };
 
                 var graphic = new Graphic({

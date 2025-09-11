@@ -7,6 +7,8 @@ using Centangle.Common.ResponseHelpers.Models;
 
 using DataLibrary;
 
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 
 using Enums;
@@ -31,6 +33,7 @@ using Repositories.Shared.UserInfoServices.Interface;
 
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using ViewModels;
@@ -43,11 +46,13 @@ namespace Repositories.Common
     {
         private readonly ApplicationDbContext _db;
         private readonly ILogger<IncidentValidationService> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IncidentValidationService(ApplicationDbContext db, ILogger<IncidentValidationService> logger)
+        public IncidentValidationService(ApplicationDbContext db, ILogger<IncidentValidationService> logger, IHttpContextAccessor httpContextAccessor)
         {
             _db = db;
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<List<IncidentValidationPendingViewModel>> GetValidationPendingList()
@@ -55,7 +60,7 @@ namespace Repositories.Common
             List<IncidentValidationPendingViewModel> incidentValidationPendings = new();
             try
             {
-                var query = _db.Incidents.Where(p => !p.IsDeleted && p.StatusLegendId != (int)StatusLegendEnum.Started)
+                var query = _db.Incidents.Where(p => !p.IsDeleted && p.StatusLegendId != (int)StatusLegendEnum.Validated)
                              .Include(p => p.SeverityLevel)
                              .AsQueryable();
 
@@ -90,7 +95,7 @@ namespace Repositories.Common
             List<RecentlyIncidentValidationViewModel> incidentValidationPendings = new();
             try
             {
-                var query = _db.Incidents.Where(p => !p.IsDeleted && p.StatusLegendId == (int)StatusLegendEnum.Started
+                var query = _db.Incidents.Where(p => !p.IsDeleted && p.StatusLegendId == (int)StatusLegendEnum.Validated
                              && p.UpdatedOn == DateTime.Today)
                              .Include(p => p.SeverityLevel)
                              .AsQueryable();
@@ -124,7 +129,7 @@ namespace Repositories.Common
             {
                 return await _db.Incidents
                     .Where(p => !p.IsDeleted
-                                && p.StatusLegendId != (int)StatusLegendEnum.Started
+                                && p.StatusLegendId != (int)StatusLegendEnum.Validated
                                 && p.SeverityLevel.Name == SeverityEnum.High.ToString())
                     .LongCountAsync();
             }
@@ -344,7 +349,121 @@ namespace Repositories.Common
             }
         }
 
+        public async Task<long> SaveIncidentValidation(IncidentSubmitViewModel request)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                // 1. Save main IncidentValidation
+                var incidentValidation = new IncidentValidation
+                {
+                    IncidentId = request.Id,
+                    IsMarkFalseAlarm = false,
+                    ValidationNotes = request.ValidationNotes,
+                    AssignResponseTeams = request.AssignResponseTeams,
+                    ConfirmedSeverityLevelId = request.ConfirmedSeverityLevelId,
+                    DiscoveryPerimeterId = request.DiscoveryPerimeterId,
+                };
+
+                await _db.IncidentValidations.AddAsync(incidentValidation);
+                await _db.SaveChangesAsync();
+
+                // 2. Policies
+                var policies = request.listSubmitPolicyVM.Select(item => new IncidentValidationPolicy
+                {
+                    IncidentId = request.Id,
+                    IncidentValidationId = incidentValidation.Id,
+                    PolicyId = item.PolicyId,
+                    Status = item.Status,
+                    TeamIds = item.Teams != null && item.Teams.Any()
+                                ? string.Join(",", item.Teams)
+                                : string.Empty
+                }).ToList();
+
+                if (policies.Any())
+                    await _db.IncidentValidationPolicies.AddRangeAsync(policies);
+
+                // 3. Communication history
+                var uploadRoot = Path.Combine(Directory.GetCurrentDirectory(), "Storage", "uploads", "Communication");
+                if (!Directory.Exists(uploadRoot))
+                    Directory.CreateDirectory(uploadRoot);
+
+                var communications = request.listSubmitCommunicationVM.Select(item =>
+                {
+                    var fileList = MoveFilesToPermanentStorage(item.FileMeta, uploadRoot);
+
+                    return new IncidentValidationCommunicationHistory
+                    {
+                        IncidentId = request.Id,
+                        IncidentValidationId = incidentValidation.Id,
+                        ImageUrl = string.Join(",", fileList),
+                        MessageType = item.MessageType,
+                        Message = item.Message,
+                        RecipientsIds = item.RecipientsIds,
+                        TimeStamp = item.TimeStamp,
+                        UserName = item.UserName,
+                    };
+                }).ToList();
+
+                if (communications.Any())
+                    await _db.IncidentValidationCommunicationHistories.AddRangeAsync(communications);
+
+                // 4. Update Incident record
+                var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == request.Id);
+                if (incident != null)
+                {
+                    var userId = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var userIdParsed = !string.IsNullOrEmpty(userId) ? long.Parse(userId) : 0;
+
+                    // ⚠️ Replace with real logged-in user
+                    //var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userIdParsed);
+
+                    incident.StatusLegendId = (int)StatusLegendEnum.Validated;
+                    incident.UpdatedOn = DateTime.Now;
+                    incident.UpdatedBy = userIdParsed;
+                }
+
+                // 5. Save everything in one go
+                await _db.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return incidentValidation.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error SaveIncidentValidation.");
+                return 0;
+            }
+        }
+
         #region private event
+        /// <summary>
+        /// Moves files from temp folder to permanent storage.
+        /// Returns list of relative paths.
+        /// </summary>
+        private static List<string> MoveFilesToPermanentStorage(IEnumerable<FileMeta> fileMeta, string uploadRoot)
+        {
+            var fileList = new List<string>();
+
+            foreach (var file in fileMeta)
+            {
+                if (string.IsNullOrWhiteSpace(file.TempPath))
+                    continue;
+
+                var destinationPath = Path.Combine(uploadRoot, file.FileName);
+                var relativePath = $"/Storage/uploads/Communication/{file.FileName}";
+
+                if (!File.Exists(destinationPath))
+                {
+                    File.Move(file.TempPath, destinationPath);
+                }
+
+                fileList.Add(relativePath);
+            }
+
+            return fileList;
+        }
         private async Task<string> GetEventTypes(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))

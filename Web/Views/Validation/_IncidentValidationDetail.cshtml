@@ -187,9 +187,9 @@
                                     <label>Discovery Perimeter <span style="color:red">*</span></label>
                                     <select class="form-select" required id="RadiusId" asp-for="@Model.IVValidation.RadiusId">
                                         <option value="" selected>Select radius</option>
-                                        <option value="1">50m</option>
-                                        <option value="2">100m</option>
-                                        <option value="3">200m</option>
+                                        <option value="1">1 Mile</option>
+                                        <option value="2">3 Miles</option>
+                                        <option value="3">5 Miles</option>
                                     </select>
                                     <small>This creates a safety perimeter around the incident location</small>
                                 </div>
@@ -203,7 +203,7 @@
                             <!-- Right: Actions -->
                             <div class="Bordercard">
                                 <h3>Alternative Actions</h3>
-                                <button class="btn-danger" data-bs-toggle="modal" data-bs-target="#AlarmModal"><i class="fa-solid fa-circle-xmark"></i> Mark as False Alarm</button>
+                                <button class="btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#AlarmModal"><i class="fa-solid fa-circle-xmark"></i> Mark as False Alarm</button>
                                 <div class="alert">
                                     <strong>False Alarm:</strong> Use this option if the incident report is determined to be invalid, duplicate, or does not require emergency response.
                                 </div>
@@ -367,19 +367,6 @@
                                 <label for="message">Message</label>
                                 <textarea id="message" placeholder="Enter your message..."></textarea>
                             </div>
-
-                            @* <div class="file-upload-container">
-                                <!-- Hidden file input -->
-                                <input type="file" id="fileInput" name="attachfile" style="display: none;" multiple>
-
-                                <!-- Button to trigger file input -->
-                                <button class="attach-btn btn-upload" type="button" onclick="document.getElementById('fileInput').click()">
-                                    <i class="fa-solid fa-paperclip"></i> Attach Files
-                                </button>
-
-                                <!-- File preview list -->
-                                <div class="file-name " id="fileList"></div>
-                            </div> *@
 
                             <div class="col-sm-12">
                                 <div class="fileinput fileinput-new input-group" data-provides="fileinput">

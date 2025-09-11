@@ -26,5 +26,6 @@ namespace Repositories.Common
         Task<List<IncidentPolicyViewModel>> GetIncidentValidationPolicy();
         Task<long> SavePolicy(PolicyModifyViewModel request);
         Task<List<SelectListItem>> GetTeamsList();
+        Task<long> SaveIncidentValidation(IncidentSubmitViewModel request);
     }
 }

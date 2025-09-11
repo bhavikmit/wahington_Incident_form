@@ -33,29 +33,210 @@
     });
     // end setting tabs
    
+    //$(document).off("click", ".teamAllTab");
+    //$(document).on("click", ".teamAllTab", function (e) {
+    //    e.preventDefault();
+    //    var tab = $(this).attr("data-tab");
+
+    //    if (tab === "Ipolicies") {
+    //        // load list when policies tab clicked
+    //        GetAllPolicies();
+
+
+    //        // open add policy partial
+    //        $(document).off("click", ".btnAddNewPolicy");
+    //        $(document).on("click", ".btnAddNewPolicy", function (e) {
+    //            e.preventDefault();
+    //            AddPolicy();
+    //        });
+
+    //        $(document).off("click", ".cancelPolicy");
+    //        $(document).on("click", ".cancelPolicy", function (e) {
+    //            e.preventDefault();
+
+    //            $("#addPolicy").empty();
+
+              
+    //            GetAllPolicies();
+
+                
+    //            $('.teamAllTab[data-tab="Ipolicies"]').addClass('active').siblings().removeClass('active');
+    //        });
+
+    //        // delete policy
+    //        $(document).off("click", ".deletePolicy");
+    //        $(document).on("click", ".deletePolicy", function (e) {
+    //            e.preventDefault();
+    //            var id = $(this).attr("id");
+    //            DeletePolicyById(id);
+    //        });
+
+    //        // edit policy
+    //        $(document).off("click", ".editPolicy");
+    //        $(document).on("click", ".editPolicy", function (e) {
+    //            e.preventDefault();
+    //            var id = $(this).attr("id");
+    //            GetPolicyById(id);
+    //        });
+
+    //        // save policy (client-side required check + submit)
+    //        $(document).off("click", ".savePolicy");
+    //        $(document).on("click", ".savePolicy", function (e) {
+    //            e.preventDefault();
+    //            var isValid = true;
+
+    //            $("#savePolicyDiv").find("input[data-val-required], textarea[data-val-required]").each(function () {
+    //                var $field = $(this);
+    //                var value = $.trim($field.val());
+    //                if (value === "") {
+    //                    isValid = false;
+    //                    showError($field);
+    //                } else {
+    //                    clearError($field);
+    //                }
+    //            });
+
+    //            if (isValid) {
+    //                SavePolicy();
+    //            }
+    //        });
+    //    } else if (tab === "Iteams") {
+    //        GetAllIncidentTeams();
+    //        $(document).off("click", ".btnAddNewIncidentTeam");
+    //        $(document).on("click", ".btnAddNewIncidentTeam", function (e) {
+    //            e.preventDefault();
+    //            AddIncidentTeam();
+    //        });
+
+    //        $(document).off("click", ".cancelIncidentTeam");
+    //        $(document).on("click", ".cancelIncidentTeam", function (e) {
+    //            e.preventDefault();
+    //            $("#addIncidentTeam").empty().html('');
+    //            $('li.active').trigger('click');
+    //        });
+
+    //        $(document).on("click", ".saveIncidentTeam", function (e) {
+    //            e.preventDefault();
+    //            var isValid = true;
+    //            $("#saveIncidentTeamDiv").find("input[data-val-required]").each(function () {
+    //                var $field = $(this);
+    //                var value = $.trim($field.val());
+    //                if (value === "") {
+    //                    isValid = false;
+    //                    showError($field);
+    //                } else {
+    //                    clearError($field);
+    //                }
+    //            });
+
+    //            if (isValid) {
+    //                SaveIncidentTeam();
+    //            }
+    //        });
+
+    //        $(document).off("click", ".editIncidentTeam");
+    //        $(document).on("click", ".editIncidentTeam", function (e) {
+    //            e.preventDefault();
+    //            var id = $(this).attr("id");
+    //            GetIncidentTeamById(id);
+    //        });
+
+    //        $(document).off("click", ".deleteIncidentTeam");
+    //        $(document).on("click", ".deleteIncidentTeam", function (e) {
+    //            e.preventDefault();
+    //            var id = $(this).attr("id");
+    //            DeleteIncidentTeamItem(id);
+    //        });
+    //    }
+    //});
     $(document).off("click", ".teamAllTab");
     $(document).on("click", ".teamAllTab", function (e) {
         e.preventDefault();
         var tab = $(this).attr("data-tab");
 
         if (tab === "Ipolicies") {
-            // load list when policies tab clicked
             GetAllPolicies();
-
-
-            // open add policy partial
+        }
+        else if (tab === "Iteams") {
+            GetAllIncidentTeams();
+        }
+        // add other tabs here if needed
+    });
+    //policy
+     //open add policy partial
             $(document).off("click", ".btnAddNewPolicy");
             $(document).on("click", ".btnAddNewPolicy", function (e) {
                 e.preventDefault();
                 AddPolicy();
             });
 
-            // cancel inside partial
             $(document).off("click", ".cancelPolicy");
             $(document).on("click", ".cancelPolicy", function (e) {
                 e.preventDefault();
-                $("#addPolicy").empty().html('');
-                $('li.active').trigger('click');
+
+                $("#addPolicy").empty();
+
+
+                GetAllPolicies();
+
+
+                $('.teamAllTab[data-tab="Ipolicies"]').addClass('active').siblings().removeClass('active');
+            });
+
+            // delete policy
+            $(document).off("click", ".deletePolicy");
+            $(document).on("click", ".deletePolicy", function (e) {
+                e.preventDefault();
+                var id = $(this).attr("id");
+                DeletePolicyById(id);
+            });
+
+            // edit policy
+            $(document).off("click", ".editPolicy");
+            $(document).on("click", ".editPolicy", function (e) {
+                e.preventDefault();
+                var id = $(this).attr("id");
+                GetPolicyById(id);
+            });
+
+            // save policy (client-side required check + submit)
+            $(document).off("click", ".savePolicy");
+            $(document).on("click", ".savePolicy", function (e) {
+                e.preventDefault();
+                var isValid = true;
+
+                $("#savePolicyDiv").find("input[data-val-required], textarea[data-val-required]").each(function () {
+                    var $field = $(this);
+                    var value = $.trim($field.val());
+                    if (value === "") {
+                        isValid = false;
+                        showError($field);
+                    } else {
+                        clearError($field);
+                    }
+                });
+
+                if (isValid) {
+                    SavePolicy();
+                }
+            }); // open add policy partial
+            $(document).off("click", ".btnAddNewPolicy");
+            $(document).on("click", ".btnAddNewPolicy", function (e) {
+                e.preventDefault();
+                AddPolicy();
+            });
+
+            $(document).off("click", ".cancelPolicy");
+            $(document).on("click", ".cancelPolicy", function (e) {
+                e.preventDefault();
+
+                $("#addPolicy").empty();
+
+
+                GetAllPolicies();
+
+
+                $('.teamAllTab[data-tab="Ipolicies"]').addClass('active').siblings().removeClass('active');
             });
 
             // delete policy
@@ -95,9 +276,8 @@
                     SavePolicy();
                 }
             });
-        } else if (tab === "Iteams") {
-            GetAllIncidentTeams();
-            $(document).off("click", ".btnAddNewIncidentTeam");
+    //teams
+    
             $(document).on("click", ".btnAddNewIncidentTeam", function (e) {
                 e.preventDefault();
                 AddIncidentTeam();
@@ -142,8 +322,6 @@
                 var id = $(this).attr("id");
                 DeleteIncidentTeamItem(id);
             });
-        }
-    });
 
 
     // Start Source

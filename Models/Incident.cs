@@ -45,6 +45,7 @@ namespace Models
         public long? VisibleDamagePresentId { get; set; }
         public long? PeopleInjuredId { get; set; }
         public long? EvacuationRequiredId { get; set; }
+        public long? EmergencyResponseNotifiedId { get; set; }
         public string? ImageUrl { get; set; }
         public string? SupportInfoNotes { get; set; }
         public bool IsSameCallerAddress { get; set; }

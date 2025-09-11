@@ -1,31 +1,72 @@
 ﻿@using System.Web
 @using ViewModels
 @model List<PolicyModifyViewModel>
-
-@if (Model != null && Model.Count > 0)
-{
-    @foreach (var policy in Model)
-    {
-        <div class="task-item">
-                            <div class="task-info">
-                                <i class="fa-solid fa-grip-vertical"></i>
-                                <div class="task-text">
-                <strong>@policy.Name</strong>
-                <p>@policy.Description</p>
-                </div>
-            </div>
-            </div>
-            
-            <div class="actions">
-                <i class="fa fa-pen edit editPolicy" id="@policy.Id"></i>
-                <i class="fa fa-trash delete deletePolicy" id="@policy.Id"></i>
-            </div>
-    
+<style>
+   .task-item {
+        background: #f9fafb;
+        padding: 15px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 10px;
     }
-}
-else
-{
-    <div class="list-item">
-        <span>No policy found.</span>
-    </div>
-}
+
+     .task-info {
+        display: flex;
+        gap: 12px;
+    }
+
+         .task-info i {
+            color: #9ca3af;
+            cursor: move;
+            margin-top: 4px;
+        }
+
+     .task-text strong {
+        font-size: 14px;
+    }
+
+     .task-text small {
+        display: block;
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 2px;
+    }
+
+     .task-actions i {
+        color: red;
+        cursor: pointer;
+    }
+</style>
+<div class="task-list" id="taskList">
+    @if (Model != null && Model.Count > 0)
+    {
+        @foreach (var policy in Model)
+        {
+            <div class="task-item  drag-handle">
+                <div class="task-info">
+                    <i class="fa-solid fa-grip-vertical"></i>
+                    <div class="task-text">
+                        <strong>@policy.Name</strong>
+                        <small>@policy.Description</small>
+                    </div>
+                </div>
+                <div class="task-actions">
+                    @* <i class="fa fa-pen edit editPolicy" id="@policy.Id"></i> *@
+                    <i class="far fa-trash-alt delete deletePolicy" id="@policy.Id"></i>
+                </div> 
+            </div>
+
+           
+
+        }
+    }
+    else
+    {
+        <div class="list-item">
+            <span>No policy found.</span>
+        </div>
+    }
+
+</div>

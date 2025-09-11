@@ -1,7 +1,6 @@
 ﻿@{
     ViewBag.Title = "Settings";
 }
-
 <style>
     /*****************Header style***************************/
     .header {
@@ -342,7 +341,7 @@
         }
 
     .btnAddNew, .btnAddNewSource, .btnAddNewEvent, .btnAddNewseverityLevl, .btnAddNewstatusLegend,
-    .btnAddNewAsset, .btnAddNewAssetType,.btnAddNewPolicy {
+    .btnAddNewAsset, .btnAddNewAssetType {
         background-color: #f54e00;
         color: #fff;
         border: none;
@@ -828,10 +827,6 @@
         padding: 15px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
-    .teamRightSec .cardHeader{
-          display: flex;
-            justify-content: space-between;
-            align-items: center;
 
     .teamRightSec .cardHeader {
         display: flex;
@@ -876,9 +871,6 @@
         padding: 20px;
         /* max-width: 600px; */
     }
-    .teamRightSec .cards{
-        margin-top:16px;
-    }
 
     .teamRightSec .cards {
         margin-top: 16px;
@@ -904,9 +896,6 @@
         font-weight: bold;
         margin-bottom: 5px;
         display: block;
-    }
-    .editDeIcons{
-        width:46px;
     }
 
     .editDeIcons {
@@ -1168,7 +1157,6 @@
             color: red;
         }
 </style>
-
 <header class="header dashboard-header d-flex align-items-center justify-content-between">
     <!-- Left section -->
     <div class="logo-section d-flex align-items-center">
@@ -1544,16 +1532,14 @@
                             <h3 class="mb-0">Teams</h3>
                             <button class="btn-add btnAddNewIncidentTeam"><i class="fa-solid fa-plus"></i> Add Team</button>
                         </div>
-                        <div class="form-container addNewTeam">
-                            <h3>Add New Team</h3>
+                      
                             <div id="addIncidentTeam">
                             </div>
                             <div id="incidentTeamList">
                             </div>
-
-                        </div>
                     </div>
-                    <div id="Iusers" class="team-tab-content userRightSec">
+                   
+                   <div id="Iusers" class="team-tab-content userRightSec">
                         <div class="d-flex align-item-center justify-content-between mb-2">
                             <h3 class="mb-0">Users</h3>
                             <button class="btn-add"><i class="fa-solid fa-plus"></i> Add User</button>
@@ -1561,7 +1547,7 @@
 
                         <!-- Form -->
                         <div class="form-container">
-                            <h3>Add New User</h3>
+                            <h3>Add New User566</h3>
                             <div class="form-grid">
                                 <div>
                                     <label>Team *</label>
@@ -1597,8 +1583,8 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-end addCancelIcons">
-                                <button class="btn btn-gray">Cancel</button>
-                                <button class="btn btn-green">Add User</button>
+                            <button class="btn btn-gray">Cancel</button>
+                            <button class="btn btn-green">Add User</button>
                             </div>
                         </div>
 
@@ -1648,10 +1634,11 @@
                             <h3 class="mb-0">Policy</h3>
                             <button class="btn-add btnAddNewPolicy"><i class="fa-solid fa-plus"></i> Add Policy</button>
 
-                            <div id="addPolicy">
-                            </div>
-                            <div id="policyList">
-                            </div>
+                            
+                        </div>
+                        <div id="addPolicy">
+                        </div>
+                        <div id="policyList">
                         </div>
 
                     </div>
@@ -1661,9 +1648,9 @@
             </div>
 
         </div>
-
     </div>
 </div>
+
 
 
 <div id="addUserManagement">

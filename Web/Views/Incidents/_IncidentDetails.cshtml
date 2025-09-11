@@ -15,7 +15,7 @@
                     var id = "eventType_" + et.Value;
                     var checkedAttr = Model.incidentDetails.EventTypeIds != null ? (Model.incidentDetails.EventTypeIds.Contains(et.Value) ? "checked" : "") : "";
                     <div class="form-check form-check-inline eventCheck">
-                        <input class="form-check-input" type="radio" id="@id" name="eventTypes.Id"
+                        <input class="form-check-input" type="checkbox" id="@id" name="incidentDetails.EventTypeIds"
                                value="@et.Value" data-val="true" data-val-required="The Event Type field is required." @checkedAttr>
                         <label class="form-check-label" for="@id">@et.Text</label>
                     </div>

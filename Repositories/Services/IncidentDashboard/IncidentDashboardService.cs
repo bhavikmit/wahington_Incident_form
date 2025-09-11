@@ -394,11 +394,11 @@ namespace Repositories.Common
                         TotalEventTypeCount = totalEvent,
                         TotalAssetTypeCount = totalAssetType,
                         ListIncidentLocationMapViewModel = incidentLocation,
-                        TotalSubmittedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Submitted.ToString()),
-                        TotalStartedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Started.ToString()),
-                        TotalDispatchedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Dispatched.ToString()),
-                        TotalCompletedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Completed.ToString()),
-                        TotalCancelledCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Cancelled.ToString()),
+                        TotalSubmittedCount = incidents.Count(i => i.StatusLegend != null && i.StatusLegend.Name == StatusLegendEnum.Submitted.ToString()),
+                        TotalStartedCount = incidents.Count(i => i.StatusLegend != null && i.StatusLegend.Name == StatusLegendEnum.Started.ToString()),
+                        TotalDispatchedCount = incidents.Count(i => i.StatusLegend != null && i.StatusLegend.Name == StatusLegendEnum.Dispatched.ToString()),
+                        TotalCompletedCount = incidents.Count(i => i.StatusLegend != null && i.StatusLegend.Name == StatusLegendEnum.Completed.ToString()),
+                        TotalCancelledCount = incidents.Count(i => i.StatusLegend != null && i.StatusLegend.Name == StatusLegendEnum.Cancelled.ToString()),
                         ListIncidentRecentViewModel = incidentRecents
                     }
                 };

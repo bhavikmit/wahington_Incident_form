@@ -1050,6 +1050,10 @@
                                     <h4>Evacuation Required</h4>
                                     <strong>@Model.incidentEnvironmentalViewModel.EvacuationRequiredText</strong>
                                 </div>
+                                <div class="safety-item @(Model.incidentEnvironmentalViewModel.EmergencyResponseNotifiedID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel.EmergencyResponseNotifiedID == 0 ? "bg-red" : "bg-grey")">
+                                    <h4>Emergency Response Notified</h4>
+                                    <strong>@Model.incidentEnvironmentalViewModel.EmergencyResponseNotifiedText</strong>
+                                </div>
                             </div>
                         </div>
                     </div>

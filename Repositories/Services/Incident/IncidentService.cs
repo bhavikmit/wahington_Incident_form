@@ -170,6 +170,7 @@ namespace Repositories.Common
                     VisibleDamagePresentId = viewModel.incidentEnvironmentalViewModel?.VisibleDamageID,
                     PeopleInjuredId = viewModel.incidentEnvironmentalViewModel?.PeopleInjuredID,
                     GasPresentId = viewModel.incidentEnvironmentalViewModel?.GasodorpresentID,
+                    EmergencyResponseNotifiedId = viewModel.incidentEnvironmentalViewModel?.EmergencyResponseNotifiedID,
 
                     Landmark = viewModel.incidentiLocation?.Landmark,
                     LocationAddress = viewModel.incidentiLocation?.Address,
@@ -248,6 +249,7 @@ namespace Repositories.Common
                 incident.VisibleDamagePresentId = env?.VisibleDamageID;
                 incident.PeopleInjuredId = env?.PeopleInjuredID;
                 incident.GasPresentId = env?.GasodorpresentID;
+                incident.EmergencyResponseNotifiedId = env?.EmergencyResponseNotifiedID;
 
                 var loc = viewModel.incidentiLocation;
                 incident.Landmark = loc?.Landmark;
@@ -334,8 +336,8 @@ namespace Repositories.Common
                         LocationAddress = item.LocationAddress ?? string.Empty,
                         Severity = item.SeverityLevel.Name,
                         SeverityId = item.SeverityLevelId,
-                        StatusLegend = item.StatusLegend.Name,
-                        StatusLegendColor = item.StatusLegend.Color,
+                        StatusLegend = item.StatusLegend != null ? item.StatusLegend.Name : string.Empty,
+                        StatusLegendColor = item.StatusLegend != null ? item.StatusLegend.Color : string.Empty,
                         StatusLegendId = item.StatusLegendId,
                         RelationShipName = item.Relationship.Name,
                         RelationShipId = item.RelationshipId,
@@ -483,6 +485,7 @@ namespace Repositories.Common
                 incidentViewModel.incidentEnvironmentalViewModel.EvacuationRequiredID = incident.EvacuationRequiredId;
                 incidentViewModel.incidentEnvironmentalViewModel.VisibleDamageID = incident.VisibleDamagePresentId;
                 incidentViewModel.incidentEnvironmentalViewModel.GasodorpresentID = incident.GasPresentId;
+                incidentViewModel.incidentEnvironmentalViewModel.EmergencyResponseNotifiedID = incident.EmergencyResponseNotifiedId;
 
                 incidentViewModel.incidentSupportingInfoViewModel.ImageUrl = incident.ImageUrl;
                 incidentViewModel.incidentSupportingInfoViewModel.Notes = incident.SupportInfoNotes;
@@ -566,12 +569,14 @@ namespace Repositories.Common
                         VisibleDamageID = incident.VisibleDamagePresentId,
                         PeopleInjuredID = incident.PeopleInjuredId,
                         EvacuationRequiredID = incident.EvacuationRequiredId,
+                        EmergencyResponseNotifiedID = incident.EmergencyResponseNotifiedId,
 
                         GasOdorText = GetIndicator(incident.GasPresentId),
                         HissingSoundText = GetIndicator(incident.HissingPresentId),
                         VisibleDamageText = GetIndicator(incident.VisibleDamagePresentId),
                         PeopleInjuredText = GetIndicator(incident.PeopleInjuredId),
-                        EvacuationRequiredText = GetIndicator(incident.EvacuationRequiredId)
+                        EvacuationRequiredText = GetIndicator(incident.EvacuationRequiredId),
+                        EmergencyResponseNotifiedText = GetIndicator(incident.EmergencyResponseNotifiedId)
                     },
 
                     incidentSupportingInfoViewModel = new IncidentSupportingInfoViewModel

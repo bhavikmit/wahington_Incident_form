@@ -122,8 +122,9 @@ namespace ViewModels.Incident
         public string ValidationNotes { get; set; } = default!;
         public string AssignResponseTeams { get; set; } = default!;
         public string listPolicyVM { get; set; } = default!;
-        public string listCommunicationVM { get; set; } = default!;
         public bool IsMarkFalseAlarm { get; set; } = false;
+
+        //public string listCommunicationVM { get; set; } = default!;
         public List<IncidentSubmitPolicyViewModel> listSubmitPolicyVM { get; set; } = new();
         public List<IncidentSubmitCommunicationViewModel> listSubmitCommunicationVM { get; set; } = new();
     }
@@ -138,10 +139,20 @@ namespace ViewModels.Incident
         public string UserName { get; set; } = default!;
         public string Message { get; set; } = default!;
         public string TimeStamp { get; set; } = default!;
-        public string Recipients { get; set; } = default!;
+        public string RecipientNames { get; set; } = default!;
+        public string RecipientsIds { get; set; } = default!;
+        public string ImageUrl { get; set; } = default!;
         public long MessageType { get; set; }
 
         // Files bind from FormData, not JSON
+        public List<FileMeta>? FileMeta { get; set; } = new();
         public List<IFormFile>? Files { get; set; }
+    }
+
+    public class FileMeta
+    {
+        public string FileName { get; set; }   // actual saved name
+        public string OriginalName { get; set; } // original upload name
+        public string TempPath { get; set; }   // path in temp folder
     }
 }

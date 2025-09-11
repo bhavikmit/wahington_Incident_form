@@ -4,6 +4,7 @@ using DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250911051527_AddIncidentValidationsNewTbl")]
+    partial class AddIncidentValidationsNewTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1644,9 +1647,6 @@ namespace DataLibrary.Migrations
                     b.Property<long?>("IncidentId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("IncidentValidationId")
-                        .HasColumnType("bigint");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1679,8 +1679,6 @@ namespace DataLibrary.Migrations
 
                     b.HasIndex("IncidentId");
 
-                    b.HasIndex("IncidentValidationId");
-
                     b.ToTable("IncidentValidationCommunicationHistories");
                 });
 
@@ -1702,9 +1700,6 @@ namespace DataLibrary.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("IncidentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IncidentValidationId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
@@ -1729,8 +1724,6 @@ namespace DataLibrary.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("IncidentId");
-
-                    b.HasIndex("IncidentValidationId");
 
                     b.ToTable("IncidentValidationPolicies");
                 });
@@ -4328,15 +4321,7 @@ namespace DataLibrary.Migrations
                         .WithMany()
                         .HasForeignKey("IncidentId");
 
-                    b.HasOne("Models.IncidentValidation", "IncidentValidation")
-                        .WithMany()
-                        .HasForeignKey("IncidentValidationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Incident");
-
-                    b.Navigation("IncidentValidation");
                 });
 
             modelBuilder.Entity("Models.IncidentValidationPolicy", b =>
@@ -4345,15 +4330,7 @@ namespace DataLibrary.Migrations
                         .WithMany()
                         .HasForeignKey("IncidentId");
 
-                    b.HasOne("Models.IncidentValidation", "IncidentValidation")
-                        .WithMany()
-                        .HasForeignKey("IncidentValidationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Incident");
-
-                    b.Navigation("IncidentValidation");
                 });
 
             modelBuilder.Entity("Models.Inventory", b =>

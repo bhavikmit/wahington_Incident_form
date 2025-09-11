@@ -1,0 +1,60 @@
+﻿@using System.Web
+@using ViewModels
+@model List<UserManagementModifyViewModel>
+
+<div class="user-table">
+    <div class="table table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Role</th>
+                    <th>Department</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Count > 0)
+                {
+                    @foreach (var usermanagement in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="user-info">
+                                    <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+                                    <div>
+                                        <strong>@usermanagement.FirstName</strong><br>
+                                        <small>@usermanagement.Email</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="role-badge role-admin">@usermanagement.RoleName</span></td>
+                            <td>@usermanagement.Department</td>
+                            <td>
+                                <i class="fa-regular fa-envelope"></i>@usermanagement.Email<br>
+                                <i class="fa-solid fa-phone"></i>@usermanagement.PhoneNumber
+                            </td>
+                            <td><span class="status">@usermanagement.Status</span></td>
+                            <td><i class="fa-regular fa-calendar"></i>@usermanagement.LastLogin</td>
+                            <td class="actions">
+                                <i class="fa-solid fa-pen editusermanagement" id="@usermanagement.Id"></i>
+                                <i class="fa-solid fa-trash deleteusermanagement" id="@usermanagement.Id"></i>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td>
+                            <span>No User Management found.</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

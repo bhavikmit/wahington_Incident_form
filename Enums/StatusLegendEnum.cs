@@ -9,9 +9,9 @@ namespace Enums
     public enum StatusLegendEnum
     {
         Submitted = 1,
-        Dispatched = 3,
-        Started = 4,
-        Completed = 5,
-        Cancelled = 6
+        //Dispatched = 3,
+        Validated = 2,
+        Completed = 3,
+        Cancelled = 4
     }
 }

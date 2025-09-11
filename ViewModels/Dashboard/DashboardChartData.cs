@@ -67,7 +67,7 @@ namespace ViewModels.Dashboard
         public long TotalAssetTypeCount { get; set; } = default!;
         public decimal ResponsePercentage { get; set; } = default!;
         public long TotalSubmittedCount { get; set; } = default!;
-        public long TotalStartedCount { get; set; } = default!;
+        public long TotalValidatedCount { get; set; } = default!;
         public long TotalDispatchedCount { get; set; } = default!;
         public long TotalCompletedCount { get; set; } = default!;
         public long TotalCancelledCount { get; set; } = default!;
@@ -112,6 +112,11 @@ namespace ViewModels.Dashboard
         public string calleraddress { get; set; } = default!;
         public string callername { get; set; } = default!;
         public string incidentid { get; set; } = default!;
+        public string eventtype { get; set; } = default!;
+        public string assettype { get; set; } = default!;
+        public string intersection { get; set; } = default!;
+        public string description { get; set; } = default!;
+        public string perimeter { get; set; } = default!;
         public string callerphone { get; set; } = default!;
     }
     public class IncidentRecentViewModel
@@ -120,6 +125,8 @@ namespace ViewModels.Dashboard
         public string incidentloc { get; set; } = default!;
         public string eventtype { get; set; } = default!;
         public string severity { get; set; } = default!;
+        public double lat { get; set; }
+        public double lon { get; set; }
         public string incidentstatus { get; set; } = default!;
         public string incidentstatusColor { get; set; } = default!;
     }

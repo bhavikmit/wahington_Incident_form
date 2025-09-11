@@ -21,5 +21,6 @@ public class ApplicationUser : IdentityUser<long>, IBaseModel
 
     public bool ChangePassword { get; set; }
     public string? PinCode { get; set; }
+    public string? Department { get; set; }
 }
 

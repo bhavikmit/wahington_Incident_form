@@ -335,7 +335,7 @@
     }
 
     .started {
-        color: #3b82f6;
+        color: #FFA500;
     }
 
     .completed {
@@ -527,16 +527,16 @@
                 <div class="tab-content mt-3">
                     <!-- Map Tab -->
                     <div class="tab-pane fade show active" id="mapTab" role="tabpanel">
-                        <h3 class="titleLocation">Incident Locations</h3>
-                        <p class="titleDescription">Interactive map showing all incident locations with status indicators</p>
+                       @*  <h3 class="titleLocation">Incident Locations</h3>
+                        <p class="titleDescription">Interactive map showing all incident locations with status indicators</p> *@
                         <div class="incident-locations">
                             <div class="statusLegendInfo">
                                 <i class="fa fa-layer-group"></i>Status Legend
                             </div>
                             <div class="status-legend">
                                 <div class="legend-item"><i class="fa-solid fa-circle submitted"></i><span>Submitted (@Model.IncidentDashboard.TotalSubmittedCount)</span></div>
-                                <div class="legend-item"><i class="fa-solid fa-circle started"></i><span>Started (@Model.IncidentDashboard.TotalStartedCount)</span></div>
-                                <div class="legend-item"><i class="fa-solid fa-circle dispatched"></i><span>Dispatched (@Model.IncidentDashboard.TotalDispatchedCount)</span></div>
+                                <div class="legend-item"><i class="fa-solid fa-circle started"></i><span>Validated (@Model.IncidentDashboard.TotalValidatedCount)</span></div>
+                                @* <div class="legend-item"><i class="fa-solid fa-circle dispatched"></i><span>Dispatched (@Model.IncidentDashboard.TotalDispatchedCount)</span></div> *@
                                 <div class="legend-item"><i class="fa-solid fa-circle completed"></i><span>Completed (@Model.IncidentDashboard.TotalCompletedCount)</span></div>
                                 <div class="legend-item"><i class="fa-solid fa-circle cancelled"></i><span>Cancelled (@Model.IncidentDashboard.TotalCancelledCount)</span></div>
                             </div>
@@ -553,7 +553,9 @@
                                 {
                                     @foreach (var item in Model.IncidentDashboard.ListIncidentRecentViewModel)
                                     {
-                                        <div class="incident-item">
+                                        <div class="incident-item focusMap" data-lat="@item.lat"
+                                             data-lon="@item.lon"
+                                             data-loc="@item.incidentloc" style="cursor:pointer">
                                             <div class="incident-details">
                                                 <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.incidentstatusColor"></span>
                                                 <div class="incident-info" style="margin-left: 10px;">
@@ -812,18 +814,27 @@
                     Location: incident.incidentloc,
                     CallerName: incident.callername,
                     CallerPhone: incident.callerphone,
-                    CallerAddress: incident.calleraddress
+                    CallerAddress: incident.calleraddress,
+                    EventType:incident.eventtype,
+                    AssetType:incident.assettype,
+                    Description:incident.description,
+                    Intersection:incident.intersection,
+                    Perimeter:incident.perimeter,
                 };
 
-                var popupTemplate = {
-                    title: "Incident Details - {IncidentID}",
-                    content: `
-                        <b>Severity:</b> {Severity}<br>
-                        <b>Location:</b> {Location}<br>
-                        <b>Caller Name:</b> {CallerName}<br>
-                        <b>Caller Phone:</b> {CallerPhone}<br>
-                        <b>Caller Address:</b> {CallerAddress}
-                    `
+            var popupTemplate = {
+                title: "Incident Details:",
+                content: `
+                    <b>Incident Number:</b> {IncidentID}<br>
+                    <b>Severity:</b> {Severity}<br>
+                    <b>Event Type:</b> {EventType}<br>
+                    <b>Asset Type:</b> {AssetType}<br>
+                    <b>Description:</b> {Description}<br>
+                    <b>Intersection:</b> {Intersection}<br>
+                    <b>Location:</b> {Location}<br>
+                    <b>Images:</b> <br>
+                    <b>Perimeter :</b> {Perimeter}<br>
+                `
                 };
 
                 var graphic = new Graphic({
@@ -856,18 +867,17 @@
                 }
             });
 
-            $("#showOnMap").click(function () {
-            var val = $("#addressInput").val().trim();
-            var incident = $("#addressInput").data("selectedIncident");
+           $(".focusMap").click(function () {
+            var incidentLoc = $(this).data("loc");
+            var hdn_lat = $(this).data("lat");
+            var hdn_lon = $(this).data("lon");
 
-            if (val && incident) {
-                // If input has value, zoom to selected incident
+            if (incidentLoc) {
                 window.view.goTo({
-                    center: [incident.lon, incident.lat],
-                    zoom: 10
+                    center: [hdn_lon, hdn_lat],
+                    zoom: 15
                 });
             } else {
-                // If input empty, reset to show all incidents
                 if (window.graphicsLayer) {
                     window.view.goTo(window.graphicsLayer.graphics);
                 }

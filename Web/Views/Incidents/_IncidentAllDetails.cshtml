@@ -847,30 +847,30 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="card">
-                                    <h4><i class="fa-solid fa-circle text-red red"></i> Status</h4>
-                                    <div class="value">Submitted</div>
-                                    <div class="subtext">Updated Sep 09, 2025</div>
+                                    <h4><i class="fa-solid fa-circle text-red" style="color:@Model.incidentDetailByIdViewModel.StatusLegendColor"></i> Status</h4>
+                                    <div class="value">@Model.incidentDetailByIdViewModel.StatusLegendName</div>
+                                    <div class="subtext">@Model.incidentDetailByIdViewModel.UpdatedOn</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="card">
                                     <h4><i class="fa-solid fa-triangle-exclamation orange"></i> Severity</h4>
-                                    <div class="value red">High</div>
-                                    <div class="subtext">Gas Leak</div>
+                                    <div class="value" style="color:@Model.incidentDetailByIdViewModel.SeverityColor">@Model.incidentDetailByIdViewModel.SeverityName</div>
+                                    <div class="subtext">@Model.incidentDetails.EventTypeNames.FirstOrDefault()</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="card">
                                     <h4><i class="fa-solid fa-calendar blue"></i> Created</h4>
-                                    <div class="value">Sep 09, 2025</div>
-                                    <div class="subtext">06:23 PM</div>
+                                    <div class="value">@Model.incidentDetailByIdViewModel.CreatedOnDate</div>
+                                    <div class="subtext">@Model.incidentDetailByIdViewModel.CreatedOnTime</div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="card">
                                     <h4><i class="fa-solid fa-user green"></i> Reporter</h4>
-                                    <div class="value">test</div>
-                                    <div class="subtext">Customer</div>
+                                    <div class="value">@Model.incidentCellerInformation.CallerName</div>
+                                    <div class="subtext">@Model.incidentCellerInformation.RelationshipName</div>
                                 </div>
                             </div>
                         </div>
@@ -882,14 +882,14 @@
                             <div class="info-item d-flex align-items-start">
                                 <i class="fa-regular fa-user"></i>
                                 <div>
-                                    <span>test</span>
-                                    <div class="subtext">Customer</div>
+                                    <span>@Model.incidentCellerInformation.CallerName</span>
+                                    <div class="subtext">@Model.incidentCellerInformation.RelationshipName</div>
                                 </div>
                             </div>
                             <div class="info-item d-flex align-items-start">
                                 <i class="fa-solid fa-phone"></i>
                                 <div>
-                                    <strong>156666623</strong>
+                                    <strong>@Model.incidentCellerInformation.CallerPhoneNumber</strong>
                                     <div class="subtext">Primary contact</div>
                                 </div>
                             </div>
@@ -897,14 +897,14 @@
                                 <i class="fa-solid fa-location-dot"></i>
                                 <div>
                                     <span class="info-title">Caller Address</span>
-                                    <div class="subtext">test</div>
+                                    <div class="subtext">@Model.incidentCellerInformation.CallerAddress</div>
                                 </div>
                             </div>
                             <div class="info-item d-flex align-items-start">
                                 <i class="fa-regular fa-calendar"></i>
                                 <div>
                                     <span class="info-title">Call Time</span>
-                                    <div class="subtext">Sep 09, 2025 06:22 PM</div>
+                                    <div class="subtext">@Model.incidentCellerInformation.CallDateInFormat @Model.incidentCellerInformation.CallTimeInFormat</div>
                                 </div>
                             </div>
                         </div>
@@ -915,24 +915,22 @@
                                 <i class="fa-solid fa-location-dot"></i>
                                 <div>
                                     <span class="info-title">Address</span>
-                                    <div class="subtext">test</div>
+                                    <div class="subtext">@Model.incidentiLocation.Address</div>
                                 </div>
                             </div>
                             <div class="info-item ">
-                                <span class="info-title">Nearest Intersection</span> <br><span class="subtext">vishal market</span>
+                                <span class="info-title">Nearest Intersection</span> <br><span class="subtext">@Model.incidentiLocation.Landmark</span>
                             </div>
                             <div class="info-item">
-                                <span class="info-title">Service Account</span> <br><span class="subtext">45666</span>
+                                <span class="info-title">Service Account</span> <br><span class="subtext">@Model.incidentiLocation.ServiceAccount</span>
                             </div>
                             <div class="info-item">
                                 <span class="info-title">Affected Assets</span> <br>
-                                <span class="badge">Compressor</span>
-                                <span class="badge">Pipeline</span>
-                                <span class="badge">Station</span>
-                                <span class="badge">Valve</span>
-                                <span class="badge">Meter</span>
-                                <span class="badge">Tank</span>
-                                <span class="badge">Regulator</span>
+                                @foreach (var asset in Model.incidentiLocation.AssetNames)
+                                {
+                                    <span class="badge">@asset</span>
+                                }
+                                
                             </div>
                         </div>
                     </div>
@@ -943,25 +941,25 @@
                             <div class="d-flex align-items-center justify-content-between">
                                 <h3>Incident Details</h3>
                                 <div class="header-meta">
-                                    <div><i class="fa-regular fa-user"></i> Created by test</div>
-                                    <div><i class="fa-regular fa-calendar"></i> Sep 09, 2025 06:23 PM</div>
+                                    <div><i class="fa-regular fa-user"></i> Created by @Model.incidentCellerInformation.CallerName</div>
+                                    <div><i class="fa-regular fa-calendar"></i> @Model.incidentDetailByIdViewModel.CreatedOnDate @Model.incidentDetailByIdViewModel.CreatedOnTime</div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
                                 <div class="fixwidth">
                                     <div>
                                         <strong>Event Type</strong>
-                                        <div class="subtext">Gas Leak</div>
+                                        <div class="subtext">@Model.incidentDetails.EventTypeNames.FirstOrDefault()</div>
                                     </div>
                                     <div>
                                         <strong>Description </strong>
-                                        <div class="subtext">tis is testing description</div>
+                                        <div class="subtext">@Model.DescriptionIssue</div>
                                     </div>
 
                                 </div>
                                 <div class="fixwidth">
                                     <p><strong>Severity Level</strong></p>
-                                    <span class="badge-red">High</span>
+                                    <span class="badge-red" style="background-color:@Model.incidentDetailByIdViewModel.SeverityColor">@Model.incidentDetailByIdViewModel.SeverityName</span>
                                 </div>
                             </div>
                         </div>
@@ -975,25 +973,19 @@
                             <div class="note-title">
                                 <i class="fa-regular fa-file-lines"></i> Service Representative Notes
                             </div>
-                            <div class="note-box">test note</div>
+                            <div class="note-box">@Model.incidentSupportingInfoViewModel.Notes</div>
 
                             <!-- Photos -->
                             <div class="photos-title">
-                                <i class="fa-regular fa-image"></i> Photos (3)
+                                <i class="fa-regular fa-image"></i> Photos (@Model.incidentSupportingInfoViewModel.ImageUrls.Count())
                             </div>
                             <div class="photos-grid">
-                                <div class="photo-item">
-                                    <img src="~/img/banner.jpg" name="incidentPhoto" alt="incidentPhoto" />
-
-                                </div>
-                                <div class="photo-item">
-                                    <img src="~/img/banner.jpg" name="incidentPhoto" alt="incidentPhoto" />
-
-                                </div>
-                                <div class="photo-item">
-                                    <img src="~/img/banner.jpg" name="incidentPhoto" alt="incidentPhoto" />
-
-                                </div>
+                                @foreach (var imageUrl in Model.incidentSupportingInfoViewModel.ImageUrls)
+                                {
+                                    <div class="photo-item">
+                                        <img src="@imageUrl" alt="incidentPhoto" />
+                                    </div>
+                                }
                             </div>
 
                         </div>
@@ -1038,25 +1030,29 @@
                         <div class="card">
                             <h3>Safety Assessment</h3>
                             <div class="safety-grid">
-                                <div class="safety-item bg-green">
+                                <div class="safety-item @(Model.incidentEnvironmentalViewModel.GasodorpresentID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel.GasodorpresentID == 0 ? "bg-red" : "bg-grey")">
                                     <h4>Gas Odor Present</h4>
-                                    <strong>No</strong>
+                                    <strong>@Model.incidentEnvironmentalViewModel.GasOdorText</strong>
                                 </div>
-                                <div class="safety-item bg-grey">
+                                <div class="safety-item @(Model.incidentEnvironmentalViewModel.HissingSoundPresentID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel.HissingSoundPresentID == 0 ? "bg-red" : "bg-grey")">
                                     <h4>Hissing Sound</h4>
-                                    <strong>Unknown</strong>
+                                    <strong>@Model.incidentEnvironmentalViewModel.HissingSoundText</strong>
                                 </div>
-                                <div class="safety-item bg-red">
+                                <div class="safety-item @(Model.incidentEnvironmentalViewModel.VisibleDamageID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel.VisibleDamageID == 0 ? "bg-red" : "bg-grey")">
                                     <h4>Visible Damage/Fire</h4>
-                                    <strong>Yes</strong>
+                                    <strong>@Model.incidentEnvironmentalViewModel.VisibleDamageText</strong>
                                 </div>
-                                <div class="safety-item bg-green">
+                                <div class="safety-item @(Model.incidentEnvironmentalViewModel.PeopleInjuredID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel.PeopleInjuredID == 0 ? "bg-red" : "bg-grey")">
                                     <h4>People Injured</h4>
-                                    <strong>No</strong>
+                                    <strong>@Model.incidentEnvironmentalViewModel.PeopleInjuredText</strong>
                                 </div>
-                                <div class="safety-item bg-green">
+                                <div class="safety-item @(Model.incidentEnvironmentalViewModel.EvacuationRequiredID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel.EvacuationRequiredID == 0 ? "bg-red" : "bg-grey")">
                                     <h4>Evacuation Required</h4>
-                                    <strong>No</strong>
+                                    <strong>@Model.incidentEnvironmentalViewModel.EvacuationRequiredText</strong>
+                                </div>
+                                <div class="safety-item @(Model.incidentEnvironmentalViewModel.EmergencyResponseNotifiedID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel.EmergencyResponseNotifiedID == 0 ? "bg-red" : "bg-grey")">
+                                    <h4>Emergency Response Notified</h4>
+                                    <strong>@Model.incidentEnvironmentalViewModel.EmergencyResponseNotifiedText</strong>
                                 </div>
                             </div>
                         </div>

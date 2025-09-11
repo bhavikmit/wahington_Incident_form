@@ -1400,7 +1400,8 @@
 
 <div id="div_ValidationDtl">
 </div>
-
+<div id="incidentMapContainer">
+</div>
 <div class="modal fade" id="AlarmModal" tabindex="-1" aria-labelledby="AlarmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1441,85 +1442,8 @@
     </div>
 </div>
 
-<!----------------Step next previous script---------------------->
-@* @section Scripts {
-    <script>
-        let currentStep = 1;
-        const totalSteps = 5;
-
-        function showStep(step) {
-            document.querySelectorAll(".step-content").forEach(el => el.classList.add("d-none"));
-            document.querySelector(`#step-${step}`)?.classList.remove("d-none");
-
-            document.querySelectorAll(".steps .step").forEach((el, idx) => {
-                el.classList.remove("active", "completed");
-                if (idx + 1 < step) el.classList.add("completed");
-                if (idx + 1 === step) el.classList.add("active");
-            });
-
-            document.getElementById("prevBtn").style.display = (step === 1) ? "none" : "inline-block";
-            document.getElementById("nextBtn").innerHTML = (step === totalSteps)
-                ? '<i class="fa-solid fa-check"></i> Finish'
-                : 'Next <i class="fa-solid fa-arrow-right"></i>';
-        }
-
-        document.getElementById("nextBtn").addEventListener("click", () => {
-            if (currentStep < totalSteps) {
-                currentStep++;
-                showStep(currentStep);
-            }
-        });
-
-        document.getElementById("prevBtn").addEventListener("click", () => {
-            if (currentStep > 1) {
-                currentStep--;
-                showStep(currentStep);
-            }
-        });
-
-        showStep(currentStep);
-    </script>
-} *@
 
 <script>
-    // const teamCards = document.querySelectorAll(".team-card");
-    // const selectedBox = document.getElementById("selectedBox");
-    // const selectedCount = document.getElementById("selectedCount");
-    // const selectedTags = document.getElementById("selectedTags");
-
-    // function updateSelectedTeams() {
-    //   const selected = document.querySelectorAll(".team-card.selected");
-    //   selectedCount.textContent = `${selected.length} Team${selected.length !== 1 ? "s" : ""} Selected`;
-
-    //   selectedTags.innerHTML = "";
-    //   selected.forEach(card => {
-    //     const tag = document.createElement("span");
-    //     tag.classList.add("tag");
-    //     tag.textContent = card.dataset.name;
-    //     selectedTags.appendChild(tag);
-    //   });
-    // }
-
-    // teamCards.forEach(card => {
-    //   card.addEventListener("click", () => {
-    //     card.classList.toggle("selected");
-
-    //     const icon = card.querySelector("i:last-child");
-    //     if (card.classList.contains("selected")) {
-    //       icon.classList.remove("fa-circle", "uncheck-icon");
-    //       icon.classList.add("fa-circle-check", "check-icon");
-    //     } else {
-    //       icon.classList.remove("fa-circle-check", "check-icon");
-    //       icon.classList.add("fa-circle", "uncheck-icon");
-    //     }
-
-    //     updateSelectedTeams();
-    //   });
-    // });
-
-    // // Initialize
-    // updateSelectedTeams();
-
 
     //image uplaod and preview
      const fileInput = document.getElementById("fileInput");
@@ -1552,11 +1476,38 @@
       fileInput.files = dt.files;
       fileInput.dispatchEvent(new Event("change"));
     }
+
+
+     async function OpenIncidentMap() {
+            try {
+
+                var id = $("#hdn_Id").val();
+
+                showLoader($(".main-content"));
+
+                const url = `/Incidents/GetIncidentMapDetailsbyId?id=${id}`;
+
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "text/html"
+                    }
+                });
+
+                if (!response.ok) throw new Error("Failed to load incident map");
+
+                const content = await response.text();
+                $("#incidentMapContainer").empty().html(content); // 👈 replace with your target div
+                $("#MapIncidentModal").modal("show");
+
+            } catch (error) {
+                console.error("Error loading incident map:", error);
+            } finally {
+                hideLoader($(".main-content"));
+            }
+        }
+
 </script>
-
-
-
-
 
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/views/incident/incident-validation.js"></script>

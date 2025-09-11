@@ -1,22 +1,10 @@
-﻿var sendCommunication = [];
-var index = 0;
+﻿
 $(function () {
 
     let currentStep = 1;
     const totalSteps = 5;
 
-    //$("#div_ValidationDtl").empty().html("");
-
     GetValidationsDetail($("#hdn_Id").val());
-
-    //GetValidationsList();
-
-    //$(document).off("click", ".validateIncident");
-    //$(document).on("click", ".validateIncident", function (e) {
-    //    var id = $(this).attr("data-incident-id");
-    //    $("#div_ValidationList").empty().html("");
-    //    GetValidationsDetail(id);
-    //});
 
     $(document).off("click", "#nextBtn");
     $(document).on("click", "#nextBtn", function (e) {
@@ -70,7 +58,6 @@ $(function () {
             showStep(currentStep);
         }
     });
-
     function showStep(step) {
 
         document.querySelectorAll(".step-content").forEach(el => el.classList.add("d-none"));
@@ -87,7 +74,6 @@ $(function () {
             ? '<i class="fa-solid fa-check"></i> Finish'
             : 'Next <i class="fa-solid fa-arrow-right"></i>';
     }
-
 
     $(document).off("click", "#add_task_policy");
     $(document).on("click", "#add_task_policy", function (e) {
@@ -266,110 +252,8 @@ $(function () {
 
     $(document).off("click", "#btnSendCommunication");
     $(document).on("click", "#btnSendCommunication", function (e) {
-        
         e.preventDefault();
-        var recipientsHtml = "";
-        var filediv = "";
-        var recipientsValue = [];
-
-        var userName = $("#hdn_user_name").val();
-        var message = $("#message").val();
-        var files = $("#Image")[0].files;
-        let timestamp = getFormattedTime();
-
-        var recipientsLength = $(".newCommunication").find('.recipients').find("input[type='checkbox']:checked").length;
-
-        if (recipientsLength > 0) {
-            var recipientNames = "";
-
-            var recipients = $(".newCommunication").find('.recipients').find("input[type='checkbox']:checked");
-            if (recipients) {
-                $.each(recipients, function (i, team) {
-                    recipientNames += $(team).attr("data-name").trim() + ", ";
-                    recipientsValue.push($(team).val());
-                });
-            }
-            recipientsHtml += `<div class="attachments">
-                                        <strong>Sent to:</strong> <i class="fas fa-users"></i>
-                                        <a href="#">${recipientNames}</a>
-                                    </div>`;
-        }
-
-        if (files.length > 0) {
-            var filesHtml = "";
-            $.each(files, function (i, file) {
-                filesHtml += `<i class="fas fa-paperclip"></i>
-                                        <a href="#">${file.name}</a>`;
-            });
-
-            filediv = `<div class="entry file">
-                            <div class="left">
-                                <div class="icon-wrapper">
-                                    <i class="fas fa-file-alt"></i>
-                                </div>
-                                <div class="details">
-                                    <div class="top">
-                                        ${userName} <span class="label">File</span>
-                                    </div>
-                                    <div>${message}</div>
-                                    <div class="attachments">
-                                        <strong>Attachments:</strong> ${filesHtml}
-                                    </div>
-                                    ${recipientsHtml}
-                                </div>
-                            </div>
-                            <div class="timestamp">${timestamp}</div>
-                        </div>`;
-        }
-        else {
-            filediv = `<div class="entry note">
-                            <div class="left">
-                                <div class="icon-wrapper">
-                                    <i class="fas fa-comment"></i>
-                                </div>
-                                <div class="details">
-                                    <div class="top">
-                                        ${userName} <span class="label">Note</span>
-                                    </div>
-                                    <div>${message}</div>
-                                    ${recipientsHtml}
-                                </div>
-                            </div>
-                            <div class="timestamp">${timestamp}</div>
-                        </div>`;
-        }
-
-        $(".communicationHistory").append(filediv);
-
-        //sendCommunication.push({
-        //    UserName: userName,
-        //    Message: message,
-        //    TimeStamp: timestamp,
-        //    Files: files,
-        //    Recipients: recipientsValue.join(","),
-        //    MessageType: $("#msgType").val()
-        //});
-
-
-        if (!sendCommunication[index]) {
-            sendCommunication[index] = {
-                UserName: userName,
-                Message: message,
-                TimeStamp: timestamp,
-                Recipients: recipientsValue.join(","),
-                MessageType: $("#msgType").val(),
-                Files: [] // 👈 make sure it exists
-            };
-        }
-
-        // store the real File objects
-        sendCommunication[index].Files = files;
-
-        $("#msgType").val(1);
-        $('.newCommunication').find(".recipients input[type=checkbox]").prop("checked", false);
-        $('#message').val('');
-        RemoveImage();
-        index++;
+        AddCommunication();
     });
 });
 
@@ -387,32 +271,6 @@ function getFormattedTime() {
 
     return now.toLocaleString("en-US", options).replace(",", "");
 }
-
-
-
-//async function GetValidationsList() {
-//    try {
-//        showLoader($(".main-content"));
-
-//        const response = await fetch("/Validation/GetValidationsList", {
-//            method: "GET",
-//            headers: {
-//                "Content-Type": "application/json",
-//                "Accept": "text/html"
-//            }
-//        });
-
-//        if (!response.ok) throw new Error("Failed to load incident validation list");
-
-//        const content = await response.text();
-//        $("#div_ValidationList").empty().html(content);
-
-//    } catch (error) {
-//        console.error("Error loading incident validation list:", error);
-//    } finally {
-//        hideLoader($(".main-content"));
-//    }
-//}
 
 async function GetValidationsDetail(id) {
     try {
@@ -439,7 +297,6 @@ async function GetValidationsDetail(id) {
         hideLoader($(".main-content"));
     }
 }
-
 function selectAssignTeam() {
     const teamCards = document.querySelectorAll(".team-card");
     //const selectedBox = document.getElementById("selectedBox");
@@ -484,7 +341,6 @@ function selectAssignTeam() {
         });
     });
 }
-
 function ShowImage(input) {
     if (input.files && input.files.length > 0) {
         var preview = $('#image-thumbnails');
@@ -582,20 +438,6 @@ async function SaveIncidentValidation() {
             formData.append("listPolicyVM", JSON.stringify(policiesData));
         }
 
-        sendCommunication.forEach((c, i) => {
-            formData.append(`listSubmitCommunicationVM[${i}].UserName`, c.UserName);
-            formData.append(`listSubmitCommunicationVM[${i}].Message`, c.Message);
-            formData.append(`listSubmitCommunicationVM[${i}].TimeStamp`, c.TimeStamp);
-            formData.append(`listSubmitCommunicationVM[${i}].Recipients`, c.Recipients);
-            formData.append(`listSubmitCommunicationVM[${i}].MessageType`, c.MessageType);
-
-            if (c.Files && c.Files.length > 0) {
-                Array.from(c.Files).forEach(file => {
-                    formData.append(`listSubmitCommunicationVM[${i}].Files`, file);
-                });
-            }
-        });
-
         showLoader($(".main-content"));
 
         //console.log(formData);
@@ -611,12 +453,79 @@ async function SaveIncidentValidation() {
 
         if (result.success) {
             SwalSuccessAlert(result.data);
-            //window.location = '/Incidents';
+
+            setTimeout(function () {
+                window.location = '/Incidents';
+            }, 1000);
+
         } else {
             SwalErrorAlert(result.message || "Failed to Save Incident Validation.");
         }
     } catch (error) {
         SwalErrorAlert("Error while Save Incident Validation!");
+        console.error(error);
+    } finally {
+        hideLoader($(".main-content"));
+    }
+}
+
+async function AddCommunication() {
+    var recipientNames = "";
+    var recipientsValue = [];
+    var userName = $("#hdn_user_name").val();
+    var message = $("#message").val();
+    var files = $("#Image")[0].files;
+    let timestamp = getFormattedTime();
+
+    var recipients = $(".newCommunication").find('.recipients').find("input[type='checkbox']:checked");
+    if (recipients) {
+        $.each(recipients, function (i, team) {
+            recipientNames += $(team).attr("data-name").trim() + ", ";
+            recipientsValue.push($(team).val());
+        });
+    }
+
+    if (recipientsValue.length == 0) {
+        SwalErrorAlert("Please select any one recipient team..!");
+        return;
+    }
+
+    try {
+        showLoader($(".main-content"));
+
+        // Build FormData for file upload
+        let formData = new FormData();
+        formData.append("UserName", userName);
+        formData.append("Message", message);
+        formData.append("TimeStamp", timestamp);
+        formData.append("RecipientsIds", recipientsValue.join(","));
+        formData.append("MessageType", $("#msgType").val());
+        formData.append("RecipientNames", recipientNames);
+
+        // Attach files
+        for (let i = 0; i < files.length; i++) {
+            formData.append("Files", files[i]);
+        }
+
+        // Send request
+        let response = await fetch("/Validation/AddCommunicationRecord", {
+            method: "POST",
+            body: formData
+        });
+
+        if (response.ok) {
+            const content = await response.text(); // HTML partial
+            $(".communicationHistory").empty().html(content);
+
+            $("#msgType").val(1);
+            $('.newCommunication').find(".recipients input[type=checkbox]").prop("checked", false);
+            $('#message').val('');
+            RemoveImage();
+        } else {
+            SwalErrorAlert("Failed to add communication record.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Failed to add communication record.");
         console.error(error);
     } finally {
         hideLoader($(".main-content"));

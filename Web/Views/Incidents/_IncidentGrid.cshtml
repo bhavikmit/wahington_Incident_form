@@ -72,8 +72,7 @@
                     <td>@item.Intersection</td>
                     <td>
                         <div class="map" style="text-wrap:auto">
-                            <i class="fa fa-map-marker"></i>
-                            @item.LocationAddress
+                            <i class="fa fa-map-marker" style="cursor:pointer" onclick="OpenIncidentMap('@item.Id')"></i>
                         </div>
                     </td>
 
@@ -103,7 +102,7 @@
                             </a>
 
                         }
-                        @if (item.StatusLegend == StatusLegendEnum.Dispatched.ToString() || item.StatusLegend == StatusLegendEnum.Started.ToString())
+                        @if (item.StatusLegend == StatusLegendEnum.Validated.ToString())
                         {
                             <a href="/IncidentProgress/Index/@item.Id"
                                class="viewProgress"
@@ -113,7 +112,7 @@
                             </a>
                         }
 
-                        <a href="javascript:void(0);"
+                      @*   <a href="javascript:void(0);"
                            class="btnIcon noteIcon note-incident"
                            title="Notes"
                            data-id="@item.Id">
@@ -125,7 +124,7 @@
                            data-id="@item.Id"
                            title="History">
                             <i class="fa-regular fa-clock"></i>
-                        </a>
+                        </a> *@
 
                         <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit Incident"><i class="fa-regular fa-edit"></i></a>
                     </td>
@@ -140,18 +139,21 @@
         }
     </tbody>
 </table>
-<script>
-      document.getElementById("selectAll").addEventListener("change", function () {
-        let checkboxes = document.querySelectorAll(".rowCheckbox");
-        checkboxes.forEach(cb => cb.checked = this.checked);
-    });
 
-    // Optional: If all row checkboxes are checked manually, update header checkbox
-    document.querySelectorAll(".rowCheckbox").forEach(cb => {
-        cb.addEventListener("change", function () {
-            let all = document.querySelectorAll(".rowCheckbox").length;
-            let checked = document.querySelectorAll(".rowCheckbox:checked").length;
-            document.getElementById("selectAll").checked = (all === checked);
+@section Scripts {
+    <script>
+          document.getElementById("selectAll").addEventListener("change", function () {
+            let checkboxes = document.querySelectorAll(".rowCheckbox");
+            checkboxes.forEach(cb => cb.checked = this.checked);
         });
-    });
-</script>
+
+        // Optional: If all row checkboxes are checked manually, update header checkbox
+        document.querySelectorAll(".rowCheckbox").forEach(cb => {
+            cb.addEventListener("change", function () {
+                let all = document.querySelectorAll(".rowCheckbox").length;
+                let checked = document.querySelectorAll(".rowCheckbox:checked").length;
+                document.getElementById("selectAll").checked = (all === checked);
+            });
+        });
+    </script>
+}

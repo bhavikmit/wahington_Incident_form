@@ -4,6 +4,7 @@ using DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250911074321_update-incident-table-schema")]
+    partial class updateincidenttableschema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1571,174 +1574,6 @@ namespace DataLibrary.Migrations
                     b.HasIndex("TeamId");
 
                     b.ToTable("IncidentUsers");
-                });
-
-            modelBuilder.Entity("Models.IncidentValidation", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AssignResponseTeams")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("ConfirmedSeverityLevelId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long>("DiscoveryPerimeterId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IncidentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsMarkFalseAlarm")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ValidationNotes")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IncidentId");
-
-                    b.ToTable("IncidentValidations");
-                });
-
-            modelBuilder.Entity("Models.IncidentValidationCommunicationHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("IncidentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IncidentValidationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("MessageType")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("RecipientsIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TimeStamp")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IncidentId");
-
-                    b.HasIndex("IncidentValidationId");
-
-                    b.ToTable("IncidentValidationCommunicationHistories");
-                });
-
-            modelBuilder.Entity("Models.IncidentValidationPolicy", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("IncidentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IncidentValidationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("PolicyId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("Status")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("TeamIds")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IncidentId");
-
-                    b.HasIndex("IncidentValidationId");
-
-                    b.ToTable("IncidentValidationPolicies");
                 });
 
             modelBuilder.Entity("Models.Inventory", b =>
@@ -4317,49 +4152,6 @@ namespace DataLibrary.Migrations
                         .IsRequired();
 
                     b.Navigation("Team");
-                });
-
-            modelBuilder.Entity("Models.IncidentValidation", b =>
-                {
-                    b.HasOne("Models.Incident", "Incident")
-                        .WithMany()
-                        .HasForeignKey("IncidentId");
-
-                    b.Navigation("Incident");
-                });
-
-            modelBuilder.Entity("Models.IncidentValidationCommunicationHistory", b =>
-                {
-                    b.HasOne("Models.Incident", "Incident")
-                        .WithMany()
-                        .HasForeignKey("IncidentId");
-
-                    b.HasOne("Models.IncidentValidation", "IncidentValidation")
-                        .WithMany()
-                        .HasForeignKey("IncidentValidationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Incident");
-
-                    b.Navigation("IncidentValidation");
-                });
-
-            modelBuilder.Entity("Models.IncidentValidationPolicy", b =>
-                {
-                    b.HasOne("Models.Incident", "Incident")
-                        .WithMany()
-                        .HasForeignKey("IncidentId");
-
-                    b.HasOne("Models.IncidentValidation", "IncidentValidation")
-                        .WithMany()
-                        .HasForeignKey("IncidentValidationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Incident");
-
-                    b.Navigation("IncidentValidation");
                 });
 
             modelBuilder.Entity("Models.Inventory", b =>

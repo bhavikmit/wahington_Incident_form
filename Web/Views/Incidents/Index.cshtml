@@ -1179,7 +1179,7 @@
             <div class="right-sec">
 
                 <a href="#" class="btn btn-primary AddIncident" id="btnAddIncident"><i class="fa fa-plus"></i>Incident</a>
-                <button data-bs-toggle="modal" data-bs-target="#ValidateIncidentModal" class="btn btn-primary ValidateIncident" id="btnValidatedIncident"><i class="fa fa-plus"></i>Validation (0)</button>
+                @* <button data-bs-toggle="modal" data-bs-target="#ValidateIncidentModal" class="btn btn-primary ValidateIncident" id="btnValidatedIncident"><i class="fa fa-plus"></i>Validation (0)</button> *@
             </div>
        
 
@@ -1203,6 +1203,8 @@
 <div id="incidentNotesModalContainer"></div>
 <div id="incidentHistoryContainer"></div>
 
+<div id="incidentMapContainer">
+</div>
 <div class="modal fade" id="ValidateIncidentModal" tabindex="-1" aria-labelledby="ValidateIncidentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -1324,6 +1326,10 @@
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/masking/initiate-masking.js"></script>
 <script src="~/js/views/incident/incidentform.js"></script>
+
+<link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
+<script src="https://js.arcgis.com/4.27/"></script>
+
 <script>
         document.addEventListener("DOMContentLoaded", function () {
 
@@ -1429,4 +1435,32 @@
     }
 
         });
+
+        async function OpenIncidentMap(id) {
+            try {
+                let payload = { id: id };
+
+                showLoader($(".main-content"));
+
+                const url = `/Incidents/GetIncidentMapDetailsbyId?id=${id}`;
+
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "text/html"
+                    }
+                });
+
+                if (!response.ok) throw new Error("Failed to load incident map");
+
+                const content = await response.text();
+                $("#incidentMapContainer").empty().html(content); // 👈 replace with your target div
+                $("#MapIncidentModal").modal("show");
+
+            } catch (error) {
+                console.error("Error loading incident map:", error);
+            } finally {
+                hideLoader($(".main-content"));
+            }
+        }
 </script>

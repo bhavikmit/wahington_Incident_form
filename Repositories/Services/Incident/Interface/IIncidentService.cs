@@ -7,6 +7,7 @@ using Pagination;
 using Repositories.Interfaces;
 
 using ViewModels;
+using ViewModels.Dashboard;
 using ViewModels.Incident;
 using ViewModels.Shared;
 
@@ -21,5 +22,6 @@ namespace Repositories.Common
         Task<IncidentViewModel> GetById(long incidentId);
         Task<IncidentViewModel> GetIncidentDetailsById(long incidentId);
         Task<string> UpdateIncident(IncidentViewModel viewModel);
+        Task<List<IncidentLocationMapViewModel>> GetIncidentMapDetailsbyId(long incidentId);
     }
 }

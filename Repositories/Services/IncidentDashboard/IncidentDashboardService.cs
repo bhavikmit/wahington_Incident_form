@@ -208,8 +208,8 @@ namespace Repositories.Common
                         TotalEventTypeCount = totalEvent,
                         TotalAssetTypeCount = totalAssetType,
                         TotalSubmittedCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Submitted.ToString()),
-                        TotalStartedCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Started.ToString()),
-                        TotalDispatchedCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Dispatched.ToString()),
+                        TotalValidatedCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Validated.ToString()),
+                        //TotalDispatchedCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Dispatched.ToString()),
                         TotalCompletedCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Completed.ToString()),
                         TotalCancelledCount = incidentsStatus.Count(i => i.StatusLegend.Name == StatusLegendEnum.Cancelled.ToString()),
                     }
@@ -227,7 +227,7 @@ namespace Repositories.Common
             try
             {
                 List<IncidentRecentViewModel> incidentRecents = new();
-
+                var eventTypes = await _db.EventTypes.ToListAsync();
                 // Pull incidents in memory (only once)
                 var incidents = await _db.Incidents.Include(p => p.StatusLegend).Include(p => p.SeverityLevel)
                     .Where(i => !i.IsDeleted)
@@ -236,7 +236,7 @@ namespace Repositories.Common
                 {
                     incidentRecents.Add(new IncidentRecentViewModel()
                     {
-                        eventtype = await GetEventTypes(item.EventTypeIds ?? string.Empty),
+                        eventtype = GetEventTypes(eventTypes, item.EventTypeIds),
                         incidentId = item.IncidentID,
                         incidentloc = item.LocationAddress,
                         incidentstatus = item.StatusLegend.Name,
@@ -248,9 +248,12 @@ namespace Repositories.Common
                 // Preload lookup tables in memory (avoid multiple DB hits)
                 var severityLevels = await _db.SeverityLevels.ToListAsync();
                 var statusLegends = await _db.StatusLegends.ToListAsync();
-                var eventTypes = await _db.EventTypes.ToListAsync();
+
+
                 var assetIncidents = await _db.AssetIncidents.ToListAsync();
 
+                var incidentValidations = await _db.IncidentValidations
+                  .Where(i => !i.IsDeleted).ToListAsync();
 
                 var incidentLocation = incidents.Select(p => new IncidentLocationMapViewModel
                 {
@@ -262,7 +265,12 @@ namespace Repositories.Common
                     calleraddress = p.CallerAddress,
                     callername = p.CallerName,
                     callerphone = p.CallerPhoneNumber,
-                    incidentid = p.IncidentID
+                    incidentid = p.IncidentID,
+                    assettype = GetAssets(assetIncidents, p.AssetIds),
+                    description = p.DescriptionIssue ?? string.Empty,
+                    eventtype = GetEventTypes(eventTypes, p.EventTypeIds),
+                    intersection = p.Landmark,
+                    perimeter = incidentValidations.Count > 0 ? GetPerimeter(incidentValidations.Where(i => i.IncidentId == p.Id).FirstOrDefault()?.DiscoveryPerimeterId) : ""
                 }).ToList();
 
 
@@ -394,11 +402,11 @@ namespace Repositories.Common
                         TotalEventTypeCount = totalEvent,
                         TotalAssetTypeCount = totalAssetType,
                         ListIncidentLocationMapViewModel = incidentLocation,
-                        TotalSubmittedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Submitted.ToString()),
-                        TotalStartedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Started.ToString()),
-                        TotalDispatchedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Dispatched.ToString()),
-                        TotalCompletedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Completed.ToString()),
-                        TotalCancelledCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Cancelled.ToString()),
+                        TotalSubmittedCount = incidents.Count(i => i.StatusLegend != null && i.StatusLegend.Name == StatusLegendEnum.Submitted.ToString()),
+                        TotalValidatedCount = incidents.Count(i => i.StatusLegend != null && i.StatusLegend.Name == StatusLegendEnum.Validated.ToString()),
+                        //TotalDispatchedCount = incidents.Count(i => i.StatusLegend.Name == StatusLegendEnum.Dispatched.ToString()),
+                        TotalCompletedCount = incidents.Count(i => i.StatusLegend != null && i.StatusLegend.Name == StatusLegendEnum.Completed.ToString()),
+                        TotalCancelledCount = incidents.Count(i => i.StatusLegend != null && i.StatusLegend.Name == StatusLegendEnum.Cancelled.ToString()),
                         ListIncidentRecentViewModel = incidentRecents
                     }
                 };
@@ -410,7 +418,7 @@ namespace Repositories.Common
             }
         }
 
-        private async Task<string> GetEventTypes(string ids)
+        private string GetEventTypes(List<EventType> eventTypes, string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))
                 return string.Empty;
@@ -421,12 +429,40 @@ namespace Repositories.Common
                              .Select(val => val.Value)
                              .ToList();
 
-            var eventTypes = await _db.EventTypes
+            var eventTypesName = eventTypes
                                       .Where(a => idArray.Contains(a.Id))
                                       .Select(a => a.Name)
-                                      .ToListAsync();
+                                      .ToList();
 
-            return string.Join(",", eventTypes);
+            return string.Join(",", eventTypesName);
         }
+
+        private string GetAssets(List<AssetIncident> assetIncidents, string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+                return string.Empty;
+
+            var idArray = ids.Split(",", StringSplitOptions.RemoveEmptyEntries)
+                             .Select(id => long.TryParse(id.Trim(), out var val) ? val : (long?)null)
+                             .Where(val => val.HasValue)
+                             .Select(val => val.Value)
+                             .ToList();
+
+            var assetNames = assetIncidents
+                                      .Where(a => idArray.Contains(a.Id))
+                                      .Select(a => a.Name)
+                                      .ToList();
+
+            return string.Join(",", assetNames);
+        }
+
+        private string GetPerimeter(long? value) =>
+           value switch
+           {
+               1 => "1 Mile",
+               2 => "3 Miles",
+               3 => "5 Miles",
+               _ => string.Empty
+           };
     }
 }

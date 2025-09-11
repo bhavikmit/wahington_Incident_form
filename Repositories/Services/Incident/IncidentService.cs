@@ -36,6 +36,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 
 using ViewModels;
+using ViewModels.Dashboard;
 using ViewModels.Incident;
 using ViewModels.Shared;
 
@@ -58,19 +59,48 @@ namespace Repositories.Common
             {
                 IncidentViewModel incidentViewModel = new();
 
+                //var statusLegends = await _db.StatusLegends
+                //    .Where(it => !it.IsDeleted)
+                //    .OrderBy(it => it.Name)
+                //    .Select(it => new SelectListItem
+                //    {
+                //        Value = it.Id.ToString(),
+                //        Text = it.Name,
+                //        Group = new SelectListGroup()
+                //        {
+                //            Name = it.Color
+                //        }
+                //    })
+                //    .ToListAsync();
+
+                // Define the fixed order mapping
+                var orderMap = new Dictionary<string, int>
+                    {
+                        { "Submitted", 1 },
+                        { "Validated", 2 },
+                        { "Completed", 3 },
+                        { "Cancelled", 4 }
+                    };
+
                 var statusLegends = await _db.StatusLegends
                     .Where(it => !it.IsDeleted)
-                    .OrderBy(it => it.Name)
+                    .ToListAsync();
+
+                // Apply the fixed order
+                var statusLegendsList = statusLegends
+                    .OrderBy(it => orderMap.ContainsKey(it.Name) ? orderMap[it.Name] : int.MaxValue)
                     .Select(it => new SelectListItem
                     {
                         Value = it.Id.ToString(),
                         Text = it.Name,
-                        Group = new SelectListGroup()
+                        Group = new SelectListGroup
                         {
                             Name = it.Color
                         }
                     })
-                    .ToListAsync();
+                    .ToList();
+
+
 
                 var severityLevels = await _db.SeverityLevels
                     .Where(it => !it.IsDeleted)
@@ -114,7 +144,7 @@ namespace Repositories.Common
 
 
                 incidentViewModel.severityLevels = severityLevels;
-                incidentViewModel.statusLegends = statusLegends;
+                incidentViewModel.statusLegends = statusLegendsList;
                 incidentViewModel.incidentCellerInformation.Relationships = relationships;
                 incidentViewModel.incidentiLocation.AssetsIncidentList = assetIncidents;
                 incidentViewModel.incidentDetails.EventTypes = eventTypes;
@@ -334,8 +364,8 @@ namespace Repositories.Common
                         LocationAddress = item.LocationAddress ?? string.Empty,
                         Severity = item.SeverityLevel.Name,
                         SeverityId = item.SeverityLevelId,
-                        StatusLegend = item.StatusLegend.Name,
-                        StatusLegendColor = item.StatusLegend.Color,
+                        StatusLegend = item.StatusLegend?.Name,
+                        StatusLegendColor = item.StatusLegend?.Color,
                         StatusLegendId = item.StatusLegendId,
                         RelationShipName = item.Relationship.Name,
                         RelationShipId = item.RelationshipId,
@@ -662,6 +692,52 @@ namespace Repositories.Common
         }
 
 
+        public async Task<List<IncidentLocationMapViewModel>> GetIncidentMapDetailsbyId(long incidentId)
+        {
+            List<IncidentLocationMapViewModel> locationMapViewModels = new();
+
+            try
+            {
+                var incident = await _db.Incidents.Include(p => p.StatusLegend).Include(p => p.SeverityLevel)
+                   .Where(i => !i.IsDeleted && i.Id == incidentId)
+                   .FirstOrDefaultAsync();
+
+                var incidentValidation = await _db.IncidentValidations
+                   .Where(i => !i.IsDeleted && i.IncidentId == incidentId)
+                   .FirstOrDefaultAsync();
+
+                if (incident == null)
+                {
+                    return new List<IncidentLocationMapViewModel>();
+                }
+
+                locationMapViewModels.Add(new IncidentLocationMapViewModel
+                {
+                    lat = incident.Lat,
+                    lon = incident.Lng,
+                    severity = incident.SeverityLevel?.Name,
+                    color = incident.SeverityLevel?.Color,
+                    incidentloc = incident.LocationAddress,
+                    calleraddress = incident.CallerAddress,
+                    callername = incident.CallerName,
+                    callerphone = incident.CallerPhoneNumber,
+                    incidentid = incident.IncidentID,
+                    assettype = await GetAssets(incident.AssetIds ?? string.Empty),
+                    description = incident.DescriptionIssue ?? string.Empty,
+                    eventtype = await GetEventTypes(incident.EventTypeIds ?? string.Empty),
+                    intersection = incident.Landmark,
+                    perimeter = incidentValidation != null ? GetPerimeter(incidentValidation.DiscoveryPerimeterId) : ""
+                });
+
+                return locationMapViewModels;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetIncidentMapDetailsbyId.");
+                return new List<IncidentLocationMapViewModel>();
+            }
+        }
+
         #region private methods
         private bool TryParseCallTime(string callTime, out DateTime dateTime)
         {
@@ -694,7 +770,14 @@ namespace Repositories.Common
                 2 => "N/A",
                 _ => string.Empty
             };
-
+        private string GetPerimeter(long? value) =>
+           value switch
+           {
+               1 => "1 Mile",
+               2 => "3 Miles",
+               3 => "5 Miles",
+               _ => string.Empty
+           };
         private async Task<string> GetAssets(string ids)
         {
             if (string.IsNullOrWhiteSpace(ids))

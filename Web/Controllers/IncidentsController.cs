@@ -125,5 +125,12 @@ namespace Web.Controllers
             if (result == null) return NotFound();
             return Json(result);
         }
+
+        [HttpGet]
+        public async Task<PartialViewResult> GetIncidentMapDetailsbyId(long id)
+        {
+            var map = await _iIncidentService.GetIncidentMapDetailsbyId(id);
+            return PartialView("_IncidentMap", map ?? new List<ViewModels.Dashboard.IncidentLocationMapViewModel>());
+        }
     }
 }

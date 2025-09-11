@@ -22,6 +22,8 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(long id)
         {
+            TempData["TempComRecords"] = null;
+
             ValidationWorkflowViewModel validationWorkflow = new();
             validationWorkflow.Id = id;
             return View(validationWorkflow);
@@ -83,6 +85,72 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        public async Task<PartialViewResult> AddCommunicationRecord([FromForm] IncidentSubmitCommunicationViewModel request)
+        {
+            var newRecord = new IncidentSubmitCommunicationViewModel();
+
+            var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "Storage", "uploads", "CommunicationTemp");
+
+            if (!Directory.Exists(uploadsPath))
+            {
+                Directory.CreateDirectory(uploadsPath);
+            }
+
+            // Save uploaded files
+            if (request.Files != null && request.Files.Count > 0)
+            {
+                foreach (var file in request.Files)
+                {
+                    if (file.Length > 0)
+                    {
+                        var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                        var filePath = Path.Combine(uploadsPath, fileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+
+                        newRecord.FileMeta.Add(new FileMeta
+                        {
+                            FileName = fileName,
+                            OriginalName = file.FileName,
+                            TempPath = filePath,
+                        });
+                    }
+                }
+            }
+
+            newRecord.Message = request.Message;
+            newRecord.MessageType = request.MessageType;
+            newRecord.RecipientsIds = request.RecipientsIds;
+            newRecord.RecipientNames = request.RecipientNames;
+            newRecord.TimeStamp = request.TimeStamp;
+            newRecord.UserName = request.UserName;
+
+            // Load existing from TempData
+            List<IncidentSubmitCommunicationViewModel> tempRecords;
+            if (TempData["TempComRecords"] != null)
+            {
+                tempRecords = Newtonsoft.Json.JsonConvert
+                    .DeserializeObject<List<IncidentSubmitCommunicationViewModel>>(TempData["TempComRecords"].ToString());
+            }
+            else
+            {
+                tempRecords = new List<IncidentSubmitCommunicationViewModel>();
+            }
+
+            tempRecords.Add(newRecord);
+
+            // Save back to TempData
+            TempData["TempComRecords"] = Newtonsoft.Json.JsonConvert.SerializeObject(tempRecords);
+            TempData.Keep("TempComRecords");
+
+            // Return partial view with model
+            return PartialView("_CommunicationHistory", tempRecords);
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> SaveIncidentValidation([FromForm] IncidentSubmitViewModel request)
         {
             if (request == null)
@@ -91,42 +159,16 @@ namespace Web.Controllers
             try
             {
 
-                foreach (var comm in request.listSubmitCommunicationVM)
-                {
-                    if (comm.Files != null && comm.Files.Count > 0)
-                    {
-                        foreach (var file in comm.Files)
-                        {
-                            var filePath = Path.Combine("Uploads", file.FileName);
-                            using (var stream = new FileStream(filePath, FileMode.Create))
-                            {
-                                await file.CopyToAsync(stream);
-                            }
-                        }
-                    }
-                }
+                var policies = JsonConvert
+                    .DeserializeObject<List<IncidentSubmitPolicyViewModel>>(request.listPolicyVM);
 
-                if (!string.IsNullOrEmpty(request.listPolicyVM))
-                    request.listSubmitPolicyVM = JsonConvert.DeserializeObject<List<IncidentSubmitPolicyViewModel>>(request.listPolicyVM);
+                var communications = JsonConvert
+                    .DeserializeObject<List<IncidentSubmitCommunicationViewModel>>(TempData["TempComRecords"].ToString());
 
-                // Deserialize metadata
-                if (!string.IsNullOrEmpty(request.listCommunicationVM))
-                {
-                    request.listSubmitCommunicationVM =
-                        JsonConvert.DeserializeObject<List<IncidentSubmitCommunicationViewModel>>(request.listCommunicationVM);
-                }
-
-                // Files will be bound automatically to request.listSubmitCommunicationVM[i].Files
-                foreach (var comm in request.listSubmitCommunicationVM)
-                {
-                    if (comm.Files != null)
-                    {
-                        foreach (var file in comm.Files)
-                        {
-                            // process file (save, etc.)
-                        }
-                    }
-                }
+                request.listSubmitPolicyVM = policies;
+                request.listSubmitCommunicationVM = communications;
+                
+                var resultId = await _iIncidentValidationService.SaveIncidentValidation(request);
 
                 var successMsg = $"Incident validation saved successfully!";
 

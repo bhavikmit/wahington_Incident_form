@@ -117,8 +117,8 @@
         align-items: center;
     }
 
-        .msg-input textarea {
-            flex: 1;
+    .send-message-image textarea {
+            width:100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 6px;
@@ -240,28 +240,53 @@
         padding: 15px;
         margin: 10px 0;
     }
+    .team-detail{
+        background: #fff;
+        border: 1px solid #e6e6e6;
+        border-radius: 8px;
+        padding: 15px;
+    }
+    .team-detailTitle{
+        font-size:18px;
+    }
 
         .task-section h5 {
-            margin: 0 0 10px;
+            /* margin: 0 0 10px; */
             font-size: 15px;
             font-weight: bold;
         }
+        .assign-task{
+            margin:6px 6px;
+        }
+        .teamName-info h5{
+            margin-bottom:0;
+            line-height:normal;
+        }
+
+    .listInfo{
+        max-height:280px;
+        overflow:auto;
+    }
+    .task-section{
+        max-height:392px;
+        
+    }
 
     .specializations span {
         display: inline-block;
-        background: #e9f1ff;
-        color: #2468f3;
-        padding: 4px 10px;
-        border-radius: 20px;
+       /*  background: #e9f1ff;
+        color: #2468f3; */
+        /* padding: 4px 10px;
+        border-radius: 20px; */
         font-size: 13px;
-        margin: 2px;
+        /* margin: 2px; */
+        /* margin: 2px; */
     }
 
     .task-list {
         margin-top: 10px;
         border-radius: 6px;
-        height: 120px;
-        overflow: auto;
+       
         border: 1px solid #ddd;
     }
 
@@ -286,19 +311,19 @@
     .task-item.complete {
         background: #e9fce9;
         color: #207820;
-        border: 1px solid #207820;
+       
     }
 
     .task-item.started {
         background: #e8f1ff;
         color: #0044cc;
-        border: 1px solid #0044cc;
+       
     }
 
     .task-item.pending {
         background: #f9f9f9;
         color: #555;
-        border: 1px solid #555;
+       
     }
 
     .task-item i {
@@ -518,6 +543,9 @@
         font-size:18px;
         font-weight:800;
     }
+    .validation-detail-sec .card h3 i.fa{
+        margin-right:8px;
+    }
 
     .saftey-assesment ,
     .incident-detail-sec  {
@@ -629,9 +657,7 @@
         width: fit-content;
     }
 
-    .validation-detail-sec{
-        margin-top:16px;
-    }
+    
     .validation-detail-sec .badge-red{
         background: #d93025;
         color: white;
@@ -727,6 +753,67 @@
     .photo-item:hover img {
         transform: scale(1.05);
     }
+    /*****************tab sec******************/
+    #incidentDetailsModal .tabs {
+        display: flex;
+        border-bottom: 1px solid #e5e7eb;
+        gap: 30px;
+    }
+
+    #incidentDetailsModal .tab-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 0;
+        font-size: 15px;
+        font-weight: 500;
+        color: #6b7280;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+    }
+
+        #incidentDetailsModal .tab-item.active {
+            color: #f54e00;
+            border-bottom: 2px solid #f54e00;
+        }
+
+        #incidentDetailsModal .tab-item i {
+            font-size: 16px;
+        }
+
+    /* Content area */
+    .tab-content {
+        display: none;
+        padding: 20px 0;
+    }
+
+        .tab-content.active {
+            display: block;
+        }
+
+    .send-message-image .file-upload {
+        margin-bottom: 15px;
+    }
+
+    .send-message-image .preview {
+        padding: 10px;
+       
+    }
+
+        .send-message-image .preview img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+    .send-message-image .file-name {
+        font-size: 14px;
+        color: #333;
+        word-break: break-word;
+    }
 </style>
 <div class="modal fade" id="incidentDetailsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -739,380 +826,574 @@
             </div>
 
             <div class="modal-body">
-                <!--------------top card sec-------------------->
-                <div class="top-card-sec">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="card">
-                                <h4><i class="fa-solid fa-circle text-red red"></i> Status</h4>
-                                <div class="value">Submitted</div>
-                                <div class="subtext">Updated Sep 09, 2025</div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <h4><i class="fa-solid fa-triangle-exclamation orange"></i> Severity</h4>
-                                <div class="value red">High</div>
-                                <div class="subtext">Gas Leak</div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <h4><i class="fa-solid fa-calendar blue"></i> Created</h4>
-                                <div class="value">Sep 09, 2025</div>
-                                <div class="subtext">06:23 PM</div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <h4><i class="fa-solid fa-user green"></i> Reporter</h4>
-                                <div class="value">test</div>
-                                <div class="subtext">Customer</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-----------------location and incident information--------------------------->
-                <div class="section">
-                    <div class="section-card">
-                        <h3>Caller Information</h3>
-                        <div class="info-item d-flex align-items-start">
-                            <i class="fa-regular fa-user"></i>
-                            <div>
-                                <span>test</span>
-                                <div class="subtext">Customer</div>
-                            </div> 
-                        </div>
-                        <div class="info-item d-flex align-items-start">
-                            <i class="fa-solid fa-phone"></i>
-                            <div>
-                                <strong>156666623</strong>
-                                <div class="subtext">Primary contact</div>
-                            </div>
-                        </div>
-                        <div class="info-item d-flex align-items-start">
-                            <i class="fa-solid fa-location-dot"></i> 
-                            <div>
-                                <span class="info-title">Caller Address</span> 
-                                <div class="subtext">test</div>
-                            </div>
-                        </div>
-                        <div class="info-item d-flex align-items-start">
-                            <i class="fa-regular fa-calendar"></i> 
-                            <div>
-                                <span class="info-title">Call Time</span> 
-                                <div class="subtext">Sep 09, 2025 06:22 PM</div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="section-card">
-                        <h3>Incident Location</h3>
-                        <div class="info-item d-flex align-items-start">
-                            <i class="fa-solid fa-location-dot"></i>
-                            <div>
-                                <span class="info-title">Address</span>
-                                <div class="subtext">test</div>
-                            </div>
-                        </div>
-                        <div class="info-item ">
-                            <span class="info-title">Nearest Intersection</span> <br><span class="subtext">vishal market</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-title">Service Account</span> <br><span class="subtext">45666</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-title">Affected Assets</span> <br>
-                            <span class="badge">Compressor</span>
-                            <span class="badge">Pipeline</span>
-                            <span class="badge">Station</span>
-                            <span class="badge">Valve</span>
-                            <span class="badge">Meter</span>
-                            <span class="badge">Tank</span>
-                            <span class="badge">Regulator</span>
-                        </div>
+                <div class="tabs">
+                    <div class="tab-item active" data-tab="incident">
+                        <i class="far fa-file-alt"></i> Incident
+                    </div>
+                    <div class="tab-item" data-tab="validation">
+                        <i class="fas fa-shield-alt"></i> Validation
+                    </div>
+                    <div class="tab-item" data-tab="worksteps">
+                        <i class="fas fa-tasks"></i> Work Steps
+                    </div>
+                    <div class="tab-item" data-tab="communication">
+                        <i class="fas fa-comment-dots"></i> Communication
                     </div>
                 </div>
-                <!------------------------incident detail and saftey-------------------------------------->
-                <div class="incident-detail-sec">
-                    <!-- Incident Details -->
-                    <div class="card">
-                        <div class="d-flex align-items-center justify-content-between">
+                <div id="incident" class="tab-content active">
+                    <!--------------top card sec-------------------->
+                    <div class="top-card-sec">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <h4><i class="fa-solid fa-circle text-red red"></i> Status</h4>
+                                    <div class="value">Submitted</div>
+                                    <div class="subtext">Updated Sep 09, 2025</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <h4><i class="fa-solid fa-triangle-exclamation orange"></i> Severity</h4>
+                                    <div class="value red">High</div>
+                                    <div class="subtext">Gas Leak</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <h4><i class="fa-solid fa-calendar blue"></i> Created</h4>
+                                    <div class="value">Sep 09, 2025</div>
+                                    <div class="subtext">06:23 PM</div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <h4><i class="fa-solid fa-user green"></i> Reporter</h4>
+                                    <div class="value">test</div>
+                                    <div class="subtext">Customer</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-----------------location and incident information--------------------------->
+                    <div class="section">
+                        <div class="section-card">
+                            <h3>Caller Information</h3>
+                            <div class="info-item d-flex align-items-start">
+                                <i class="fa-regular fa-user"></i>
+                                <div>
+                                    <span>test</span>
+                                    <div class="subtext">Customer</div>
+                                </div>
+                            </div>
+                            <div class="info-item d-flex align-items-start">
+                                <i class="fa-solid fa-phone"></i>
+                                <div>
+                                    <strong>156666623</strong>
+                                    <div class="subtext">Primary contact</div>
+                                </div>
+                            </div>
+                            <div class="info-item d-flex align-items-start">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <div>
+                                    <span class="info-title">Caller Address</span>
+                                    <div class="subtext">test</div>
+                                </div>
+                            </div>
+                            <div class="info-item d-flex align-items-start">
+                                <i class="fa-regular fa-calendar"></i>
+                                <div>
+                                    <span class="info-title">Call Time</span>
+                                    <div class="subtext">Sep 09, 2025 06:22 PM</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-card">
+                            <h3>Incident Location</h3>
+                            <div class="info-item d-flex align-items-start">
+                                <i class="fa-solid fa-location-dot"></i>
+                                <div>
+                                    <span class="info-title">Address</span>
+                                    <div class="subtext">test</div>
+                                </div>
+                            </div>
+                            <div class="info-item ">
+                                <span class="info-title">Nearest Intersection</span> <br><span class="subtext">vishal market</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-title">Service Account</span> <br><span class="subtext">45666</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-title">Affected Assets</span> <br>
+                                <span class="badge">Compressor</span>
+                                <span class="badge">Pipeline</span>
+                                <span class="badge">Station</span>
+                                <span class="badge">Valve</span>
+                                <span class="badge">Meter</span>
+                                <span class="badge">Tank</span>
+                                <span class="badge">Regulator</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!------------------------incident detail and saftey-------------------------------------->
+                    <div class="incident-detail-sec">
+                        <!-- Incident Details -->
+                        <div class="card">
+                            <div class="d-flex align-items-center justify-content-between">
                                 <h3>Incident Details</h3>
                                 <div class="header-meta">
                                     <div><i class="fa-regular fa-user"></i> Created by test</div>
                                     <div><i class="fa-regular fa-calendar"></i> Sep 09, 2025 06:23 PM</div>
                                 </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <div class="fixwidth">
-                                <div>
-                                    <strong>Event Type</strong>
-                                    <div class="subtext">Gas Leak</div>
-                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="fixwidth">
+                                    <div>
+                                        <strong>Event Type</strong>
+                                        <div class="subtext">Gas Leak</div>
+                                    </div>
                                     <div>
                                         <strong>Description </strong>
                                         <div class="subtext">tis is testing description</div>
                                     </div>
 
-                            </div>
-                            <div class="fixwidth">
-                                <p><strong>Severity Level</strong></p>
-                                <span class="badge-red">High</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="saftey-assesment">
-                    <!-- Safety Assessment -->
-                    <div class="card">
-                        <h3>Safety Assessment</h3>
-                        <div class="safety-grid">
-                            <div class="safety-item bg-green">
-                                <h4>Gas Odor Present</h4>
-                                <strong>No</strong>
-                            </div>
-                            <div class="safety-item bg-grey">
-                                <h4>Hissing Sound</h4>
-                                <strong>Unknown</strong>
-                            </div>
-                            <div class="safety-item bg-red">
-                                <h4>Visible Damage/Fire</h4>
-                                <strong>Yes</strong>
-                            </div>
-                            <div class="safety-item bg-green">
-                                <h4>People Injured</h4>
-                                <strong>No</strong>
-                            </div>
-                            <div class="safety-item bg-green">
-                                <h4>Evacuation Required</h4>
-                                <strong>No</strong>
+                                </div>
+                                <div class="fixwidth">
+                                    <p><strong>Severity Level</strong></p>
+                                    <span class="badge-red">High</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!---------------------Validation details-------------------------->
-                <div class="validation-detail-sec">
-                    <div class="card">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <h3><i class="fa-regular fa-circle-check"></i>Validation Details</h3>
-                            <div class="header-meta">
-                                <div><i class="fa-regular fa-user"></i> Validated by John Smith</div>
-                                <div><i class="fa-regular fa-calendar"></i>Sep 09, 2025 05:53 PM</div>
+                    <!-----------------Supporting information--------------------------->
+                    <div class="supporting-information-sec">
+                        <div class="card">
+                            <h3>Supporting Information</h3>
+
+                            <!-- Service Notes -->
+                            <div class="note-title">
+                                <i class="fa-regular fa-file-lines"></i> Service Representative Notes
                             </div>
+                            <div class="note-box">test note</div>
+
+                            <!-- Photos -->
+                            <div class="photos-title">
+                                <i class="fa-regular fa-image"></i> Photos (3)
+                            </div>
+                            <div class="photos-grid">
+                                <div class="photo-item">
+                                    <img src="~/img/banner.jpg" name="incidentPhoto" alt="incidentPhoto" />
+
+                                </div>
+                                <div class="photo-item">
+                                    <img src="~/img/banner.jpg" name="incidentPhoto" alt="incidentPhoto" />
+
+                                </div>
+                                <div class="photo-item">
+                                    <img src="~/img/banner.jpg" name="incidentPhoto" alt="incidentPhoto" />
+
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="validated-info">
-                            <div>
-                                <strong>Validated Severity</strong>
-                                <div class="badge-red">High</div>
+                    </div>
+                </div>
+
+                <div id="validation" class="tab-content">
+                    <!---------------------Validation details-------------------------->
+                    <div class="validation-detail-sec">
+                        <div class="card">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <h3><i class="fa-regular fa-circle-check"></i>Validation Details</h3>
+                                <div class="header-meta">
+                                    <div><i class="fa-regular fa-user"></i> Validated by John Smith</div>
+                                    <div><i class="fa-regular fa-calendar"></i>Sep 09, 2025 05:53 PM</div>
+                                </div>
                             </div>
-                             <div>
-                                <strong>Discovery Perimeter</strong>
+                            <div class="validated-info">
+                                <div>
+                                    <strong>Validated Severity</strong>
+                                    <div class="badge-red">High</div>
+                                </div>
+                                <div>
+                                    <strong>Discovery Perimeter</strong>
                                     <div class="subtext">3 Miles</div>
-                             </div>
-                            <div>
-                                <strong>Status</strong>
-                                <div class="badge-success">Validated</div>
+                                </div>
+                                <div>
+                                    <strong>Status</strong>
+                                    <div class="badge-success">Validated</div>
+                                </div>
+                            </div>
+                            <div class="validation-note">
+                                <strong>Validation Notes</strong>
+                                <div class="notes">
+                                    Incident validated and confirmed. Safety assessment completed.
+                                </div>
                             </div>
                         </div>
-                        <div class="validation-note">
-                            <strong>Validation Notes</strong>
-                            <div class="notes">
-                                Incident validated and confirmed. Safety assessment completed.
+                    </div>
+                    <div class="saftey-assesment">
+                        <!-- Safety Assessment -->
+                        <div class="card">
+                            <h3>Safety Assessment</h3>
+                            <div class="safety-grid">
+                                <div class="safety-item bg-green">
+                                    <h4>Gas Odor Present</h4>
+                                    <strong>No</strong>
+                                </div>
+                                <div class="safety-item bg-grey">
+                                    <h4>Hissing Sound</h4>
+                                    <strong>Unknown</strong>
+                                </div>
+                                <div class="safety-item bg-red">
+                                    <h4>Visible Damage/Fire</h4>
+                                    <strong>Yes</strong>
+                                </div>
+                                <div class="safety-item bg-green">
+                                    <h4>People Injured</h4>
+                                    <strong>No</strong>
+                                </div>
+                                <div class="safety-item bg-green">
+                                    <h4>Evacuation Required</h4>
+                                    <strong>No</strong>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-----------------Supporting information--------------------------->
-                <div class="supporting-information-sec">
-                    <div class="card">
-                        <h3>Supporting Information</h3>
 
-                        <!-- Service Notes -->
-                        <div class="note-title">
-                            <i class="fa-regular fa-file-lines"></i> Service Representative Notes
-                        </div>
-                        <div class="note-box">test note</div>
+                <div id="worksteps" class="tab-content">
+                    <div class="team-detail">
+                        <h3 class="team-detailTitle">Assigned Response Teams</h3>
+                        <div class="row AllteamSec">
+                            <div class="col-md-4">
+                                <div class="task-section">
+                                    <div class="teamName-icon d-flex align-items-center">
+                                        <div class="avatar"><i class="fa-solid fa-people-group"></i></div>
+                                        <div class="teamName-info">
+                                            <h5>Distribution Emergency Team</h5>
+                                            <div class="specializations">
+                                                <span>Gas Leaks,</span>
+                                                <span>Valve Repairs,</span>
+                                                <span>Meter Issues,</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
 
-                        <!-- Photos -->
-                        <div class="photos-title">
-                            <i class="fa-regular fa-image"></i> Photos (3)
+                                    <div class="task-list">
+                                        <h5 class="assign-task">Assigned Tasks:</h5>
+                                        <div class="listInfo">
+                                            <div class="task-item complete">
+                                                <span>#1 Travel to Site</span>
+                                                <span>Complete </span>
+                                            </div>
+                                            <div class="task-item started">
+                                                <span>#2 Arrive & Assess Scene</span>
+                                                <span>Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#3 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                            <div class="task-item complete">
+                                                <span>#4 Travel to Site</span>
+                                                <span>Complete </span>
+                                            </div>
+                                            <div class="task-item started">
+                                                <span>#5 Arrive & Assess Scene</span>
+                                                <span>Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#6 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#7 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="task-section">
+                                    <div class="teamName-icon d-flex align-items-center">
+                                        <div class="avatar"><i class="fa-solid fa-people-group"></i></div>
+                                        <div class="teamName-info">
+                                            <h5>Distribution Emergency Team</h5>
+                                            <div class="specializations">
+                                                <span>Gas Leaks,</span>
+                                                <span>Valve Repairs,</span>
+                                                <span>Meter Issues,</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+
+                                    <div class="task-list">
+                                        <h5 class="assign-task">Assigned Tasks:</h5>
+                                        <div class="listInfo">
+                                            <div class="task-item complete">
+                                                <span>#1 Travel to Site</span>
+                                                <span>Complete </span>
+                                            </div>
+                                            <div class="task-item started">
+                                                <span>#2 Arrive & Assess Scene</span>
+                                                <span>Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#3 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                            <div class="task-item complete">
+                                                <span>#4 Travel to Site</span>
+                                                <span>Complete </span>
+                                            </div>
+                                            <div class="task-item started">
+                                                <span>#5 Arrive & Assess Scene</span>
+                                                <span>Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#6 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#7 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="task-section">
+                                    <div class="teamName-icon d-flex align-items-center">
+                                        <div class="avatar"><i class="fa-solid fa-people-group"></i></div>
+                                        <div class="teamName-info">
+                                            <h5>Distribution Emergency Team</h5>
+                                            <div class="specializations">
+                                                <span>Gas Leaks,</span>
+                                                <span>Valve Repairs,</span>
+                                                <span>Meter Issues,</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+
+                                    <div class="task-list">
+                                        <h5 class="assign-task">Assigned Tasks:</h5>
+                                        <div class="listInfo">
+                                            <div class="task-item complete">
+                                                <span>#1 Travel to Site</span>
+                                                <span>Complete </span>
+                                            </div>
+                                            <div class="task-item started">
+                                                <span>#2 Arrive & Assess Scene</span>
+                                                <span>Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#3 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                            <div class="task-item complete">
+                                                <span>#4 Travel to Site</span>
+                                                <span>Complete </span>
+                                            </div>
+                                            <div class="task-item started">
+                                                <span>#5 Arrive & Assess Scene</span>
+                                                <span>Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#6 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#7 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="task-section">
+                                    <div class="teamName-icon d-flex align-items-center">
+                                        <div class="avatar"><i class="fa-solid fa-people-group"></i></div>
+                                        <div class="teamName-info">
+                                            <h5>Distribution Emergency Team</h5>
+                                            <div class="specializations">
+                                                <span>Gas Leaks,</span>
+                                                <span>Valve Repairs,</span>
+                                                <span>Meter Issues,</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+
+                                    <div class="task-list">
+                                        <h5 class="assign-task">Assigned Tasks:</h5>
+                                        <div class="listInfo">
+                                            <div class="task-item complete">
+                                                <span>#1 Travel to Site</span>
+                                                <span>Complete </span>
+                                            </div>
+                                            <div class="task-item started">
+                                                <span>#2 Arrive & Assess Scene</span>
+                                                <span>Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#3 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                            <div class="task-item complete">
+                                                <span>#4 Travel to Site</span>
+                                                <span>Complete </span>
+                                            </div>
+                                            <div class="task-item started">
+                                                <span>#5 Arrive & Assess Scene</span>
+                                                <span>Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#6 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                            <div class="task-item pending">
+                                                <span>#7 Perform Leak Survey</span>
+                                                <span>Not Started</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
-                        <div class="photos-grid">
-                            <div class="photo-item">
-                                <img src="~/img/banner.jpg" name="incidentPhoto" alt="incidentPhoto" />
-                                
-                            </div>
-                            <div class="photo-item">
-                                <img src="~/img/banner.jpg" name="incidentPhoto" alt="incidentPhoto" />
-                               
-                            </div>
-                            <div class="photo-item">
-                                <img src="~/img/banner.jpg" name="incidentPhoto" alt="incidentPhoto" />
-                                
+
+                    </div>
+                    
+                </div>
+
+                <div id="communication" class="tab-content">
+                    <!-------------------------team communication-------------------------------->
+                    <div class="team-communications">
+                        <!-- Header -->
+                        <div class="header">
+                            <h3><i class="fa fa-comments"></i>Team Communications</h3>
+                            <div class="messages-count">
+                                <i class="fa fa-user"></i> 0 messages
                             </div>
                         </div>
-                        
+                        <div class="messageSec">
+                            <!-- Message Type -->
+                            <div class="message-type">
+                                <label>
+                                    <input type="radio" name="msgType" value="team" checked> Team Message
+                                </label>
+                                <label>
+                                    <input type="radio" name="msgType" value="note"> Internal Note
+                                </label>
+                            </div>
+
+                            <!-- Team Message Box -->
+                            <div class="message-box team-message-box">
+                                <label>Select Team</label>
+                                <select>
+                                    <option>Select a team to message...</option>
+                                    <option>Team A</option>
+                                    <option>Team B</option>
+                                </select>
+
+                                <label>Select Specific Task (Optional)</label>
+                                <input type="text" class="dropdown" placeholder="Message entire team...">
+                                <small>Select a specific task to send targeted communication about that task</small>
+
+                             
+
+                                <div class="send-message-image">
+                                    <textarea placeholder="Select a team first to send message..."></textarea>
+                                    <input type="file" id="fileInput" class="file-upload" accept="image/*">
+                                    <div id="previewContainer"></div>
+                                    <button class="btn-send"><i class="fa fa-paper-plane"></i> Send</button>
+                                </div>
+                            </div>
+
+                            <!-- Internal Note Box -->
+                            <div class="message-box internal-note-box" style="display:none;">
+                                <label>Internal Note</label>
+                                <div class="msg-input">
+                                    <textarea placeholder="Write an internal note..."></textarea>
+                                    <button class="btn-send"><i class="fa fa-paper-plane"></i> Send</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-------------------Chat Message--------------------------->
+                        <div class="chat-message bg-yellow">
+                            <div class="avatar"><i class="fa-regular fa-user"></i></div>
+                            <div class="message-box ">
+                                <div class="message-header">
+                                    <strong>Current User</strong>
+                                    <span class="role">Super Admin</span>
+                                    <span class="role tag-yellow">Internal</span>
+                                </div>
+                                <div class="message-text">test message</div>
+                                <div class="timestamp">Sep 09, 04:15 PM</div>
+                            </div>
+                        </div>
+
+                        <div class="chat-message bg-blue">
+                            <div class="avatar"><i class="fa-regular fa-user"></i></div>
+                            <div class="message-box ">
+                                <div class="message-header">
+                                    <strong>Current User</strong>
+                                    <span class="role">Super Admin</span>
+                                    <span class="role tag-green">→ Distribution Emergency Team</span>
+                                    <span class="role tag-purple">Task: Notify & Dispatch</span>
+                                </div>
+                                <div class="message-text">test</div>
+                                <div class="timestamp">Sep 09, 06:11 PM</div>
+                            </div>
+                        </div>
+                        <!-- Timeline -->
+                        <div class="timeline">
+                            <h4><i class="fa fa-clock"></i> Timeline</h4>
+                            <ul>
+                                <li>
+                                    <span class="dot blue"></span>
+                                    <div>
+                                        <strong>Incident Created</strong>
+                                        <p>Sep 08, 2025 08:16 AM</p>
+                                        <small>by Caller 1</small>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="dot green"></span>
+                                    <div>
+                                        <strong>Incident Validated</strong>
+                                        <p>Sep 09, 2025 03:32 PM</p>
+                                        <small>by John Smith</small>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="dot gray"></span>
+                                    <div>
+                                        <strong>Status: Cancelled</strong>
+                                        <p>Sep 09, 2025 04:02 PM</p>
+                                        <small>by System</small>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-                <!-------------------------team communication-------------------------------->
-                <div class="team-communications">
-                    <!-- Header -->
-                    <div class="header">
-                        <h3><i class="fa fa-comments"></i>Team Communications</h3>
-                        <div class="messages-count">
-                            <i class="fa fa-user"></i> 0 messages
-                        </div>
-                    </div>
-                    <div class="messageSec">
-                        <!-- Message Type -->
-                        <div class="message-type">
-                            <label>
-                                <input type="radio" name="msgType" value="team" checked> Team Message
-                            </label>
-                            <label>
-                                <input type="radio" name="msgType" value="note"> Internal Note
-                            </label>
-                        </div>
-
-                        <!-- Team Message Box -->
-                        <div class="message-box team-message-box">
-                            <label>Select Team</label>
-                            <select>
-                                <option>Select a team to message...</option>
-                                <option>Team A</option>
-                                <option>Team B</option>
-                            </select>
-
-                            <label>Select Specific Task (Optional)</label>
-                            <input type="text" class="dropdown" placeholder="Message entire team...">
-                            <small>Select a specific task to send targeted communication about that task</small>
-
-                            <div class="task-section">
-                                <h5>Distribution Emergency Team - Assigned Tasks <span style="float:right;font-size:13px;color:#666">7 tasks</span></h5>
-                                <div class="specializations">
-                                    <span>Gas Leaks</span>
-                                    <span>Valve Repairs</span>
-                                    <span>Meter Issues</span>
-                                </div>
-
-                                <div class="task-list">
-                                    <div class="task-item complete">
-                                        <span><i class="fa fa-check-circle"></i> #1 Travel to Site</span>
-                                        <span>Complete <span class="selectedTask">Selected</span></span>
-                                    </div>
-                                    <div class="task-item started">
-                                        <span><i class="fa fa-spinner"></i> #2 Arrive & Assess Scene</span>
-                                        <span>Started</span>
-                                    </div>
-                                    <div class="task-item pending">
-                                        <span><i class="fa fa-clock"></i> #3 Perform Leak Survey</span>
-                                        <span>Not Started</span>
-                                    </div>
-                                    <div class="task-item complete">
-                                        <span><i class="fa fa-check-circle"></i> #4 Travel to Site</span>
-                                        <span>Complete <span class="selectedTask">Selected</span></span>
-                                    </div>
-                                    <div class="task-item started">
-                                        <span><i class="fa fa-spinner"></i> #5 Arrive & Assess Scene</span>
-                                        <span>Started</span>
-                                    </div>
-                                    <div class="task-item pending">
-                                        <span><i class="fa fa-clock"></i> #6 Perform Leak Survey</span>
-                                        <span>Not Started</span>
-                                    </div>
-                                </div>
-
-                                <div class="task-footer">
-                                    <div class="green">
-                                        <span>3 </span>
-                                        <p>Complete</p>
-                                    </div>
-                                    <div class="blue">
-                                        <span>1</span>
-                                        <p>Started</p>
-                                    </div>
-                                    <div class="gray">
-                                        <span>3 </span>
-                                        <p>Pending</p>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="msg-input">
-                                <textarea placeholder="Select a team first to send message..."></textarea>
-                                <button class="btn-send"><i class="fa fa-paper-plane"></i> Send</button>
-                            </div>
-                        </div>
-
-                        <!-- Internal Note Box -->
-                        <div class="message-box internal-note-box" style="display:none;">
-                            <label>Internal Note</label>
-                            <div class="msg-input">
-                                <textarea placeholder="Write an internal note..."></textarea>
-                                <button class="btn-send"><i class="fa fa-paper-plane"></i> Send</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-------------------Chat Message--------------------------->
-                    <div class="chat-message bg-yellow">
-                        <div class="avatar"><i class="fa-regular fa-user"></i></div>
-                        <div class="message-box ">
-                            <div class="message-header">
-                                <strong>Current User</strong>
-                                <span class="role">Super Admin</span>
-                                <span class="role tag-yellow">Internal</span>
-                            </div>
-                            <div class="message-text">test message</div>
-                            <div class="timestamp">Sep 09, 04:15 PM</div>
-                        </div>
-                    </div>
-
-                    <div class="chat-message bg-blue">
-                        <div class="avatar"><i class="fa-regular fa-user"></i></div>
-                        <div class="message-box ">
-                            <div class="message-header">
-                                <strong>Current User</strong>
-                                <span class="role">Super Admin</span>
-                                <span class="role tag-green">→ Distribution Emergency Team</span>
-                                <span class="role tag-purple">Task: Notify & Dispatch</span>
-                            </div>
-                            <div class="message-text">test</div>
-                            <div class="timestamp">Sep 09, 06:11 PM</div>
-                        </div>
-                    </div>
-                    <!-- Timeline -->
-                    <div class="timeline">
-                        <h4><i class="fa fa-clock"></i> Timeline</h4>
-                        <ul>
-                            <li>
-                                <span class="dot blue"></span>
-                                <div>
-                                    <strong>Incident Created</strong>
-                                    <p>Sep 08, 2025 08:16 AM</p>
-                                    <small>by Caller 1</small>
-                                </div>
-                            </li>
-                            <li>
-                                <span class="dot green"></span>
-                                <div>
-                                    <strong>Incident Validated</strong>
-                                    <p>Sep 09, 2025 03:32 PM</p>
-                                    <small>by John Smith</small>
-                                </div>
-                            </li>
-                            <li>
-                                <span class="dot gray"></span>
-                                <div>
-                                    <strong>Status: Cancelled</strong>
-                                    <p>Sep 09, 2025 04:02 PM</p>
-                                    <small>by System</small>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+               
+                
+                
+             
+                
             </div>
         </div>
     </div>
@@ -1121,7 +1402,23 @@
     <span class="close">&times;</span>
     <img class="modal-content" id="previewImg" src="~/img/banner.jpg">
 </div>
+<script>
+    // Tab click handler
+    document.querySelectorAll(".tab-item").forEach(tab => {
+      tab.addEventListener("click", function () {
+        // Remove active from all tabs
+        document.querySelectorAll(".tab-item").forEach(el => el.classList.remove("active"));
+        this.classList.add("active");
 
+        // Hide all contents
+        document.querySelectorAll(".tab-content").forEach(content => content.classList.remove("active"));
+
+        // Show selected content
+        const tabId = this.getAttribute("data-tab");
+        document.getElementById(tabId).classList.add("active");
+      });
+    });
+</script>
 <script>
         document.querySelectorAll('.photo-thumb').forEach(link => {
 
@@ -1155,5 +1452,29 @@
         document.querySelector(".internal-note-box").style.display =
           this.value === "note" ? "block" : "none";
       });
+    });
+</script>
+<script>
+    const fileInput = document.getElementById("fileInput");
+    const previewContainer = document.getElementById("previewContainer");
+
+    fileInput.addEventListener("change", function () {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          previewContainer.innerHTML = `
+            <div class="preview">
+              <img src="${e.target.result}" alt="Image Preview">
+              
+            </div>
+          `;
+        };
+
+        reader.readAsDataURL(file);
+      } else {
+        previewContainer.innerHTML = "";
+      }
     });
 </script>

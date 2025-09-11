@@ -1537,7 +1537,7 @@ Media Query
             .sidebar .navigation ul li {
                 padding: 0;
                 list-style: none;
-                margin-top: 20px;
+                margin-top: 10px;
                 margin-bottom: 0;
                 position: relative;
             }
@@ -1567,7 +1567,7 @@ Media Query
         /*color: var(--text-gray);*/
         color: #656464;
         border: 1px solid var(--primary-color);
-        min-height: 44px;
+        min-height: 40px;
         padding: 0 20px;
         text-decoration: none;
         cursor: pointer;
@@ -1575,7 +1575,7 @@ Media Query
         padding: 0 14px;
         width: calc(100% - 0px);
         font-weight: 600;
-        min-height: 42px;
+        min-height: 40px;
         background: transparent;
         border-color: transparent;
         justify-content: flex-start;
@@ -1597,12 +1597,34 @@ Media Query
     background: #FF6A27;
 }
 
-.sidebar .navigation a:hover,
+
 .sidebar-footer a:hover,
 .sidebar .navigation a.active {
-    background: var(--primary-color);
-    border-color: var(--primary-color);
-    color: var(--nav-text-color-active);
+    background: #FFEBEB;
+    border-color: #FFEBEB ;
+    color: #f54e00;
+}
+.sidebar .navigation a:hover {
+    background: #f6f6f6;
+    border-color: #f6f6f6;
+    color: #000000;
+}
+
+
+    
+    .sidebar-footer a:hover i,
+    .sidebar .navigation a.active i {
+        color: #f54e00 !important;
+    }
+    .sidebar .fas.fa-border-all {
+    color: #7e22ce;
+}
+.sidebar .fa-regular.fa-home {
+    color:red;
+}
+
+.sidebar .fas.fa-cog {
+    color:#1d4ed8;
 }
 
 .sidebar .navigation a.active {

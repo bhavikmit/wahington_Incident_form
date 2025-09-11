@@ -59,13 +59,13 @@
                 <ul class="nav-ul Ezsidebar">
                     <li>
                         <a href="/Home/Dashboard" class="@(currentPath.Contains("/home/dashboard") ? "active" : "")">
-                            <span class="SidebarIcon dashboard"><i class="fa fa-home"></i></span>
+                            <span class="SidebarIcon dashboard"><i class="fa-regular fa-home"></i></span>
                             <span class="name">Dashboard</span>
                         </a>
                     </li>
                     <li>
                         <a href="/Incidents" class="@(currentPath.Contains("/incidents") ? "active" : "")">
-                            <span class="SidebarIcon incident"><i class="fa fa-list"></i></span>
+                            <span class="SidebarIcon incident"><i class="fas fa-border-all"></i></span>
                             <span class="name">Incidents</span>
                         </a>
                     </li>
@@ -78,11 +78,11 @@
                     <li>
                         
                         <a href="/Settings">
-                            <span class="SidebarIcon setting"><i class="fa fa-gear"></i></span>
+                            <span class="SidebarIcon setting"><i class="fas fa-cog "></i></span>
                             <span class="name">Settings</span>
                         </a>
                     </li>
-                    <li>
+                   @*  <li>
                         <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3 sidebar-account" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa fa-user"></i>
                             <div class="d-flex flex-column">
@@ -106,7 +106,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li> *@
                     
                     @* <li>
                         <a href="/WorkOrders" class="@(currentPath.Contains("/workorders") ? "active" : "")">

@@ -92,7 +92,7 @@
                                     <i class="fa-solid fa-location-dot"></i>
                                     <span class="info-title">Address</span>
                                     <span class="info-sub">@Model.IVDetails.IncidentLocation</span>
-                                    <a href="#" class="map-link" onclick="openmap('@Model.IVDetails.Lat','@Model.IVDetails.Long')"><i class="fa-solid fa-map"></i> View on Map</a>
+                                    <a href="#" class="map-link" onclick="OpenIncidentMap()"><i class="fa-solid fa-map"></i> View on Map</a>
                                 </div>
 
                                 <div class="info-item">
@@ -203,7 +203,7 @@
                             <!-- Right: Actions -->
                             <div class="Bordercard">
                                 <h3>Alternative Actions</h3>
-                                <button class="btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#AlarmModal"><i class="fa-solid fa-circle-xmark"></i> Mark as False Alarm</button>
+                                <button class="btn-danger" type="button" data-bs-toggle="modal"><i class="fa-solid fa-circle-xmark"></i> Mark as False Alarm</button>
                                 <div class="alert">
                                     <strong>False Alarm:</strong> Use this option if the incident report is determined to be invalid, duplicate, or does not require emergency response.
                                 </div>
@@ -212,7 +212,7 @@
                                 <div class="location-preview">
                                     <i class="fa-solid fa-location-dot"></i>
                                     <p>@Model.IVValidation.IncidentLocation</p>
-                                    <a href="#" class="map-link" onclick="openmap('@Model.IVValidation.Lat','@Model.IVValidation.Long')">View Full Map</a>
+                                    <a href="#" class="map-link" onclick="OpenIncidentMap()">View Full Map</a>
                                 </div>
                             </div>
                         </div>

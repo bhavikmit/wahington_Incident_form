@@ -241,7 +241,9 @@ namespace Repositories.Common
                         incidentloc = item.LocationAddress,
                         incidentstatus = item.StatusLegend.Name,
                         incidentstatusColor = item.StatusLegend.Color,
-                        severity = item.SeverityLevel.Name
+                        severity = item.SeverityLevel.Name,
+                        lat = item.Lat,
+                        lon = item.Lng,
                     });
                 }
 

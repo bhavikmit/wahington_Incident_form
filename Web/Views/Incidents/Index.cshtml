@@ -1450,15 +1450,6 @@
                     }
                 });
 
-                // const response = await fetch("/Incidents/GetIncidentMapDetailsbyId", {
-                //     method: "POST",
-                //     headers: {
-                //         "Content-Type": "application/json",
-                //         "Accept": "text/html"
-                //     },
-                //     body: JSON.stringify(payload)
-                // });
-
                 if (!response.ok) throw new Error("Failed to load incident map");
 
                 const content = await response.text();

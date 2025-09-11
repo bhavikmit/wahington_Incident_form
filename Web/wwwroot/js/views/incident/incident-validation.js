@@ -485,6 +485,11 @@ async function AddCommunication() {
         });
     }
 
+    if (recipientsValue.length == 0) {
+        SwalErrorAlert("Please select any one recipient team..!");
+        return;
+    }
+
     try {
         showLoader($(".main-content"));
 

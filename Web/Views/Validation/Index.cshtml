@@ -1400,7 +1400,8 @@
 
 <div id="div_ValidationDtl">
 </div>
-
+<div id="incidentMapContainer">
+</div>
 <div class="modal fade" id="AlarmModal" tabindex="-1" aria-labelledby="AlarmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -1475,6 +1476,37 @@
       fileInput.files = dt.files;
       fileInput.dispatchEvent(new Event("change"));
     }
+
+
+     async function OpenIncidentMap() {
+            try {
+
+                var id = $("#hdn_Id").val();
+
+                showLoader($(".main-content"));
+
+                const url = `/Incidents/GetIncidentMapDetailsbyId?id=${id}`;
+
+                const response = await fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "text/html"
+                    }
+                });
+
+                if (!response.ok) throw new Error("Failed to load incident map");
+
+                const content = await response.text();
+                $("#incidentMapContainer").empty().html(content); // 👈 replace with your target div
+                $("#MapIncidentModal").modal("show");
+
+            } catch (error) {
+                console.error("Error loading incident map:", error);
+            } finally {
+                hideLoader($(".main-content"));
+            }
+        }
+
 </script>
 
 <script src="~/js/custom/loader/loader.js"></script>

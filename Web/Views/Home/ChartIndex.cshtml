@@ -549,7 +549,9 @@
                                 {
                                     @foreach (var item in Model.IncidentDashboard.ListIncidentRecentViewModel)
                                     {
-                                        <div class="incident-item">
+                                        <div class="incident-item focusMap" data-lat="@item.lat"
+                                             data-lon="@item.lon"
+                                             data-loc="@item.incidentloc" style="cursor:pointer">
                                             <div class="incident-details">
                                                 <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.incidentstatusColor"></span>
                                                 <div class="incident-info" style="margin-left: 10px;">
@@ -861,18 +863,17 @@
                 }
             });
 
-            $("#showOnMap").click(function () {
-            var val = $("#addressInput").val().trim();
-            var incident = $("#addressInput").data("selectedIncident");
+           $(".focusMap").click(function () {
+            var incidentLoc = $(this).data("loc");
+            var hdn_lat = $(this).data("lat");
+            var hdn_lon = $(this).data("lon");
 
-            if (val && incident) {
-                // If input has value, zoom to selected incident
+            if (incidentLoc) {
                 window.view.goTo({
-                    center: [incident.lon, incident.lat],
-                    zoom: 10
+                    center: [hdn_lon, hdn_lat],
+                    zoom: 15
                 });
             } else {
-                // If input empty, reset to show all incidents
                 if (window.graphicsLayer) {
                     window.view.goTo(window.graphicsLayer.graphics);
                 }

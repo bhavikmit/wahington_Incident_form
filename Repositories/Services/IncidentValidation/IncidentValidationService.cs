@@ -416,9 +416,9 @@ namespace Repositories.Common
                     var userIdParsed = !string.IsNullOrEmpty(userId) ? long.Parse(userId) : 0;
 
                     // ⚠️ Replace with real logged-in user
-                    //var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == userIdParsed);
+                    var statusLegend = await _db.StatusLegends.FirstOrDefaultAsync(x => x.Name == StatusLegendEnum.Validated.ToString());
 
-                    incident.StatusLegendId = (int)StatusLegendEnum.Validated;
+                    incident.StatusLegendId = statusLegend?.Id ?? (int)StatusLegendEnum.Validated;
                     incident.UpdatedOn = DateTime.Now;
                     incident.UpdatedBy = userIdParsed;
                 }

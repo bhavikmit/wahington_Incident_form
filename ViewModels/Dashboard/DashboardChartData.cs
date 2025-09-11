@@ -125,6 +125,8 @@ namespace ViewModels.Dashboard
         public string incidentloc { get; set; } = default!;
         public string eventtype { get; set; } = default!;
         public string severity { get; set; } = default!;
+        public double lat { get; set; }
+        public double lon { get; set; }
         public string incidentstatus { get; set; } = default!;
         public string incidentstatusColor { get; set; } = default!;
     }

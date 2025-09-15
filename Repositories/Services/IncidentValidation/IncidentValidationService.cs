@@ -255,7 +255,7 @@ namespace Repositories.Common
 
             try
             {
-                var responseTeams = await _db.AssignResponseTeams.Where(p => !p.IsDeleted).ToListAsync();
+                var responseTeams = await _db.IncidentTeams.Where(p => !p.IsDeleted).ToListAsync();
 
                 foreach (var item in responseTeams)
                 {
@@ -263,9 +263,8 @@ namespace Repositories.Common
                     {
                         ReponseTeamId = item.Id,
                         Name = item.Name,
-                        Contact = item.ContactNumber,
-                        Tag = item.Category,
-                        Specializations = item.SpecializationsList
+                        Contact = item.Contact,
+                        Specializations = item.Specializations
                     });
                 }
 
@@ -344,7 +343,7 @@ namespace Repositories.Common
             List<SelectListItem> assignResponseTeams = new();
             try
             {
-                var assignResponses = await _db.AssignResponseTeams.Where(p => !p.IsDeleted)
+                var assignResponses = await _db.IncidentTeams.Where(p => !p.IsDeleted)
                              .ToListAsync();
                 assignResponseTeams = assignResponses.Select(p => new SelectListItem()
                 {

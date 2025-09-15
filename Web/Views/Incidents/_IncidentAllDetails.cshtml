@@ -977,10 +977,10 @@
 
                             <!-- Photos -->
                             <div class="photos-title">
-                                <i class="fa-regular fa-image"></i> Photos (@Model.incidentSupportingInfoViewModel.ImageUrls.Count())
+                                <i class="fa-regular fa-image"></i> Photos (@Model.incidentSupportingInfoViewModel?.ImageUrls.Count())
                             </div>
                             <div class="photos-grid">
-                                @foreach (var imageUrl in Model.incidentSupportingInfoViewModel.ImageUrls)
+                                @foreach (var imageUrl in Model.incidentSupportingInfoViewModel?.ImageUrls)
                                 {
                                     <div class="photo-item">
                                         <img src="@imageUrl" alt="incidentPhoto" />

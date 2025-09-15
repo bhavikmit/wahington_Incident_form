@@ -553,35 +553,35 @@ namespace Repositories.Common
                 //var incidentValidation = await _db.IncidentValidations
                 //    .FirstOrDefaultAsync(iv => iv.IncidentId == id);
 
-                var incidentValidation = from i in _db.IncidentValidations
-                                   join s in _db.SeverityLevels on i.ConfirmedSeverityLevelId equals s.Id
-                                   where i.IncidentId == id
-                                   select new IncidentValidationsDetailsViewModel
-                                   {
-                                       // IncidentValidation properties
-                                       ConfirmedSeverityLevelId = i.ConfirmedSeverityLevelId,
-                                       DiscoveryPerimeterId = i.DiscoveryPerimeterId,
-                                       ValidationNotes = i.ValidationNotes,
-                                       CreatedBy = i.UpdatedBy,
-                                       CreatedOn = i.UpdatedOn,
+                var incidentValidation = (from i in _db.IncidentValidations
+                                          join s in _db.SeverityLevels on i.ConfirmedSeverityLevelId equals s.Id
+                                          where i.IncidentId == id
+                                          select new IncidentValidationsDetailsViewModel
+                                          {
+                                              // IncidentValidation properties
+                                              ConfirmedSeverityLevelId = i.ConfirmedSeverityLevelId,
+                                              DiscoveryPerimeterId = i.DiscoveryPerimeterId,
+                                              ValidationNotes = i.ValidationNotes,
+                                              CreatedBy = i.UpdatedBy,
+                                              CreatedOn = i.UpdatedOn,
 
-                                       SeverityLevelName = s.Name,
-                                       SeverityLevelColor = s.Color,
+                                              SeverityLevelName = s.Name,
+                                              SeverityLevelColor = s.Color,
 
-                                       IncidentValidationCommunicationHistoriesViewModelList = _db.IncidentValidationCommunicationHistories
-                                            .Where(ih => ih.IncidentId == i.IncidentId)
-                                            .OrderByDescending(ih => ih.CreatedOn)
-                                            .Select(ih => new IncidentValidationCommunicationHistoriesViewModel
-                                            {
-                                                UserName = ih.UserName,
-                                                Message = ih.Message,
-                                                TimeStamp = ih.TimeStamp,
-                                                ReceipientsIds = ih.RecipientsIds,
-                                                ImageUrl = ih.ImageUrl,
-                                                MessageType = ih.MessageType
-                                            })
-                                            .ToList()
-                                   };
+                                              IncidentValidationCommunicationHistoriesViewModelList = _db.IncidentValidationCommunicationHistories
+                                                   .Where(ih => ih.IncidentId == i.IncidentId)
+                                                   .OrderByDescending(ih => ih.CreatedOn)
+                                                   .Select(ih => new IncidentValidationCommunicationHistoriesViewModel
+                                                   {
+                                                       UserName = ih.UserName,
+                                                       Message = ih.Message,
+                                                       TimeStamp = ih.TimeStamp,
+                                                       ReceipientsIds = ih.RecipientsIds,
+                                                       ImageUrl = ih.ImageUrl,
+                                                       MessageType = ih.MessageType
+                                                   })
+                                                   .ToList()
+                                          }).ToList() ?? new List<IncidentValidationsDetailsViewModel>();
 
 
                 if (incident == null)
@@ -668,18 +668,21 @@ namespace Repositories.Common
                            .ToList()
                             : new List<string>()
                     },
+
+                    //incidentValidation = incidentValidation ?? new IncidentValidationsDetailsViewModel()
+
                     incidentValidationsDetailsViewModel = new IncidentValidationsDetailsViewModel
                     {
-                        ConfirmedSeverityLevelId = incidentValidation.FirstOrDefault().ConfirmedSeverityLevelId,
-                        DiscoveryPerimeterId = incidentValidation.FirstOrDefault().DiscoveryPerimeterId,
-                        DiscoveryPerimeterName = GetPerimeter(incidentValidation.FirstOrDefault().DiscoveryPerimeterId),
-                        ValidationNotes = incidentValidation.FirstOrDefault().ValidationNotes,
-                        CreatedBy = incidentValidation.FirstOrDefault().CreatedBy,
-                        CreatedDateInFormat = GetDate(Convert.ToString(incidentValidation.FirstOrDefault().CreatedOn)),
-                        CreatedTimeInFormat = GetTime(Convert.ToString(incidentValidation.FirstOrDefault().CreatedOn)),
-                        SeverityLevelName = incidentValidation.FirstOrDefault().SeverityLevelName,
-                        SeverityLevelColor = incidentValidation.FirstOrDefault().SeverityLevelColor,
-                        IncidentValidationCommunicationHistoriesViewModelList = incidentValidation.FirstOrDefault().IncidentValidationCommunicationHistoriesViewModelList
+                        ConfirmedSeverityLevelId = incidentValidation.FirstOrDefault() != null ? incidentValidation.FirstOrDefault().ConfirmedSeverityLevelId : 0,
+                        DiscoveryPerimeterId = incidentValidation.FirstOrDefault() != null ? incidentValidation.FirstOrDefault().DiscoveryPerimeterId : 0,
+                        DiscoveryPerimeterName = GetPerimeter(incidentValidation.FirstOrDefault()?.DiscoveryPerimeterId),
+                        ValidationNotes = incidentValidation.FirstOrDefault()?.ValidationNotes,
+                        CreatedBy = incidentValidation.FirstOrDefault() != null ? incidentValidation.FirstOrDefault().CreatedBy : 0,
+                        CreatedDateInFormat = GetDate(Convert.ToString(incidentValidation.FirstOrDefault()?.CreatedOn)),
+                        CreatedTimeInFormat = GetTime(Convert.ToString(incidentValidation.FirstOrDefault()?.CreatedOn)),
+                        SeverityLevelName = incidentValidation.FirstOrDefault()?.SeverityLevelName,
+                        SeverityLevelColor = incidentValidation.FirstOrDefault()?.SeverityLevelColor,
+                        IncidentValidationCommunicationHistoriesViewModelList = incidentValidation.FirstOrDefault()?.IncidentValidationCommunicationHistoriesViewModelList
                     }
                 };
 

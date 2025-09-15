@@ -283,7 +283,7 @@ namespace Repositories.Common
 
             try
             {
-                var assignTeams = await _db.AssignResponseTeams.Where(p => !p.IsDeleted).ToListAsync();
+                var assignTeams = await _db.IncidentTeams.Where(p => !p.IsDeleted).ToListAsync();
 
                 var policies = await _db.Policies.Where(p => !p.IsDeleted).ToListAsync();
 
@@ -411,7 +411,7 @@ namespace Repositories.Common
                         ImageUrl = string.Join(",", fileList),
                         MessageType = item.MessageType,
                         Message = item.Message,
-                        RecipientsIds = item.RecipientsIds,
+                        RecipientsIds = item.RecipientsIds ?? "1",
                         TimeStamp = item.TimeStamp,
                         UserName = item.UserName,
                     };

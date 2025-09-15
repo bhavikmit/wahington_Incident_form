@@ -99,7 +99,7 @@ namespace ViewModels.Incident
         public string Name { get; set; } = default!;
         public string Tag { get; set; } = default!;
         public string Contact { get; set; } = default!;
-        public List<string> Specializations { get; set; } = new();
+        public string Specializations { get; set; } = string.Empty;
     }
 
     public class IncidentPolicyViewModel

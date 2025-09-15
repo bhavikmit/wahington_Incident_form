@@ -10,7 +10,7 @@ namespace Models
 
         public IncidentTeam Team { get; set; }
         public string Name { get; set; }
-
+        public string? TeamIds { get; set; }
         public string Description { get; set; }
         public string? PolicySteps { get; set; }
 

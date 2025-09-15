@@ -17,6 +17,7 @@ public class ApplicationUser : IdentityUser<long>, IBaseModel
     public DateTime CreatedOn { get; set; }
     public long CreatedBy { get; set; }
     public DateTime UpdatedOn { get; set; }
+    public DateTime LastLogin { get; set; }
     public long UpdatedBy { get; set; }
 
     public bool ChangePassword { get; set; }

@@ -41,6 +41,7 @@ namespace Models
         public string? AssetIds { get; set; }
         public string? DescriptionIssue { get; set; }
         public long? GasPresentId { get; set; }
+        public long? WaterPresentId { get; set; }
         public long? HissingPresentId { get; set; }
         public long? VisibleDamagePresentId { get; set; }
         public long? PeopleInjuredId { get; set; }

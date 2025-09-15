@@ -977,10 +977,10 @@
 
                             <!-- Photos -->
                             <div class="photos-title">
-                                <i class="fa-regular fa-image"></i> Photos (@Model.incidentSupportingInfoViewModel.ImageUrls.Count())
+                                <i class="fa-regular fa-image"></i> Photos (@Model.incidentSupportingInfoViewModel?.ImageUrls.Count())
                             </div>
                             <div class="photos-grid">
-                                @foreach (var imageUrl in Model.incidentSupportingInfoViewModel.ImageUrls)
+                                @foreach (var imageUrl in Model.incidentSupportingInfoViewModel?.ImageUrls)
                                 {
                                     <div class="photo-item">
                                         <img src="@imageUrl" alt="incidentPhoto" />
@@ -999,18 +999,18 @@
                             <div class="d-flex align-items-center justify-content-between">
                                 <h3><i class="fa-regular fa-circle-check"></i>Validation Details</h3>
                                 <div class="header-meta">
-                                    <div><i class="fa-regular fa-user"></i> Validated by John Smith</div>
-                                    <div><i class="fa-regular fa-calendar"></i>Sep 09, 2025 05:53 PM</div>
+                                    <div><i class="fa-regular fa-user"></i> Validated by Administrator</div>
+                                    <div><i class="fa-regular fa-calendar"></i>@Model.incidentValidationsDetailsViewModel.CreatedDateInFormat @Model.incidentValidationsDetailsViewModel.CreatedTimeInFormat</div>
                                 </div>
                             </div>
                             <div class="validated-info">
                                 <div>
                                     <strong>Validated Severity</strong>
-                                    <div class="badge-red">High</div>
+                                    <div class="badge-red" style="background-color:@Model.incidentValidationsDetailsViewModel.SeverityLevelColor">@Model.incidentValidationsDetailsViewModel.SeverityLevelName</div>
                                 </div>
                                 <div>
                                     <strong>Discovery Perimeter</strong>
-                                    <div class="subtext">3 Miles</div>
+                                    <div class="subtext">@Model.incidentValidationsDetailsViewModel.DiscoveryPerimeterName</div>
                                 </div>
                                 <div>
                                     <strong>Status</strong>
@@ -1020,7 +1020,7 @@
                             <div class="validation-note">
                                 <strong>Validation Notes</strong>
                                 <div class="notes">
-                                    Incident validated and confirmed. Safety assessment completed.
+                                    @Model.incidentValidationsDetailsViewModel.ValidationNotes
                                 </div>
                             </div>
                         </div>
@@ -1280,7 +1280,7 @@
                         <div class="header">
                             <h3><i class="fa fa-comments"></i>Team Communications</h3>
                             <div class="messages-count">
-                                <i class="fa fa-user"></i> 0 messages
+                                <i class="fa fa-user"></i> @Model.incidentValidationsDetailsViewModel.IncidentValidationCommunicationHistoriesViewModelList.Count() messages
                             </div>
                         </div>
                         <div class="messageSec">
@@ -1289,9 +1289,9 @@
                                 <label>
                                     <input type="radio" name="msgType" value="team" checked> Team Message
                                 </label>
-                                <label>
+                               @*  <label>
                                     <input type="radio" name="msgType" value="note"> Internal Note
-                                </label>
+                                </label> *@
                             </div>
 
                             <!-- Team Message Box -->
@@ -1327,32 +1327,44 @@
                             </div>
                         </div>
                         <!-------------------Chat Message--------------------------->
-                        <div class="chat-message bg-yellow">
-                            <div class="avatar"><i class="fa-regular fa-user"></i></div>
-                            <div class="message-box ">
-                                <div class="message-header">
-                                    <strong>Current User</strong>
-                                    <span class="role">Super Admin</span>
-                                    <span class="role tag-yellow">Internal</span>
-                                </div>
-                                <div class="message-text">test message</div>
-                                <div class="timestamp">Sep 09, 04:15 PM</div>
-                            </div>
-                        </div>
+                        @for (int i = 0; i < Model.incidentValidationsDetailsViewModel.IncidentValidationCommunicationHistoriesViewModelList.Count; i++)
+                        {
+                            var communication = Model.incidentValidationsDetailsViewModel.IncidentValidationCommunicationHistoriesViewModelList[i];
+                            bool isEven = i % 2 == 0;
 
-                        <div class="chat-message bg-blue">
-                            <div class="avatar"><i class="fa-regular fa-user"></i></div>
-                            <div class="message-box ">
-                                <div class="message-header">
-                                    <strong>Current User</strong>
-                                    <span class="role">Super Admin</span>
-                                    <span class="role tag-green">→ Distribution Emergency Team</span>
-                                    <span class="role tag-purple">Task: Notify & Dispatch</span>
+                            if (isEven)
+                            {
+                                <div class="chat-message bg-yellow">
+                                    <div class="avatar"><i class="fa-regular fa-user"></i></div>
+                                    <div class="message-box">
+                                        <div class="message-header">
+                                            <strong>Current User</strong>
+                                            <span class="role">Super Admin</span>
+                                            <span class="role tag-yellow">Internal</span>
+                                        </div>
+                                        <div class="message-text">@communication.Message</div>
+                                        <div class="timestamp">@communication.TimeStamp</div>
+                                    </div>
                                 </div>
-                                <div class="message-text">test</div>
-                                <div class="timestamp">Sep 09, 06:11 PM</div>
-                            </div>
-                        </div>
+                            }
+                            else
+                            {
+                                <div class="chat-message bg-blue">
+                                    <div class="avatar"><i class="fa-regular fa-user"></i></div>
+                                    <div class="message-box">
+                                        <div class="message-header">
+                                            <strong>Current User</strong>
+                                            <span class="role">Super Admin</span>
+                                            <span class="role tag-green">→ Distribution Emergency Team</span>
+                                            <span class="role tag-purple">Task: Notify & Dispatch</span>
+                                        </div>
+                                        <div class="message-text">@communication.Message</div>
+                                        <div class="timestamp">@communication.TimeStamp</div>
+                                    </div>
+                                </div>
+                            }
+                        }
+
                         <!-- Timeline -->
                         <div class="timeline">
                             <h4><i class="fa fa-clock"></i> Timeline</h4>
@@ -1361,26 +1373,26 @@
                                     <span class="dot blue"></span>
                                     <div>
                                         <strong>Incident Created</strong>
-                                        <p>Sep 08, 2025 08:16 AM</p>
-                                        <small>by Caller 1</small>
+                                        <p>@Model.incidentDetailByIdViewModel.CreatedOnDate @Model.incidentDetailByIdViewModel.CreatedOnTime</p>
+                                        <small>by @Model.incidentCellerInformation.CallerName</small>
                                     </div>
                                 </li>
                                 <li>
                                     <span class="dot green"></span>
                                     <div>
                                         <strong>Incident Validated</strong>
-                                        <p>Sep 09, 2025 03:32 PM</p>
-                                        <small>by John Smith</small>
+                                        <p>@Model.incidentValidationsDetailsViewModel.CreatedDateInFormat @Model.incidentValidationsDetailsViewModel.CreatedTimeInFormat</p>
+                                        <small>by Administrator</small>
                                     </div>
                                 </li>
-                                <li>
+                                @* <li>
                                     <span class="dot gray"></span>
                                     <div>
                                         <strong>Status: Cancelled</strong>
                                         <p>Sep 09, 2025 04:02 PM</p>
                                         <small>by System</small>
                                     </div>
-                                </li>
+                                </li> *@
                             </ul>
                         </div>
                     </div>

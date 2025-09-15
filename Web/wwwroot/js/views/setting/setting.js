@@ -77,6 +77,13 @@
         DeleteUserManagement(id);
     });
 
+    $(document).off("click", ".editusermanagement");
+    $(document).on("click", ".editusermanagement", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetUserManagementById(id);
+    });
+
     $(document).on("click", ".saveusermanagement", function (e) {
         e.preventDefault();
         var isValid = true;
@@ -1706,7 +1713,7 @@ async function AddUserManagement() {
     }
 }
 
-async function SaveUserManagement() {
+async function SaveUserManagement()  {
     try {
         let form = [], formData = new FormData(), obj = $("#NewUserManagementForm")[0];
         let params = $(obj).serializeArray();
@@ -1723,7 +1730,15 @@ async function SaveUserManagement() {
     finally { hideLoader($(".setting")); }
 }
 
-async function DeleteUserManagement(id) {
+function DeleteUserManagement(id) {
+    Swal.fire({
+        title: 'Are you sure?', text: "You won't be able to revert this!", icon: 'warning',
+        showCancelButton: true, confirmButtonText: "Yes, delete it!", cancelButtonText: "No, cancel!",
+        confirmButtonClass: 'btn btn-success me-2', cancelButtonClass: 'btn btn-danger', buttonsStyling: false
+    }).then(function (result) { if (result.isConfirmed) { DeleteUserManagementById(id); } });
+}
+
+async function DeleteUserManagementById(id) {
     try {
         showLoader($(".setting"));
         const response = await fetch("/Settings/DeleteUserManagementById?id=" + id, { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
@@ -1731,6 +1746,17 @@ async function DeleteUserManagement(id) {
         SwalSuccessAlert("User Management deleted successfully!");
         GetAllUserManagement();
     } catch (error) { console.error("Error deleting usermanagement:", error); }
+    finally { hideLoader($(".setting")); }
+}
+
+async function GetUserManagementById(id) {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/GetUserManagementById?id=" + id, { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
+        if (!response.ok) throw new Error("Failed to load user Management");
+        const content = await response.text();
+        $("#addUserManagement").empty().html(content);
+    } catch (error) { console.error("Error loading usermanagement:", error); }
     finally { hideLoader($(".setting")); }
 }
 

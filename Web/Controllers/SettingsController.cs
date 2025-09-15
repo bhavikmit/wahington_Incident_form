@@ -705,6 +705,15 @@ namespace Web.Controllers
             return PartialView("~/Views/Settings/UserManagement/_AddUserManagement.cshtml", model);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetUserManagementById(long id)
+        {
+            var roles = await _iUserManagementService.GetAllRoles();
+            ViewBag.Roles = new SelectList(roles, "RoleId", "RoleName");
+            var model = await _iUserManagementService.GetUserManagementById(id);
+            return PartialView("~/Views/Settings/UserManagement/_AddUserManagement.cshtml", model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> SaveUserManagement([FromForm] UserManagementModifyViewModel User)
         {
@@ -721,7 +730,7 @@ namespace Web.Controllers
 
                 if (id == 0)
                     return StatusCode(StatusCodes.Status500InternalServerError,
-                        new { success = false, message = "Failed to save usermanagement." });
+                        new { success = false, message = "Failed to save usermanagement.Use diffrent email address." });
 
                 var successMsg = "UserManagement saved successfully!";
                 return Ok(new { success = true, data = successMsg });

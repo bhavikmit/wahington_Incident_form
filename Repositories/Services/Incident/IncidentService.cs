@@ -103,14 +103,18 @@ namespace Repositories.Common
 
 
                 var severityLevels = await _db.SeverityLevels
-                    .Where(it => !it.IsDeleted)
-                    .OrderBy(it => it.Name)
-                    .Select(it => new SelectListItem
-                    {
-                        Value = it.Id.ToString(),
-                        Text = !string.IsNullOrWhiteSpace(it.Description) ? it.Name + " (" + it.Description + ")" : it.Name
-                    })
-                    .ToListAsync();
+                                    .Where(it => !it.IsDeleted)
+                                    .OrderBy(it => it.Name == "High" ? 1 :
+                                                   it.Name == "Moderate" ? 2 :
+                                                   it.Name == "Low" ? 3 : 4)
+                                    .Select(it => new SelectListItem
+                                    {
+                                        Value = it.Id.ToString(),
+                                        Text = !string.IsNullOrWhiteSpace(it.Description)
+                                               ? it.Name + " (" + it.Description + ")"
+                                               : it.Name
+                                    })
+                                    .ToListAsync();
 
                 var relationships = await _db.Relationships
                    .Where(it => !it.IsDeleted)
@@ -133,15 +137,19 @@ namespace Repositories.Common
                   .ToListAsync();
 
                 var eventTypes = await _db.EventTypes
-                 .Where(it => !it.IsDeleted)
-                 .OrderBy(it => it.Name)
-                 .Select(it => new SelectListItem
-                 {
-                     Value = it.Id.ToString(),
-                     Text = !string.IsNullOrWhiteSpace(it.Description) ? it.Name + " (" + it.Description + ")" : it.Name
-                 })
-                 .ToListAsync();
-
+                                .Where(it => !it.IsDeleted)
+                                .OrderByDescending(it =>
+                                    !string.IsNullOrWhiteSpace(it.Name) &&
+                                    it.Name.Trim().ToLower() == "water intrusion")
+                                .ThenBy(it => it.Name)
+                                .Select(it => new SelectListItem
+                                {
+                                    Value = it.Id.ToString(),
+                                    Text = !string.IsNullOrWhiteSpace(it.Description)
+                                        ? it.Name + " (" + it.Description + ")"
+                                        : it.Name
+                                })
+                                .ToListAsync();
 
                 incidentViewModel.severityLevels = severityLevels;
                 incidentViewModel.statusLegends = statusLegendsList;
@@ -200,6 +208,7 @@ namespace Repositories.Common
                     VisibleDamagePresentId = viewModel.incidentEnvironmentalViewModel?.VisibleDamageID,
                     PeopleInjuredId = viewModel.incidentEnvironmentalViewModel?.PeopleInjuredID,
                     GasPresentId = viewModel.incidentEnvironmentalViewModel?.GasodorpresentID,
+                    WaterPresentId = viewModel.incidentEnvironmentalViewModel?.WaterPresentID,
                     EmergencyResponseNotifiedId = viewModel.incidentEnvironmentalViewModel?.EmergencyResponseNotifiedID,
 
                     Landmark = viewModel.incidentiLocation?.Landmark,
@@ -279,6 +288,7 @@ namespace Repositories.Common
                 incident.VisibleDamagePresentId = env?.VisibleDamageID;
                 incident.PeopleInjuredId = env?.PeopleInjuredID;
                 incident.GasPresentId = env?.GasodorpresentID;
+                incident.WaterPresentId = env?.WaterPresentID;
                 incident.EmergencyResponseNotifiedId = env?.EmergencyResponseNotifiedID;
 
                 var loc = viewModel.incidentiLocation;
@@ -364,13 +374,13 @@ namespace Repositories.Common
                         Id = item.Id,
                         Intersection = item.Landmark ?? string.Empty,
                         LocationAddress = item.LocationAddress ?? string.Empty,
-                        Severity = item.SeverityLevel.Name,
-                        SeverityId = item.SeverityLevelId,
+                        Severity = item.SeverityLevel?.Name,
+                        SeverityId = item?.SeverityLevelId,
                         StatusLegend = item.StatusLegend?.Name,
                         StatusLegendColor = item.StatusLegend?.Color,
                         StatusLegendId = item.StatusLegendId,
-                        RelationShipName = item.Relationship.Name,
-                        RelationShipId = item.RelationshipId,
+                        RelationShipName = item.Relationship?.Name,
+                        RelationShipId = item?.RelationshipId,
                     });
                 }
                 return incidentGridViews;
@@ -515,6 +525,7 @@ namespace Repositories.Common
                 incidentViewModel.incidentEnvironmentalViewModel.EvacuationRequiredID = incident.EvacuationRequiredId;
                 incidentViewModel.incidentEnvironmentalViewModel.VisibleDamageID = incident.VisibleDamagePresentId;
                 incidentViewModel.incidentEnvironmentalViewModel.GasodorpresentID = incident.GasPresentId;
+                incidentViewModel.incidentEnvironmentalViewModel.WaterPresentID = incident.WaterPresentId;
                 incidentViewModel.incidentEnvironmentalViewModel.EmergencyResponseNotifiedID = incident.EmergencyResponseNotifiedId;
 
                 incidentViewModel.incidentSupportingInfoViewModel.ImageUrl = incident.ImageUrl;
@@ -538,6 +549,40 @@ namespace Repositories.Common
                     .Include(i => i.SeverityLevel)
                     .Include(i => i.Relationship)
                     .FirstOrDefaultAsync(i => i.Id == id);
+
+                //var incidentValidation = await _db.IncidentValidations
+                //    .FirstOrDefaultAsync(iv => iv.IncidentId == id);
+
+                var incidentValidation = (from i in _db.IncidentValidations
+                                          join s in _db.SeverityLevels on i.ConfirmedSeverityLevelId equals s.Id
+                                          where i.IncidentId == id
+                                          select new IncidentValidationsDetailsViewModel
+                                          {
+                                              // IncidentValidation properties
+                                              ConfirmedSeverityLevelId = i.ConfirmedSeverityLevelId,
+                                              DiscoveryPerimeterId = i.DiscoveryPerimeterId,
+                                              ValidationNotes = i.ValidationNotes,
+                                              CreatedBy = i.UpdatedBy,
+                                              CreatedOn = i.UpdatedOn,
+
+                                              SeverityLevelName = s.Name,
+                                              SeverityLevelColor = s.Color,
+
+                                              IncidentValidationCommunicationHistoriesViewModelList = _db.IncidentValidationCommunicationHistories
+                                                   .Where(ih => ih.IncidentId == i.IncidentId)
+                                                   .OrderByDescending(ih => ih.CreatedOn)
+                                                   .Select(ih => new IncidentValidationCommunicationHistoriesViewModel
+                                                   {
+                                                       UserName = ih.UserName,
+                                                       Message = ih.Message,
+                                                       TimeStamp = ih.TimeStamp,
+                                                       ReceipientsIds = ih.RecipientsIds,
+                                                       ImageUrl = ih.ImageUrl,
+                                                       MessageType = ih.MessageType
+                                                   })
+                                                   .ToList()
+                                          }).ToList() ?? new List<IncidentValidationsDetailsViewModel>();
+
 
                 if (incident == null)
                     return new IncidentViewModel();
@@ -600,8 +645,10 @@ namespace Repositories.Common
                         PeopleInjuredID = incident.PeopleInjuredId,
                         EvacuationRequiredID = incident.EvacuationRequiredId,
                         EmergencyResponseNotifiedID = incident.EmergencyResponseNotifiedId,
+                        WaterPresentID = incident.WaterPresentId,
 
                         GasOdorText = GetIndicator(incident.GasPresentId),
+                        WaterPresentText = GetIndicator(incident.WaterPresentId),
                         HissingSoundText = GetIndicator(incident.HissingPresentId),
                         VisibleDamageText = GetIndicator(incident.VisibleDamagePresentId),
                         PeopleInjuredText = GetIndicator(incident.PeopleInjuredId),
@@ -620,6 +667,22 @@ namespace Repositories.Common
                            .Select(img => img.Trim())
                            .ToList()
                             : new List<string>()
+                    },
+
+                    //incidentValidation = incidentValidation ?? new IncidentValidationsDetailsViewModel()
+
+                    incidentValidationsDetailsViewModel = new IncidentValidationsDetailsViewModel
+                    {
+                        ConfirmedSeverityLevelId = incidentValidation.FirstOrDefault() != null ? incidentValidation.FirstOrDefault().ConfirmedSeverityLevelId : 0,
+                        DiscoveryPerimeterId = incidentValidation.FirstOrDefault() != null ? incidentValidation.FirstOrDefault().DiscoveryPerimeterId : 0,
+                        DiscoveryPerimeterName = GetPerimeter(incidentValidation.FirstOrDefault()?.DiscoveryPerimeterId),
+                        ValidationNotes = incidentValidation.FirstOrDefault()?.ValidationNotes,
+                        CreatedBy = incidentValidation.FirstOrDefault() != null ? incidentValidation.FirstOrDefault().CreatedBy : 0,
+                        CreatedDateInFormat = GetDate(Convert.ToString(incidentValidation.FirstOrDefault()?.CreatedOn)),
+                        CreatedTimeInFormat = GetTime(Convert.ToString(incidentValidation.FirstOrDefault()?.CreatedOn)),
+                        SeverityLevelName = incidentValidation.FirstOrDefault()?.SeverityLevelName,
+                        SeverityLevelColor = incidentValidation.FirstOrDefault()?.SeverityLevelColor,
+                        IncidentValidationCommunicationHistoriesViewModelList = incidentValidation.FirstOrDefault()?.IncidentValidationCommunicationHistoriesViewModelList
                     }
                 };
 

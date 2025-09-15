@@ -16,6 +16,7 @@ $(function () {
         if (currentStep == 2) {
             var rediusId = $("#step-2").find("#RadiusId").val();
             var severityLevelId = $("#step-2").find("#severityLevelId").val();
+            var validationNotes = $("#step-2").find("#IVValidation_ValidationNotes").val();
 
             if (severityLevelId == "") {
                 SwalErrorAlert("Please select confirmed severity level..!");
@@ -26,6 +27,12 @@ $(function () {
                 SwalErrorAlert("Please select discovery perimeter..!");
                 return;
             }
+
+            if (validationNotes == "") {
+                SwalErrorAlert("Please add validation note..!");
+                return;
+            }
+
         }
 
         if (currentStep == 3) {
@@ -470,23 +477,28 @@ async function SaveIncidentValidation() {
 }
 
 async function AddCommunication() {
-    var recipientNames = "";
-    var recipientsValue = [];
+    //var recipientNames = "";
+    //var recipientsValue = [];
     var userName = $("#hdn_user_name").val();
     var message = $("#message").val();
     var files = $("#Image")[0].files;
     let timestamp = getFormattedTime();
 
-    var recipients = $(".newCommunication").find('.recipients').find("input[type='checkbox']:checked");
-    if (recipients) {
-        $.each(recipients, function (i, team) {
-            recipientNames += $(team).attr("data-name").trim() + ", ";
-            recipientsValue.push($(team).val());
-        });
-    }
+    //var recipients = $(".newCommunication").find('.recipients').find("input[type='checkbox']:checked");
+    //if (recipients) {
+    //    $.each(recipients, function (i, team) {
+    //        recipientNames += $(team).attr("data-name").trim() + ", ";
+    //        recipientsValue.push($(team).val());
+    //    });
+    //}
 
-    if (recipientsValue.length == 0) {
-        SwalErrorAlert("Please select any one recipient team..!");
+    //if (recipientsValue.length == 0) {
+    //    SwalErrorAlert("Please select any one recipient team..!");
+    //    return;
+    //}
+
+    if (message == "") {
+        SwalErrorAlert("Please enter message..!");
         return;
     }
 
@@ -498,9 +510,9 @@ async function AddCommunication() {
         formData.append("UserName", userName);
         formData.append("Message", message);
         formData.append("TimeStamp", timestamp);
-        formData.append("RecipientsIds", recipientsValue.join(","));
-        formData.append("MessageType", $("#msgType").val());
-        formData.append("RecipientNames", recipientNames);
+        formData.append("RecipientsIds", "1");
+        formData.append("MessageType", 1);
+        formData.append("RecipientNames", "");
 
         // Attach files
         for (let i = 0; i < files.length; i++) {
@@ -517,8 +529,8 @@ async function AddCommunication() {
             const content = await response.text(); // HTML partial
             $(".communicationHistory").empty().html(content);
 
-            $("#msgType").val(1);
-            $('.newCommunication').find(".recipients input[type=checkbox]").prop("checked", false);
+            //$("#msgType").val(1);
+            //$('.newCommunication').find(".recipients input[type=checkbox]").prop("checked", false);
             $('#message').val('');
             RemoveImage();
         } else {

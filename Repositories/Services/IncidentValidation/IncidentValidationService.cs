@@ -200,18 +200,31 @@ namespace Repositories.Common
                     .Include(p => p.SeverityLevel)
                     .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
 
-                var severityLevelsTask = await _db.SeverityLevels
-                    .Where(it => !it.IsDeleted)
-                    .OrderBy(it => it.Name)
-                    .Select(it => new SelectListItem
-                    {
-                        Value = it.Id.ToString(),
-                        Text = !string.IsNullOrWhiteSpace(it.Description)
-                               ? it.Name + " - " + it.Description
-                               : it.Name
-                    })
-                    .ToListAsync();
+                //var severityLevelsTask = await _db.SeverityLevels
+                //    .Where(it => !it.IsDeleted)
+                //    .OrderBy(it => it.Name)
+                //    .Select(it => new SelectListItem
+                //    {
+                //        Value = it.Id.ToString(),
+                //        Text = !string.IsNullOrWhiteSpace(it.Description)
+                //               ? it.Name + " - " + it.Description
+                //               : it.Name
+                //    })
+                //    .ToListAsync();
 
+                var severityLevelsTask = await _db.SeverityLevels
+                                   .Where(it => !it.IsDeleted)
+                                   .OrderBy(it => it.Name == "High" ? 1 :
+                                                  it.Name == "Moderate" ? 2 :
+                                                  it.Name == "Low" ? 3 : 4)
+                                   .Select(it => new SelectListItem
+                                   {
+                                       Value = it.Id.ToString(),
+                                       Text = !string.IsNullOrWhiteSpace(it.Description)
+                                              ? it.Name + " (" + it.Description + ")"
+                                              : it.Name
+                                   })
+                                   .ToListAsync();
 
                 if (incidentTask == null)
                 {
@@ -242,7 +255,7 @@ namespace Repositories.Common
 
             try
             {
-                var responseTeams = await _db.AssignResponseTeams.Where(p => !p.IsDeleted).ToListAsync();
+                var responseTeams = await _db.IncidentTeams.Where(p => !p.IsDeleted).ToListAsync();
 
                 foreach (var item in responseTeams)
                 {
@@ -250,9 +263,8 @@ namespace Repositories.Common
                     {
                         ReponseTeamId = item.Id,
                         Name = item.Name,
-                        Contact = item.ContactNumber,
-                        Tag = item.Category,
-                        Specializations = item.SpecializationsList
+                        Contact = item.Contact,
+                        Specializations = item.Specializations
                     });
                 }
 
@@ -271,7 +283,7 @@ namespace Repositories.Common
 
             try
             {
-                var assignTeams = await _db.AssignResponseTeams.Where(p => !p.IsDeleted).ToListAsync();
+                var assignTeams = await _db.IncidentTeams.Where(p => !p.IsDeleted).ToListAsync();
 
                 var policies = await _db.Policies.Where(p => !p.IsDeleted).ToListAsync();
 
@@ -331,7 +343,7 @@ namespace Repositories.Common
             List<SelectListItem> assignResponseTeams = new();
             try
             {
-                var assignResponses = await _db.AssignResponseTeams.Where(p => !p.IsDeleted)
+                var assignResponses = await _db.IncidentTeams.Where(p => !p.IsDeleted)
                              .ToListAsync();
                 assignResponseTeams = assignResponses.Select(p => new SelectListItem()
                 {
@@ -399,7 +411,7 @@ namespace Repositories.Common
                         ImageUrl = string.Join(",", fileList),
                         MessageType = item.MessageType,
                         Message = item.Message,
-                        RecipientsIds = item.RecipientsIds,
+                        RecipientsIds = item.RecipientsIds ?? "1",
                         TimeStamp = item.TimeStamp,
                         UserName = item.UserName,
                     };

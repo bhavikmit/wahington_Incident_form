@@ -137,6 +137,8 @@ namespace Web.Areas.Identity.Pages.Account
                         else
                         {
                             var url = await GetReturnUrl(returnUrl, user);
+                            user.LastLogin = DateTime.UtcNow;
+                            await _userManager.UpdateAsync(user);
 
                             await _signInManager.SignInAsync(user, Input.RememberMe, null);
                             var customClaims = new[] { new Claim(ClaimTypes.Email, user.Email) };

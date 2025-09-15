@@ -99,7 +99,7 @@ namespace ViewModels.Incident
         public string Name { get; set; } = default!;
         public string Tag { get; set; } = default!;
         public string Contact { get; set; } = default!;
-        public List<string> Specializations { get; set; } = new();
+        public string Specializations { get; set; } = string.Empty;
     }
 
     public class IncidentPolicyViewModel
@@ -142,7 +142,7 @@ namespace ViewModels.Incident
         public string RecipientNames { get; set; } = default!;
         public string RecipientsIds { get; set; } = default!;
         public string ImageUrl { get; set; } = default!;
-        public long MessageType { get; set; }
+        public long MessageType { get; set; } = 1;
 
         // Files bind from FormData, not JSON
         public List<FileMeta>? FileMeta { get; set; } = new();

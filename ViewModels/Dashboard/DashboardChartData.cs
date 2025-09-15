@@ -107,6 +107,7 @@ namespace ViewModels.Dashboard
         public double lat { get; set; }
         public double lon { get; set; }
         public string severity { get; set; } = default!;
+        public string incidentStatus { get; set; } = default!;
         public string color { get; set; } = default!;
         public string incidentloc { get; set; } = default!;
         public string calleraddress { get; set; } = default!;
@@ -129,5 +130,6 @@ namespace ViewModels.Dashboard
         public double lon { get; set; }
         public string incidentstatus { get; set; } = default!;
         public string incidentstatusColor { get; set; } = default!;
+        public string perimeter { get; set; } = default!;
     }
 }

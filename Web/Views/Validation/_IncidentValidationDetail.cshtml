@@ -246,9 +246,13 @@
                                             <div class="phone"><i class="fa-solid fa-phone"></i> @item.Contact</div>
                                             <p class="mb-0">Specializations:</p>
                                             <div class="specializations">
-                                                @foreach (var itemSpe in item.Specializations)
+
+                                                @if (!string.IsNullOrWhiteSpace(item.Specializations))
                                                 {
-                                                    <span>@itemSpe</span>
+                                                    @foreach (var itemSpe in item.Specializations.Split(",").ToList())
+                                                    {
+                                                        <span>@itemSpe</span>
+                                                    }
                                                 }
                                             </div>
                                         </div>
@@ -343,7 +347,7 @@
                         <div class="Bordercard newCommunication">
                             <h3>New Communication</h3>
 
-                            <div class="form-grid">
+                            @*  <div class="form-grid" style="display:none">
                                 <div>
                                     <label for="msgType">Message Type</label>
                                     <select id="msgType">
@@ -361,7 +365,7 @@
                                         }
                                     }
                                 </div>
-                            </div>
+                            </div> *@
 
                             <div>
                                 <label for="message">Message</label>

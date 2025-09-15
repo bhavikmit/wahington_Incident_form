@@ -9,7 +9,7 @@
             <!-- Modal Header -->
             <div class="modal-header">
                 <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close cancelusermanagement" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <!-- Modal Body -->
@@ -41,7 +41,7 @@
                     </div>
                     <div class="form-group">
                         <label>Status</label>
-                        <select name="ActiveStatus" class="form-control">
+                        <select name="ActiveStatus" class="form-control" asp-for="Status">
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
@@ -125,4 +125,21 @@
         }
     });
 $("#RoleId").trigger("change");
+
+    $(document).ready(function () {
+        $(".permissions-box ul").hide();
+
+        function showPermissions() {
+            var selectedRole = $("#RoleId option:selected").text().trim();
+            $(".permissions-box ul").hide();
+            if (selectedRole) {
+                $("#" + selectedRole.replace(/\s+/g, '')).show();
+            }
+        }
+
+        $("#RoleId").on("change", showPermissions);
+
+        // Call on page load (for pre-selected role from controller)
+        showPermissions();
+    });
 </script>

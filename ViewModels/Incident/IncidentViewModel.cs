@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
-
+using Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -20,6 +20,7 @@ namespace ViewModels.Incident
         public IncidentSupportingInfoViewModel incidentSupportingInfoViewModel { get; set; } = new();
         public IncidentDetailByIdViewModel incidentDetailByIdViewModel { get; set; } = new();
         public List<IncidentGridViewModel> incidentGridViewModel { get; set; } = new();
+        public IncidentValidationsDetailsViewModel incidentValidationsDetailsViewModel { get; set; } = new();
 
         public List<SelectListItem> statusLegends { get; set; } = new();
         public List<SelectListItem> severityLevels { get; set; } = new();
@@ -61,6 +62,7 @@ namespace ViewModels.Incident
     public class IncidentEnvironmentalViewModel
     {
         public long? GasodorpresentID { get; set; } = default!;
+        public long? WaterPresentID { get; set; } = default!;
         public long? HissingSoundPresentID { get; set; } = default!;
         public long? VisibleDamageID { get; set; } = default!;
         public long? PeopleInjuredID { get; set; } = default!;
@@ -68,6 +70,7 @@ namespace ViewModels.Incident
         public long? EmergencyResponseNotifiedID { get; set; } = default!;
         // ✅ Friendly
         public string GasOdorText { get; set; } = string.Empty;
+        public string WaterPresentText { get; set; } = string.Empty;
         public string HissingSoundText { get; set; } = string.Empty;
         public string VisibleDamageText { get; set; } = string.Empty;
         public string PeopleInjuredText { get; set; } = string.Empty;
@@ -91,8 +94,8 @@ namespace ViewModels.Incident
         public string IncidentNumber { get; set; } = string.Empty;
         public DateTime? CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
-        public string CreatedOnDate { get; set; }
-        public string CreatedOnTime { get; set; }
+        public string CreatedOnDate { get; set; } = string.Empty;
+        public string CreatedOnTime { get; set; } = string.Empty;
     }
 
     public class IncidentGridViewModel
@@ -132,5 +135,31 @@ namespace ViewModels.Incident
     {
         public double Lat { get; set; }
         public double Lng { get; set; }
+    }
+
+    public class IncidentValidationsDetailsViewModel
+    {
+        public long ConfirmedSeverityLevelId { get; set; }
+        public long DiscoveryPerimeterId { get; set; }
+        public string DiscoveryPerimeterName { get; set; }
+        public string AssignResponseTeams { get; set; }
+        public string ValidationNotes { get; set; }
+        public long CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public string CreatedDateInFormat { get; set; } 
+        public string CreatedTimeInFormat { get; set; }
+        public string SeverityLevelName { get; set; }   
+        public string SeverityLevelColor { get; set; }
+        public List<IncidentValidationCommunicationHistoriesViewModel> IncidentValidationCommunicationHistoriesViewModelList { get; set; }
+    }   
+
+    public class IncidentValidationCommunicationHistoriesViewModel
+    {
+        public string UserName { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
+        public string TimeStamp { get; set; } = string.Empty;
+        public string ReceipientsIds { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
+        public long MessageType { get; set; }
     }
 }

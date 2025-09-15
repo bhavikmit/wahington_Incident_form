@@ -67,6 +67,32 @@ namespace Repositories.Common
             {
                 var users = await _db.Users.ToListAsync();
 
+                var activeUserCount = await _db.Users
+                    .CountAsync(u => u.ActiveStatus == Enums.ActiveStatus.Active);
+
+                var inactiveUserCount = await _db.Users
+                    .CountAsync(u => u.ActiveStatus == Enums.ActiveStatus.Inactive);
+
+                var totalUserCount = await _db.Users.CountAsync();
+
+                var systemAdminRoleId = await _db.Roles
+                    .Where(r => r.Name == "SYSTEMADMINISTRATOR")
+                    .Select(r => r.Id)
+                    .FirstOrDefaultAsync();
+
+                int systemAdminCount = 0;
+
+                if (systemAdminRoleId != 0)
+                {
+                    systemAdminCount = await _db.UserRoles
+                        .Where(ur => ur.RoleId == systemAdminRoleId)
+                        .Join(_db.Users,
+                              ur => ur.UserId,
+                              u => u.Id,
+                              (ur, u) => u)
+                        .CountAsync(u => u.ActiveStatus == Enums.ActiveStatus.Active);
+                }
+
                 foreach (var t in users)
                 {
                     //fetch team name using TeamId
@@ -87,7 +113,12 @@ namespace Repositories.Common
                         Department = t.Department,
                         PhoneNumber = t.PhoneNumber,
                         Status = t.ActiveStatus.ToString(),
-                        LastLogin = DateTime.UtcNow.ToString(),
+                        LastLogin = t.LastLogin,
+
+                        totalUserCount = totalUserCount,
+                        activeUserCount= activeUserCount,
+                        inactiveUserCount= inactiveUserCount,
+                        adminsCount= systemAdminCount,
                     });
                 }
             }
@@ -110,18 +141,19 @@ namespace Repositories.Common
                 var user = new ApplicationUser
                 {
                     FirstName = viewModel.FirstName,
-                    Email=viewModel.Email,
+                    Email = viewModel.Email,
                     UserName = viewModel.Email,
-                    NormalizedUserName =viewModel.Email.ToUpper(),
-                    NormalizedEmail=viewModel.Email.ToUpper(),
+                    NormalizedUserName = viewModel.Email.ToUpper(),
+                    NormalizedEmail = viewModel.Email.ToUpper(),
                     SecurityStamp = Guid.NewGuid().ToString("D"),
                     EmailConfirmed = true,
                     ActiveStatus = viewModel.ActiveStatus,
                     Department = viewModel.Department,
+                    PhoneNumber =viewModel.PhoneNumber,
                 };
 
                 var hasher = new PasswordHasher<ApplicationUser>();
-                user.PasswordHash = hasher.HashPassword(user, "123456");
+                user.PasswordHash = hasher.HashPassword(user, "LAC@1234");
 
 
                 _db.Users.Add(user);
@@ -129,7 +161,7 @@ namespace Repositories.Common
 
                 var userRole = new IdentityUserRole<long>
                 {
-                    UserId = user.Id,        
+                    UserId = user.Id,
                     RoleId = viewModel.RoleId
                 };
 
@@ -163,25 +195,39 @@ namespace Repositories.Common
 
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
-                //user.TeamId = viewModel.TeamId;
-                //user.FirstName = viewModel.FirstName;
-                //user.LastName = viewModel.LastName;
-                //user.Telephone = viewModel.Telephone;
-                //user.Email = viewModel.Email;
-                //user.PinHash = viewModel.PinHash;
-                //user.UpdatedOn = DateTime.UtcNow;
-                //// set UpdatedBy if available
+                user.FirstName = viewModel.FirstName;
+                user.Email = viewModel.Email;
+                user.UserName = viewModel.Email;
+                user.NormalizedUserName = viewModel.Email.ToUpper();
+                user.NormalizedEmail = viewModel.Email.ToUpper();
+                user.ActiveStatus = viewModel.ActiveStatus;
+                user.Department = viewModel.Department;
+                user.PhoneNumber = viewModel.PhoneNumber;
+                user.UpdatedOn = DateTime.UtcNow;
 
-                //try
-                //{
-                //    await _db.SaveChangesAsync();
-                //    await transaction.CommitAsync();
-                //}
-                //catch
-                //{
-                //    await transaction.RollbackAsync();
-                //    throw;
-                //}
+                try
+                {
+                    var existingRoles = _db.UserRoles.Where(r => r.UserId == user.Id);
+                    _db.UserRoles.RemoveRange(existingRoles);
+
+                    if (viewModel.RoleId > 0)
+                    {
+                        var userRole = new IdentityUserRole<long>
+                        {
+                            UserId = user.Id,
+                            RoleId = viewModel.RoleId
+                        };
+                        await _db.UserRoles.AddAsync(userRole);
+                    }
+
+                    await _db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
 
                 return user.Id;
             }
@@ -203,18 +249,21 @@ namespace Repositories.Common
                 if (user == null)
                     return new UserManagementModifyViewModel();
 
-                //return new UserManagementModifyViewModel
-                //{
-                //    Id = user.Id,
-                //    TeamId = user.TeamId,
-                //    FirstName = user.FirstName,
-                //    LastName = user.LastName,
-                //    Telephone = user.Telephone,
-                //    Email = user.Email,
-                //    PinHash = user.PinHash,
-                //    VerifyPIN = user.PinHash
-                //};
-                return new UserManagementModifyViewModel();
+                var roleId = await _db.UserRoles
+                    .Where(ur => ur.UserId == user.Id)
+                    .Select(ur => ur.RoleId)
+                    .FirstOrDefaultAsync();
+
+                return new UserManagementModifyViewModel
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    Email = user.Email,
+                    RoleId = roleId,
+                    Department = user.Department,
+                    PhoneNumber = user.PhoneNumber,
+                    Status = user.ActiveStatus.ToString(),
+                };
             }
             catch (Exception ex)
             {

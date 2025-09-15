@@ -341,7 +341,7 @@
         }
 
     .btnAddNew, .btnAddNewSource, .btnAddNewEvent, .btnAddNewseverityLevl, .btnAddNewstatusLegend,
-    .btnAddNewAsset, .btnAddNewAssetType {
+    .btnAddNewAsset, .btnAddNewAssetType, .btnAddNewPolicy {
         background-color: #f54e00;
         color: #fff;
         border: none;
@@ -1213,7 +1213,7 @@
                     <li class="settingAllTab" data-tab="asset"><i class="fa-solid fa-barcode"></i> Asset Types</li>
                     @* <li class="settingAllTab" data-tab="type"><i class="fa-solid fa-building"></i> Asset Types</li> *@
                     <li class="settingAllTab" data-tab="status"><i class="fa-solid fa-palette"></i> Status Legend</li>
-                    @*  <li class="settingAllTab" data-tab="policy"><i class="fa-solid fa-gavel"></i> Policies</li> *@
+                     <li class="settingAllTab" data-tab="Ipolicies"><i class="fa-solid fa-gavel"></i> Policies</li>
                     @* <li class="settingAllTab" data-tab="teams"><i class="fa-brands fa-teamspeak"></i> Assign Response Teams</li> *@
                     <li class="settingAllTab" data-tab="user" onclick="showContent('user')"><i class="fa fa-user-circle"></i> User Management</li>
                     <li class="settingAllTab" data-tab="teamManagement" onclick="showContent('team')">
@@ -1271,6 +1271,18 @@
                     </div>
 
                 </div>
+               <div id="Ipolicies" class="setting-tab-content">
+                        <div class="d-flex align-item-center justify-content-between mb-2">
+                            <h3 class="mb-0">Policy</h3>
+                            <button class="btn-add btnAddNewPolicy"><i class="fa-solid fa-plus"></i> Add Policy</button>
+                                                        
+                        </div>
+                        <div id="addPolicy">
+                        </div>
+                        <div id="policyList">
+                        </div>
+
+               </div>
                 <div id="type" class="setting-tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Asset Type</h3>
@@ -1297,6 +1309,7 @@
                     <div id="statusLegendList">
                     </div>
                 </div>
+
                 <div id="teams" class="setting-tab-content">
                     <div class="d-flex justify-content-between">
                         <h3>Assign Response Teams</h3>
@@ -1470,7 +1483,7 @@
                     <ul>
                         <li class="active teamAllTab" data-tab="Iteams"><i class="fa-solid fa-user-group"></i> Teams</li>
                         <li class="teamAllTab" data-tab="Iusers"><i class="fa-regular fa-user"></i>Users</li>
-                        <li class="teamAllTab" data-tab="Ipolicies"><i class="fa-regular fa-file-lines"></i>Policies</li>
+                        @* <li class="teamAllTab" data-tab="Ipolicies"><i class="fa-regular fa-file-lines"></i>Policies</li> *@
                     </ul>
                 </div>
 
@@ -1499,7 +1512,7 @@
                         <div id="Userlist">
                         </div>
                     </div>
-                    <div id="Ipolicies" class="team-tab-content policiesRightSec ">
+                    @* <div id="Ipolicies" class="team-tab-content policiesRightSec ">
                         <div class="d-flex align-item-center justify-content-between mb-2">
                             <h3 class="mb-0">Policy</h3>
                             <button class="btn-add btnAddNewPolicy"><i class="fa-solid fa-plus"></i> Add Policy</button>
@@ -1511,7 +1524,7 @@
                         <div id="policyList">
                         </div>
 
-                    </div>
+                    </div> *@
                 </div>
 
 

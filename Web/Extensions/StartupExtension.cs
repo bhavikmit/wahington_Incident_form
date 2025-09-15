@@ -215,7 +215,7 @@ namespace Web.Extensions
 
             services.AddScoped<ITimesheetService, TimesheetService>();
             services.AddScoped<ITimesheetLimit, TimesheetLimitService>();
-
+            services.AddScoped(typeof(IUsersinService<,,>), typeof(UsersinService<,,>));
             services.AddScoped(typeof(IUserSearchSettingService<,,>), typeof(UserSearchSettingService<,,>));
             services.AddScoped(typeof(IReportFactory), typeof(ReportFactory));
             services.AddScoped(typeof(IRelationshipService<,,>), typeof(RelationshipService<,,>));

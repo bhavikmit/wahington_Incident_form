@@ -1,0 +1,46 @@
+﻿@using ViewModels
+@model UserModifyViewModel
+
+<form id="NewUserForm">
+    <div class="form-container" id="saveuserDiv">
+        <h3>Add New User</h3>
+        <input type="hidden" value="@Model.Id" name="Id" id="user_@Model.Id" />
+        <div class="form-grid">
+            <div>
+                <label>Team *</label>
+                @Html.DropDownListFor(model => model.TeamId,
+                         (SelectList)ViewBag.Teams,
+                         "Select team",
+                         new { @class = "form-control" })
+            </div>
+            <div>
+                <label>First Name *</label>
+                <input type="text" class="form-control" placeholder="First name" asp-for="FirstName">
+            </div>
+            <div>
+                <label>Last Name *</label>
+                <input type="text" class="form-control" placeholder="Last name" asp-for="LastName">
+            </div>
+            <div>
+                <label>Telephone</label>
+                <input type="text" class="form-control" placeholder="555-0123" asp-for="Telephone">
+            </div>
+            <div>
+                <label>Email Address</label>
+                <input type="email" class="form-control" placeholder="user@company.com" asp-for="Email">
+            </div>
+            <div>
+                <label>PIN (4 digits) *</label>
+                <input type="password" class="form-control" placeholder="1234" maxlength="4" value="@Model.PinHash" asp-for="PinHash" id="pinhash">
+            </div>
+            <div>
+                <label>Verify PIN *</label>
+                <input type="password" class="form-control" placeholder="1234" maxlength="4" value="@Model.VerifyPIN" asp-for="VerifyPIN" id="verifypin">
+            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-end addCancelIcons">
+            <button class="btn btn-gray canceluser">Cancel</button>
+            <button class="btn btn-green saveuser">Add User</button>
+        </div>
+    </div>
+</form>

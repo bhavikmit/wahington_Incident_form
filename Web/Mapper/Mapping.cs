@@ -743,6 +743,11 @@ namespace Models.Mapper
             CreateMap<PolicyBriefViewModel, Policy>().ReverseMap();
             CreateMap<PolicyModifyViewModel, PolicyDetailViewModel>().ReverseMap();
 
+            // UsersTeamSettings
+            CreateMap<UserModifyViewModel, IncidentUser>().ReverseMap();
+            CreateMap<UserDetailViewModel, IncidentUser>().ReverseMap();
+            CreateMap<UserBriefViewModel, IncidentUser>().ReverseMap();
+            CreateMap<UserModifyViewModel, UserDetailViewModel>().ReverseMap();
             //IgnoreGlobalProperties();
         }
         //private void IgnoreGlobalProperties()

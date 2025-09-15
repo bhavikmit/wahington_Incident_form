@@ -44,8 +44,8 @@
         else if (tab === "Iteams") {
             GetAllIncidentTeams();
         }
-        else if (tab === "user") {
-            GetAllUserManagement();
+        else if (tab === "Iusers") {
+            GetAllUsers();
         }
     });
     // end setting tabs
@@ -485,6 +485,62 @@
         $("#addPolicy").empty();
         GetAllPolicies();
         $('.teamAllTab[data-tab="Ipolicies"]').addClass('active').siblings().removeClass('active');
+    });
+
+    $(document).off("click", ".btnAddNewUser");
+    $(document).on("click", ".btnAddNewUser", function (e) {
+        e.preventDefault();
+        AddUser();
+    });
+
+    $(document).off("click", ".canceluser");
+    $(document).on("click", ".canceluser", function (e) {
+        e.preventDefault();
+        $("#addUser").empty().html('');
+        $('.teamAllTab[data-tab="Iusers"]').addClass('active').siblings().removeClass('active');
+    });
+
+    $(document).off("click", ".deleteuser");
+    $(document).on("click", ".deleteuser", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        DeleteUser(id);
+    });
+
+    $(document).off("click", ".edituser");
+    $(document).on("click", ".edituser", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetUserById(id);
+    });
+
+    $(document).on("click", ".saveuser", function (e) {
+        e.preventDefault();
+        var isValid = true;
+        if ($("#TeamId").val() === "" || $("#TeamId").val() === null) {
+            SwalErrorAlert("Please Select Team");
+            isValid = false;
+        }
+        var pinhash = $("#pinhash").val();
+        var verifyPin = $("#verifypin").val();
+        if (pinhash !== verifyPin) {
+            SwalErrorAlert("Pin and VerifyPin are not match");
+            isValid = false;
+        }
+        $("#saveuserDiv").find("input[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            } else {
+                clearError($field);
+            }
+        });
+
+        if (isValid) {
+            SaveUser();
+        }
     });
 })
 
@@ -1675,5 +1731,86 @@ async function DeleteUserManagement(id) {
         SwalSuccessAlert("User Management deleted successfully!");
         GetAllUserManagement();
     } catch (error) { console.error("Error deleting usermanagement:", error); }
+    finally { hideLoader($(".setting")); }
+}
+
+async function GetAllUsers() {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/GetAllUsers", { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
+        if (!response.ok) throw new Error("Failed to load Users list");
+        const content = await response.text();
+        $("#Userlist").empty().html(content);
+    } catch (error) { console.error("Error loading Users list:", error); }
+    finally { hideLoader($(".setting")); }
+}
+
+async function AddUser() {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/AddUser", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load Users list");
+
+        const content = await response.text();
+        $("#addUser").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading Users list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveUser() {
+    try {
+        let form = [], formData = new FormData(), obj = $("#NewUserForm")[0];
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) { formData.append(val.name, val.value); form.push({ name: val.name, value: val.value }); });
+        debugger;
+        showLoader($(".setting"));
+        let response = await fetch("/Settings/SaveUser", { method: "POST", body: formData });
+        let result = await response.json();
+        if (result.success) {
+            $("#addUser").html("");
+            SwalSuccessAlert(result.data);
+            GetAllUsers();
+        } else { SwalErrorAlert(result.message || "Failed to save user."); }
+    } catch (error) { SwalErrorAlert("Error while saving user!"); console.error(error); }
+    finally { hideLoader($(".setting")); }
+}
+function DeleteUser(id) {
+    Swal.fire({
+        title: 'Are you sure?', text: "You won't be able to revert this!", icon: 'warning',
+        showCancelButton: true, confirmButtonText: "Yes, delete it!", cancelButtonText: "No, cancel!",
+        confirmButtonClass: 'btn btn-success me-2', cancelButtonClass: 'btn btn-danger', buttonsStyling: false
+    }).then(function (result) { if (result.isConfirmed) { DeleteUserById(id); } });
+}
+
+async function DeleteUserById(id) {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/DeleteUserById?id=" + id, { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
+        if (!response.ok) throw new Error("Failed to delete user");
+        SwalSuccessAlert("User deleted successfully!");
+        GetAllUsers();
+    } catch (error) { console.error("Error deleting user:", error); }
+    finally { hideLoader($(".setting")); }
+}
+
+async function GetUserById(id) {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/GetUserById?id=" + id, { method: "GET", headers: { "Content-Type": "application/json", "Accept": "text/html" } });
+        if (!response.ok) throw new Error("Failed to load user");
+        const content = await response.text();
+        $("#addUser").empty().html(content);
+    } catch (error) { console.error("Error loading user:", error); }
     finally { hideLoader($(".setting")); }
 }

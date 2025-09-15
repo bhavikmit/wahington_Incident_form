@@ -20,13 +20,14 @@ namespace Web.Controllers
         private readonly IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> _iIncidentTeamService;
         private readonly IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> _iPolicyService;
         private readonly IUserManagementService<UserManagementModifyViewModel, UserManagementModifyViewModel, UserDetailViewModel> _iUserManagementService;
+        private readonly IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> _iUsersinService;
         #endregion
 
         #region Ctor
         public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService, ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> iSeverityLevelService, IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> iStatusLegendService, IAssetIdService<AssetIdModifyViewModel, AssetIdModifyViewModel, AssetIdDetailViewModel> iAssetIdService,
             IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService, IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> iIncidentTeamService,
             IUserManagementService<UserManagementModifyViewModel,UserManagementModifyViewModel, UserDetailViewModel> iUserManagementService,
-            IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService)
+            IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService, IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> iusersinService)
         {
             _iRelationshipService = iRelationshipService;
             _iEventTypeService = iEventTypeService;
@@ -37,6 +38,7 @@ namespace Web.Controllers
             _iIncidentTeamService = iIncidentTeamService;
             _iUserManagementService = iUserManagementService;
             _iPolicyService = iPolicyService;
+            _iUsersinService = iusersinService;
         }
         #endregion
 
@@ -755,6 +757,86 @@ namespace Web.Controllers
             }
         }
         #endregion
+
+        #region Users
+        [HttpGet]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var model = await _iUsersinService.GetAllUsers();
+            return PartialView("~/Views/Settings/Users/_ListUser.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddUser()
+        {
+            var model = new UserModifyViewModel();
+            var teams = await _iUsersinService.GetAllTeams();
+            ViewBag.Teams = new SelectList(teams, "TeamId", "TeamName");
+            return PartialView("~/Views/Settings/Users/_AddUser.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUserById(long id)
+        {
+            var teams = await _iUsersinService.GetAllTeams();
+            ViewBag.Teams = new SelectList(teams, "TeamId", "TeamName");
+            var model = await _iUsersinService.GetUserById(id);
+            return PartialView("~/Views/Settings/Users/_AddUser.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveUser([FromForm] UserModifyViewModel User)
+        {
+            if (User == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long id = 0;
+                if (User.Id > 0)
+                    id = await _iUsersinService.UpdateUser(User);
+                else
+                    id = await _iUsersinService.SaveUser(User);
+
+                if (id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save user." });
+
+                var successMsg = "User saved successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteUserById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                var deletedId = await _iUsersinService.DeleteUser(id);
+
+                if (deletedId == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete user." });
+
+                var successMsg = "User deleted successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+        #endregion
+
     }
 }
 

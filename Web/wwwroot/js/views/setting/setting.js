@@ -24,6 +24,9 @@
         else if (tab === "type") {
             GetAllAssetTypes();
         }
+        else if (tab === "Ipolicies") {
+            GetAllPolicies();
+        }
         else if (tab === "teamManagement") {
             $(".teamsidebar ul li:eq(0)").trigger('click');
             $(".teamsidebar ul li:eq(0)").addClass("active");
@@ -36,15 +39,11 @@
     $(document).off("click", ".teamAllTab");
     $(document).on("click", ".teamAllTab", function (e) {
         e.preventDefault();
-        var tab = $(this).attr("data-tab");
-
-        if (tab === "Ipolicies") {
-            GetAllPolicies();
-        }
-        else if (tab === "Iteams") {
+        var tab = $(this).attr("data-tab");         
+        if (tab === "Iteams") {
             GetAllIncidentTeams();
         }
-        else if (tab === "user") {
+        else if (tab === "Iusers") {
             GetAllUserManagement();
         }
     });
@@ -473,19 +472,19 @@
             SavePolicy();
         }
     }); // open add policy partial
-    $(document).off("click", ".btnAddNewPolicy");
-    $(document).on("click", ".btnAddNewPolicy", function (e) {
-        e.preventDefault();
-        AddPolicy();
-    });
+    //$(document).off("click", ".btnAddNewPolicy");
+    //$(document).on("click", ".btnAddNewPolicy", function (e) {
+    //    e.preventDefault();
+    //    AddPolicy();
+    //});
 
-    $(document).off("click", ".cancelPolicy");
-    $(document).on("click", ".cancelPolicy", function (e) {
-        e.preventDefault();
-        $("#addPolicy").empty();
-        GetAllPolicies();
-        $('.teamAllTab[data-tab="Ipolicies"]').addClass('active').siblings().removeClass('active');
-    });
+    //$(document).off("click", ".cancelPolicy");
+    //$(document).on("click", ".cancelPolicy", function (e) {
+    //    e.preventDefault();
+    //    $("#addPolicy").empty();
+    //    GetAllPolicies();
+    //    $('.teamAllTab[data-tab="Ipolicies"]').addClass('active').siblings().removeClass('active');
+    //});
 })
 
 // Start Source
@@ -1426,31 +1425,6 @@ function InitIncidentTeamPartial() {
     // e.g. $("#NewIncidentTeamForm").on("submit", function(e){ e.preventDefault(); SaveIncidentTeam(); });
 }
 
-function DeleteIncidentTeamItem(id) {
-    Swal.fire({
-        title: 'Are you sure?', text: "You won't be able to revert this!", icon: 'warning',
-        showCancelButton: true, confirmButtonText: "Yes, delete it!", cancelButtonText: "No, cancel!",
-        customClass: { confirmButton: 'btn btn-success me-2', cancelButton: 'btn btn-danger' },
-        buttonsStyling: false
-    }).then(function (result) { if (result.isConfirmed) { DeleteIncidentTeamById(id); } });
-}
-
-async function SaveIncidentTeam() {
-    try {
-        let form = [], formData = new FormData(), obj = $("#NewIncidentTeamForm")[0];
-        let params = $(obj).serializeArray();
-        $.each(params, function (i, val) { formData.append(val.name, val.value); form.push({ name: val.name, value: val.value }); });
-        showLoader($(".setting"));
-        let response = await fetch("/Settings/SaveIncidentTeam", { method: "POST", body: formData });
-        let result = await response.json();
-        if (result.success) {
-            $("#addIncidentTeam").html("");
-            SwalSuccessAlert(result.data);
-            GetAllIncidentTeams();
-        } else { SwalErrorAlert(result.message || "Failed to save incident team."); }
-    } catch (error) { SwalErrorAlert("Error while saving incident team!"); console.error(error); }
-    finally { hideLoader($(".setting")); }
-}
 
 function DeleteIncidentTeamItem(id) {
     Swal.fire({

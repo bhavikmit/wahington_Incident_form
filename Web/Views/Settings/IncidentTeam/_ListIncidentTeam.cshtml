@@ -71,9 +71,10 @@
                 <div class="cardHeader">
                     <h4>@team.Name</h4>
                     <div class="editDeIcons">
-                        <i class="fa-regular fa-edit" id="@team.Id"></i>
-                        <i class="far fa-trash-alt" id="@team.Id"></i>
+                        <i class="fa-regular fa-edit edit editIncidentTeam" id="@team.Id"></i>
+                        <i class="far fa-trash-alt deleteIncidentTeam ms-3" id="@team.Id"></i>
                     </div>
+                    
                 </div>
 
                 <p><span class="lbl">Department:</span>@(!string.IsNullOrWhiteSpace(team.Department) ? team.Department : "N/A")</p>

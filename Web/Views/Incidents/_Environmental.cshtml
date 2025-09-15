@@ -6,6 +6,38 @@
 <div class="shadow-sm border border-gray-200 card-body InfoCard">
     <h6 class="fw-bold mb-3">Environmental / Safety Indicators</h6>
     <div class="row">
+
+        <div class="col-md-12">
+            <div class="mb-3 d-flex align-items-center justify-content-start indicators">
+                <label class="form-label d-block">Is Water Present</label>
+                <div class="selectRadio">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="incidentEnvironmentalViewModel.WaterPresentID"
+                               id="WaterPresentYes" value="1" asp-for="incidentEnvironmentalViewModel.WaterPresentID">
+                        <label class="form-check-label" for="WaterPresentYes">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        @if (Model.Id > 0)
+                        {
+                            <input class="form-check-input" type="radio" name="incidentEnvironmentalViewModel.WaterPresentID"
+                                   id="WaterPresentNo" value="0" asp-for="incidentEnvironmentalViewModel.WaterPresentID">
+                        }
+                        else
+                        {
+                            <input class="form-check-input" type="radio" checked name="incidentEnvironmentalViewModel.WaterPresentID"
+                                   id="WaterPresentNo" value="0" asp-for="incidentEnvironmentalViewModel.WaterPresentID">
+                        }
+                        <label class="form-check-label" for="WaterPresentNo">No</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="incidentEnvironmentalViewModel.WaterPresentID"
+                               id="WaterPresentUnknown" value="2" asp-for="incidentEnvironmentalViewModel.WaterPresentID">
+                        <label class="form-check-label" for="WaterPresentUnknown">N/A</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-md-12">
             <div class="mb-3 d-flex align-items-center justify-content-start indicators">
                 <label class="form-label d-block">Is gas odor present?</label>

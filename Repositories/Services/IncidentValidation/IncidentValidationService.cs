@@ -200,18 +200,31 @@ namespace Repositories.Common
                     .Include(p => p.SeverityLevel)
                     .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
 
-                var severityLevelsTask = await _db.SeverityLevels
-                    .Where(it => !it.IsDeleted)
-                    .OrderBy(it => it.Name)
-                    .Select(it => new SelectListItem
-                    {
-                        Value = it.Id.ToString(),
-                        Text = !string.IsNullOrWhiteSpace(it.Description)
-                               ? it.Name + " - " + it.Description
-                               : it.Name
-                    })
-                    .ToListAsync();
+                //var severityLevelsTask = await _db.SeverityLevels
+                //    .Where(it => !it.IsDeleted)
+                //    .OrderBy(it => it.Name)
+                //    .Select(it => new SelectListItem
+                //    {
+                //        Value = it.Id.ToString(),
+                //        Text = !string.IsNullOrWhiteSpace(it.Description)
+                //               ? it.Name + " - " + it.Description
+                //               : it.Name
+                //    })
+                //    .ToListAsync();
 
+                var severityLevelsTask = await _db.SeverityLevels
+                                   .Where(it => !it.IsDeleted)
+                                   .OrderBy(it => it.Name == "High" ? 1 :
+                                                  it.Name == "Moderate" ? 2 :
+                                                  it.Name == "Low" ? 3 : 4)
+                                   .Select(it => new SelectListItem
+                                   {
+                                       Value = it.Id.ToString(),
+                                       Text = !string.IsNullOrWhiteSpace(it.Description)
+                                              ? it.Name + " (" + it.Description + ")"
+                                              : it.Name
+                                   })
+                                   .ToListAsync();
 
                 if (incidentTask == null)
                 {

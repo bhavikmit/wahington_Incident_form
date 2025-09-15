@@ -227,6 +227,10 @@ namespace Repositories.Common
             try
             {
                 List<IncidentRecentViewModel> incidentRecents = new();
+
+                var incidentValidations = await _db.IncidentValidations
+                 .Where(i => !i.IsDeleted).ToListAsync();
+
                 var eventTypes = await _db.EventTypes.ToListAsync();
                 // Pull incidents in memory (only once)
                 var incidents = await _db.Incidents.Include(p => p.StatusLegend).Include(p => p.SeverityLevel)
@@ -239,11 +243,12 @@ namespace Repositories.Common
                         eventtype = GetEventTypes(eventTypes, item.EventTypeIds),
                         incidentId = item.IncidentID,
                         incidentloc = item.LocationAddress,
-                        incidentstatus = item.StatusLegend.Name,
-                        incidentstatusColor = item.StatusLegend.Color,
-                        severity = item.SeverityLevel.Name,
+                        incidentstatus = item.StatusLegend?.Name,
+                        incidentstatusColor = item.StatusLegend?.Color,
+                        severity = item.SeverityLevel?.Name,
                         lat = item.Lat,
                         lon = item.Lng,
+                        perimeter = incidentValidations.Count > 0 ? GetPerimeter(incidentValidations.Where(i => i.IncidentId == item.Id).FirstOrDefault()?.DiscoveryPerimeterId) : ""
                     });
                 }
 
@@ -254,15 +259,14 @@ namespace Repositories.Common
 
                 var assetIncidents = await _db.AssetIncidents.ToListAsync();
 
-                var incidentValidations = await _db.IncidentValidations
-                  .Where(i => !i.IsDeleted).ToListAsync();
 
-                var incidentLocation = incidents.Select(p => new IncidentLocationMapViewModel
+                var incidentLocation = incidents.Where(p => p.StatusLegend?.Name != StatusLegendEnum.Completed.ToString() && p.StatusLegend?.Name != StatusLegendEnum.Cancelled.ToString()).Select(p => new IncidentLocationMapViewModel
                 {
                     lat = p.Lat,
                     lon = p.Lng,
-                    severity = p.SeverityLevel.Name,
-                    color = p.SeverityLevel.Color,
+                    severity = p.SeverityLevel?.Name,
+                    incidentStatus = p.StatusLegend?.Name,
+                    color = p.StatusLegend?.Color,
                     incidentloc = p.LocationAddress,
                     calleraddress = p.CallerAddress,
                     callername = p.CallerName,

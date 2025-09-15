@@ -61,6 +61,7 @@ namespace ViewModels.Incident
     public class IncidentEnvironmentalViewModel
     {
         public long? GasodorpresentID { get; set; } = default!;
+        public long? WaterPresentID { get; set; } = default!;
         public long? HissingSoundPresentID { get; set; } = default!;
         public long? VisibleDamageID { get; set; } = default!;
         public long? PeopleInjuredID { get; set; } = default!;
@@ -68,6 +69,7 @@ namespace ViewModels.Incident
         public long? EmergencyResponseNotifiedID { get; set; } = default!;
         // ✅ Friendly
         public string GasOdorText { get; set; } = string.Empty;
+        public string WaterPresentText { get; set; } = string.Empty;
         public string HissingSoundText { get; set; } = string.Empty;
         public string VisibleDamageText { get; set; } = string.Empty;
         public string PeopleInjuredText { get; set; } = string.Empty;

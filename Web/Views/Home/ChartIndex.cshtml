@@ -14,6 +14,9 @@
 
 
 
+<script type="module" src="https://js.arcgis.com/embeddable-components/4.33/arcgis-embeddable-components.esm.js"></script>
+
+
 <style>
     .chart-container {
         background-color: transparent;
@@ -308,7 +311,7 @@
     .legend-item {
         display: flex;
         align-items: center;
-        margin-top:6px;
+        margin-top: 6px;
     }
 
         .legend-item i {
@@ -318,7 +321,7 @@
 
         .legend-item span {
             font-size: 14px;
-            font-weight:700;
+            font-weight: 700;
         }
 
     .fa-circle {
@@ -422,7 +425,7 @@
         align-items: center;
         padding: 12px 0;
         border-bottom: 1px solid #eee;
-        margin-right:16px;
+        margin-right: 16px;
     }
 
         .incident-item:last-child {
@@ -450,7 +453,7 @@
         color: #4b5563;
         font-size: 14px;
         line-height: normal;
-        margin-bottom:0;
+        margin-bottom: 0;
     }
 
     .incident-severity {
@@ -527,7 +530,7 @@
                 <div class="tab-content mt-3">
                     <!-- Map Tab -->
                     <div class="tab-pane fade show active" id="mapTab" role="tabpanel">
-                       @*  <h3 class="titleLocation">Incident Locations</h3>
+                        @*  <h3 class="titleLocation">Incident Locations</h3>
                         <p class="titleDescription">Interactive map showing all incident locations with status indicators</p> *@
                         <div class="incident-locations">
                             <div class="statusLegendInfo">
@@ -542,7 +545,12 @@
                             </div>
                         </div>
                         <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
-                            <div id="map" style="height:500px; width:100%;"></div>
+                            <div id="map" style="height:600px; width:100%;">
+                                <!-- Add custom element to <body> of your page -->
+                                @*  <arcgis-embedded-map style="height:600px;width:1750px;" item-id="8a4533b464d041ac9a50279ab8717767" theme="light"
+                                                       center="-118.1107272296462,33.967678536918406" scale="36111.909643"
+                                                       portal-url="https://pmm-jason.maps.arcgis.com"></arcgis-embedded-map> *@
+                            </div>
                         </div>
 
                         <!-- Recent Incidents List -->
@@ -555,7 +563,10 @@
                                     {
                                         <div class="incident-item focusMap" data-lat="@item.lat"
                                              data-lon="@item.lon"
-                                             data-loc="@item.incidentloc" style="cursor:pointer">
+                                             data-loc="@item.incidentloc"
+                                             data-radius="@(!string.IsNullOrWhiteSpace(item.perimeter) ? item.perimeter : "0")"
+                                             data-incidentstatusColor="@item.incidentstatusColor"
+                                             style="cursor:pointer">
                                             <div class="incident-details">
                                                 <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.incidentstatusColor"></span>
                                                 <div class="incident-info" style="margin-left: 10px;">
@@ -726,6 +737,8 @@
 
 
 
+
+
 @section Scripts {
     <script>
         $(document).ready(function () {
@@ -772,8 +785,13 @@
             "esri/Map",
             "esri/views/MapView",
             "esri/Graphic",
-            "esri/layers/GraphicsLayer"
-        ], function (Map, MapView, Graphic, GraphicsLayer) {
+            "esri/layers/GraphicsLayer",
+            "esri/geometry/Circle"
+        ], function (Map, MapView, Graphic, GraphicsLayer, Circle) {
+
+                 // make available globally
+            window.Graphic = Graphic;
+            window.Circle = Circle;
 
             console.log("ArcGIS modules loaded ✔");
 
@@ -782,13 +800,13 @@
             });
 
             var incidents = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.IncidentDashboard.ListIncidentLocationMapViewModel));
-            var firstObj = incidents[0];
+            //var firstObj = incidents[0];
 
             window.view = new MapView({
                 container: "map",
                 map: map,
-                center: [firstObj.lon, firstObj.lat],
-                zoom: 2
+                center: [-119.4179, 36.7783], // California center (Lon, Lat)
+                zoom: 6
             });
 
             var graphicsLayer = new GraphicsLayer();
@@ -796,17 +814,20 @@
             map.add(graphicsLayer);
 
             incidents.forEach(function (incident) {
-                var point = {
-                    type: "point",
-                    longitude: incident.lon,
-                    latitude: incident.lat
-                };
 
-                var symbol = {
-                    type: "simple-marker",
-                    color: incident.color,
-                    outline: { color: "white", width: 1 }
-                };
+           var point = {
+                            type: "point",
+                            longitude: incident.lon,
+                            latitude: incident.lat
+                       };
+
+         var symbol =   {
+                            type: "simple-marker",
+                            path: "M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z",
+                            color: incident.color,
+                            outline: { color: "black", width: 1 },
+                            size: "20px"
+                        };
 
                 var attributes = {
                     Severity: incident.severity,
@@ -844,6 +865,26 @@
                     popupTemplate: popupTemplate
                 });
                 graphicsLayer.add(graphic);
+
+                var circle = new Circle({
+                    center: point,
+                    radius: incident.perimeter!='' ? parseInt(incident.perimeter) : 0,
+                    radiusUnit: "miles" // unit: MILES
+                });
+
+                var circleGraphic = new Graphic({
+                    geometry: circle,
+                    symbol: {
+                        type: "simple-fill",
+                        color: [255, 0, 0, 0.1], // semi-transparent fill
+                        outline: {
+                            color: incident.color,
+                            width: 2
+                        }
+                    }
+                });
+
+                graphicsLayer.add(circleGraphic);
             });
 
         });
@@ -867,22 +908,72 @@
                 }
             });
 
-           $(".focusMap").click(function () {
+       $(".focusMap").click(function () {
             var incidentLoc = $(this).data("loc");
             var hdn_lat = $(this).data("lat");
             var hdn_lon = $(this).data("lon");
+            var hdn_radius = $(this).data("radius");
+            var hdn_incidentstatusColor = $(this).data("incidentstatuscolor");
 
             if (incidentLoc) {
-                window.view.goTo({
-                    center: [hdn_lon, hdn_lat],
-                    zoom: 15
+                // Clear old shapes if you want only one active
+                // window.graphicsLayer.removeAll();
+
+                // Create point
+                var point = {
+                    type: "point",
+                    longitude: hdn_lon,
+                    latitude: hdn_lat
+                };
+
+                // Marker symbol (SVG path)
+                var markerSymbol = {
+                    type: "simple-marker",   // for custom path, use 'simple-marker' with style: "path"
+                    path: "M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z",
+                    color: hdn_incidentstatusColor,
+                    outline: { color: "black", width: 1 },
+                    size: "20px"
+                };
+
+                var markerGraphic = new Graphic({
+                    geometry: point,
+                    symbol: markerSymbol
                 });
+
+                // Circle radius in miles
+                var circle = new Circle({
+                    center: [hdn_lon, hdn_lat],
+                    radius: hdn_radius && hdn_radius !== '' ? parseInt(hdn_radius) : 0,
+                    radiusUnit: "miles"
+                });
+
+                var circleGraphic = new Graphic({
+                    geometry: circle,
+                    symbol: {
+                        type: "simple-fill",
+                        color: [255, 0, 0, 0.1], // transparent red fill
+                        outline: { color: hdn_incidentstatusColor, width: 2 }
+                    }
+                });
+
+                // Add to graphics layer
+                window.graphicsLayer.addMany([markerGraphic, circleGraphic]);
+
+                // Zoom to point (closer zoom if radius is small)
+                window.view.goTo({
+                    target: circle,  // ensures circle fits in view
+                    zoom: hdn_radius && hdn_radius > 2 ? 13 : 16
+                });
+
+                 //window.view.goTo(circle.extent.expand(1.5));
+
             } else {
                 if (window.graphicsLayer) {
                     window.view.goTo(window.graphicsLayer.graphics);
                 }
             }
         });
+
 
         });
     </script>

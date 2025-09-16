@@ -230,7 +230,7 @@ $(function () {
         var assignTeamsArray = [];
 
         // Get policy details
-        var policyName = $(this).closest(".task-card").find("h5").text();
+        var policyName = $(this).closest(".task-card").find("h3").text();
         var policyDesc = $(this).closest(".task-card").find("p").text();
         var policyId = $(this).data("id");
         var teams = $(this).data("teams"); // dynamic teams from server

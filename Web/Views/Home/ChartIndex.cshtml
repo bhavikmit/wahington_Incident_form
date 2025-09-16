@@ -563,6 +563,12 @@
                                     {
                                         <div class="incident-item focusMap" data-lat="@item.lat"
                                              data-lon="@item.lon"
+                                             data-description="@item.description"
+                                             data-intersection="@item.intersection"
+                                             data-incidentId="@item.incidentId"
+                                             data-eventtype="@item.eventtype"
+                                             data-severity="@item.severity"
+                                             data-assettype="@item.assettype"
                                              data-loc="@item.incidentloc"
                                              data-radius="@(!string.IsNullOrWhiteSpace(item.perimeter) ? item.perimeter : "0")"
                                              data-incidentstatusColor="@item.incidentstatusColor"
@@ -913,8 +919,10 @@
             var hdn_incidentstatusColor = $(this).data("incidentstatuscolor");
 
             if (incidentLoc) {
-                // Clear old shapes if you want only one active
-                // window.graphicsLayer.removeAll();
+                // ✅ Clear old graphics (circle + marker)
+                if (window.graphicsLayer) {
+                    window.graphicsLayer.removeAll();
+                }
 
                 // Create point
                 var point = {
@@ -923,21 +931,52 @@
                     latitude: hdn_lat
                 };
 
-                // Marker symbol (SVG path)
+                // Marker symbol
                 var markerSymbol = {
-                    type: "simple-marker",   // for custom path, use 'simple-marker' with style: "path"
+                    type: "simple-marker",
                     path: "M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z",
                     color: hdn_incidentstatusColor,
                     outline: { color: "black", width: 1 },
                     size: "20px"
                 };
 
+                // Popup content
+                var popupTemplate = {
+                    title: "Incident Details",
+                    content: `
+                        <b>Incident Number:</b> {IncidentID}<br>
+                        <b>Severity:</b> {Severity}<br>
+                        <b>Event Type:</b> {EventType}<br>
+                        <b>Asset Type:</b> {AssetType}<br>
+                        <b>Description:</b> {Description}<br>
+                        <b>Intersection:</b> {Intersection}<br>
+                        <b>Location:</b> {Location}<br>
+                        <b>Images:</b> <br>
+                        <b>Perimeter:</b> {Perimeter}<br>
+                    `
+                };
+
+                // Attributes for popup
+                var attributes = {
+                    IncidentID: $(this).data("incidentid") || "",
+                    Severity: $(this).data("severity") || "",
+                    EventType: $(this).data("eventtype") || "",
+                    AssetType: $(this).data("assettype") || "",
+                    Description: $(this).data("description") || "",
+                    Intersection: $(this).data("intersection") || "",
+                    Location: incidentLoc,
+                    Perimeter: hdn_radius || "N/A"
+                };
+
+                // Marker with popup
                 var markerGraphic = new Graphic({
                     geometry: point,
-                    symbol: markerSymbol
+                    symbol: markerSymbol,
+                    attributes: attributes,
+                    popupTemplate: popupTemplate
                 });
 
-                // Circle radius in miles
+                // Circle radius (default 0 if not provided)
                 var circle = new Circle({
                     center: [hdn_lon, hdn_lat],
                     radius: hdn_radius && hdn_radius !== '' ? parseInt(hdn_radius) : 0,
@@ -948,21 +987,16 @@
                     geometry: circle,
                     symbol: {
                         type: "simple-fill",
-                        color: [255, 0, 0, 0.1], // transparent red fill
+                        color: [255, 0, 0, 0.1], // transparent red
                         outline: { color: hdn_incidentstatusColor, width: 2 }
                     }
                 });
 
-                // Add to graphics layer
+                // Add fresh graphics
                 window.graphicsLayer.addMany([markerGraphic, circleGraphic]);
 
-                // Zoom to point (closer zoom if radius is small)
-                // window.view.goTo({
-                //     target: circle,  // ensures circle fits in view
-                //     zoom: hdn_radius && hdn_radius > 2 ? 5 : 8
-                // });
-
-                 window.view.goTo(circle.extent.expand(3));
+                // Zoom to circle extent
+                window.view.goTo(circle.extent.expand(1));
 
             } else {
                 if (window.graphicsLayer) {
@@ -971,7 +1005,6 @@
             }
         });
 
-
-        });
+   });
     </script>
 }

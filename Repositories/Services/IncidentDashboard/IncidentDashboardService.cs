@@ -228,6 +228,8 @@ namespace Repositories.Common
             {
                 List<IncidentRecentViewModel> incidentRecents = new();
 
+                var assetIncidents = await _db.AssetIncidents.ToListAsync();
+
                 var incidentValidations = await _db.IncidentValidations
                  .Where(i => !i.IsDeleted).ToListAsync();
 
@@ -248,7 +250,10 @@ namespace Repositories.Common
                         severity = item.SeverityLevel?.Name,
                         lat = item.Lat,
                         lon = item.Lng,
-                        perimeter = incidentValidations.Count > 0 ? GetPerimeter(incidentValidations.Where(i => i.IncidentId == item.Id).FirstOrDefault()?.DiscoveryPerimeterId) : ""
+                        perimeter = incidentValidations.Count > 0 ? GetPerimeter(incidentValidations.Where(i => i.IncidentId == item.Id).FirstOrDefault()?.DiscoveryPerimeterId) : "",
+                        assettype = GetAssets(assetIncidents, item.AssetIds),
+                        description = item.DescriptionIssue,
+                        intersection = item.Landmark
                     });
                 }
 
@@ -257,7 +262,7 @@ namespace Repositories.Common
                 var statusLegends = await _db.StatusLegends.ToListAsync();
 
 
-                var assetIncidents = await _db.AssetIncidents.ToListAsync();
+
 
 
                 var incidentLocation = incidents.Where(p => p.StatusLegend?.Name != StatusLegendEnum.Completed.ToString() && p.StatusLegend?.Name != StatusLegendEnum.Cancelled.ToString()).Select(p => new IncidentLocationMapViewModel

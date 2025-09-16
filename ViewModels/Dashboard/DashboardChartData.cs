@@ -126,6 +126,9 @@ namespace ViewModels.Dashboard
         public string incidentloc { get; set; } = default!;
         public string eventtype { get; set; } = default!;
         public string severity { get; set; } = default!;
+        public string assettype { get; set; } = default!;
+        public string description { get; set; } = default!;
+        public string intersection { get; set; } = default!;
         public double lat { get; set; }
         public double lon { get; set; }
         public string incidentstatus { get; set; } = default!;

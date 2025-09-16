@@ -726,7 +726,7 @@ namespace Repositories.Common
                 {
                     var policyName = policyGroup.FirstOrDefault()?.PolicyName;
                     var teamNames = string.Join(" || ", policyGroup.Select(ws => ws.TeamName).Distinct());
-                    
+
                     foreach (var workStep in policyGroup)
                     {
                         workStep.TeamsByPolicy = teamNames;

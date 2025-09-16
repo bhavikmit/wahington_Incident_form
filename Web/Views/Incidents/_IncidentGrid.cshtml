@@ -88,7 +88,7 @@
                         <a href="javascript:void(0);"
                            class="btnIcon eyeIcon view-incident"
                            data-id="@item.Id"
-                           title="View Details">
+                           title="View Details" disabled="@item.StatusLegend == @StatusLegendEnum.Validated.ToString()">
                             <i class="fa-regular fa-eye"></i>
                         </a>
 
@@ -126,7 +126,7 @@
                             <i class="fa-regular fa-clock"></i>
                         </a> *@
 
-                        <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit Incident"><i class="fa-regular fa-edit"></i></a>
+                        @* <a href="#" class="btnIcon editIcon btnEditIncident" id="@item.Id" title="Edit Incident"><i class="fa-regular fa-edit"></i></a> *@
                     </td>
                 </tr>
             }

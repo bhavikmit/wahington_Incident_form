@@ -584,6 +584,37 @@ namespace Repositories.Common
                                                    .ToList()
                                           }).ToList() ?? new List<IncidentValidationsDetailsViewModel>();
 
+                var incidentPolicies = await _db.IncidentValidationPolicies
+                    .Where(ivp => ivp.IncidentId == id)
+                    .ToListAsync();
+
+                var teams = await _db.IncidentTeams.ToListAsync();
+                var policies = await _db.Policies.ToListAsync();
+
+                var workStepsData = incidentPolicies
+                    .SelectMany(ivp => ivp.TeamIds.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                  .Select(teamId => new { ivp, teamId = int.Parse(teamId) }))
+                    .Join(teams,
+                          x => x.teamId,
+                          it => it.Id,
+                          (x, it) => new { x.ivp, Team = it })
+                    .Join(policies,
+                          x => x.ivp.PolicyId,
+                          p => p.Id,
+                          (x, p) => new WorkStepViewModel
+                          {
+                              PolicyId = p.Id,
+                              PolicyName = p.Name,
+                              TeamId = x.Team.Id,
+                              TeamName = x.Team.Name,
+                              PolicySteps = p.PolicySteps ?? string.Empty
+                          })
+                    .GroupBy(ws => ws.PolicyName)
+                    .Select(g => g.ToList())  // each group is a list
+                    .ToList(); // list of lists
+
+
+
 
                 if (incident == null)
                     return new IncidentViewModel();
@@ -685,8 +716,22 @@ namespace Repositories.Common
                         SeverityLevelName = incidentValidation.FirstOrDefault()?.SeverityLevelName,
                         SeverityLevelColor = incidentValidation.FirstOrDefault()?.SeverityLevelColor,
                         IncidentValidationCommunicationHistoriesViewModelList = incidentValidation.FirstOrDefault()?.IncidentValidationCommunicationHistoriesViewModelList
-                    }
+                    },
+
+                    workSteps = workStepsData.SelectMany(x => x).ToList()
                 };
+
+                // ✅ Set TeamsByPolicy for each WorkStepViewModel
+                foreach (var policyGroup in workStepsData)
+                {
+                    var policyName = policyGroup.FirstOrDefault()?.PolicyName;
+                    var teamNames = string.Join(", ", policyGroup.Select(ws => ws.TeamName).Distinct());
+                    
+                    foreach (var workStep in policyGroup)
+                    {
+                        workStep.TeamsByPolicy = teamNames;
+                    }
+                }
 
                 // ✅ Resolve EventType names
                 if (!string.IsNullOrWhiteSpace(incident.EventTypeIds))
@@ -707,7 +752,10 @@ namespace Repositories.Common
                         .Select(a => a.Name)
                         .ToListAsync();
                 }
-
+                viewModel.workStepsByPolicy = viewModel.workSteps
+                    .GroupBy(ws => ws.PolicyName)
+                    .Select(g => g.ToList())  // each group is a list
+                    .ToList(); // list of lists
                 return viewModel;
             }
             catch (Exception ex)

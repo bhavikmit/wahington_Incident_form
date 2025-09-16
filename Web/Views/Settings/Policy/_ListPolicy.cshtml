@@ -2,91 +2,72 @@
 @using ViewModels
 @model List<PolicyModifyViewModel>
 <style>
-   /* .task-item {
-        background: #f9fafb;
-        padding: 15px;
-        border-radius: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 10px;
-    }
 
-     .task-info {
-        display: flex;
-        gap: 12px;
-    }
-
-         .task-info i {
-            color: #9ca3af;
-            cursor: move;
-            margin-top: 4px;
-        }
-
-     .task-text strong {
-        font-size: 14px;
-    }
-
-     .task-text small {
-        display: block;
-        font-size: 13px;
-        color: #6b7280;
-        margin-top: 2px;
-    }
-
-     .task-actions i {
-        color: red;
-        cursor: pointer;
-    } */
-    .task-list{
+    .task-list {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-gap: 20px;
     }
 
         .task-list .card {
-        background: #fff;
-        border: 1px solid #ddd;
-        border-radius: 12px;
-        padding: 16px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        transition: 0.3s;
-    }
-
-        .task-list .card.highlight {
-            border: 2px solid #ff8800 !important;
-            background: #fff7f0;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            transition: 0.3s;
         }
 
-        .task-list .card h3 {
+            .task-list .card.highlight {
+                border: 2px solid #ff8800 !important;
+                background: #fff7f0;
+            }
+
+            .task-list .card h3 {
                 font-size: 16px;
                 font-weight: 700;
                 color: #0073e6;
                 margin-bottom: 5px;
                 line-height: normal;
-        }
-
-        .task-list ul {
-        list-style: none;
-        padding: 0;
-        margin: 0 0 10px 0;
-    }
-
-        .task-list ul li {
-            margin: 8px 0;
-            font-size: 14px;
-        }
-
-                .task-list ul li input {
-                margin-right: 8px;
             }
 
-    .task-list .add-step {
+        .task-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 10px 0;
+        }
+
+            .task-list ul li {
+                margin: 8px 0;
+                font-size: 14px;
+            }
+
+                .task-list ul li input {
+                    margin-right: 8px;
+                }
+
+        .task-list .add-step {
             font-size: 14px;
             color: #919191;
             cursor: pointer;
             font-weight: 500;
+            margin-top: 8px;
+        }
+
+    .title h2{
+        font-size:18px;
+        font-weight:800;
+
     }
+
+    .btn-primary{
+        background:#f54e00;
+        color:#ffffff;
+        border:1px solid #f54e00;
+    }
+   .btn-cancel{
+        background: #d9d9d9;
+   }
 
 </style>
 <div class="task-list" id="taskList">
@@ -109,69 +90,18 @@
             </div> *@
 
             <div class="card highlight ">
-                <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                <h3>@policy.Name</h3>
                 <ul>
-                    <li><input type="checkbox" checked> Isolate pipeline section</li>
-                    <li><input type="checkbox" checked> Excavate pipe</li>
-                    <li><input type="checkbox" checked> Perform weld repair</li>
-                    <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
-                    <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                    @if (policy.PolicySteps != null && policy.PolicySteps.Count > 0)
+                    {
+                        foreach (var item in policy.PolicySteps)
+                        {
+                            <li><input type="checkbox" checked> @item</li>
+                        }
+                    }
                 </ul>
-                <div class="add-step">+ Add New Step</div>
+                <div class="add-step" data-policy-id="@policy.Id" data-bs-toggle="modal" data-bs-target="#addStepPopup">+ Add New Step</div>
             </div>
-
-            <div class="card">
-                <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
-                <ul>
-                    <li><input type="checkbox" checked> Isolate pipeline section</li>
-                    <li><input type="checkbox" checked> Excavate pipe</li>
-                    <li><input type="checkbox" checked> Perform weld repair</li>
-                    <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
-                    <li><input type="checkbox" checked> Backfill &amp; restore site</li>
-                </ul>
-                <div class="add-step">+ Add New Step</div>
-            </div>
-
-            <div class="card">
-                <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
-                <ul>
-                    <li><input type="checkbox" checked> Isolate pipeline section</li>
-                    <li><input type="checkbox" checked> Excavate pipe</li>
-                    <li><input type="checkbox" checked> Perform weld repair</li>
-                    <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
-                    <li><input type="checkbox" checked> Backfill &amp; restore site</li>
-                </ul>
-                <div class="add-step">+ Add New Step</div>
-            </div>
-
-            <div class="card">
-                <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
-                <ul>
-                    <li><input type="checkbox" checked> Isolate pipeline section</li>
-                    <li><input type="checkbox" checked> Excavate pipe</li>
-                    <li><input type="checkbox" checked> Perform weld repair</li>
-                    <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
-                    <li><input type="checkbox" checked> Backfill &amp; restore site</li>
-                </ul>
-                <div class="add-step">+ Add New Step</div>
-            </div>
-
-            <div class="card">
-                <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
-                <ul>
-                    <li><input type="checkbox" checked> Isolate pipeline section</li>
-                    <li><input type="checkbox" checked> Excavate pipe</li>
-                    <li><input type="checkbox" checked> Perform weld repair</li>
-                    <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
-                    <li><input type="checkbox" checked> Backfill &amp; restore site</li>
-                </ul>
-                <div class="add-step">+ Add New Step</div>
-            </div>
-
-
-
-           
-
         }
     }
     else
@@ -182,3 +112,77 @@
     }
 
 </div>
+<!-- Static popup (always in DOM, hidden by default) -->
+@* <div id="addStepPopup" class="popup-overlay">
+    <div class="popup-box">
+        <h3>Add Step</h3>
+        <input type="hidden" id="policyId" />
+        <input type="text" id="stepText" placeholder="Enter step" style="width:100%; padding:6px;" />
+        <div class="popup-actions">
+            <button type="button" class="btn btn-secondary" id="closePopupBtn">Cancel</button>
+            <button type="button" class="btn btn-primary" id="saveStepBtn">Save</button>
+        </div>
+    </div>
+</div> *@
+<div class="modal fade" id="addStepPopup" tabindex="-1" aria-labelledby="addStepPopupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xs">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <div class="title">
+                    <h2 class="mb-0">Add New Procedure</h2>
+                   
+                </div>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close" type="button"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div class="addStepContent">
+                <input type="hidden" id="policyId" />
+                <input type="text" class="form-control" id="stepText" placeholder="Enter step" style="width:100%; padding:6px;" />
+                </div>
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button class="btn-cancel btn" type="button" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times"></i> Cancel</button>
+                <button class="btn-primary btn" type="button"><i class="fa fa-check"></i> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        // open popup
+        $(document).on("click", ".add-step", function () {
+            $("#policyId").val($(this).data("policy-id"));
+            $("#stepText").val("");
+         ;
+        });
+        // save step
+        $("#saveStepBtn").click(function () {
+            var policyId = $("#policyId").val();
+            var step = $("#stepText").val().trim();
+            if (!step) {
+                alert("Enter a step name");
+                return;
+            }
+
+            // Just append to UI (static demo)
+            var card = $(".add-step[data-policy-id='" + policyId + "']").closest(".card");
+            card.find("ul").append("<li><input type='checkbox' checked /> " + step + "</li>");
+            const modalEl = document.getElementById('addStepPopup');
+            let modal = bootstrap.Modal.getInstance(modalEl);
+            if (!modal) {
+                modal = new bootstrap.Modal(modalEl);
+            }
+             modal.hide();
+                 
+            });
+    });
+
+
+
+</script>

@@ -85,7 +85,7 @@ namespace Repositories.Common
                         Id = p.Id,
                         Name = p.Name,
                         Description = p.Description,
-                        PolicySteps = p.PolicySteps?.Split(',').ToList()
+                        PolicySteps = p.PolicySteps?.Split(',').ToList() ?? new List<string>()
                     });
                 }
             }

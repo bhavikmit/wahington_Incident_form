@@ -3,7 +3,51 @@
 @using ViewModels.Incident
 @model ValidationWorkflowViewModel
 
+<style>
+    .IVPolicyList .card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: 0.3s;
+    }
 
+        .IVPolicyList .card.highlight {
+            border: 2px solid #ff8800 !important;
+            background: #fff7f0;
+    }
+
+        .IVPolicyList .card h3 {
+      font-size: 16px;
+      font-weight: bold;
+      color: #0073e6;
+      margin-bottom: 15px;
+    }
+
+    .IVPolicyList ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 10px 0;
+    }
+
+        .IVPolicyList ul li {
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+            .IVPolicyList ul li input {
+      margin-right: 8px;
+    }
+
+    .IVPolicyList .add-step {
+        font-size: 14px;
+        color: #919191;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+</style>
 <div class="container-fluid">
     <div class="validation-center">
         <div class="workflow">
@@ -305,7 +349,7 @@
                         <div class="Bordercard">
                             <div class="polices-task-add d-flex align-items-center justify-content-between">
                                 <h4>Add Policies</h4>
-                                <div class="add-task"><i class="fa fa-plus" style="cursor:pointer" id="add_task_policy">Add Task</i></div>
+                                @* <div class="add-task"><i class="fa fa-plus" style="cursor:pointer" id="add_task_policy">Add Task</i></div> *@
                             </div>
                             <div class="form-box" id="div_Policy">
                                 <input type="text" placeholder="Task title..." id="task_policy_title">
@@ -317,7 +361,7 @@
                             </div>
 
                             <div class="task-grid IVPolicyList">
-                                @foreach (var item in Model.IVPolicyList)
+                                @* @foreach (var item in Model.IVPolicyList)
                                 {
                                     <div class="task-card">
                                         <h5>@item.Name</h5>
@@ -325,7 +369,66 @@
                                         <a href="#" id="add_policy_workflow" data-id="@item.PolicyId"
                                            data-teams='@Html.Raw(Json.Serialize(item.assignTeams))'><i class="fa-solid fa-plus"></i> Add to Workflow</a>
                                     </div>
-                                }
+                                } *@
+                                <div class="card highlight">
+                                    <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                                    <ul>
+                                        <li><input type="checkbox" checked> Isolate pipeline section</li>
+                                        <li><input type="checkbox" checked> Excavate pipe</li>
+                                        <li><input type="checkbox" checked> Perform weld repair</li>
+                                        <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
+                                        <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                                    </ul>
+                                    <a href="#" id="add_policy_workflow"  class="add-step"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                                </div>
+
+                                <div class="card">
+                                    <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                                    <ul>
+                                        <li><input type="checkbox" checked> Isolate pipeline section</li>
+                                        <li><input type="checkbox" checked> Excavate pipe</li>
+                                        <li><input type="checkbox" checked> Perform weld repair</li>
+                                        <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
+                                        <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                                    </ul>
+                                    <a href="#" id="add_policy_workflow" class="add-step"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                                </div>
+
+                                <div class="card">
+                                    <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                                    <ul>
+                                        <li><input type="checkbox" checked> Isolate pipeline section</li>
+                                        <li><input type="checkbox" checked> Excavate pipe</li>
+                                        <li><input type="checkbox" checked> Perform weld repair</li>
+                                        <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
+                                        <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                                    </ul>
+                                    <a href="#" id="add_policy_workflow" class="add-step"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                                </div>
+
+                                <div class="card">
+                                    <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                                    <ul>
+                                        <li><input type="checkbox" checked> Isolate pipeline section</li>
+                                        <li><input type="checkbox" checked> Excavate pipe</li>
+                                        <li><input type="checkbox" checked> Perform weld repair</li>
+                                        <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
+                                        <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                                    </ul>
+                                    <a href="#" id="add_policy_workflow" class="add-step"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                                </div>
+
+                                <div class="card">
+                                    <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                                    <ul>
+                                        <li><input type="checkbox" checked> Isolate pipeline section</li>
+                                        <li><input type="checkbox" checked> Excavate pipe</li>
+                                        <li><input type="checkbox" checked> Perform weld repair</li>
+                                        <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
+                                        <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                                    </ul>
+                                    <a href="#" id="add_policy_workflow" class="add-step"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                                </div>
                             </div>
                         </div>
                         <div class="Bordercard selectPoliciesTask">

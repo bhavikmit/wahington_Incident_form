@@ -102,6 +102,14 @@
             margin-left: 6px;
             color: red;
         }
+
+    .remove-specialization{
+        background:transparent;
+        border:none;
+        color:red;
+        font-size:16px;
+        margin-left:10px;
+    }
 </style>
 <form id="NewIncidentTeamForm" autocomplete="off">
     <div id="saveIncidentTeamDiv" class="form-container addNewTeam">
@@ -165,16 +173,17 @@
                         <button type="button" class="btn btn-danger remove-specialization">Delete</button>
                     </div> *@
 
-                    <div class="input-group mb-2 specialization-row">
+                    <div class="d-flex align-items-center addMoreSpecialization specialization-row">
                         <input type="text"
                                name="SpecializationList[@i]"
                                value="@Model.SpecializationList[i]"
-                               class="form-control specialization-input"
+                               class="form-control"
                                placeholder="Enter specialization" />
-                        <button type="button" class="btn btn-sm remove-specialization" title="Remove">
+                        <button type="button" class="remove-specialization" title="Remove">
                             <i class="fa fa-close"></i>
                         </button>
                     </div>
+
                 }
             }
             <!-- IMPORTANT: If there are no saved items, we intentionally render NOTHING here.
@@ -278,7 +287,7 @@
 
             var index = $("#specializationsList .specialization-row").length;
 
-            var $row = $("<div>").addClass("input-group mb-2 specialization-row");
+            var $row = $("<div>").addClass("d-flex align-items-center addMoreSpecialization specialization-row");
             var $input = $("<input>")
                 .attr({
                     type: "text",
@@ -289,8 +298,8 @@
                 .addClass("form-control specialization-input");
             var $btn = $("<button>")
                 .attr("type", "button")
-                .addClass("btn btn-sm remove-specialization")
-                .html('<i class="fa fa-close"></i>');
+                .addClass("remove-specialization")
+                .html('<i class="far fa-trash-alt "></i>');
 
             $row.append($input).append($btn);
             $("#specializationsList").append($row);

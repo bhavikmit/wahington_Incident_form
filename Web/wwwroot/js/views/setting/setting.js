@@ -1394,20 +1394,44 @@ async function SaveIncidentTeam() {
     try {
         // run client-side validation before anything else
         //if (!validateIncidentTeamForm()) {
-        //    // validation plugin already shows messages; show a friendly toast as well if you like
         //    SwalErrorAlert("Please fix validation errors before submitting.");
         //    return;
         //}
 
-        //// ensure correct indexing of dynamic list names
-        //if (typeof window.reindexIncidentSpecializations === "function") {
-        //    window.reindexIncidentSpecializations();
-        //}
+        // Ensure existing rows are correctly indexed (so names are SpecializationList[0], [1], ...)
+        $("#specializationsList .specialization-row").each(function (i) {
+            $(this).find("input.specialization-input").attr("name", "SpecializationList[" + i + "]");
+        });
 
-        let formData = new FormData(), obj = $("#NewIncidentTeamForm")[0];
-        if (!obj) { SwalErrorAlert("Form not found!"); return; }
-        let params = $(obj).serializeArray();
+        // Collect serialized form params
+        let formObj = $("#NewIncidentTeamForm")[0];
+        if (!formObj) { SwalErrorAlert("Form not found!"); return; }
 
+        let params = $(formObj).serializeArray(); // array of {name, value}
+
+        // If quick input has a value, add it automatically (unless it's a duplicate)
+        var raw = ($("#specializationInput").val() || "").toString().trim();
+        if (raw) {
+            // check duplicates (case-insensitive) among existing specialization inputs
+            var dup = false;
+            $("#specializationsList .specialization-input").each(function () {
+                var v = ($(this).val() || "").toString().trim();
+                if (v && v.toLowerCase() === raw.toLowerCase()) { dup = true; return false; }
+            });
+
+            if (!dup) {
+                // index for new specialization is current number of rows
+                var idx = $("#specializationsList .specialization-row").length;
+                // push into params so it'll be included in the FormData below
+                params.push({ name: "SpecializationList[" + idx + "]", value: raw });
+            } else {
+                // optional: clear input if duplicate found
+                // $("#specializationInput").val("");
+            }
+        }
+
+        // Build FormData from params
+        let formData = new FormData();
         $.each(params, function (i, val) {
             console.log("adding to formData", val.name, "=", val.value); // Debug log (optional)
             formData.append(val.name, val.value);

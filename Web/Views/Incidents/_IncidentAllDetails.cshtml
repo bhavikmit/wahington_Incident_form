@@ -1151,7 +1151,7 @@
                                     <div class="avatar"><i class="fa-regular fa-user"></i></div>
                                     <div class="message-box">
                                         <div class="message-header">
-                                            <strong>Current User</strong>
+                                                <strong>Administrator</strong>
                                             @* <span class="role">Super Admin</span>
                                             <span class="role tag-yellow">Internal</span> *@
                                         </div>
@@ -1174,7 +1174,7 @@
                                     <div class="avatar"><i class="fa-regular fa-user"></i></div>
                                     <div class="message-box">
                                         <div class="message-header">
-                                            <strong>Current User</strong>
+                                                <strong>Administrator</strong>
                                             @* <span class="role">Super Admin</span> *@
                                            @*  <span class="role tag-green">→ Distribution Emergency Team</span>
                                             <span class="role tag-purple">Task: Notify & Dispatch</span> *@
@@ -1349,9 +1349,16 @@
                 document.getElementById('messageText').value = '';
                 document.getElementById('previewContainer').innerHTML = '';
                 fileInput.value = '';
-                
-                // Add the new message to the UI
-                addMessageToUI(messageText, new Date().toLocaleString(), fileName);
+                     const now = new Date();
+                const formattedTime = now.toLocaleString("en-US", {
+                    month: "short",   // "Sep"
+                    day: "numeric",   // "16"
+                    hour: "2-digit",  // "05"
+                    minute: "2-digit",// "20"
+                    hour12: true      // "PM"
+                });
+
+                addMessageToUI(messageText, formattedTime, fileName);
                 
                 // Update message count
                 updateMessageCount();
@@ -1383,7 +1390,7 @@
                 <div class="avatar"><i class="fa-regular fa-user"></i></div>
                 <div class="message-box">
                     <div class="message-header">
-                        <strong>Current User</strong>
+                        <strong>Administrator</strong>
                     </div>
                     <div class="message-text">${message}</div>
                     ${attachmentHtml}

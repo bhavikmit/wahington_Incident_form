@@ -373,7 +373,7 @@
                                            data-teams='@Html.Raw(Json.Serialize(item.assignTeams))'><i class="fa-solid fa-plus"></i> Add to Workflow</a>
                                     </div> *@
 
-                                    <div class="card highlight task-card">
+                                    <div class="card task-card" id="div_@item.PolicyId">
                                         <h3>@item.Name</h3>
                                         <ul>
                                             @if (item.PolicySteps != null && item.PolicySteps.Count > 0)

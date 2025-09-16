@@ -49,7 +49,7 @@
 
                     <div class="permissions-box">
                         <h3>Role Permissions</h3>
-                        <p>Can create incidents and have read-only access to other pages. No settings access.</p>
+                        <p>Full access to all functionality and system administration.</p>
                         <ul id="SystemAdministrator">
                             <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
                             <li class="allowed"><i class="fa-solid fa-check"></i> can edit incidents</li>
@@ -63,6 +63,7 @@
                             <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
                             <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
                         </ul>
+                        <p>Full access to all functionality and super administration.</p>
                         <ul id="SuperAdministrator">
                             <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
                             <li class="allowed"><i class="fa-solid fa-check"></i> can edit incidents</li>
@@ -76,6 +77,7 @@
                             <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
                             <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
                         </ul>
+                        <p>Can create incidents, manage settings, send alerts, desktop access, view all incidents. No settings access.</p>
                         <ul id="Manager">
                             <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
                             <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
@@ -89,6 +91,7 @@
                             <li class="denied"><i class="fa-solid fa-xmark"></i> can complete tasks</li>
                             <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
                         </ul>
+                        <p>Can only send alerts, view settings, has desktop access and complete tasks. No settings access.</p>
                         <ul id="Technician">
                             <li class="denied"><i class="fa-solid fa-xmark"></i> can create incidents</li>
                             <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
@@ -102,6 +105,7 @@
                             <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
                             <li class="denied"><i class="fa-solid fa-xmark"></i> can view reports</li>
                         </ul>
+                        <p>Can only view all incidents, view reports and complete tasks. No other settings.</p>
                         <ul id="Guest">
                             <li class="denied"><i class="fa-solid fa-xmark"></i> can create incidents</li>
                             <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
@@ -125,7 +129,7 @@
         </div>
     </div>
 </div>
-<script>
+@* <script>
         $(document).ready(function () {
             $(".permissions-box ul").hide();
         });
@@ -155,4 +159,29 @@
             // Call on page load (for pre-selected role from controller)
             showPermissions();
         });
+</script> *@
+<script>
+    $(document).ready(function () {
+        function showPermissions() {
+            // Hide all <p> and <ul> inside permissions-box
+            $(".permissions-box p, .permissions-box ul").hide();
+
+            // Get selected role text
+            var selectedRole = $("#RoleId option:selected").text().trim();
+            if (selectedRole) {
+                // Find matching <ul> by ID (remove spaces in role name)
+                var $roleUl = $("#" + selectedRole.replace(/\s+/g, ''));
+
+                // Show the <ul> and the <p> right before it
+                $roleUl.show();
+                $roleUl.prev("p").show();
+            }
+        }
+
+        // Run when dropdown changes
+        $("#RoleId").on("change", showPermissions);
+
+        // Run once on page load
+        showPermissions();
+    });
 </script>

@@ -1,8 +1,21 @@
 ﻿@using ViewModels
 @model UserManagementModifyViewModel
-
+<style>
+    #addUserModal::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        background: #0000009e;
+        z-index: -1;
+        border-radius: 10px;
+        height:100vh;
+    }
+</style>
 @* <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true"> *@
-    <div class="modal fade " id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-modal="true" role="dialog">
+<div class="modal fade show" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-modal="true" role="dialog" style="display: block; padding-left: 0px;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 

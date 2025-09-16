@@ -2,7 +2,7 @@
 @model UserManagementModifyViewModel
 
 @* <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true"> *@
-    <div class="modal fade show" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-modal="true" role="dialog" style="display: block; padding-left: 0px;">
+<div class="modal fade show" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-modal="true" role="dialog" style="display: block; padding-left: 0px;">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
@@ -27,9 +27,9 @@
                     <div class="form-group">
                         <label>Role *</label>
                         @Html.DropDownListFor(model => model.RoleId,
-                                          (SelectList)ViewBag.Roles,
-                                          "Select role",
-                                          new { @class = "form-control" })
+                                 (SelectList)ViewBag.Roles,
+                                 "Select role",
+                                 new { @class = "form-control" })
                     </div>
                     <div class="form-group">
                         <label>Department</label>
@@ -50,58 +50,71 @@
                     <div class="permissions-box">
                         <h3>Role Permissions</h3>
                         <p>Can create incidents and have read-only access to other pages. No settings access.</p>
-                        <ul id="ServiceCenter">
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can manage settings</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can send alerts</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can view settings</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can complete tasks</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
-                    </ul>
-                    <ul id="Dispatch">
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can edit incidents</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can manage settings</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can assign teams</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can validate incidents</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can view settings</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
-                    </ul>
-                    <ul id="ServiceTeams">
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can create incidents</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can manage settings</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can send alerts</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> has desktop access</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can view all incidents</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can view settings</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
-                        <li class="denied"><i class="fa-solid fa-xmark"></i> can view reports</li>
-                    </ul>
-                    <ul id="MasterAdmin">
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can edit incidents</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can manage settings</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can assign teams</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can validate incidents</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can view settings</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
-                        <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
-                    </ul>
+                        <ul id="SystemAdministrator">
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can edit incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can manage settings</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can assign teams</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can validate incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view settings</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
+                        </ul>
+                        <ul id="SuperAdministrator">
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can edit incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can manage settings</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can assign teams</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can validate incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view settings</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
+                        </ul>
+                        <ul id="Manager">
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can manage settings</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view settings</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can complete tasks</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
+                        </ul>
+                        <ul id="Technician">
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can create incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can manage settings</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view all incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view settings</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view reports</li>
+                        </ul>
+                        <ul id="Guest">
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can create incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can manage settings</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can send alerts</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> has desktop access</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view settings</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
+                        </ul>
                     </div>
                 </form>
             </div>
@@ -113,33 +126,33 @@
     </div>
 </div>
 <script>
-    $(document).ready(function () {
-        $(".permissions-box ul").hide();
-    });
-    var selectedRole = "";
-    $("#RoleId").on("change", function () {
-        selectedRole = $(this).find("option:selected").text();
-        $(".permissions-box ul").hide();
-        if (selectedRole) {
-            $("#" + selectedRole.replace(/\s+/g, '')).show(); 
-        }
-    });
-$("#RoleId").trigger("change");
-
-    $(document).ready(function () {
-        $(".permissions-box ul").hide();
-
-        function showPermissions() {
-            var selectedRole = $("#RoleId option:selected").text().trim();
+        $(document).ready(function () {
+            $(".permissions-box ul").hide();
+        });
+        var selectedRole = "";
+        $("#RoleId").on("change", function () {
+            selectedRole = $(this).find("option:selected").text();
             $(".permissions-box ul").hide();
             if (selectedRole) {
                 $("#" + selectedRole.replace(/\s+/g, '')).show();
             }
-        }
+        });
+    $("#RoleId").trigger("change");
 
-        $("#RoleId").on("change", showPermissions);
+        $(document).ready(function () {
+            $(".permissions-box ul").hide();
 
-        // Call on page load (for pre-selected role from controller)
-        showPermissions();
-    });
+            function showPermissions() {
+                var selectedRole = $("#RoleId option:selected").text().trim();
+                $(".permissions-box ul").hide();
+                if (selectedRole) {
+                    $("#" + selectedRole.replace(/\s+/g, '')).show();
+                }
+            }
+
+            $("#RoleId").on("change", showPermissions);
+
+            // Call on page load (for pre-selected role from controller)
+            showPermissions();
+        });
 </script>

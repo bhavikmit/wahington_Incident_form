@@ -183,6 +183,7 @@ namespace Repositories.Common
                     HissingPresent = GetIndicator(incident.HissingPresentId),
                     PeopleInjured = GetIndicator(incident.PeopleInjuredId),
                     VisibleDamagePresent = GetIndicator(incident.VisibleDamagePresentId),
+                    WaterPresent = GetIndicator(incident.WaterPresentId),
                 };
             }
             catch (Exception ex)

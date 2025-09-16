@@ -160,6 +160,7 @@
                                 @RenderBox("Visible Damage/Fire", Model.IVDetails.VisibleDamagePresent)
                                 @RenderBox("People Injured", Model.IVDetails.PeopleInjured)
                                 @RenderBox("Evacuation Required", Model.IVDetails.EvacuationRequired)
+                                @RenderBox("Water Present", Model.IVDetails.WaterPresent)
                             </div>
                         </div>
                     </div>
@@ -346,27 +347,6 @@
 
                         <div class="Bordercard newCommunication">
                             <h3>New Communication</h3>
-
-                            @*  <div class="form-grid" style="display:none">
-                                <div>
-                                    <label for="msgType">Message Type</label>
-                                    <select id="msgType">
-                                        <option value="1">Internal Note</option>
-                                        <option value="2">Emergency Alert</option>
-                                        <option value="3">Team Notification</option>
-                                    </select>
-                                </div>
-                                <div class="recipients">
-                                    @foreach (var itemTeam in Model.IVPolicyList.Take(1).ToList())
-                                    {
-                                        @foreach (var item in itemTeam.assignTeams)
-                                        {
-                                            <label><input type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
-                                        }
-                                    }
-                                </div>
-                            </div> *@
-
                             <div>
                                 <label for="message">Message</label>
                                 <textarea id="message" placeholder="Enter your message..."></textarea>

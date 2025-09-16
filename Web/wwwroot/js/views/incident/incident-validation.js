@@ -41,6 +41,28 @@ $(function () {
                 SwalErrorAlert("Please select any one response team..!");
                 return;
             }
+
+            var assignTeams = document.querySelectorAll(".team-card.selected");
+            var assignTeamsArray = [];
+
+            $.each(assignTeams, function (i, team) {
+                assignTeamsArray.push($(team).attr('data-id'));
+            });
+
+            $(".selectPoliciesTask .checkbox-group").find('input[type=checkbox]').prop("checked", false);
+
+            assignTeamsArray.forEach(function (id) {
+                $(".selectPoliciesTask .checkbox-group input[type=checkbox][value='" + id + "']").prop("checked", true);
+            });
+
+            // Build team checkboxes dynamically
+            //var teamHtml = "";
+            //if (teams && teams.length) {
+            //    $.each(teams, function (i, team) {
+            //        var isChecked = assignTeamsArray.includes(team.Value) ? "checked" : "";
+            //        teamHtml += `<label><input type="checkbox" value="${team.Value}" ${isChecked}> ${team.Text}</label>`;
+            //    });
+            //}
         }
 
         if (currentStep == 4) {
@@ -205,6 +227,7 @@ $(function () {
     $(document).on("click", "#add_policy_workflow", function (e) {
 
         e.preventDefault();
+        var assignTeamsArray = [];
 
         // Get policy details
         var policyName = $(this).closest(".task-card").find("h5").text();
@@ -217,13 +240,35 @@ $(function () {
             return;
         }
 
+
+        var assignTeams = document.querySelectorAll(".team-card.selected");
+        var assignTeamsArray = [];
+
+        $.each(assignTeams, function (i, team) {
+            assignTeamsArray.push($(team).attr('data-id'));
+        });
+
         // Build team checkboxes dynamically
         var teamHtml = "";
         if (teams && teams.length) {
             $.each(teams, function (i, team) {
-                teamHtml += `<label><input type="checkbox" value="${team.Value}"> ${team.Text}</label>`;
+                var isChecked = assignTeamsArray.includes(team.Value) ? "checked" : "";
+                teamHtml += `<label><input type="checkbox" value="${team.Value}" ${isChecked}> ${team.Text}</label>`;
             });
         }
+
+        //var assignTeams = document.querySelectorAll(".team-card.selected");
+        //$.each(assignTeams, function (i, team) {
+        //    assignTeamsArray.push($(team).attr('data-id'));
+        //});
+
+        //// Build team checkboxes dynamically
+        //var teamHtml = "";
+        //if (teams && teams.length) {
+        //    $.each(teams, function (i, team) {
+        //        teamHtml += `<label><input type="checkbox" value="${team.Value}"> ${team.Text}</label>`;
+        //    });
+        //}
 
         // Create new task card
         var newCard = `
@@ -237,7 +282,7 @@ $(function () {
                 </div>
             </div>
             <div class="task-actions">
-                <select>
+                <select style="visibility:hidden">
                     <option value="1">Not Started</option>
                     <option value="2">In Progress</option>
                     <option value="3">Completed</option>

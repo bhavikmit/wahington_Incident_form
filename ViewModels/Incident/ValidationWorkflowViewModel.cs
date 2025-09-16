@@ -71,6 +71,7 @@ namespace ViewModels.Incident
         public string GasPresent { get; set; } = default!;
         public string HissingPresent { get; set; } = default!;
         public string VisibleDamagePresent { get; set; } = default!;
+        public string WaterPresent { get; set; } = default!;
         public string PeopleInjured { get; set; } = default!;
         public string EvacuationRequired { get; set; } = default!;
     }

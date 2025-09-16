@@ -227,9 +227,6 @@ $(function () {
     $(document).on("click", "#add_policy_workflow", function (e) {
 
         e.preventDefault();
-
-        $(this).closest('.card').addClass('highlight');
-
         var assignTeamsArray = [];
 
         // Get policy details
@@ -302,10 +299,6 @@ $(function () {
     // Remove task
     $(document).on("click", ".remove-link", function (e) {
         e.preventDefault();
-
-        var divID = $(this).closest(".task-card").attr("data-id");
-        $("#div_" + divID).removeClass("highlight");
-
         $(this).closest(".task-card").remove();
     });
 

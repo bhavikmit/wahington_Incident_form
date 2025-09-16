@@ -4,6 +4,9 @@
 @model ValidationWorkflowViewModel
 
 <style>
+    .info-sub.assets{
+        margin-top: 5px;
+    }
     .IVPolicyList .card {
         background: #fff;
         border: 1px solid #ddd !important;
@@ -151,12 +154,12 @@
                                 <div class="info-item">
                                     <i class="fa-solid fa-cube"></i>
                                     <span class="info-title">Affected Assets</span>
-                                    <div class="assets">
+                                    <span class="assets info-sub">
                                         @foreach (var item in Model.IVDetails.AffectedAssets)
                                         {
                                             <span>@item</span>
                                         }
-                                    </div>
+                                    </span>
                                 </div>
                             </div>
 
@@ -166,7 +169,7 @@
 
                             <div class="row">
                                 <div class="col">
-                                    <div class="info-item">
+                                    <div class="info-sec">
 
                                         <span class="info-title">Event Type</span>
                                     </div>
@@ -174,7 +177,7 @@
                                 </div>
 
                                 <div class="col">
-                                    <div class="info-item">
+                                    <div class="info-sec">
 
                                         <span class="info-title">Reported Severity</span>
                                     </div>
@@ -182,7 +185,7 @@
                                 </div>
 
                                 <div class="col">
-                                    <div class="info-item">
+                                    <div class="info-sec">
 
                                         <span class="info-title">Current Status</span>
                                     </div>
@@ -190,7 +193,7 @@
                                 </div>
                             </div>
 
-                            <div class="info-item">
+                            <div class="info-sec">
 
                                 <span class="info-title">Description</span>
                             </div>

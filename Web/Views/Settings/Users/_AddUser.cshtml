@@ -15,27 +15,27 @@
             </div>
             <div>
                 <label>First Name *</label>
-                <input type="text" class="form-control" placeholder="First name" asp-for="FirstName">
+                <input type="text" class="form-control" placeholder="Enter first name" asp-for="FirstName">
             </div>
             <div>
                 <label>Last Name *</label>
-                <input type="text" class="form-control" placeholder="Last name" asp-for="LastName">
+                <input type="text" class="form-control" placeholder="Enter last name" asp-for="LastName">
             </div>
             <div>
                 <label>Telephone</label>
-                <input type="text" class="form-control" placeholder="555-0123" asp-for="Telephone">
+                <input type="text" class="form-control" placeholder="XXX-XXX-XXXX" asp-for="Telephone">
             </div>
             <div>
                 <label>Email Address</label>
-                <input type="email" class="form-control" placeholder="user@company.com" asp-for="Email">
+                <input type="email" class="form-control" placeholder="Enter mail" asp-for="Email">
             </div>
             <div>
                 <label>PIN (4 digits) *</label>
-                <input type="password" class="form-control" placeholder="1234" maxlength="4" value="@Model.PinHash" asp-for="PinHash" id="pinhash">
+                <input type="password" class="form-control" placeholder="Enter pin" maxlength="4" value="@Model.PinHash" asp-for="PinHash" id="pinhash">
             </div>
             <div>
                 <label>Verify PIN *</label>
-                <input type="password" class="form-control" placeholder="1234" maxlength="4" value="@Model.VerifyPIN" asp-for="VerifyPIN" id="verifypin">
+                <input type="password" class="form-control" placeholder="Re-enter pin" maxlength="4" value="@Model.VerifyPIN" asp-for="VerifyPIN" id="verifypin">
             </div>
         </div>
         <div class="d-flex align-items-center justify-content-end addCancelIcons">

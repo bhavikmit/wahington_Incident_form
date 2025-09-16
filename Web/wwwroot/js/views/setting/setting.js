@@ -228,7 +228,7 @@
         e.preventDefault();
         var isValid = true;
 
-        $("#savestatusLegendDiv").find("input[data-val-required],textarea[data-val-required]").each(function () {
+        $("#savestatusLegendDiv").find("input[data-val-required]").each(function () {
             var $field = $(this);
             var value = $.trim($field.val());
 

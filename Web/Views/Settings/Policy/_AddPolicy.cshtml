@@ -49,8 +49,8 @@
     <div class="form-container">
         <h3>Add New Policy</h3>
         <input type="hidden" value="@Model.Id" name="Id" id="policy_@Model.Id" />
-        <input type="text" class="form-control" placeholder="Policy name..." asp-for="Name" />
-        <textarea placeholder="Policy description..." class="form-control" asp-for="Description"></textarea>
+        <input type="text" class="form-control" placeholder="Enter name" asp-for="Name" />
+        <textarea placeholder="Enter description" class="form-control" asp-for="Description"></textarea>
         <div class="d-flex align-item-center justify-content-end">
             <button type="button" class="btn btn-green">Add Policy</button>
             <button type="button" class="btn btn-gray cancelPolicy">Cancel</button>

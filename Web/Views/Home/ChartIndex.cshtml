@@ -407,7 +407,13 @@
     }
 
     .recentList {
-        height: 350px;
+       
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
+    }
+    .ListHeight{
+        height: 250px;
         overflow: auto;
     }
 
@@ -423,9 +429,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 12px 0;
-        border-bottom: 1px solid #eee;
-        margin-right: 16px;
+        background: #f7f7f7;
+        padding: 12px;
+        border: 1px solid #eee;
+        /* margin-right: 16px; */
+        border-radius: 8px;
     }
 
         .incident-item:last-child {
@@ -556,7 +564,8 @@
                         <!-- Recent Incidents List -->
                         <div class="incident-list">
                             <h3>Recent Incidents on Map</h3>
-                            <div class="recentList">
+                            <div class="ListHeight">
+                                <div class="recentList">
                                 @if (Model.IncidentDashboard.ListIncidentRecentViewModel.Count > 0)
                                 {
                                     @foreach (var item in Model.IncidentDashboard.ListIncidentRecentViewModel)
@@ -593,6 +602,7 @@
                                         </div>
                                     </div>
                                 }
+                            </div>
                             </div>
                         </div>
 

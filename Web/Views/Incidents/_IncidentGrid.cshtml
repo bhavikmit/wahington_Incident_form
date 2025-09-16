@@ -2,7 +2,18 @@
 @using Enums
 @using ViewModels.Incident
 @model IncidentViewModel
-
+<style>
+    .map i.fa{
+        color:darkslategrey;
+    }
+    .description{
+        white-space: normal; /* allow text to wrap */
+        word-wrap: break-word; /* break long words */
+        word-break: break-word; /* ensure wrapping in all browsers */
+        max-width: 300px; /* set a width limit for wrapping */
+        
+    }
+</style>
 <table class="table align-middle text-left">
     <thead class="table-light">
         <tr>
@@ -68,11 +79,11 @@
                             @item.AssetId
                         </div>
                     </td>
-                    <td>@item.DescriptionIssue</td>
+                    <td class="description">@item.DescriptionIssue</td>
                     <td>@item.Intersection</td>
                     <td>
                         <div class="map" style="text-wrap:auto">
-                            <i class="fa fa-map-marker" style="cursor:pointer" onclick="OpenIncidentMap('@item.Id')"></i>
+                            <i class="fa fa-map-marker-alt" style="cursor:pointer" onclick="OpenIncidentMap('@item.Id')"></i>
                         </div>
                     </td>
 
@@ -91,7 +102,7 @@
                             <a href="javascript:void(0);"
                                class="btnIcon eyeIcon view-incident"
                                data-id="@item.Id"
-                               title="View Details" disabled="@item.StatusLegend == @StatusLegendEnum.Validated.ToString()">
+                               title="View Details">
                                 <i class="fa-regular fa-eye"></i>
                             </a>
 

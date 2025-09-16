@@ -2,7 +2,7 @@
 @using ViewModels
 @model List<PolicyModifyViewModel>
 <style>
-   .task-item {
+   /* .task-item {
         background: #f9fafb;
         padding: 15px;
         border-radius: 8px;
@@ -37,14 +37,64 @@
      .task-actions i {
         color: red;
         cursor: pointer;
+    } */
+    .task-list{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 20px;
     }
+
+        .task-list .card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 16px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        transition: 0.3s;
+    }
+
+        .task-list .card.highlight {
+            border: 2px solid #ff8800 !important;
+            background: #fff7f0;
+        }
+
+        .task-list .card h3 {
+                font-size: 16px;
+                font-weight: 700;
+                color: #0073e6;
+                margin-bottom: 5px;
+                line-height: normal;
+        }
+
+        .task-list ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 10px 0;
+    }
+
+        .task-list ul li {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+                .task-list ul li input {
+                margin-right: 8px;
+            }
+
+    .task-list .add-step {
+            font-size: 14px;
+            color: #919191;
+            cursor: pointer;
+            font-weight: 500;
+    }
+
 </style>
 <div class="task-list" id="taskList">
     @if (Model != null && Model.Count > 0)
     {
         @foreach (var policy in Model)
         {
-            <div class="task-item  drag-handle">
+            @* <div class="task-item  drag-handle">
                 <div class="task-info">
                     <i class="fa-solid fa-grip-vertical"></i>
                     <div class="task-text">
@@ -53,10 +103,72 @@
                     </div>
                 </div>
                 <div class="task-actions">
-                    @* <i class="fa fa-pen edit editPolicy" id="@policy.Id"></i> *@
+                    
                     <i class="far fa-trash-alt delete deletePolicy" id="@policy.Id"></i>
                 </div> 
+            </div> *@
+
+            <div class="card highlight ">
+                <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                <ul>
+                    <li><input type="checkbox" checked> Isolate pipeline section</li>
+                    <li><input type="checkbox" checked> Excavate pipe</li>
+                    <li><input type="checkbox" checked> Perform weld repair</li>
+                    <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
+                    <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                </ul>
+                <div class="add-step">+ Add New Step</div>
             </div>
+
+            <div class="card">
+                <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                <ul>
+                    <li><input type="checkbox" checked> Isolate pipeline section</li>
+                    <li><input type="checkbox" checked> Excavate pipe</li>
+                    <li><input type="checkbox" checked> Perform weld repair</li>
+                    <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
+                    <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                </ul>
+                <div class="add-step">+ Add New Step</div>
+            </div>
+
+            <div class="card">
+                <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                <ul>
+                    <li><input type="checkbox" checked> Isolate pipeline section</li>
+                    <li><input type="checkbox" checked> Excavate pipe</li>
+                    <li><input type="checkbox" checked> Perform weld repair</li>
+                    <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
+                    <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                </ul>
+                <div class="add-step">+ Add New Step</div>
+            </div>
+
+            <div class="card">
+                <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                <ul>
+                    <li><input type="checkbox" checked> Isolate pipeline section</li>
+                    <li><input type="checkbox" checked> Excavate pipe</li>
+                    <li><input type="checkbox" checked> Perform weld repair</li>
+                    <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
+                    <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                </ul>
+                <div class="add-step">+ Add New Step</div>
+            </div>
+
+            <div class="card">
+                <h3>Pipeline Leak Repair Policy (PL-192.703)</h3>
+                <ul>
+                    <li><input type="checkbox" checked> Isolate pipeline section</li>
+                    <li><input type="checkbox" checked> Excavate pipe</li>
+                    <li><input type="checkbox" checked> Perform weld repair</li>
+                    <li><input type="checkbox" checked> Inspect &amp; pressure test</li>
+                    <li><input type="checkbox" checked> Backfill &amp; restore site</li>
+                </ul>
+                <div class="add-step">+ Add New Step</div>
+            </div>
+
+
 
            
 

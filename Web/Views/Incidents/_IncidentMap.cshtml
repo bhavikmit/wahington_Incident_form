@@ -23,86 +23,115 @@
     </div>
 </div>
 
-<script>
-    require([
-        "esri/Map",
-        "esri/views/MapView",
-        "esri/Graphic",
-        "esri/layers/GraphicsLayer"
-    ], function (Map, MapView, Graphic, GraphicsLayer) {
-        console.log("ArcGIS modules loaded ✔");
 
-        var map = new Map({
-            basemap: "streets-navigation-vector"
-        });
-        debugger;
-        var incidents = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
-        var firstObj = incidents[0];
 
-        window.view = new MapView({
-            container: "map",
-            map: map,
-            center: [firstObj.lon, firstObj.lat],
-            zoom: 5
-        });
-
-        var graphicsLayer = new GraphicsLayer();
-        window.graphicsLayer = graphicsLayer;
-        map.add(graphicsLayer);
-
-        incidents.forEach(function (incident) {
-            var point = {
-                type: "point",
-                longitude: incident.lon,
-                latitude: incident.lat
-            };
-
-            var symbol = {
-                type: "simple-marker",
-                color: incident.color,
-                outline: { color: "white", width: 1 }
-            };
-
-            var attributes = {
-                Severity: incident.severity,
-                IncidentID: incident.incidentid,
-                Location: incident.incidentloc,
-                CallerName: incident.callername,
-                CallerPhone: incident.callerphone,
-                CallerAddress: incident.calleraddress,
-                EventType:incident.eventtype,
-                AssetType:incident.assettype,
-                Description:incident.description,
-                Intersection:incident.intersection,
-                Perimeter:incident.perimeter,
-            };
-
-            var popupTemplate = {
-                title: "Incident Details:",
-                content: `
-                    <b>Incident Number:</b> {IncidentID}<br>
-                    <b>Severity:</b> {Severity}<br>
-                    <b>Event Type:</b> {EventType}<br>
-                    <b>Asset Type:</b> {AssetType}<br>
-                    <b>Description:</b> {Description}<br>
-                    <b>Intersection:</b> {Intersection}<br>
-                    <b>Location:</b> {Location}<br>
-                    <b>Images:</b> <br>
-                    <b>Perimeter :</b> {Perimeter}<br>
-                `
-            };
-
-            var graphic = new Graphic({
-                geometry: point,
-                symbol: symbol,
-                attributes: attributes,
-                popupTemplate: popupTemplate
-            });
-            graphicsLayer.add(graphic);
-        });
-
-    });
-
+ <script>
    
-</script>
+     require([
+         "esri/Map",
+         "esri/views/MapView",
+         "esri/Graphic",
+         "esri/layers/GraphicsLayer",
+         "esri/geometry/Circle"
+     ], function (Map, MapView, Graphic, GraphicsLayer, Circle) {
 
+              // make available globally
+         window.Graphic = Graphic;
+         window.Circle = Circle;
+
+         console.log("ArcGIS modules loaded ✔");
+
+         var map = new Map({
+             basemap: "streets-navigation-vector"
+         });
+
+          var incidents = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
+          var firstObj = incidents[0];
+
+         window.view = new MapView({
+             container: "map",
+             map: map,
+            center: [firstObj.lon, firstObj.lat],
+             zoom: 6
+         });
+
+         var graphicsLayer = new GraphicsLayer();
+         window.graphicsLayer = graphicsLayer;
+         map.add(graphicsLayer);
+
+         incidents.forEach(function (incident) {
+
+        var point = {
+                         type: "point",
+                         longitude: incident.lon,
+                         latitude: incident.lat
+                    };
+
+      var symbol =   {
+                         type: "simple-marker",
+                         path: "M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z",
+                         color: incident.color,
+                         outline: { color: "black", width: 1 },
+                         size: "20px"
+                     };
+
+             var attributes = {
+                 Severity: incident.severity,
+                 IncidentID: incident.incidentid,
+                 Location: incident.incidentloc,
+                 CallerName: incident.callername,
+                 CallerPhone: incident.callerphone,
+                 CallerAddress: incident.calleraddress,
+                 EventType:incident.eventtype,
+                 AssetType:incident.assettype,
+                 Description:incident.description,
+                 Intersection:incident.intersection,
+                 Perimeter:incident.perimeter,
+             };
+
+         var popupTemplate = {
+             title: "Incident Details:",
+             content: `
+                 <b>Incident Number:</b> {IncidentID}<br>
+                 <b>Severity:</b> {Severity}<br>
+                 <b>Event Type:</b> {EventType}<br>
+                 <b>Asset Type:</b> {AssetType}<br>
+                 <b>Description:</b> {Description}<br>
+                 <b>Intersection:</b> {Intersection}<br>
+                 <b>Location:</b> {Location}<br>
+                 <b>Images:</b> <br>
+                 <b>Perimeter :</b> {Perimeter}<br>
+             `
+             };
+
+             var graphic = new Graphic({
+                 geometry: point,
+                 symbol: symbol,
+                 attributes: attributes,
+                 popupTemplate: popupTemplate
+             });
+             graphicsLayer.add(graphic);
+
+             var circle = new Circle({
+                 center: point,
+                 radius: incident.perimeter!='' ? parseInt(incident.perimeter) : 0,
+                 radiusUnit: "miles" // unit: MILES
+             });
+
+             var circleGraphic = new Graphic({
+                 geometry: circle,
+                 symbol: {
+                     type: "simple-fill",
+                     color: [255, 0, 0, 0.1], // semi-transparent fill
+                     outline: {
+                         color: incident.color,
+                         width: 2
+                     }
+                 }
+             });
+
+             graphicsLayer.add(circleGraphic);
+         });
+
+     });
+</script>

@@ -736,9 +736,6 @@
 </div>
 
 
-
-
-
 @section Scripts {
     <script>
         $(document).ready(function () {
@@ -960,12 +957,12 @@
                 window.graphicsLayer.addMany([markerGraphic, circleGraphic]);
 
                 // Zoom to point (closer zoom if radius is small)
-                window.view.goTo({
-                    target: circle,  // ensures circle fits in view
-                    zoom: hdn_radius && hdn_radius > 2 ? 5 : 8
-                });
+                // window.view.goTo({
+                //     target: circle,  // ensures circle fits in view
+                //     zoom: hdn_radius && hdn_radius > 2 ? 5 : 8
+                // });
 
-                 //window.view.goTo(circle.extent.expand(1.5));
+                 window.view.goTo(circle.extent.expand(3));
 
             } else {
                 if (window.graphicsLayer) {

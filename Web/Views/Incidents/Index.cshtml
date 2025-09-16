@@ -1100,6 +1100,12 @@
   color: #fff;
 }
 
+    a.disabled {
+        pointer-events: none; /* disables clicking */
+        opacity: 0.5; /* faded look */
+        cursor: not-allowed; /* show "not allowed" cursor */
+    }
+
 /* Hover Effects */
 .btn-undo:hover { background: #343a40; }
 .btn-confirm:hover { background: #f39c72; }

@@ -21,6 +21,8 @@ namespace ViewModels.Incident
         public IncidentDetailByIdViewModel incidentDetailByIdViewModel { get; set; } = new();
         public List<IncidentGridViewModel> incidentGridViewModel { get; set; } = new();
         public IncidentValidationsDetailsViewModel incidentValidationsDetailsViewModel { get; set; } = new();
+        public List<WorkStepViewModel> workSteps { get; set; } = new();
+        public List<List<WorkStepViewModel>> workStepsByPolicy { get; set; } = new();
 
         public List<SelectListItem> statusLegends { get; set; } = new();
         public List<SelectListItem> severityLevels { get; set; } = new();
@@ -187,5 +189,33 @@ namespace ViewModels.Incident
         public string Image { get; private set; } = string.Empty;
 
         public long MessageType { get; set; }
+    }
+
+    public class WorkStepViewModel
+    {
+        public long PolicyId { get; set; }
+        public string PolicyName { get; set; } = string.Empty;
+        public string TeamName { get; set; } = string.Empty;
+        public long TeamId { get; set; }
+
+        // existing comma separated string
+        public string PolicySteps { get; set; } = string.Empty;
+
+        // new property: auto-splits PolicySteps into list
+        public List<string> Steps
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(PolicySteps))
+                    return new List<string>();
+
+                return PolicySteps
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => s.Trim())
+                    .ToList();
+            }
+        }
+
+        public string TeamsByPolicy { get; set; } = string.Empty;
     }
 }

@@ -1061,212 +1061,56 @@
 
                 <div id="worksteps" class="tab-content">
                     <div class="team-detail">
-                        <h3 class="team-detailTitle">Assigned Response Teams</h3>
+                        <h3 class="team-detailTitle">Assigned Policies and Procedures to Team(s)</h3>
                         <div class="row AllteamSec">
-                            <div class="col-md-4">
-                                <div class="task-section">
-                                    <div class="teamName-icon d-flex align-items-center">
-                                        <div class="avatar"><i class="fa-solid fa-people-group"></i></div>
-                                        <div class="teamName-info">
-                                            <h5>Distribution Emergency Team</h5>
-                                            <div class="specializations">
-                                                <span>Gas Leaks,</span>
-                                                <span>Valve Repairs,</span>
-                                                <span>Meter Issues,</span>
+                        @foreach(var team in Model.workStepsByPolicy)
+                        {
+                           
+                                <div class="col-md-4">
+                                    <div class="task-section">
+                                        <div class="teamName-icon d-flex align-items-center">
+                                            <div class="avatar"><i class="fa-solid fa-people-group"></i></div>
+                                            <div class="teamName-info">
+                                                <h5>@team.FirstOrDefault().PolicyName</h5>
+                                                <div class="specializations">
+                                                    <span>@team.FirstOrDefault().TeamsByPolicy</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                   
 
-                                    <div class="task-list">
-                                        <h5 class="assign-task">Assigned Tasks:</h5>
-                                        <div class="listInfo">
-                                            <div class="task-item complete">
-                                                <span>#1 Travel to Site</span>
-                                                <span>Complete </span>
-                                            </div>
-                                            <div class="task-item started">
-                                                <span>#2 Arrive & Assess Scene</span>
-                                                <span>Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#3 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                            <div class="task-item complete">
-                                                <span>#4 Travel to Site</span>
-                                                <span>Complete </span>
-                                            </div>
-                                            <div class="task-item started">
-                                                <span>#5 Arrive & Assess Scene</span>
-                                                <span>Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#6 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#7 Perform Leak Survey</span>
-                                                <span>Not Started</span>
+
+                                        <div class="task-list">
+                                            <h5 class="assign-task">Assigned Tasks:</h5>
+                                            <div class="listInfo">
+                                                @for (int i = 0; i < team.FirstOrDefault().Steps.Count(); i++)
+                                                {
+                                                    var task = team.FirstOrDefault().Steps[i];
+                                                    string cssClass;
+
+                                                    switch (i % 3)
+                                                    {
+                                                        case 0: // 1st in cycle
+                                                            cssClass = "complete";
+                                                            break;
+                                                        case 1: // 2nd in cycle
+                                                            cssClass = "started";
+                                                            break;
+                                                        default: // 3rd in cycle
+                                                            cssClass = "pending";
+                                                            break;
+                                                    }
+
+                                                    <div class="task-item @cssClass">
+                                                        <span>@task</span>
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
-                                    </div>
 
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="task-section">
-                                    <div class="teamName-icon d-flex align-items-center">
-                                        <div class="avatar"><i class="fa-solid fa-people-group"></i></div>
-                                        <div class="teamName-info">
-                                            <h5>Distribution Emergency Team</h5>
-                                            <div class="specializations">
-                                                <span>Gas Leaks,</span>
-                                                <span>Valve Repairs,</span>
-                                                <span>Meter Issues,</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                   
-
-                                    <div class="task-list">
-                                        <h5 class="assign-task">Assigned Tasks:</h5>
-                                        <div class="listInfo">
-                                            <div class="task-item complete">
-                                                <span>#1 Travel to Site</span>
-                                                <span>Complete </span>
-                                            </div>
-                                            <div class="task-item started">
-                                                <span>#2 Arrive & Assess Scene</span>
-                                                <span>Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#3 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                            <div class="task-item complete">
-                                                <span>#4 Travel to Site</span>
-                                                <span>Complete </span>
-                                            </div>
-                                            <div class="task-item started">
-                                                <span>#5 Arrive & Assess Scene</span>
-                                                <span>Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#6 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#7 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="task-section">
-                                    <div class="teamName-icon d-flex align-items-center">
-                                        <div class="avatar"><i class="fa-solid fa-people-group"></i></div>
-                                        <div class="teamName-info">
-                                            <h5>Distribution Emergency Team</h5>
-                                            <div class="specializations">
-                                                <span>Gas Leaks,</span>
-                                                <span>Valve Repairs,</span>
-                                                <span>Meter Issues,</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                   
-
-                                    <div class="task-list">
-                                        <h5 class="assign-task">Assigned Tasks:</h5>
-                                        <div class="listInfo">
-                                            <div class="task-item complete">
-                                                <span>#1 Travel to Site</span>
-                                                <span>Complete </span>
-                                            </div>
-                                            <div class="task-item started">
-                                                <span>#2 Arrive & Assess Scene</span>
-                                                <span>Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#3 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                            <div class="task-item complete">
-                                                <span>#4 Travel to Site</span>
-                                                <span>Complete </span>
-                                            </div>
-                                            <div class="task-item started">
-                                                <span>#5 Arrive & Assess Scene</span>
-                                                <span>Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#6 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#7 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="task-section">
-                                    <div class="teamName-icon d-flex align-items-center">
-                                        <div class="avatar"><i class="fa-solid fa-people-group"></i></div>
-                                        <div class="teamName-info">
-                                            <h5>Distribution Emergency Team</h5>
-                                            <div class="specializations">
-                                                <span>Gas Leaks,</span>
-                                                <span>Valve Repairs,</span>
-                                                <span>Meter Issues,</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                   
-
-                                    <div class="task-list">
-                                        <h5 class="assign-task">Assigned Tasks:</h5>
-                                        <div class="listInfo">
-                                            <div class="task-item complete">
-                                                <span>#1 Travel to Site</span>
-                                                <span>Complete </span>
-                                            </div>
-                                            <div class="task-item started">
-                                                <span>#2 Arrive & Assess Scene</span>
-                                                <span>Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#3 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                            <div class="task-item complete">
-                                                <span>#4 Travel to Site</span>
-                                                <span>Complete </span>
-                                            </div>
-                                            <div class="task-item started">
-                                                <span>#5 Arrive & Assess Scene</span>
-                                                <span>Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#6 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                            <div class="task-item pending">
-                                                <span>#7 Perform Leak Survey</span>
-                                                <span>Not Started</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
+                           
+                        }
                         </div>
 
                     </div>

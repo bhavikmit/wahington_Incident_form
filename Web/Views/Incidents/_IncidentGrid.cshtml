@@ -95,14 +95,28 @@
                         </div>
                     </td>
                     <td>
-                        <!-- Action Icons -->
-                        <a href="javascript:void(0);"
-                           class="btnIcon eyeIcon view-incident"
-                           data-id="@item.Id"
-                           title="View Details" disabled="@item.StatusLegend == @StatusLegendEnum.Validated.ToString()">
-                            <i class="fa-regular fa-eye"></i>
-                        </a>
-                      
+                        @if (!string.IsNullOrEmpty(item.StatusLegend) && item.StatusLegend == StatusLegendEnum.Validated.ToString())
+                        {
+
+                            <!-- Action Icons -->
+                            <a href="javascript:void(0);"
+                               class="btnIcon eyeIcon view-incident"
+                               data-id="@item.Id"
+                               title="View Details">
+                                <i class="fa-regular fa-eye"></i>
+                            </a>
+
+                        }
+                        else
+                        {
+                            <a href="javascript:void(0);"
+                               class="btnIcon eyeIcon view-incident disabled"
+                               title="View Details">
+                                <i class="fa-regular fa-eye"></i>
+                            </a>
+                        }
+
+
                         @if (item.StatusLegend == StatusLegendEnum.Submitted.ToString())
                         {
 

@@ -132,5 +132,25 @@ namespace Web.Controllers
             var map = await _iIncidentService.GetIncidentMapDetailsbyId(id);
             return PartialView("_IncidentMap", map ?? new List<ViewModels.Dashboard.IncidentLocationMapViewModel>());
         }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveCommunicationMessage([FromForm] SaveCommunicationRequest request)
+        {
+            if (request == null || string.IsNullOrWhiteSpace(request.Message))
+                return BadRequest(new { success = false, message = "Message is required." });
+
+            try
+            {
+                var result = await _iIncidentService.SaveCommunicationMessage(request);
+                if (result)
+                    return Ok(new { success = true, message = "Message sent successfully." });
+                else
+                    return StatusCode(500, new { success = false, message = "Failed to save message." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { success = false, message = "An error occurred while saving the message." });
+            }
+        }
     }
 }

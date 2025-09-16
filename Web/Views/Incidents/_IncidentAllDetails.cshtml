@@ -1,4 +1,4 @@
-﻿@model ViewModels.Incident.IncidentViewModel
+@model ViewModels.Incident.IncidentViewModel
 <style>
     #imgPreviewModal.modal {
         display: none;
@@ -1287,13 +1287,14 @@
                             <!-- Team Message Box -->
                             <div class="message-box team-message-box">
                                 <div class="send-message-image">
-                                    <textarea placeholder="Select a team first to send message..."></textarea>
+                                    <textarea id="messageText" placeholder="Type your message here..."></textarea>
                                     <input type="file" id="fileInput" class="file-upload" accept="image/*">
                                     <div id="previewContainer"></div>
-                                    <button class="btn-send"><i class="fa fa-paper-plane"></i> Send</button>
+                                    <button class="btn-send" onclick="sendMessage()"><i class="fa fa-paper-plane"></i> Send</button>
                                 </div>
                             </div>
                         </div>
+                        <div id="messagesContainer">
                         <!-------------------Chat Message--------------------------->
                         @for (int i = 0; i < Model.incidentValidationsDetailsViewModel?.IncidentValidationCommunicationHistoriesViewModelList.Count; i++)
                         {
@@ -1307,10 +1308,18 @@
                                     <div class="message-box">
                                         <div class="message-header">
                                             <strong>Current User</strong>
-                                            <span class="role">Super Admin</span>
-                                            <span class="role tag-yellow">Internal</span>
+                                            @* <span class="role">Super Admin</span>
+                                            <span class="role tag-yellow">Internal</span> *@
                                         </div>
                                         <div class="message-text">@communication?.Message</div>
+                                            @if (!string.IsNullOrEmpty(communication.Image))
+                                            {
+                                                <div class="attachments">
+                                                    <strong>Attachments:</strong>
+                                                    <i class="fas fa-paperclip"></i>
+                                                    <a href="#">@communication.Image</a>
+                                                </div>
+                                        }
                                         <div class="timestamp">@communication?.TimeStamp</div>
                                     </div>
                                 </div>
@@ -1322,16 +1331,25 @@
                                     <div class="message-box">
                                         <div class="message-header">
                                             <strong>Current User</strong>
-                                            <span class="role">Super Admin</span>
-                                            <span class="role tag-green">→ Distribution Emergency Team</span>
-                                            <span class="role tag-purple">Task: Notify & Dispatch</span>
+                                            @* <span class="role">Super Admin</span> *@
+                                           @*  <span class="role tag-green">→ Distribution Emergency Team</span>
+                                            <span class="role tag-purple">Task: Notify & Dispatch</span> *@
                                         </div>
                                         <div class="message-text">@communication?.Message</div>
+                                            @if (!string.IsNullOrEmpty(communication.Image))
+                                            {
+                                                <div class="attachments">
+                                                    <strong>Attachments:</strong>
+                                                    <i class="fas fa-paperclip"></i>
+                                                    <a href="#">@communication.Image</a>
+                                                </div>
+                                            }
                                         <div class="timestamp">@communication?.TimeStamp</div>
                                     </div>
                                 </div>
                             }
                         }
+                        </div>
 
                         <!-- Timeline -->
                         <div class="timeline">
@@ -1453,4 +1471,91 @@
         previewContainer.innerHTML = "";
       }
     });
+
+    function sendMessage() {
+        const messageText = document.getElementById('messageText').value.trim();
+        const fileInput = document.getElementById('fileInput');
+        
+        if (!messageText) {
+            alert('Please enter a message.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('IncidentId', @(Model.Id ?? 0));
+        formData.append('IncidentValidationId', @(Model.incidentValidationsDetailsViewModel?.IncidentValidationId ?? 0));
+        formData.append('Message', messageText);
+        formData.append('MessageType', 1);
+        
+        for (let i = 0; i < fileInput.files.length; i++) {
+            formData.append('File', fileInput.files[i]);
+        }
+
+        fetch('/Incidents/SaveCommunicationMessage', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Get filename if file was uploaded
+                const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : '';
+                
+                // Clear the form
+                document.getElementById('messageText').value = '';
+                document.getElementById('previewContainer').innerHTML = '';
+                fileInput.value = '';
+                
+                // Add the new message to the UI
+                addMessageToUI(messageText, new Date().toLocaleString(), fileName);
+                
+                // Update message count
+                updateMessageCount();
+            } else {
+                alert('Failed to send message: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while sending the message.');
+        });
+    }
+
+    function addMessageToUI(message, timestamp, attachmentUrl = '') {
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageCount = messagesContainer.children.length;
+        const isEven = messageCount % 2 === 0;
+        
+        const attachmentHtml = attachmentUrl ? `
+            <div class="attachments">
+                <strong>Attachments:</strong>
+                <i class="fas fa-paperclip"></i>
+                <a href="#">${attachmentUrl}</a>
+            </div>
+        ` : '';
+        
+        const messageHtml = `
+            <div class="chat-message ${isEven ? 'bg-yellow' : 'bg-blue'}">
+                <div class="avatar"><i class="fa-regular fa-user"></i></div>
+                <div class="message-box">
+                    <div class="message-header">
+                        <strong>Current User</strong>
+                    </div>
+                    <div class="message-text">${message}</div>
+                    ${attachmentHtml}
+                    <div class="timestamp">${timestamp}</div>
+                </div>
+            </div>
+        `;
+        
+        messagesContainer.insertAdjacentHTML('afterbegin', messageHtml);
+    }
+
+    function updateMessageCount() {
+        const messageCount = document.getElementById('messagesContainer').children.length;
+        const countElement = document.querySelector('.messages-count');
+        if (countElement) {
+            countElement.innerHTML = `<i class="fa fa-user"></i> ${messageCount} messages`;
+        }
+    }
 </script>

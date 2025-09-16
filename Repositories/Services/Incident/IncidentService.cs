@@ -559,6 +559,7 @@ namespace Repositories.Common
                                           select new IncidentValidationsDetailsViewModel
                                           {
                                               // IncidentValidation properties
+                                              IncidentValidationId = i.Id,
                                               ConfirmedSeverityLevelId = i.ConfirmedSeverityLevelId,
                                               DiscoveryPerimeterId = i.DiscoveryPerimeterId,
                                               ValidationNotes = i.ValidationNotes,
@@ -673,6 +674,7 @@ namespace Repositories.Common
 
                     incidentValidationsDetailsViewModel = new IncidentValidationsDetailsViewModel
                     {
+                        IncidentValidationId = incidentValidation.FirstOrDefault() != null ? incidentValidation.FirstOrDefault().IncidentValidationId : 0,
                         ConfirmedSeverityLevelId = incidentValidation.FirstOrDefault() != null ? incidentValidation.FirstOrDefault().ConfirmedSeverityLevelId : 0,
                         DiscoveryPerimeterId = incidentValidation.FirstOrDefault() != null ? incidentValidation.FirstOrDefault().DiscoveryPerimeterId : 0,
                         DiscoveryPerimeterName = GetPerimeter(incidentValidation.FirstOrDefault()?.DiscoveryPerimeterId),
@@ -810,6 +812,40 @@ namespace Repositories.Common
             }
         }
 
+        public async Task<bool> SaveCommunicationMessage(SaveCommunicationRequest request)
+        {
+            try
+            {
+                var imageUrl = await SaveAttachments(request.File);
+                var communicationHistory = new IncidentValidationCommunicationHistory
+                {
+                    IncidentId = request.IncidentId,
+                    IncidentValidationId = request.IncidentValidationId,
+                    UserName = "admin@eztrak.com", // Replace with actual user name
+                    Message = request.Message,
+                    TimeStamp = DateTime.Now.ToString("MMM dd hh:mm tt"),
+                    RecipientsIds = "",
+                    ImageUrl = imageUrl ?? "",
+                    MessageType = request.MessageType,
+                    CreatedOn = DateTime.UtcNow,
+                    CreatedBy = 1, // Replace with actual user ID
+                    UpdatedOn = DateTime.UtcNow,
+                    UpdatedBy = 1, // Replace with actual user ID
+                    IsDeleted = false,
+                    ActiveStatus = Enums.ActiveStatus.Active
+                };
+
+                await _db.IncidentValidationCommunicationHistories.AddAsync(communicationHistory);
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error SaveCommunicationMessage.");
+                return false;
+            }
+        }
+
         #region private methods
         private bool TryParseCallTime(string callTime, out DateTime dateTime)
         {
@@ -926,6 +962,6 @@ namespace Repositories.Common
             return string.Join(",", fileList);
         }
 
-        #endregion
+        #endregion 
     }
 }

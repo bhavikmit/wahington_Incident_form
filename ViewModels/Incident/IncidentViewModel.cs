@@ -137,8 +137,19 @@ namespace ViewModels.Incident
         public double Lng { get; set; }
     }
 
+    public class SaveCommunicationRequest
+    {
+        public long IncidentId { get; set; }
+        public long IncidentValidationId { get; set; }
+        public string Message { get; set; }
+        public string ImageUrl { get; set; }
+        public long MessageType { get; set; }
+        public List<IFormFile> File { get; set; }
+    }
+
     public class IncidentValidationsDetailsViewModel
     {
+        public long IncidentValidationId { get; set; }
         public long ConfirmedSeverityLevelId { get; set; }
         public long DiscoveryPerimeterId { get; set; }
         public string DiscoveryPerimeterName { get; set; }
@@ -159,7 +170,22 @@ namespace ViewModels.Incident
         public string Message { get; set; } = string.Empty;
         public string TimeStamp { get; set; } = string.Empty;
         public string ReceipientsIds { get; set; } = string.Empty;
-        public string ImageUrl { get; set; } = string.Empty;
+        private string _imageUrl = string.Empty;
+        public string ImageUrl
+        {
+            get => _imageUrl;
+            set
+            {
+                _imageUrl = value ?? string.Empty;
+                Image = string.IsNullOrWhiteSpace(_imageUrl)
+                    ? string.Empty
+                    : Path.GetFileName(_imageUrl);
+            }
+        }
+
+        // new property that auto-extracts from ImageUrl
+        public string Image { get; private set; } = string.Empty;
+
         public long MessageType { get; set; }
     }
 }

@@ -28,6 +28,7 @@
                 <label class="form-label" asp-for="incidentCellerInformation.CallerAddress">Caller Address <span class="text-danger">*</span></label>
                 <textarea type="number" class="form-control" asp-for="incidentCellerInformation.CallerAddress" id="callerAddress" placeholder="Street address, City, State, ZIP"></textarea>
                 <div class="invalid-feedback"></div>
+                <ul id="suggestionsCallAdd" class="suggestions-list"></ul>
             </div>
         </div>
     </div>
@@ -60,3 +61,28 @@
         <button type="button" class="btn btn-primary" id="nextToIncidentLocation">Next</button>
     </div>
 </div>
+
+<script>
+        $("#callerAddress").on("input", function () {
+        let query = $(this).val();
+        if (query.length > 2) {
+            $.getJSON("/Incidents/Suggest", { text: query }, function (data) {
+                let $list = $("#suggestionsCallAdd");
+                $list.empty().show();
+
+                $.each(data, function (i, item) {
+                    $list.append(
+                        `<li onclick="selectcallerAddressAddress('${item.replace(/'/g, "\\'")}')">${item}</li>`
+                    );
+                });
+            });
+        } else {
+            $("#suggestionsCallAdd").hide();
+        }
+    });
+
+    function selectcallerAddressAddress(address) {
+        $("#callerAddress").val(address);
+        $("#suggestionsCallAdd").empty();
+    }
+</script>

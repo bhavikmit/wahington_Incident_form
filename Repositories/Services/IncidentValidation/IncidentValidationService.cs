@@ -298,7 +298,8 @@ namespace Repositories.Common
                         {
                             Text = p.Name,
                             Value = p.Id.ToString()
-                        }).ToList()
+                        }).ToList(),
+                        PolicySteps = item.PolicySteps?.Split(',').ToList() ?? new List<string>()
                     });
                 }
 

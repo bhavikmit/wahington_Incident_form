@@ -108,6 +108,7 @@ namespace ViewModels.Incident
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public List<SelectListItem> assignTeams { get; set; } = new();
+        public List<string> PolicySteps { get; set; } = new();
     }
     public class IncidentCommunicationViewModel
     {

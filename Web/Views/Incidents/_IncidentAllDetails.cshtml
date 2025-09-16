@@ -1061,10 +1061,11 @@
 
                 <div id="worksteps" class="tab-content">
                     <div class="team-detail">
-                        <h3 class="team-detailTitle">Assigned Response Teams</h3>
+                        <h3 class="team-detailTitle">Assigned Policies and Procedures to Team(s)</h3>
+                        <div class="row AllteamSec">
                         @foreach(var team in Model.workStepsByPolicy)
                         {
-                            <div class="row AllteamSec">
+                           
                                 <div class="col-md-4">
                                     <div class="task-section">
                                         <div class="teamName-icon d-flex align-items-center">
@@ -1108,8 +1109,9 @@
 
                                     </div>
                                 </div>
-                            </div>
+                           
                         }
+                        </div>
 
                     </div>
                     

@@ -1,18 +1,25 @@
 ﻿using AutoMapper;
+
 using Centangle.Common.ResponseHelpers.Models;
+
 using DataLibrary;
+
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 using Models;
 using Models.Common.Interfaces;
+
 using Pagination;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+
 using ViewModels;
 using ViewModels.Shared;
 
@@ -77,7 +84,8 @@ namespace Repositories.Common
                     {
                         Id = p.Id,
                         Name = p.Name,
-                        Description = p.Description
+                        Description = p.Description,
+                        PolicySteps = p.PolicySteps?.Split(',').ToList() ?? new List<string>()
                     });
                 }
             }

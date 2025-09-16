@@ -6,7 +6,7 @@
 <table class="table align-middle text-left">
     <thead class="table-light">
         <tr>
-            <th>
+            <th style="display:none">
                 <input type="checkbox" id="selectAll" />
             </th>
             <th>Status</th>
@@ -29,7 +29,7 @@
             @foreach (var item in Model.incidentGridViewModel)
             {
                 <tr id="@item.Id">
-                    <td>
+                    <td style="display:none">
                         @if (item.StatusLegend == StatusLegendEnum.Submitted.ToString())
                         {
                             <input type="checkbox" class="rowCheckbox" value="@item.Id" />

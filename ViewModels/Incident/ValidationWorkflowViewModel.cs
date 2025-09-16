@@ -71,6 +71,7 @@ namespace ViewModels.Incident
         public string GasPresent { get; set; } = default!;
         public string HissingPresent { get; set; } = default!;
         public string VisibleDamagePresent { get; set; } = default!;
+        public string WaterPresent { get; set; } = default!;
         public string PeopleInjured { get; set; } = default!;
         public string EvacuationRequired { get; set; } = default!;
     }
@@ -108,6 +109,7 @@ namespace ViewModels.Incident
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public List<SelectListItem> assignTeams { get; set; } = new();
+        public List<string> PolicySteps { get; set; } = new();
     }
     public class IncidentCommunicationViewModel
     {

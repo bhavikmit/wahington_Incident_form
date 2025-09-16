@@ -83,7 +83,24 @@
                                     </div>
                                 </div>
                             </td>
-                            <td><span class="role-badge role-admin">@usermanagement.RoleName</span></td>
+                            <td>
+                                <span class="role-badge role-admin">
+                                    @{
+                                        string roleName = usermanagement.RoleName;
+                                        string displayRole = roleName;
+
+                                        if (roleName == "SystemAdministrator")
+                                        {
+                                            displayRole = "System Administrator";
+                                        }
+                                        else if (roleName == "SuperAdministrator")
+                                        {
+                                            displayRole = "Super Administrator";
+                                        }
+                                    }
+                                    @displayRole
+                                </span>
+                            </td>
                             <td>@usermanagement.Department</td>
                             <td>
                                 <i class="fa-regular fa-envelope"></i>@usermanagement.Email<br>

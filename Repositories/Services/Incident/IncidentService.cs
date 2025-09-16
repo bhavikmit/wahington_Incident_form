@@ -813,7 +813,6 @@ namespace Repositories.Common
             };
         }
 
-
         public async Task<List<IncidentLocationMapViewModel>> GetIncidentMapDetailsbyId(long incidentId)
         {
             List<IncidentLocationMapViewModel> locationMapViewModels = new();

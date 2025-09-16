@@ -1379,69 +1379,9 @@
 
                 <div class="role-container">
 
-                    <!-- Service Center -->
+                    <!-- Super Administrator -->
                     <div class="role-card">
-                        <div class="role-title service-center">Service Center</div>
-                        <p>Can create incidents and have read-only access to other pages. No settings access.</p>
-                        <h4>Permissions:</h4>
-                        <ul class="permissions">
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can manage settings</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can send alerts</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view settings</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can complete tasks</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
-                        </ul>
-                    </div>
-
-                    <!-- Dispatch -->
-                    <div class="role-card">
-                        <div class="role-title dispatch">Dispatch</div>
-                        <p>Can validate incidents, edit, communicate, send alerts. Can view and manage settings.</p>
-                        <h4>Permissions:</h4>
-                        <ul class="permissions">
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can edit incidents</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can manage settings</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can assign teams</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can validate incidents</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can view settings</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
-                        </ul>
-                    </div>
-
-                    <!-- Service Teams -->
-                    <div class="role-card">
-                        <div class="role-title service-teams">Service Teams</div>
-                        <p>Can only view assigned incidents, submit notes and mark tasks complete. No settings or desktop access.</p>
-                        <h4>Permissions:</h4>
-                        <ul class="permissions">
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can create incidents</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can manage settings</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can send alerts</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> has desktop access</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view all incidents</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view settings</li>
-                            <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
-                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view reports</li>
-                        </ul>
-                    </div>
-
-                    <!-- Master Admin -->
-                    <div class="role-card">
-                        <div class="role-title master-admin">Master Admin</div>
+                        <div class="role-title master-admin">Super Administrator</div>
                         <p>Full access to all functionality and system administration.</p>
                         <h4>Permissions:</h4>
                         <ul class="permissions">
@@ -1459,6 +1399,85 @@
                         </ul>
                     </div>
 
+                    <!-- System Administrator -->
+                    <div class="role-card">
+                        <div class="role-title dispatch">System Administrator</div>
+                        <p>Can validate incidents, edit, communicate, send alerts. Can view and manage settings.</p>
+                        <h4>Permissions:</h4>
+                        <ul class="permissions">
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can edit incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can manage settings</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can assign teams</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can validate incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view settings</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
+                        </ul>
+                    </div>
+
+                    <!-- Manager -->
+                    <div class="role-card">
+                        <div class="role-title service-center">Manager</div>
+                        <p>Can create incidents and have read-only access to other pages. No settings access.</p>
+                        <h4>Permissions:</h4>
+                        <ul class="permissions">
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can create incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can manage settings</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view settings</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can complete tasks</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
+                        </ul>
+                    </div>
+
+                    <!-- Technician -->
+                    <div class="role-card">
+                        <div class="role-title service-teams">Technician</div>
+                        <p>Can only view assigned incidents, submit notes and mark tasks complete. No settings or desktop access.</p>
+                        <h4>Permissions:</h4>
+                        <ul class="permissions">
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can create incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can manage settings</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can send alerts</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> has desktop access</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view all incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view settings</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view reports</li>
+                        </ul>
+                    </div>
+
+                    <!-- Guest -->
+                    <div class="role-card">
+                        <div class="role-title service-teams">Guest</div>
+                        <p>Can only view assigned incidents, submit notes and mark tasks complete. No settings or desktop access.</p>
+                        <h4>Permissions:</h4>
+                        <ul class="permissions">
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can create incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can edit incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can manage settings</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can assign teams</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can send alerts</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> has desktop access</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can validate incidents</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view all incidents</li>
+                            <li class="denied"><i class="fa-solid fa-xmark"></i> can view settings</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can complete tasks</li>
+                            <li class="allowed"><i class="fa-solid fa-check"></i> can view reports</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 

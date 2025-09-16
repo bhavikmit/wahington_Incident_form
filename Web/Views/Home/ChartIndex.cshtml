@@ -597,7 +597,7 @@
                     <div class="tab-pane fade" id="chartsTab" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h6 class="fw-bold anakyticsTitle">Incident Analytics</h6>
-                            <span class="text-muted small"><i class="fa fa-arrow-trend-up"></i>(@Model.IncidentDashboard.TotalIncidentCount) total incidents analyzed</span>
+                            <span class="text-muted small" style="display:none"><i class="fa fa-arrow-trend-up"></i>(@Model.IncidentDashboard.TotalIncidentCount) total incidents analyzed</span>
                         </div>
                         <p class="text-muted" style="display:none">Visual breakdown of incident data and trends</p>
                         <div class="row">
@@ -616,8 +616,8 @@
                             <div class="col-md-3">
                                 <div class="stat-box">
                                     <div>
-                                        <div class="stat-label">Response Rate</div>
-                                        <div class="stat-value text-success">13%</div>
+                                        <div class="stat-label">Total Incidents</div>
+                                        <div class="stat-value text-success">@Model.IncidentDashboard.TotalIncidentCount</div>
                                     </div>
                                     <div class="icon-box icon-chart"></div>
                                 </div>

@@ -12,5 +12,6 @@ namespace ViewModels
 
         [Display(Name = "Description", Prompt = "Description")]
         public string? Description { get; set; }
+        public List<string> PolicySteps { get; set; }
     }
 }

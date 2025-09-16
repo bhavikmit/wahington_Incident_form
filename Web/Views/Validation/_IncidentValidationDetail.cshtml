@@ -3,7 +3,54 @@
 @using ViewModels.Incident
 @model ValidationWorkflowViewModel
 
+<style>
+    .IVPolicyList .card {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        transition: 0.3s;
+    }
 
+        .IVPolicyList .card.highlight {
+            /* border: 2px solid #ff8800 !important;
+            background: #fff7f0; */
+
+            border: 2px solid #93bfab !important;
+            background: #ecfdf5;
+        }
+
+        .IVPolicyList .card h3 {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0073e6;
+            margin-bottom: 15px;
+        }
+
+    .IVPolicyList ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 10px 0;
+    }
+
+        .IVPolicyList ul li {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+            .IVPolicyList ul li input {
+                margin-right: 8px;
+            }
+
+    .IVPolicyList .add-step {
+        font-size: 14px;
+        color: #919191;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+</style>
 <div class="container-fluid">
     <div class="validation-center">
         <div class="workflow">
@@ -160,6 +207,7 @@
                                 @RenderBox("Visible Damage/Fire", Model.IVDetails.VisibleDamagePresent)
                                 @RenderBox("People Injured", Model.IVDetails.PeopleInjured)
                                 @RenderBox("Evacuation Required", Model.IVDetails.EvacuationRequired)
+                                @RenderBox("Water Present", Model.IVDetails.WaterPresent)
                             </div>
                         </div>
                     </div>
@@ -195,7 +243,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Validation Notes</label>
+                                    <label>Validation Notes <span style="color:red">*</span></label></label>
                                     <textarea asp-for="@Model.IVValidation.ValidationNotes" placeholder="Add validation notes, observations, or additional context..."></textarea>
                                 </div>
                             </div>
@@ -261,7 +309,7 @@
                                 </div>
                             }
 
-                            @* <div class="summary">
+                            <div class="summary" style="display:none">
                                 <h3>Assignment Summary</h3>
                                 <div class="summary-card">
 
@@ -275,7 +323,7 @@
                                         <div class="value" id="estResponseTeam">N/A</div>
                                     </div>
                                 </div>
-                            </div> *@
+                            </div>
 
                         </div>
                     </div>
@@ -304,7 +352,7 @@
                         <div class="Bordercard">
                             <div class="polices-task-add d-flex align-items-center justify-content-between">
                                 <h4>Add Policies</h4>
-                                <div class="add-task"><i class="fa fa-plus" style="cursor:pointer" id="add_task_policy">Add Task</i></div>
+                                @* <div class="add-task"><i class="fa fa-plus" style="cursor:pointer" id="add_task_policy">Add Task</i></div> *@
                             </div>
                             <div class="form-box" id="div_Policy">
                                 <input type="text" placeholder="Task title..." id="task_policy_title">
@@ -318,13 +366,31 @@
                             <div class="task-grid IVPolicyList">
                                 @foreach (var item in Model.IVPolicyList)
                                 {
-                                    <div class="task-card">
+                                    @*  <div class="task-card">
                                         <h5>@item.Name</h5>
                                         <p>@item.Description</p>
                                         <a href="#" id="add_policy_workflow" data-id="@item.PolicyId"
                                            data-teams='@Html.Raw(Json.Serialize(item.assignTeams))'><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                                    </div> *@
+
+                                    <div class="card task-card" id="div_@item.PolicyId">
+                                        <h3>@item.Name</h3>
+                                        <ul>
+                                            @if (item.PolicySteps != null && item.PolicySteps.Count > 0)
+                                            {
+                                                @foreach (var step in item.PolicySteps)
+                                                {
+                                                    <li> <input type="checkbox" checked> @step</li>
+                                                }
+                                            }
+                                        </ul>
+                                        <a href="#" id="add_policy_workflow" data-id="@item.PolicyId"
+                                           data-teams='@Html.Raw(Json.Serialize(item.assignTeams))' 
+                                           class="add-step"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
                                     </div>
+
                                 }
+
                             </div>
                         </div>
                         <div class="Bordercard selectPoliciesTask">
@@ -346,27 +412,6 @@
 
                         <div class="Bordercard newCommunication">
                             <h3>New Communication</h3>
-
-                            @*  <div class="form-grid" style="display:none">
-                                <div>
-                                    <label for="msgType">Message Type</label>
-                                    <select id="msgType">
-                                        <option value="1">Internal Note</option>
-                                        <option value="2">Emergency Alert</option>
-                                        <option value="3">Team Notification</option>
-                                    </select>
-                                </div>
-                                <div class="recipients">
-                                    @foreach (var itemTeam in Model.IVPolicyList.Take(1).ToList())
-                                    {
-                                        @foreach (var item in itemTeam.assignTeams)
-                                        {
-                                            <label><input type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
-                                        }
-                                    }
-                                </div>
-                            </div> *@
-
                             <div>
                                 <label for="message">Message</label>
                                 <textarea id="message" placeholder="Enter your message..."></textarea>
@@ -384,7 +429,6 @@
                                     <div id="image-thumbnails" class="d-flex flex-wrap">
                                         <img class="img-responsive img-thumbnail me-2 mb-2"
                                              src="@Model.IVCommunication.ImageUrl"
-                                             alt="attachment"
                                              style="max-width:120px; max-height:120px;">
                                     </div>
 

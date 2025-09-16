@@ -183,6 +183,7 @@ namespace Repositories.Common
                     HissingPresent = GetIndicator(incident.HissingPresentId),
                     PeopleInjured = GetIndicator(incident.PeopleInjuredId),
                     VisibleDamagePresent = GetIndicator(incident.VisibleDamagePresentId),
+                    WaterPresent = GetIndicator(incident.WaterPresentId),
                 };
             }
             catch (Exception ex)
@@ -298,7 +299,8 @@ namespace Repositories.Common
                         {
                             Text = p.Name,
                             Value = p.Id.ToString()
-                        }).ToList()
+                        }).ToList(),
+                        PolicySteps = item.PolicySteps?.Split(',').ToList() ?? new List<string>()
                     });
                 }
 

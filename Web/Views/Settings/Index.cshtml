@@ -184,9 +184,10 @@
     }
 
         .content h3 {
-            margin: 0 0 20px;
+            margin: 0;
             font-size: 18px;
             font-weight: bold;
+            line-height:normal;
         }
 
     /* Tab visibility */
@@ -1225,7 +1226,7 @@
             <!-- Content -->
             <div class="content" id="rightContent">
                 <div id="source" class="setting-tab-content active">
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Source</h3>
                         <button class="btn btn-primary btnAddNewSource"><i class="fa-solid fa-plus"></i> Add New</button>
                     </div>
@@ -1261,7 +1262,7 @@
                     </div>
                 </div>
                 <div id="asset" class="setting-tab-content">
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Asset Types</h3>
                         <button class="btn btn-primary btnAddNewAsset"><i class="fa-solid fa-plus"></i> Add New</button>
                     </div>
@@ -1272,7 +1273,7 @@
 
                 </div>
                <div id="Ipolicies" class="setting-tab-content">
-                        <div class="d-flex align-item-center justify-content-between mb-2">
+                        <div class="d-flex align-item-center justify-content-between mb-3">
                             <h3 class="mb-0">Policy</h3>
                             <button class="btn-add btnAddNewPolicy"><i class="fa-solid fa-plus"></i> Add Policy</button>
                                                         
@@ -1311,7 +1312,7 @@
                 </div>
 
                 <div id="teams" class="setting-tab-content">
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Assign Response Teams</h3>
                         <button class="btn btn-primary btnAddNew "><i class="fa-solid fa-plus"></i> Add New</button>
                     </div>
@@ -1364,7 +1365,7 @@
                         <p>Manage system users and their role-based permissions</p>
                     </div>
                 </div>
-                <button class="btn-add btn btn-primary btnAddNewUserManagement"><i class="fa-solid fa-plus"></i> Add User</button>
+                <button class="btn-add btn btn-primary btnAddNewUserManagement" data-bs-toggle="modal" data-bs-target="#addUserModal"><i class="fa-solid fa-plus"></i> Add User</button>
             </div>
 
 
@@ -1491,7 +1492,7 @@
                 <!-- Content -->
                 <div class="content" id="rightContent">
                     <div id="Iteams" class="team-tab-content active teamRightSec">
-                        <div class="d-flex align-item-center justify-content-between mb-2">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
                             <h3 class="mb-0">Teams</h3>
                             <button class="btn-add btnAddNewIncidentTeam"><i class="fa-solid fa-plus"></i> Add Team</button>
                         </div>
@@ -1503,7 +1504,7 @@
                     </div>
                    
                    <div id="Iusers" class="team-tab-content userRightSec">
-                        <div class="d-flex align-item-center justify-content-between mb-2">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
                             <h3 class="mb-0">Users</h3>
                             <button class="btn-add btnAddNewUser"><i class="fa-solid fa-plus"></i> Add User</button>
                         </div>

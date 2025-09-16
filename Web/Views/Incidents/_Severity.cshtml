@@ -10,7 +10,7 @@
             <div class="mb-3">
                 <label class="form-label" asp-for="severityLevelId">Severity<span class="text-danger">*</span></label>
                 <select class="form-select" id="severity" required asp-for="severityLevelId">
-                    <option value="" selected>-- Select --</option>
+                    <option value="" selected>Select severity</option>
                     @foreach (var item in Model.severityLevels)
                     {
                         <option value="@item.Value">@item.Text</option>

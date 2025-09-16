@@ -1,7 +1,13 @@
 ﻿@using System.Web
 @using ViewModels
 @model List<UserManagementModifyViewModel>
+<style>
+    i.fa-edit{color:darkorange}
 
+    i.fa-trash-alt{
+        color:red;
+    }
+</style>
 
 <div class="row g-3 mb-4 topCard">
     <div class="col-md-3">
@@ -95,8 +101,8 @@
                                 @(usermanagement.LastLogin == DateTime.MinValue ? " " : usermanagement.LastLogin.ToString("dd-MM-yyyy HH:mm:ss"))
                             </td>
                             <td class="actions">
-                                <i class="fa-solid fa-pen editusermanagement" id="@usermanagement.Id"></i>
-                                <i class="fa-solid fa-trash deleteusermanagement" id="@usermanagement.Id"></i>
+                                <i class="fa-regular fa-edit editusermanagement" id="@usermanagement.Id"></i>
+                                <i class="far fa-trash-alt  deleteusermanagement" id="@usermanagement.Id"></i>
                             </td>
                         </tr>
                     }

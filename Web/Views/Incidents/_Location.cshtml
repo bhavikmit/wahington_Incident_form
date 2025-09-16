@@ -37,7 +37,7 @@
         <div class="col-md-12">
             <div class="mb-3">
                 <label class="form-label" asp-for="incidentiLocation.Address">Address <span class="text-danger">*</span></label>
-                <textarea type="text" class="form-control" id="locAddress" asp-for="incidentiLocation.Address" placeholder="Street, city, state..."></textarea>
+                <textarea type="text" class="form-control" id="locAddress" asp-for="incidentiLocation.Address" placeholder="Enter incident address for GIS lookup"></textarea>
                 <ul id="suggestions" class="suggestions-list"></ul>
 
                 <div class="invalid-feedback"></div>
@@ -56,14 +56,14 @@
         <div class="col-md-6">
             <div class="mb-3">
                 <label class="form-label" asp-for="incidentiLocation.Landmark">Intersection / Landmark<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="landmark" required asp-for="incidentiLocation.Landmark" />
+                <input type="text" class="form-control" id="landmark" required asp-for="incidentiLocation.Landmark" placeholder="e.g., Main St & Oak Ave />
                 <div class="invalid-feedback"></div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="mb-3">
                 <label class="form-label" asp-for="incidentiLocation.ServiceAccount">Service Account # </label>
-                <input type="text" class="form-control" id="serviceAct" asp-for="incidentiLocation.ServiceAccount" />
+                <input type="text" class="form-control" id="serviceAct" placeholder="Customer accoutn number" asp-for="incidentiLocation.ServiceAccount" />
 
             </div>
         </div>

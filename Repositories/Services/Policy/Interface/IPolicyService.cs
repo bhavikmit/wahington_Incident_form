@@ -17,5 +17,8 @@ namespace Repositories.Common
         Task<long> UpdatePolicy(PolicyModifyViewModel viewModel);
         Task<PolicyModifyViewModel> GetPolicyById(long id);
         Task<long> DeletePolicy(long id);
+       // Task<long> AddPolicyStep(long policyId, string step);
+        Task<long> AddPolicySteps(long policyId, IEnumerable<string> steps);
+
     }
 }

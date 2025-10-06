@@ -1,4 +1,6 @@
-﻿$(function () {
+﻿
+
+$(function () {
     GetAllRelationships();
 
     // start setting tabs
@@ -682,7 +684,7 @@ async function SaveRelationships() {
         } else {
             SwalErrorAlert(result.message || "Failed to save relation.");
         }
-    } catch (error) {
+    } catch (error) {   
         SwalErrorAlert("Error while saving relation!");
         console.error(error);
     } finally {
@@ -1618,6 +1620,7 @@ async function DeletePolicyById(id) {
 
 async function SavePolicy() {
     try {
+        debugger;
         let form = [];
         let formData = new FormData();
         let obj = $("#NewPolicyForm")[0];
@@ -1838,3 +1841,4 @@ async function GetUserById(id) {
     } catch (error) { console.error("Error loading user:", error); }
     finally { hideLoader($(".setting")); }
 }
+

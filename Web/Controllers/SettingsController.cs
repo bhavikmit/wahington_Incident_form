@@ -4,6 +4,7 @@ using Repositories.Common;
 
 using ViewModels;
 using ViewModels.Incident;
+using ViewModels.Policy;
 using ViewModels.Users;
 
 namespace Web.Controllers
@@ -632,6 +633,21 @@ namespace Web.Controllers
 
             try
             {
+                // ensure PolicySteps is populated from the incoming form string (hidden input)
+                var stepsRaw = Request.Form["PolicySteps"].FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(stepsRaw))
+                {
+                    policy.PolicySteps = stepsRaw
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => s.Trim())
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .ToList();
+                }
+                else
+                {
+                    policy.PolicySteps = new List<string>();
+                }
+
                 long Id = 0;
                 if (policy.Id > 0)
                 {
@@ -683,6 +699,27 @@ namespace Web.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+       
+        [HttpPost]
+        public async Task<IActionResult> AddPolicySteps([FromBody] AddPolicyStepsRequest req)
+        {
+            if (req == null || req.PolicyId <= 0 || req.Steps == null || !req.Steps.Any())
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                var updatedId = await _iPolicyService.AddPolicySteps(req.PolicyId, req.Steps);
+                if (updatedId == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "Failed to add procedures." });
+
+                return Ok(new { success = true, data = "Procedures added successfully." });
+            }
+            catch (Exception ex)
+            {
+               // _logger?.LogError(ex, "Error AddPolicySteps");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "An unexpected error occurred." });
             }
         }
         #endregion

@@ -21,13 +21,15 @@ namespace Web.Controllers
         private readonly IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> _iPolicyService;
         private readonly IUserManagementService<UserManagementModifyViewModel, UserManagementModifyViewModel, UserDetailViewModel> _iUserManagementService;
         private readonly IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> _iUsersinService;
+        private readonly IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> _iProgressService;
         #endregion
 
         #region Ctor
         public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService, ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> iSeverityLevelService, IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> iStatusLegendService, IAssetIdService<AssetIdModifyViewModel, AssetIdModifyViewModel, AssetIdDetailViewModel> iAssetIdService,
             IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService, IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> iIncidentTeamService,
             IUserManagementService<UserManagementModifyViewModel,UserManagementModifyViewModel, UserDetailViewModel> iUserManagementService,
-            IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService, IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> iusersinService)
+            IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService, IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> iusersinService,
+            IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService)
         {
             _iRelationshipService = iRelationshipService;
             _iEventTypeService = iEventTypeService;
@@ -39,6 +41,7 @@ namespace Web.Controllers
             _iUserManagementService = iUserManagementService;
             _iPolicyService = iPolicyService;
             _iUsersinService = iusersinService;
+            _iProgressService = iProgressService;
         }
         #endregion
 
@@ -846,6 +849,88 @@ namespace Web.Controllers
         }
         #endregion
 
+        #region Progress
+        [HttpGet]
+        public async Task<IActionResult> GetAllProgress()
+        {
+            var model = await _iProgressService.GetAllProgress();
+            return PartialView("~/Views/Settings/Progress/_ListProgress.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddProgress()
+        {
+            var model = new ProgressModifyViewModel();
+            return PartialView("~/Views/Settings/Progress/_AddProgress.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProgressById(long id)
+        {
+            var model = await _iProgressService.GetProgressById(id);
+            return PartialView("~/Views/Settings/Progress/_AddProgress.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveProgress([FromForm] ProgressModifyViewModel progress)
+        {
+            if (progress == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (progress.Id > 0)
+                {
+                    Id = await _iProgressService.UpdateProgress(progress);
+                }
+                else
+                {
+                    Id = await _iProgressService.SaveProgress(progress);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save progress." });
+
+                var successMsg = $"Progress saved successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteProgressById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (id > 0)
+                {
+                    Id = await _iProgressService.DeleteProgress(id);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete progress." });
+
+                var successMsg = $"Progress deleted successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        #endregion
     }
 }
-

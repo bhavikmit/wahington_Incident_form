@@ -106,7 +106,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<IncidentValidationCommunicationHistory> IncidentValidationCommunicationHistories { get; set; }
     public DbSet<IncidentValidationPolicy> IncidentValidationPolicies { get; set; }
     public DbSet<Progress> Progress { get; set; }
-
+    public DbSet<AdditionalLocations> AdditionalLocations { get; set; }
 
     [DbFunction("GetWeekNumber", "dbo")]
     public int GetWeekNumber(DateTime dateToCheck)

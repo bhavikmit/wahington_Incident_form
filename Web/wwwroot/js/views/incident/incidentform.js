@@ -36,8 +36,8 @@
         }
     });
 
-    $(document).off("click", "#nextToIncidentDetials");
-    $(document).on("click", "#nextToIncidentDetials", function (e) {
+    $(document).off("click", "#nextToAdditionalLocations");
+    $(document).on("click", "#nextToAdditionalLocations", function (e) {
         e.preventDefault();
 
         var isValid = true;
@@ -60,6 +60,16 @@
                 clearError($field);
             }
         });
+
+        if (isValid) {
+            $("#pills-additional-tab").trigger("click");
+        }
+    });
+
+    $(document).off("click", "#nextToIncidentDetials");
+    $(document).on("click", "#nextToIncidentDetials", function (e) {
+        e.preventDefault();
+        var isValid = true;
 
         if (isValid) {
             $("#pills-detail-tab").trigger("click");
@@ -287,6 +297,12 @@
     $(document).on("click", "#backButtonToCaller", function (e) {
         e.preventDefault();
         $("#pills-caller-tab").trigger("click");
+    });
+
+    $(document).off("click", "#backButtonToAdditionalLoc");
+    $(document).on("click", "#backButtonToAdditionalLoc", function (e) {
+        e.preventDefault();
+        $("#pills-additional-tab").trigger("click");
     });
 
     // Open Add

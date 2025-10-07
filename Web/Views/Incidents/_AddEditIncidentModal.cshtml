@@ -31,6 +31,12 @@
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="pills-additional-tab" data-bs-toggle="pill"
+                                                data-bs-target="#pills-additional" type="button" role="tab">
+                                            <i class="fa fa-book-open"></i>Additional Locations
+                                    </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
                                         <button class="nav-link " id="pills-detail-tab" data-bs-toggle="pill"
                                                 data-bs-target="#pills-detail" type="button" role="tab">
                                             <i class="fa fa-list-check"></i>Incident Details
@@ -74,6 +80,9 @@
                                 </div>
                                 <div class="tab-pane fade" id="pills-location" role="tabpanel" aria-labelledby="location-tab">
                                     @await Html.PartialAsync("~/Views/Incidents/_Location.cshtml", Model)
+                                </div>
+                                <div class="tab-pane fade" id="pills-additional" role="tabpanel" aria-labelledby="additional-tab">
+                                    @await Html.PartialAsync("~/Views/Incidents/_AdditionalLocations.cshtml", Model)
                                 </div>
                                 <div class="tab-pane fade" id="pills-detail" role="tabpanel" aria-labelledby="detail-tab">
                                     @await Html.PartialAsync("~/Views/Incidents/_IncidentDetails.cshtml", Model)

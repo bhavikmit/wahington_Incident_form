@@ -106,7 +106,7 @@ namespace Repositories.Common
                 var policy = new Policy
                 {
                     Name = viewModel.Name,
-                    Description = viewModel.Description
+                    Description = viewModel.Description ?? string.Empty,
                 };
 
                 await _db.Policies.AddAsync(policy);
@@ -138,7 +138,7 @@ namespace Repositories.Common
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
                 policy.Name = viewModel.Name;
-                policy.Description = viewModel.Description;
+                policy.Description = viewModel.Description ?? string.Empty;
 
                 try
                 {

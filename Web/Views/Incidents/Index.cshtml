@@ -63,7 +63,7 @@
 
     .badge-low {
         background-color: limegreen !important;
-        color:#ffffff !important;
+        color: #ffffff !important;
     }
 
     .badge-medium {
@@ -103,57 +103,59 @@
     }
 
     /* .incident-table {
-        overflow-y: hidden;
-        overflow-x: auto;
-        overflow: visible !important;
-    } */
-    .incident-table.table-responsive{
+            overflow-y: hidden;
+            overflow-x: auto;
+            overflow: visible !important;
+        } */
+    .incident-table.table-responsive {
         width: 100%;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
+
     .incident-table {
         background: #fff;
         border: 1px solid #e5e7eb;
         border-radius: 12px;
-        overflow: auto; 
-        min-height:calc(100vh - 280px);
+        overflow: auto;
+        min-height: calc(100vh - 280px);
     }
-    .incident-table input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    width: 18px;
-    height: 18px;
-    border: 2px solid #555;
-    border-radius: 4px;
-    cursor: pointer;
-    position: relative;
-    vertical-align: middle;
-    margin: 0;
-    outline: none;
-    background-color: #fff;
-    transition: all 0.2s ease-in-out;
-}
 
-/* When checked */
-.incident-table input[type="checkbox"]:checked {
-    background-color: #007bff;
-    border-color: #007bff;
-}
+        .incident-table input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #555;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            vertical-align: middle;
+            margin: 0;
+            outline: none;
+            background-color: #fff;
+            transition: all 0.2s ease-in-out;
+        }
 
-/* Tick mark */
-.incident-table input[type="checkbox"]:checked::after {
-    content: "";
-    position: absolute;
-    left: 5px;
-    top: 1px;
-    width: 5px;
-    height: 10px;
-    border: solid #fff;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
+            /* When checked */
+            .incident-table input[type="checkbox"]:checked {
+                background-color: #007bff;
+                border-color: #007bff;
+            }
+
+                /* Tick mark */
+                .incident-table input[type="checkbox"]:checked::after {
+                    content: "";
+                    position: absolute;
+                    left: 5px;
+                    top: 1px;
+                    width: 5px;
+                    height: 10px;
+                    border: solid #fff;
+                    border-width: 0 2px 2px 0;
+                    transform: rotate(45deg);
+                }
 
         .incident-table table {
             width: 100%;
@@ -193,9 +195,9 @@
         .customTableDropdown .dropdown-toggle::before {
             display: none;
             /*    width: 11px;
-                                    filter: brightness(1) !important;
-                                    left: 81% !important;
-                                    rotate: 92deg !important; */
+                                        filter: brightness(1) !important;
+                                        left: 81% !important;
+                                        rotate: 92deg !important; */
         }
 
         .customTableDropdown .dropdown-toggle.status-started::before {
@@ -210,7 +212,7 @@
         color: #15803d;
     }
 
-    .historyIcon ,
+    .historyIcon,
     .validateIcon {
         color: #7e22ce;
     }
@@ -233,13 +235,14 @@
     .AddIncident {
         margin-left: 16px;
     }
-    .right-sec .btn{
-        width:auto !important;
+
+    .right-sec .btn {
+        width: auto !important;
     }
 
-    .right-sec .btn i.fa{
-        margin-right:6px;
-    }
+        .right-sec .btn i.fa {
+            margin-right: 6px;
+        }
 
     .incidentFilter {
         margin-bottom: 20px;
@@ -309,7 +312,7 @@
         width: 20px;
         height: 20px;
         margin-right: 8px;
-        margin-top:0;
+        margin-top: 0;
     }
 
     #addIncidentModal .form-check-label {
@@ -322,61 +325,61 @@
     }
 
     /********************View Incident css***************************/
-  /*   #incidentDetailsModal .badge-status {
-        background-color: #dc3545;
-        font-size: 0.875rem;
-        padding: 0.4rem 0.8rem;
-    }
+    /*   #incidentDetailsModal .badge-status {
+            background-color: #dc3545;
+            font-size: 0.875rem;
+            padding: 0.4rem 0.8rem;
+        }
 
-    #incidentDetailsModal .badge-severity {
-        background-color: #28a745;
-        font-size: 0.875rem;
-        padding: 0.4rem 0.8rem;
-    }
+        #incidentDetailsModal .badge-severity {
+            background-color: #28a745;
+            font-size: 0.875rem;
+            padding: 0.4rem 0.8rem;
+        }
 
-    #incidentDetailsModal .badge-unknown {
-        background-color: #e5e7eb;
-        color: #374151;
-    }
+        #incidentDetailsModal .badge-unknown {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
 
-    #incidentDetailsModal .badge-yes {
-        background-color: #28a745;
-    }
+        #incidentDetailsModal .badge-yes {
+            background-color: #28a745;
+        }
 
-    #incidentDetailsModal .badge-no {
-        background-color: #c6f6d5;
-        color: #155724;
-    }
+        #incidentDetailsModal .badge-no {
+            background-color: #c6f6d5;
+            color: #155724;
+        }
 
-    #incidentDetailsModal .asset-badge {
-        background-color: #e5e7eb;
-        color: #374151;
-        margin-right: 0.25rem;
-        font-size: 0.8rem;
-    }
+        #incidentDetailsModal .asset-badge {
+            background-color: #e5e7eb;
+            color: #374151;
+            margin-right: 0.25rem;
+            font-size: 0.8rem;
+        }
 
-    #incidentDetailsModal .section-title {
-        font-weight: 600;
-        font-size: 19px;
-        margin-bottom: 0.75rem;
-    }
+        #incidentDetailsModal .section-title {
+            font-weight: 600;
+            font-size: 19px;
+            margin-bottom: 0.75rem;
+        }
 
-    #incidentDetailsModal .info-label {
-        font-weight: 500;
-    }
+        #incidentDetailsModal .info-label {
+            font-weight: 500;
+        }
 
-    #incidentDetailsModal .card,
-    #noteIncidentModal .card,
-    #historyIncidentModal .card {
-        border-radius: 6px;
-        background: #f7f7f7;
-        margin-bottom: 22px;
-        padding: 16px;
-    }
+        #incidentDetailsModal .card,
+        #noteIncidentModal .card,
+        #historyIncidentModal .card {
+            border-radius: 6px;
+            background: #f7f7f7;
+            margin-bottom: 22px;
+            padding: 16px;
+        }
 
-    .callerInfo i.fa {
-        margin-right: 8px;
-    } */
+        .callerInfo i.fa {
+            margin-right: 8px;
+        } */
     /********************Note Modal Css********************/
     #noteIncidentModal .card h3 {
         margin-top: 0;
@@ -657,32 +660,32 @@
         overflow-x: auto !important;
         -webkit-overflow-scrolling: touch !important;
     }
-/* 
-    .incident-photos {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 7px;
-    }
-
-    .photo-thumb {
-        width: 100px;
-        height: 100px;
-        border-radius: 8px;
-        overflow: hidden;
-        cursor: pointer;
-        border: 1px solid #ddd;
-    }
-
-        .photo-thumb img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
+    /*
+        .incident-photos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
         }
 
-        .photo-thumb:hover img {
-            transform: scale(1.05);
-        } */
+        .photo-thumb {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #ddd;
+        }
+
+            .photo-thumb img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                transition: transform 0.3s;
+            }
+
+            .photo-thumb:hover img {
+                transform: scale(1.05);
+            } */
 
     .file-upload {
         margin: 12px 0;
@@ -734,10 +737,11 @@
     }
 
     .ValidateIncident {
-        background-color:#16a34a;
-        color:#fff;
-        border-color:#16a34a;
+        background-color: #16a34a;
+        color: #fff;
+        border-color: #16a34a;
     }
+
     .eventCheck {
         margin-right: 10px;
         width: 100%;
@@ -860,246 +864,247 @@
     }
     /***********************Validate Modal**********************/
     #ValidateIncidentModal .modal-header h2 {
-  margin: 0;
-  font-size: 20px;
-  line-height:normal;
-}
+        margin: 0;
+        font-size: 20px;
+        line-height: normal;
+    }
 
-#ValidateIncidentModal .modal-header .sub-text {
-  font-size: 14px;
-  color: #666;
-  margin-bottom:0;
-}
+    #ValidateIncidentModal .modal-header .sub-text {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 0;
+    }
 
-#ValidateIncidentModal .close-btn {
-  position: absolute;
-  top: 16px;
-  right: 20px;
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-}
+    #ValidateIncidentModal .close-btn {
+        position: absolute;
+        top: 16px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+    }
 
-/* Incident Card */
-#ValidateIncidentModal .incident-card {
-  border: 1px solid #eee;
-  border-radius: 8px;
-  margin-bottom: 16px;
-  padding: 16px;
-  background: #fff;
-}
-
-
-.incident-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.incident-header h3 {
-  margin: 0;
-  font-size:18px;
-  line-height:normal;
-
-}
-
-.incident-meta {
-  font-size: 14px;
-  margin: 2px 0;
-  color: #333;
-}
-
-.incident-meta .low {
-  color: #28a745;
-  font-weight: bold;
-}
-
-.incident-location {
-  font-size: 13px;
-  color: #666;
-}
-
-.incident-date {
-  font-size: 13px;
-  color: #666;
-}
-
-/* Form Section */
-.incident-form {
-  margin-top: 16px;
-}
-
-#ValidateIncidentModal .form-row {
-      display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-    align-items: end;
-}
-
-#ValidateIncidentModal .form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-#ValidateIncidentModal .form-group label {
-  font-size: 15px;
-  margin-bottom: 4px;
-  font-weight:600;
-}
-
-#ValidateIncidentModal .form-group select,
-#ValidateIncidentModal .form-group textarea {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-#ValidateIncidentModal .form-group textarea {
-  resize: vertical;
-  min-height: 60px;
-}
-
-.full-width {
-  margin-top: 12px;
-  width: 100%;
-}
-
-/* Buttons */
-#ValidateIncidentModal .btn-false-alarm {
-  padding: 10px 16px;
-  background: #e95420;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  white-space: nowrap;
-  font-size: 14px;
-}
-
-.btn-false-alarm:hover {
-  background: #cf491d;
-}
-
-#ValidateIncidentModal .location-preview {
-  background: #f9f9f9;
-  border-radius: 6px;
-  padding: 12px;
-  margin-top: 16px;
-  font-size: 14px;
-}
-#ValidateIncidentModal .location-preview p{
-    font-size:14px;
-    font-weight:400;
-    line-height:normal;
-    margin-bottom:3px;
-}
-
-#ValidateIncidentModal .location-preview a {
-  color: #007bff;
-  text-decoration: none;
-  font-weight:700;
-}
-
-#ValidateIncidentModal .location-preview a:hover {
-  text-decoration: underline;
-}
-
-/* Footer */
-#ValidateIncidentModal .modal-footer {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 20px;
-  border-top: 1px solid #eee;
-  background: #fafafa;
-}
-
-#ValidateIncidentModal .btn-cancel {
-  background: #495057;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 16px;
-  cursor: pointer;
-}
-
-#ValidateIncidentModal .btn-validate {
-  background: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 10px 16px;
-  cursor: pointer;
-}
-
-#ValidateIncidentModal .btn-cancel i,
-#ValidateIncidentModal .btn-validate i {
-  margin-right: 6px;
-}
-#ValidateIncidentModal .false-alarm-box {
-  background: #fff8f2;
-  border: 1px solid #f5c59d;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 20px 0;
-}
-
-#ValidateIncidentModal .false-alarm-box h4 {
-  margin: 0 0 10px;
-  color: #8b3e00;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-/* Textarea */
-#ValidateIncidentModal .false-alarm-box textarea {
-  width: 100%;
-  min-height: 80px;
-  padding: 10px;
-  border: 1px solid #f5c59d;
-  border-radius: 6px;
-  font-size: 14px;
-  outline: none;
-  resize: vertical;
-}
-
-#ValidateIncidentModal .false-alarm-box textarea:focus {
-  border-color: #e67e22;
-  box-shadow: 0 0 4px rgba(230,126,34,0.3);
-}
-
-/* Action Buttons */
-#ValidateIncidentModal .false-alarm-actions {
-  margin-top: 12px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-#ValidateIncidentModal .false-alarm-actions button {
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 500;
-}
-
-/* Button Variants */
-#ValidateIncidentModal .btn-undo {
-  background: #495057;
-  color: #fff;
-}
+    /* Incident Card */
+    #ValidateIncidentModal .incident-card {
+        border: 1px solid #eee;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        padding: 16px;
+        background: #fff;
+    }
 
 
-#ValidateIncidentModal .btn-cancel {
-  background: #e57373;
-  color: #fff;
-}
+    .incident-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+        .incident-header h3 {
+            margin: 0;
+            font-size: 18px;
+            line-height: normal;
+        }
+
+    .incident-meta {
+        font-size: 14px;
+        margin: 2px 0;
+        color: #333;
+    }
+
+        .incident-meta .low {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+    .incident-location {
+        font-size: 13px;
+        color: #666;
+    }
+
+    .incident-date {
+        font-size: 13px;
+        color: #666;
+    }
+
+    /* Form Section */
+    .incident-form {
+        margin-top: 16px;
+    }
+
+    #ValidateIncidentModal .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+        align-items: end;
+    }
+
+    #ValidateIncidentModal .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+        #ValidateIncidentModal .form-group label {
+            font-size: 15px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        #ValidateIncidentModal .form-group select,
+        #ValidateIncidentModal .form-group textarea {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        #ValidateIncidentModal .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+    .full-width {
+        margin-top: 12px;
+        width: 100%;
+    }
+
+    /* Buttons */
+    #ValidateIncidentModal .btn-false-alarm {
+        padding: 10px 16px;
+        background: #e95420;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        white-space: nowrap;
+        font-size: 14px;
+    }
+
+    .btn-false-alarm:hover {
+        background: #cf491d;
+    }
+
+    #ValidateIncidentModal .location-preview {
+        background: #f9f9f9;
+        border-radius: 6px;
+        padding: 12px;
+        margin-top: 16px;
+        font-size: 14px;
+    }
+
+        #ValidateIncidentModal .location-preview p {
+            font-size: 14px;
+            font-weight: 400;
+            line-height: normal;
+            margin-bottom: 3px;
+        }
+
+        #ValidateIncidentModal .location-preview a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+            #ValidateIncidentModal .location-preview a:hover {
+                text-decoration: underline;
+            }
+
+    /* Footer */
+    #ValidateIncidentModal .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 20px;
+        border-top: 1px solid #eee;
+        background: #fafafa;
+    }
+
+    #ValidateIncidentModal .btn-cancel {
+        background: #495057;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 16px;
+        cursor: pointer;
+    }
+
+    #ValidateIncidentModal .btn-validate {
+        background: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 16px;
+        cursor: pointer;
+    }
+
+        #ValidateIncidentModal .btn-cancel i,
+        #ValidateIncidentModal .btn-validate i {
+            margin-right: 6px;
+        }
+
+    #ValidateIncidentModal .false-alarm-box {
+        background: #fff8f2;
+        border: 1px solid #f5c59d;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 20px 0;
+    }
+
+        #ValidateIncidentModal .false-alarm-box h4 {
+            margin: 0 0 10px;
+            color: #8b3e00;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Textarea */
+        #ValidateIncidentModal .false-alarm-box textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 1px solid #f5c59d;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            resize: vertical;
+        }
+
+            #ValidateIncidentModal .false-alarm-box textarea:focus {
+                border-color: #e67e22;
+                box-shadow: 0 0 4px rgba(230,126,34,0.3);
+            }
+
+    /* Action Buttons */
+    #ValidateIncidentModal .false-alarm-actions {
+        margin-top: 12px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+        #ValidateIncidentModal .false-alarm-actions button {
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+    /* Button Variants */
+    #ValidateIncidentModal .btn-undo {
+        background: #495057;
+        color: #fff;
+    }
+
+
+    #ValidateIncidentModal .btn-cancel {
+        background: #e57373;
+        color: #fff;
+    }
 
     a.disabled {
         pointer-events: none; /* disables clicking */
@@ -1107,10 +1112,18 @@
         cursor: not-allowed; /* show "not allowed" cursor */
     }
 
-/* Hover Effects */
-.btn-undo:hover { background: #343a40; }
-.btn-confirm:hover { background: #f39c72; }
-.btn-cancel:hover { background: #d9534f; }
+    /* Hover Effects */
+    .btn-undo:hover {
+        background: #343a40;
+    }
+
+    .btn-confirm:hover {
+        background: #f39c72;
+    }
+
+    .btn-cancel:hover {
+        background: #d9534f;
+    }
 </style>
 <header class="header dashboard-header d-flex align-items-center justify-content-between">
     <!-- Left section -->
@@ -1159,53 +1172,62 @@
 </header>
 <div class="container-fluid">
     <div class="incidentSec">
-   
-    <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4 mt-4">
-        <div class="IncidentTopfilter d-flex justify-content-between align-items-center mb-3 ">
-            <div class="left-sec d-flex justify-content-center">
-                <div class="search-container me-3">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" class="form-control search-input" placeholder="Search incidents..." id="global_search_value">
-                </div>
-                <div class="statusFilter">
-                    <select class="form-select" id="statusSelect" placeholder="status">
-                        <option value="" selected>Select Status</option>
-                        @foreach (var item in Model.statusLegends)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
-                </div>
-                <div class="severityFilter">
-                    <select class="form-select" id="severitySelect" placeholder="Severity">
-                        <option value="" selected>Select Severity</option>
-                        @foreach (var item in Model.severityLevels)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
-                </div>
-            </div>
-            <div class="right-sec">
 
-                <a href="#" class="btn btn-primary AddIncident" id="btnAddIncident"><i class="fa fa-plus"></i>Incident</a>
-                @* <button data-bs-toggle="modal" data-bs-target="#ValidateIncidentModal" class="btn btn-primary ValidateIncident" id="btnValidatedIncident"><i class="fa fa-plus"></i>Validation (0)</button> *@
-            </div>
-       
+        <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4 mt-4">
+            <div class="IncidentTopfilter d-flex justify-content-between align-items-center mb-3 ">
+                <div class="left-sec d-flex justify-content-center">
+                    <div class="search-container me-3">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" class="form-control search-input" placeholder="Search incidents..." id="global_search_value">
+                    </div>
+                    <div class="statusFilter">
+                        <select class="form-select" id="statusSelect" placeholder="status">
+                            <option value="" selected>Select Status</option>
+                            @foreach (var item in Model.statusLegends)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="severityFilter">
+                        <select class="form-select" id="severitySelect" placeholder="Severity">
+                            <option value="" selected>Select Severity</option>
+                            @foreach (var item in Model.severityLevels)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="progressFilter">
+                        <select class="form-select" id="progressSelect" placeholder="Progress">
+                            <option value="" selected>All Progress</option>
+                            @foreach (var item in Model.progressLevels)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="right-sec">
 
+                    <a href="#" class="btn btn-primary AddIncident" id="btnAddIncident"><i class="fa fa-plus"></i>Incident</a>
+                    @* <button data-bs-toggle="modal" data-bs-target="#ValidateIncidentModal" class="btn btn-primary ValidateIncident" id="btnValidatedIncident"><i class="fa fa-plus"></i>Validation (0)</button> *@
+                </div>
+
+
+            </div>
+            <div class="Statuslegend">
+
+                @foreach (var item in Model.statusLegends)
+                {
+                    <div class="legend-item"><span class="dot" style="background-color:@item.Group?.Name"></span> @item.Text</div>
+                }
+            </div>
         </div>
-        <div class="Statuslegend">
-
-            @foreach (var item in Model.statusLegends)
-            {
-                <div class="legend-item"><span class="dot" style="background-color:@item.Group?.Name"></span> @item.Text</div>
-            }
+        <div class="table-responsive incident-table" id="incidentGrid">
+            @await Html.PartialAsync("~/Views/Incidents/_IncidentGrid.cshtml", Model)
         </div>
     </div>
-    <div class="table-responsive incident-table" id="incidentGrid">
-        @await Html.PartialAsync("~/Views/Incidents/_IncidentGrid.cshtml", Model)
-    </div>
-</div>
 </div>
 <!-- Placeholder where modal will be injected -->
 <div id="incidentAddEditModalContainer"></div>
@@ -1238,15 +1260,15 @@
                         </div>
                         <div class="incident-date">Sep 08, 2025 02:53 PM</div>
                     </div>
-                    
-                    <div class="false-alarm-box">
-                      <h4>Mark as False Alarm</h4>
-                      <textarea placeholder="Explain why this incident is a false alarm..."></textarea>
 
-                      <div class="false-alarm-actions">
-                        <button class="btn-undo"><i class="fa fa-undo"></i> Undo False Alarm</button>
-                        <button class="btn-cancel"><i class="fa fa-times"></i> Cancel Incident</button>
-                      </div>
+                    <div class="false-alarm-box">
+                        <h4>Mark as False Alarm</h4>
+                        <textarea placeholder="Explain why this incident is a false alarm..."></textarea>
+
+                        <div class="false-alarm-actions">
+                            <button class="btn-undo"><i class="fa fa-undo"></i> Undo False Alarm</button>
+                            <button class="btn-cancel"><i class="fa fa-times"></i> Cancel Incident</button>
+                        </div>
                     </div>
                     <div class="incident-form">
                         <div class="form-row">

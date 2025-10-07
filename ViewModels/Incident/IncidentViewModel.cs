@@ -26,6 +26,7 @@ namespace ViewModels.Incident
 
         public List<SelectListItem> statusLegends { get; set; } = new();
         public List<SelectListItem> severityLevels { get; set; } = new();
+        public List<SelectListItem> progressLevels { get; set; } = new();
         public long? severityLevelId { get; set; } = default!;
         public long? Id { get; set; } = default!;
         public string DescriptionIssue { get; set; } = default!;

@@ -106,7 +106,10 @@ namespace Repositories.Common
                 var policy = new Policy
                 {
                     Name = viewModel.Name,
-                    Description = viewModel.Description ?? string.Empty,
+                    Description = "Description",
+                    PolicySteps = viewModel.PolicySteps != null && viewModel.PolicySteps.Any()
+                        ? string.Join(", ", viewModel.PolicySteps.Select(s => s.Replace(",", " ").Trim()))
+                        : null
                 };
 
                 await _db.Policies.AddAsync(policy);
@@ -138,7 +141,10 @@ namespace Repositories.Common
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
                 policy.Name = viewModel.Name;
-                policy.Description = viewModel.Description ?? string.Empty;
+                //policy.Description = viewModel.Description;
+                policy.PolicySteps = viewModel.PolicySteps != null && viewModel.PolicySteps.Any()
+                    ? string.Join(", ", viewModel.PolicySteps.Select(s => s.Replace(",", " ").Trim()))
+                    : null;
 
                 try
                 {
@@ -146,7 +152,7 @@ namespace Repositories.Common
                     await transaction.CommitAsync();
                 }
                 catch
-                {
+                {   
                     await transaction.RollbackAsync();
                     throw;
                 }
@@ -211,6 +217,66 @@ namespace Repositories.Common
                 _logger.LogError(ex, "Error DeletePolicy.");
                 return 0;
             }
+           
         }
+        
+        public async Task<long> AddPolicySteps(long policyId, IEnumerable<string> steps)
+        {
+            if (policyId <= 0 || steps == null || !steps.Any())
+                return 0;
+
+            // sanitize incoming steps (trim, drop empties)
+            var incoming = steps
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Select(s => s.Trim())
+                .ToList();
+
+            if (!incoming.Any()) return 0;
+
+            try
+            {
+                var policy = await _db.Policies.FirstOrDefaultAsync(p => p.Id == policyId && !p.IsDeleted);
+                if (policy == null) return 0;
+
+                await using var transaction = await _db.Database.BeginTransactionAsync();
+
+                var existing = policy.PolicySteps ?? string.Empty;
+                var existingList = existing
+                    .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => s.Trim())
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .ToList();
+
+                // optionally sanitize incoming steps to avoid extra commas:
+                var sanitizedIncoming = incoming.Select(s => s.Replace(",", " ").Trim()).ToList();
+
+                // append incoming
+                existingList.AddRange(sanitizedIncoming);
+
+                // You might want to remove duplicates:
+                // existingList = existingList.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+
+                policy.PolicySteps = string.Join(", ", existingList);
+
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+
+                return policy.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error AddPolicySteps.");
+                return 0;
+            }
+        }
+
     }
 }

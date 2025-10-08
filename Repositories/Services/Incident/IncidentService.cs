@@ -373,10 +373,23 @@ namespace Repositories.Common
                     }
                 }
                 var incidentsList = await query.ToListAsync();
+                var incidentIds = incidentsList.Select(i => i.Id).ToList();
 
+                var additionalCounts = new List<(long IncidentId, int Count)>();
+                if (incidentIds.Any())
+                {
+                    additionalCounts = await _db.AdditionalLocations
+                        .Where(al => !al.IsDeleted && al.IncidentID.HasValue && incidentIds.Contains(al.IncidentID.Value))
+                        .GroupBy(al => al.IncidentID)
+                        .Select(g => new { IncidentId = g.Key.Value, Count = g.Count() })
+                        .ToListAsync()
+                        .ContinueWith(t => t.Result.Select(x => (x.IncidentId, x.Count)).ToList());
+                }
 
                 foreach (var item in incidentsList)
                 {
+                    var addCount = additionalCounts.FirstOrDefault(a => a.IncidentId == item.Id).Count;
+
                     incidentGridViews.Add(new IncidentGridViewModel()
                     {
                         CallDate = GetDate(Convert.ToString(item.CallTime)),
@@ -395,6 +408,7 @@ namespace Repositories.Common
                         StatusLegendId = item.StatusLegendId,
                         RelationShipName = item.Relationship?.Name ?? string.Empty,
                         RelationShipId = item?.RelationshipId,
+                        AdditionalLocationCount = addCount
                     });
                 }
                 return incidentGridViews;
@@ -914,6 +928,53 @@ namespace Repositories.Common
                 return false;
             }
         }
+        public async Task<List<AdditionalLocationViewModel>> GetAdditionalLocationsByIncidentId(long incidentId)
+        {
+            try
+            {
+                var additionalLocations = await _db.AdditionalLocations
+                    .Where(al => !al.IsDeleted && al.IncidentID.HasValue && al.IncidentID.Value == incidentId)
+                    .OrderBy(al => al.Id)
+                    .ToListAsync();
+
+                var result = new List<AdditionalLocationViewModel>();
+
+                foreach (var al in additionalLocations)
+                {
+                    var vm = new AdditionalLocationViewModel
+                    {
+                        Id = al.Id,
+                        IncidentID = al.IncidentID,
+                        LocationAddress = al.LocationAddress ?? string.Empty,
+                        Latitude = al.Latitude,
+                        Longitude = al.Longitude,
+                        NearestIntersection = al.NearestIntersection ?? string.Empty,
+                        ServiceAccount = al.ServiceAccount ?? string.Empty,
+                        PerimeterType = al.PerimeterType,
+                        PerimeterTypeDigit = al.PerimeterTypeDigit,
+                        AssetIds = al.AssetIds ?? string.Empty,
+                        AssetNames = string.Empty
+                    };
+
+                    // Resolve asset names if AssetIds present (re-using your GetAssets helper)
+                    if (!string.IsNullOrWhiteSpace(vm.AssetIds))
+                    {
+                        vm.AssetNames = await GetAssets(vm.AssetIds);
+                    }
+
+                    result.Add(vm);
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetAdditionalLocationsByIncidentId.");
+                return new List<AdditionalLocationViewModel>();
+            }
+        }
+
+
 
         #region private methods
         private bool TryParseCallTime(string callTime, out DateTime dateTime)

@@ -1235,6 +1235,27 @@
 <div id="incidentNotesModalContainer"></div>
 <div id="incidentHistoryContainer"></div>
 
+
+<div class="modal fade" id="additionalLocationsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Additional Locations</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="additionalLocationsModalBody">
+                <div class="text-center py-3">
+                    <div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div id="incidentMapContainer">
 </div>
 <div class="modal fade" id="ValidateIncidentModal" tabindex="-1" aria-labelledby="ValidateIncidentModalLabel" aria-hidden="true">
@@ -1358,6 +1379,46 @@
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/masking/initiate-masking.js"></script>
 <script src="~/js/views/incident/incidentform.js"></script>
+<script>
+    (function () {
+        async function loadAdditionalLocations(incidentId) {
+            const url = `/Incidents/GetAdditionalLocations?incidentId=${incidentId}`;
+            const modalBody = document.getElementById('additionalLocationsModalBody');
+
+            modalBody.innerHTML = '<div class="text-center py-3"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+            try {
+                const resp = await fetch(url, {
+                    method: 'GET',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+
+                if (!resp.ok) {
+                    modalBody.innerHTML = '<div class="alert alert-danger">Failed to load additional locations.</div>';
+                    return;
+                }
+
+                const html = await resp.text();
+                modalBody.innerHTML = html;
+
+                var modalEl = document.getElementById('additionalLocationsModal');
+                var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.show();
+            } catch (err) {
+                modalBody.innerHTML = '<div class="alert alert-danger">An error occurred while loading.</div>';
+                console.error(err);
+            }
+        }
+
+        document.addEventListener('click', function (e) {
+            var anchor = e.target.closest && e.target.closest('.more-locations-link');
+            if (anchor) {
+                var incidentId = anchor.getAttribute('data-incident-id');
+                if (incidentId) loadAdditionalLocations(incidentId);
+            }
+        });
+    })();
+</script>
 
 <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
 <script src="https://js.arcgis.com/4.27/"></script>

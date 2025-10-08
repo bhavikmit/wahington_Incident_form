@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
+﻿using DocumentFormat.OpenXml.Presentation;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Repositories.Common;
 using Repositories.Services.ArcGis;
 using Repositories.Services.ArcGis.Interface;
-
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 using ViewModels;
@@ -132,7 +133,7 @@ namespace Web.Controllers
             var map = await _iIncidentService.GetIncidentMapDetailsbyId(id);
             return PartialView("_IncidentMap", map ?? new List<ViewModels.Dashboard.IncidentLocationMapViewModel>());
         }
-
+        
         [HttpPost]
         public async Task<IActionResult> SaveCommunicationMessage([FromForm] SaveCommunicationRequest request)
         {
@@ -141,6 +142,7 @@ namespace Web.Controllers
 
             try
             {
+                
                 var result = await _iIncidentService.SaveCommunicationMessage(request);
                 if (result)
                     return Ok(new { success = true, message = "Message sent successfully." });
@@ -152,5 +154,12 @@ namespace Web.Controllers
                 return StatusCode(500, new { success = false, message = "An error occurred while saving the message." });
             }
         }
+        [HttpGet]
+        public async Task<PartialViewResult> GetAdditionalLocations(long incidentId)
+        {
+            var locations = await _iIncidentService.GetAdditionalLocationsByIncidentId(incidentId);
+            return PartialView("_AdditionalLocations", locations ?? new List<AdditionalLocationViewModel>());
+        }
+       
     }
-}
+    }

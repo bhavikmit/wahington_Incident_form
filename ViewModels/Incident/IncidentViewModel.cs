@@ -121,6 +121,7 @@ namespace ViewModels.Incident
         public string RelationShipName { get; set; }
         public string DescriptionIssue { get; set; }
         public string GasESIndicator { get; set; }
+        public int AdditionalLocationCount { get; set; } = 0;
     }
     public class ChangeStatusRequest
     {

@@ -22,5 +22,6 @@ namespace Models
         public bool PerimeterType { get; set; }
         public long? PerimeterTypeDigit { get; set; }
         public string? AssetIds { get; set; }
+        public bool IsPrimaryLocation { get; set; }
     }
 }

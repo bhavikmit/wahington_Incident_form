@@ -16,6 +16,7 @@ namespace Web.Controllers
     {
         private readonly IIncidentService _iIncidentService;
         private readonly IArcGisGeocodingService _iArcGisGeocodingService;
+        //private readonly IAdditionalLocationsService _iAdditionalLocationsService;
 
         public IncidentsController(IIncidentService incidentService, IArcGisGeocodingService iArcGisGeocodingService)
         {
@@ -44,7 +45,7 @@ namespace Web.Controllers
                 }
                 else
                 {
-                    incidentId = await _iIncidentService.SaveIncident(incidentViewModel);
+                    incidentId = await _iIncidentService.SaveIncident(incidentViewModel);                   
                 }
                 if (string.IsNullOrWhiteSpace(incidentId))
                     return StatusCode(StatusCodes.Status500InternalServerError,

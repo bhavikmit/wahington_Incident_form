@@ -1,7 +1,102 @@
 ﻿@using System.Web
 @using ViewModels.Incident
 @model IncidentViewModel
+<style>
+    .location-card {
+        border: 1px solid #dee2e6;
+        border-radius: 0.5rem;
+        padding: 1.2rem 1.5rem;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
 
+        .location-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .location-icon {
+        color: #f25c2a;
+        font-size: 1.1rem;
+        margin-right: 0.5rem;
+    }
+
+    .card-title {
+        font-weight: 600;
+        font-size: 1.05rem;
+    }
+
+    .action-icons {
+        display: flex;
+        gap: 0.8rem;
+    }
+
+        .action-icons i {
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+            .action-icons i.fa-plus {
+                color: #0d6efd;
+            }
+
+            .action-icons i.fa-trash-alt {
+                color: #dc3545;
+            }
+
+            .action-icons i:hover {
+                opacity: 0.8;
+            }
+
+    .info-text {
+        color: #6c757d;
+        font-size: 0.9rem;
+    }
+    .location-section {
+        margin-bottom: 30px;
+    }
+
+    .add-location-box {
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        color: #6b7280;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+        .add-location-box:hover {
+            background-color: #f9fafb;
+        }
+
+    .add-location-form {
+        background-color: #fff8f1;
+        border: 1px solid #fcd8b6;
+        border-radius: 10px;
+        padding: 25px;
+        margin-top:20px;
+        display: none;
+    }
+
+    .form-control {
+        border-radius: 6px;
+    }
+
+    .btn-orange {
+        background-color: #eb6619;
+        color: white;
+        border: none;
+    }
+
+        .btn-orange:hover {
+            background-color: #d35510;
+            color: white;
+        }
+
+    .perimeter-type .btn {
+        width: 100%;
+    }
+</style>
 <div class="modal fade" id="addIncidentModal" tabindex="-1" aria-labelledby="addIncidentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -28,6 +123,12 @@
                                         <button class="nav-link " id="pills-location-tab" data-bs-toggle="pill"
                                                 data-bs-target="#pills-location" type="button" role="tab">
                                             <i class="fa fa-map-pin"></i>Location of Incident
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link " id="pills-additionallocation-tab" data-bs-toggle="pill"
+                                                data-bs-target="#pills-additionallocation" type="button" role="tab">
+                                            <i class="fa fa-map-marker-alt"></i>Additional Location
                                         </button>
                                     </li>
                                     <li class="nav-item" role="presentation">
@@ -75,6 +176,98 @@
                                 <div class="tab-pane fade" id="pills-location" role="tabpanel" aria-labelledby="location-tab">
                                     @await Html.PartialAsync("~/Views/Incidents/_Location.cshtml", Model)
                                 </div>
+                                <div class="tab-pane fade" id="pills-additionallocation" role="tabpanel" aria-labelledby="location-tab">
+                                    <div class="location-section">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h5 class="fw-bold mb-0">Additional Locations</h5>
+                                            <span class="text-muted small">0 location(s)</span>
+                                        </div>
+
+                                        <div class="add-location-box" id="addLocationBtn">
+                                            <i class="fa-solid fa-plus me-2"></i>
+                                            Add Additional Location
+                                        </div>
+                                    </div>
+                                    <div class="location-card d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <div class="d-flex align-items-center mb-1">
+                                                <i class="fa-solid fa-location-dot location-icon"></i>
+                                                <span class="card-title">test</span>
+                                            </div>
+
+                                            <div class="info-text">GPS: 455.000000, 464654.000000</div>
+                                            <div class="info-text">Near: sdfsd</div>
+                                            <div class="info-text">Assets: Pipeline, Compressor, Station</div>
+                                        </div>
+
+                                        <div class="action-icons">
+                                            <i class="fa-solid fa-plus"></i>
+                                            <i class="far fa-trash-alt "></i>
+                                        </div>
+                                    </div>
+                                    
+
+                                    <!---------add form----------->
+                                    <div class="add-location-form" id="locationForm">
+                                        <h6 class="fw-bold mb-3">Add New Location</h6>
+
+                                        <form>
+                                            <div class="mb-3">
+                                                <label class="form-label">Location Address <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="locAdd" placeholder="Enter location address...">
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Latitude</label>
+                                                    <input type="text" id="Loc2Latitude" class="form-control" placeholder="Latitude">
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Longitude</label>
+                                                    <input type="text" id="Loc2Longitude" class="form-control" placeholder="Longitude">
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Nearest Intersection</label>
+                                                    <input type="text" class="form-control" id="Loc2Intersection" placeholder="e.g., Main St & Oak Ave">
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Service Account</label>
+                                                    <input type="text" class="form-control" id="acct2" placeholder="Account number">
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="checkBoxTitle">Affected Assets</div>
+                                                    <div class="row">
+
+                                                        @foreach (var asset in Model.incidentiLocation.AssetsIncidentList)
+                                                        {
+                                                            var id = "asset_" + asset.Value;
+                                                            var checkedAttr = Model.incidentiLocation.AssetIDs != null ? (Model.incidentiLocation.AssetIDs.Contains(asset.Value) ? "checked" : "") : "";
+                                                            <div class="col-md-6">
+                                                                <div class="mb-3">
+                                                                    <input name="asset.Id" type="checkbox" class="form-check-input"
+                                                                           data-val="true" data-val-required="The Asset field is required." @checkedAttr value="@asset.Value" id="@id">
+                                                                    <label class="form-check-label" for="@id">@asset.Text</label>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex justify-content-between">
+                                                <button type="button" class="btn btn-orange px-4">Add Location</button>
+                                                <button type="button" class="btn btn-secondary px-4" id="cancelForm">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                                 <div class="tab-pane fade" id="pills-detail" role="tabpanel" aria-labelledby="detail-tab">
                                     @await Html.PartialAsync("~/Views/Incidents/_IncidentDetails.cshtml", Model)
                                 </div>
@@ -93,10 +286,25 @@
                             </div>
                         </div>
                     </div>
-
+                    
 
                 </form>
             </div>
         </div>
     </div>
 </div>
+<script>
+    const addBtn = document.getElementById('addLocationBtn');
+    const form = document.getElementById('locationForm');
+    const cancel = document.getElementById('cancelForm');
+
+    addBtn.addEventListener('click', () => {
+      form.style.display = 'block';
+      addBtn.style.display = 'none';
+    });
+
+    cancel.addEventListener('click', () => {
+      form.style.display = 'none';
+      addBtn.style.display = 'block';
+    });
+</script>

@@ -373,8 +373,8 @@ namespace Repositories.Common
                 {
                     IncidentId = request.Id,
                     IsMarkFalseAlarm = false,
-                    ValidationNotes = request.ValidationNotes,
-                    AssignResponseTeams = request.AssignResponseTeams,
+                    ValidationNotes = request.ValidationNotes ?? "test",
+                    AssignResponseTeams = "1",//request.AssignResponseTeams,
                     ConfirmedSeverityLevelId = request.ConfirmedSeverityLevelId,
                     DiscoveryPerimeterId = request.DiscoveryPerimeterId,
                 };

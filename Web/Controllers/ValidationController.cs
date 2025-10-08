@@ -159,15 +159,15 @@ namespace Web.Controllers
             try
             {
 
-                var policies = JsonConvert
-                    .DeserializeObject<List<IncidentSubmitPolicyViewModel>>(request.listPolicyVM);
+                var policies = request.listPolicyVM != null ? JsonConvert
+                    .DeserializeObject<List<IncidentSubmitPolicyViewModel>>(request.listPolicyVM) : new List<IncidentSubmitPolicyViewModel>();
 
                 var communications = JsonConvert
                     .DeserializeObject<List<IncidentSubmitCommunicationViewModel>>(TempData["TempComRecords"].ToString());
 
                 request.listSubmitPolicyVM = policies;
                 request.listSubmitCommunicationVM = communications;
-                
+
                 var resultId = await _iIncidentValidationService.SaveIncidentValidation(request);
 
                 var successMsg = $"Incident validation saved successfully!";

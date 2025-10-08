@@ -55,6 +55,21 @@
     <div class="row">
         <div class="col-md-6">
             <div class="mb-3">
+                <label class="form-label">Latitude<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="Loc1Latitude" placeholder="0.000000" />
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label class="form-label">Longitude</label>
+                <input type="text" class="form-control" id="Loca1Longitude" placeholder="0.000000" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mb-3">
                 <label class="form-label" asp-for="incidentiLocation.Landmark">Intersection / Landmark<span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="landmark" required asp-for="incidentiLocation.Landmark" placeholder="e.g., Main St & Oak Ave" />
                 <div class="invalid-feedback"></div>

@@ -152,5 +152,12 @@ namespace Web.Controllers
                 return StatusCode(500, new { success = false, message = "An error occurred while saving the message." });
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLatLong(string text)
+        {
+            var results = await _iArcGisGeocodingService.GetSuggestionsAsynclat(text);
+            return Json(results);
+        }
     }
 }

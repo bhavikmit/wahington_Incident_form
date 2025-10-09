@@ -632,6 +632,65 @@ async function GetIncidentList(statusID, severityID, description) {
         console.error("Error loading incident list:", error);
     } finally {
         hideLoader($(".main-content"));
+        // find your Date/Time header by its text
+        const $dateHeader = $("th:contains('Date/Time')");
+        let ascending = true;
+
+        $dateHeader.css("cursor", "pointer");
+
+        $dateHeader.on("click", function () {
+
+            const $table = $(this).closest("table");
+            const $tbody = $table.find("tbody");
+            const $rows = $tbody.find("tr").has("td"); // skip "no records" row
+
+            $rows.sort(function (a, b) {
+                const aText = $(a).find("td:eq(10)").text().trim(); // adjust index if needed
+                const bText = $(b).find("td:eq(10)").text().trim();
+
+                const aDateTime = parseDateTime(aText);
+                const bDateTime = parseDateTime(bText);
+
+                if (aDateTime < bDateTime) return ascending ? -1 : 1;
+                if (aDateTime > bDateTime) return ascending ? 1 : -1;
+                return 0;
+            });
+
+            $.each($rows, function (index, row) {
+                $tbody.append(row); // reattach sorted rows
+            });
+
+            ascending = !ascending;
+
+            // update icon if exists
+            const $icon = $dateHeader.find("i");
+            if ($icon.length) {
+                $icon.removeClass("fa-sort fa-sort-up fa-sort-down");
+                $icon.addClass(ascending ? "fa-sort-up" : "fa-sort-down");
+            }
+        });
+
+        // helper for "15 Sep, 2025 14:20 PM" format
+        function parseDateTime(dateTimeStr) {
+            // remove commas
+            dateTimeStr = dateTimeStr.replace(",", "").trim();
+
+            // Split into date and time
+            // e.g. "15 Sep 2025 14:20 PM"
+            const parts = dateTimeStr.split(" ");
+            if (parts.length < 4) return new Date(dateTimeStr);
+
+            const [day, monthStr, year, timeWithAmPm] = parts;
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+            const month = monthNames.indexOf(monthStr) + 1;
+            const time = timeWithAmPm.toUpperCase();
+
+            // build "YYYY-MM-DD HH:mm AM/PM"
+            return new Date(`${year}-${month}-${day} ${time}`);
+        }
+
     }
 }
 

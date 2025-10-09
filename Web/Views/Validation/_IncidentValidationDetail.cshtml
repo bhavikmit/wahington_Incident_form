@@ -4,9 +4,10 @@
 @model ValidationWorkflowViewModel
 
 <style>
-    .info-sub.assets{
+    .info-sub.assets {
         margin-top: 5px;
     }
+
     .IVPolicyList .card {
         background: #fff;
         border: 1px solid #ddd !important;
@@ -18,7 +19,7 @@
 
         .IVPolicyList .card.highlight {
             /* border: 2px solid #ff8800 !important;
-            background: #fff7f0; */
+                                                background: #fff7f0; */
 
             border: 2px solid #93bfab !important;
             background: #ecfdf5;
@@ -53,7 +54,7 @@
         font-weight: 500;
     }
     /*************New validation design with multiple location*****************/
-    
+
 
     .left-panel {
         background: #fff;
@@ -71,7 +72,7 @@
         font-weight: 500;
     }
 
-        .add-location-btn:hover{
+        .add-location-btn:hover {
             background-color: #f54e00;
             color: white;
         }
@@ -122,12 +123,11 @@
         border-radius: 0.4rem;
         padding: 0.8rem;
         margin-top: 1rem;
-        
     }
 
-    .new-location .btn-cancel{
-        background-color: #9f9f9f;
-    }
+        .new-location .btn-cancel {
+            background-color: #9f9f9f;
+        }
 
     .right-panel {
         background: #fff;
@@ -142,21 +142,21 @@
         margin-bottom: 0.8rem;
     }
 
-   /*  .form-check {
-        border: 1px solid #dee2e6;
-        border-radius: 0.4rem;
-        padding: 0.6rem 1rem;
-        margin-bottom: 0.6rem;
-    }
+    /*  .form-check {
+                                            border: 1px solid #dee2e6;
+                                            border-radius: 0.4rem;
+                                            padding: 0.6rem 1rem;
+                                            margin-bottom: 0.6rem;
+                                        }
 
-    textarea {
-        resize: vertical;
-    } */
+                                        textarea {
+                                            resize: vertical;
+                                        } */
 
-  /*   .form-check-input:checked {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-    } */
+    /*   .form-check-input:checked {
+                                            background-color: #0d6efd;
+                                            border-color: #0d6efd;
+                                        } */
 
     .team-section {
         border: 1px solid #dee2e6;
@@ -198,7 +198,7 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
-    
+
 
     .location-card {
         border: 1px solid #dee2e6;
@@ -276,37 +276,39 @@
         border-radius: 8px;
         padding: 10px;
     }
-    .team-details{
 
-        background:#f9fafb;
+    .team-details {
+        background: #f9fafb;
         border-top: 1px solid #dfdfdf;
         padding: 12px;
     }
 
-     .team-details .form-check {
+        .team-details .form-check {
             border: 1px solid #dee2e6;
             width: 100%;
             margin: 0;
             padding: 10px 10px 10px 35px;
             border-radius: 6px;
             margin-bottom: 12px;
-            
         }
-        .del-workstep{
+
+    .del-workstep {
         color: #dc3545;
-        }
-        .teamSelect{
+    }
+
+    .teamSelect {
         padding: 10px 15px 10px 36px;
     }
-    .titleOfteams{
-        font-size:16px !important;
+
+    .titleOfteams {
+        font-size: 16px !important;
     }
 
     .validation-card {
         background-color: #f8f9fa;
         border-radius: 0.5rem;
         padding: 12px;
-        margin-top:16px;
+        margin-top: 16px;
         border: 1px solid #e5e7eb;
         box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
@@ -351,9 +353,10 @@
             .status-value a:hover {
                 text-decoration: underline;
             }
-            .Locationnotes{
-                margin-top:16px;
-            }
+
+    .Locationnotes {
+        margin-top: 16px;
+    }
 </style>
 <div class="container-fluid">
     <div class="validation-center">
@@ -381,27 +384,7 @@
                         </div>
                         <div class="step-label">Validation</div>
                     </div>
-                   @*  <div class="step" data-step="3">
-                        <div class="step-icon">
-                            <i class="fa-solid fa-people-group"></i>
-                        </div>
-                        <div class="step-label">Response Teams</div>
-                    </div> *@
-                    <div class="step" data-step="3">
-                        <div class="step-icon">
-                            <i class="fa-regular fa-circle-check"></i>
-                        </div>
-                        <div class="step-label">Policies & Procedures</div>
-                    </div>
-                    <div class="step" data-step="4">
-                        <div class="step-icon">
-                            <i class="fa-regular fa-comment-dots"></i>
-                        </div>
-                        <div class="step-label">Communication</div>
-                    </div>
                 </div>
-
-
 
                 <!-- Step Content -->
                 <div class="shadow-sm step-content" id="step-1">
@@ -522,27 +505,41 @@
                         <div class="col-md-3">
                             <div class="left-panel">
                                 <button id="addLocationBtn" type="button" class="btn add-location-btn mb-3"><i class="fa fa-plus"></i>Add Location</button>
-                                <div class="location-card active" data-location="1">
-                                    <div class="d-flex align-items-start">
-                                        <div class="ms-2">
-                                            <div class="location-title fw-semibold">
-                                                4256 Service Ave, City, ST 12345
-                                            </div><span class="badge-primary">Primary</span> <span class="badge-status">In Progress</span>
+
+                                @foreach (var item in Model.IVAdditionalLocations)
+                                {
+                                    if (item.IsPrimaryLocation)
+                                    {
+                                        <div class="location-card active" data-location="@item.Id">
+                                            <div class="d-flex align-items-start">
+                                                <div class="ms-2">
+                                                    <div class="location-title fw-semibold">
+                                                        @item.AdditionalLocation
+                                                    </div><span class="badge-primary">Primary</span> <span class="badge-status">In Progress</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="location-card" data-location="2">
-                                    <div class="d-flex align-items-start">
-                                        <div class="ms-2">
-                                            <div class="location-title fw-semibold">
-                                                9818 Secondary Rd, City, ST 12345
-                                            </div><span class="badge-status">In Progress</span>
+                                    }
+                                    else
+                                    {
+                                        <div class="location-card" data-location="@item.Id">
+                                            <div class="d-flex align-items-start justify-content-between">
+                                                <div class="ms-2">
+                                                    <div class="location-title fw-semibold">
+                                                        @item.AdditionalLocation
+                                                    </div><span class="badge-status">In Progress</span>
+                                                </div>
+                                                <div class="ms-1">
+                                                    <i class="far fa-trash-alt" id="dltAddLoc"></i>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    }
+                                }
                                 <div id="newLocation" class="new-location d-none">
-                                    <label class="form-label small mb-1">New Location Address</label> 
+                                    <label class="form-label small mb-1">New Location Address</label>
                                     <input type="text" id="newAddress" class="form-control mb-2" placeholder="123 Main St, City, ST 12345">
+                                    <ul id="suggestionsnewAddress" class="suggestions-list"></ul>
                                     <div class="d-flex gap-2">
                                         <button id="addBtn" class="btn btn-primary btn-sm w-50">Add</button>
                                         <button id="cancelBtn" class="btn btn-dark btn-sm w-50">Cancel</button>
@@ -553,7 +550,6 @@
                         <div class="col-md-9">
                             <div id="rightPanel" class="right-panel">
                                 <h3>Location Validation</h3>
-                                <p>4256 Service Ave, City, ST 12345</p>
                                 <div class="form-group">
                                     <label>Confirmed Severity Level <span style="color:red">*</span></label>
                                     <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.severityLevelId">
@@ -577,460 +573,51 @@
                                     <small>This creates a safety perimeter around the incident location</small>
                                 </div>
                                 <h6 class="titleOfteams"><i class="fa-solid fa-users"></i> Response Teams <span class="text-danger">*</span> (Select one or more)</h6>
-                                <div class="team-section">
-                                    <div class="form-check teamSelect">
-                                        <input class="form-check-input team-check" type="checkbox" id="teamAlpha"> <label class="form-check-label fw-semibold" for="teamAlpha">Emergency Response Team Alpha</label>
-                                    </div>
-                                    <div id="alphaDetails" class="team-details d-none">
-                                        <div class="team-members ">
-                                            <label class="form-label fw-semibold">Select Team Members <span class="text-danger">*</span>(at least one)</label><br>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">John Smith</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Sarah Johnson</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Mike Williams</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Emily Brown</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                        <div class="work-steps mb-3">
-                                            <label class="form-label fw-semibold"><i class="fa fa-list"></i>Work Steps for Emergency Response Team Alpha</label>
-                                            <div class="work-step d-flex align-items-start justify-content-between">
-                                                <div>
-                                                    <div class="fw-semibold StepName">Gas Step</div>
-                                                    <div class="StepDescription">This is the test description</div>
-                                                </div>
-                                                <div class="del-workstep"><i class="far fa-trash-alt"></i></div>
-                                            </div>
-                                           
-                                            <div class="add-step-area mt-2">
-                                                <input type="text" class="form-control mb-2" placeholder="Step name (e.g., Isolate gas line)..."> <input type="text" class="form-control mb-2" placeholder="Description (optional)..."> <input type="text" class="form-control mb-2" placeholder="Assign to specific person (optional)..."> <button class="btn btn-primary w-100">Add Work Step</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="team-section">
-                                    <div class="form-check teamSelect">
-                                        <input class="form-check-input team-check" type="checkbox" id="teamBravo"> <label class="form-check-label fw-semibold" for="teamBravo">Emergency Response Team Bravo</label>
-                                    </div>
-                                    <div id="bravoDetails" class="team-details d-none">
-                                        <div class="team-members ">
-                                            <label class="form-label fw-semibold">Select Team Members <span class="text-danger">*</span>(at least one)</label><br>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">John Smith</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Sarah Johnson</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Mike Williams</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Emily Brown</label>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                        </div>
-                                        <div class="work-steps mb-3">
-                                            <label class="form-label fw-semibold"><i class="fa fa-list"></i>Work Steps for Emergency Response Team Alpha</label>
-                                            <div class="work-step d-flex align-items-start justify-content-between">
-                                                <div>
-                                                    <div class="fw-semibold StepName">Gas Step</div>
-                                                    <div class="StepDescription">This is the test description</div>
-                                                </div>
-                                                <div class="del-workstep"><i class="far fa-trash-alt"></i></div>
-                                            </div>
-
-                                            <div class="add-step-area mt-2">
-                                                <input type="text" class="form-control mb-2" placeholder="Step name (e.g., Isolate gas line)..."> <input type="text" class="form-control mb-2" placeholder="Description (optional)..."> <input type="text" class="form-control mb-2" placeholder="Assign to specific person (optional)..."> <button class="btn btn-primary w-100">Add Work Step</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="team-section">
-                                    <div class="form-check teamSelect">
-                                        <input class="form-check-input team-check" type="checkbox" id="gasLeak"><label class="form-check-label fw-semibold" for="gasLeak">Gas Leak Specialists</label>
-                                    </div>
-                                    <div id="gasLeakDetails" class="team-details d-none">
-                                        <div class="team-members ">
-                                            <label class="form-label fw-semibold">Select Team Members <span class="text-danger">*</span>(at least one)</label><br>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">John Smith</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Sarah Johnson</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Mike Williams</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Emily Brown</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="work-steps mb-3">
-                                            <label class="form-label fw-semibold"><i class="fa fa-list"></i>Work Steps for Emergency Response Team Alpha</label>
-                                            <div class="work-step d-flex align-items-start justify-content-between">
-                                                <div>
-                                                    <div class="fw-semibold StepName">Gas Step</div>
-                                                    <div class="StepDescription">This is the test description</div>
-                                                </div>
-                                                <div class="del-workstep"><i class="far fa-trash-alt"></i></div>
-                                            </div>
-
-                                            <div class="add-step-area mt-2">
-                                                <input type="text" class="form-control mb-2" placeholder="Step name (e.g., Isolate gas line)..."> <input type="text" class="form-control mb-2" placeholder="Description (optional)..."> <input type="text" class="form-control mb-2" placeholder="Assign to specific person (optional)..."> <button class="btn btn-primary w-100">Add Work Step</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="team-section">
-                                    <div class="form-check teamSelect">
-                                        <input class="form-check-input team-check" type="checkbox" id="fireUnit"><label class="form-check-label fw-semibold" for="fireUnit">Fire & Explosion Unit</label>
-                                    </div>
-                                    <div id="fireUnitDetails" class="team-details d-none">
-                                        <div class="team-members ">
-                                            <label class="form-label fw-semibold">Select Team Members <span class="text-danger">*</span>(at least one)</label><br>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">John Smith</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Sarah Johnson</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Mike Williams</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Emily Brown</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="work-steps mb-3">
-                                            <label class="form-label fw-semibold"><i class="fa fa-list"></i>Work Steps for Emergency Response Team Alpha</label>
-                                            <div class="work-step d-flex align-items-start justify-content-between">
-                                                <div>
-                                                    <div class="fw-semibold StepName">Gas Step</div>
-                                                    <div class="StepDescription">This is the test description</div>
-                                                </div>
-                                                <div class="del-workstep"><i class="far fa-trash-alt"></i></div>
-                                            </div>
-
-                                            <div class="add-step-area mt-2">
-                                                <input type="text" class="form-control mb-2" placeholder="Step name (e.g., Isolate gas line)..."> <input type="text" class="form-control mb-2" placeholder="Description (optional)..."> <input type="text" class="form-control mb-2" placeholder="Assign to specific person (optional)..."> <button class="btn btn-primary w-100">Add Work Step</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="team-section">
-                                    <div class="form-check teamSelect">
-                                        <input class="form-check-input team-check" type="checkbox" id="infraTeam"><label class="form-check-label fw-semibold" for="infraTeam">Infrastructure Repair Team</label>
-                                    </div>
-                                    <div id="infraTeamDetails" class="team-details d-none">
-                                        <div class="team-members ">
-                                            <label class="form-label fw-semibold">Select Team Members <span class="text-danger">*</span>(at least one)</label><br>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">John Smith</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Sarah Johnson</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Mike Williams</label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Emily Brown</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="work-steps mb-3">
-                                            <label class="form-label fw-semibold"><i class="fa fa-list"></i>Work Steps for Emergency Response Team Alpha</label>
-                                            <div class="work-step d-flex align-items-start justify-content-between">
-                                                <div>
-                                                    <div class="fw-semibold StepName">Gas Step</div>
-                                                    <div class="StepDescription">This is the test description</div>
-                                                </div>
-                                                <div class="del-workstep"><i class="far fa-trash-alt"></i></div>
-                                            </div>
-
-                                            <div class="add-step-area mt-2">
-                                                <input type="text" class="form-control mb-2" placeholder="Step name (e.g., Isolate gas line)..."> <input type="text" class="form-control mb-2" placeholder="Description (optional)..."> <input type="text" class="form-control mb-2" placeholder="Assign to specific person (optional)..."> <button class="btn btn-primary w-100">Add Work Step</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="Locationnotes">
-                            <h6 class="section-title ">Location-Specific Notes</h6>
-                            <textarea class="form-control" rows="3" placeholder="Add any location-specific observations, hazards, or important details..."></textarea>
-                            </div>
-                            <div class="validation-card">
-                                <h6><i class="fa-solid fa-circle-check me-2 text-secondary"></i>Validation Status</h6>
-
-                                <div class="status-row">
-                                    <span class="status-label">Severity:</span>
-                                    <span class="status-value high">High</span>
-                                </div>
-
-                                <div class="status-row">
-                                    <span class="status-label">Perimeter:</span>
-                                    <span class="status-value not-set">Not set</span>
-                                </div>
-
-                                <div class="status-row">
-                                    <span class="status-label">Teams:</span>
-                                    <span class="status-value not-set">Not selected</span>
-                                </div>
-
-                                <div class="status-row">
-                                    <span class="status-label">Total Members:</span>
-                                    <span class="status-value not-set">0 assigned</span>
-                                </div>
-
-                                <div class="status-row">
-                                    <span class="status-label">Total Work Steps:</span>
-                                    <span class="status-value not-set">0 steps</span>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-
-             @*    <div class=" shadow-sm step-content d-none" id="step-3">
-                    <div class="details-sec teams-details-sec p-6">
-
-                        <div class="responseCard">
-                            <div class="info-box">
-                                <i class="fa-solid fa-people-group"></i>
-                                Response Team Assignment <br>
-                                <small>Select the appropriate response teams based on the incident type and severity. Multiple teams can be assigned.</small>
-                            </div>
-
-                           
-                            <div class="selected-box" id="selectedBox">
-                                <strong id="selectedCount">0 Teams Selected</strong>
-                                <div id="selectedTags"></div>
-                            </div>
-
-
-                            @foreach (var item in Model.IVResponseTeamList)
-                            {
-                                <div class="team-card" data-name="@item.Name" data-id="@item.ReponseTeamId">
-                                    <div class="team-left">
-                                        <div class="team-icon"><i class="fa-solid fa-user-group"></i></div>
-                                        <div class="team-info">
-                                            <h4>@item.Name <span class="badge blue">@item.Tag</span></h4>
-                                            <div class="phone"><i class="fa-solid fa-phone"></i> @item.Contact</div>
-                                            <p class="mb-0">Specializations:</p>
-                                            <div class="specializations">
-
-                                                @if (!string.IsNullOrWhiteSpace(item.Specializations))
-                                                {
-                                                    @foreach (var itemSpe in item.Specializations.Split(",").ToList())
-                                                    {
-                                                        <span>@itemSpe</span>
-                                                    }
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <i class="fa-regular fa-circle uncheck-icon"></i>
-                                </div>
-                            }
-
-                            <div class="summary" style="display:none">
-                                <h3>Assignment Summary</h3>
-                                <div class="summary-card">
-
-                                    <div class="summary-item">
-
-                                        <label>Teams Assigned</label>
-                                        <div class="value" id="teamAssigned">0</div>
-                                    </div>
-                                    <div class="summary-item right">
-                                        <label>Estimated Response Time</label>
-                                        <div class="value" id="estResponseTeam">N/A</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div> *@
-
-                <div class=" shadow-sm step-content d-none" id="step-3">
-                    <div class="details-sec policies-details-sec p-6">
-                        <div class="info-box">
-                            <i class="fa-solid fa-book"></i>
-                            Policies & Procedures
-                            <small>Select and customize the policies and procedures for this incident response. Assign teams to each task.</small>
-                        </div>
-
-
-                        <div class="progress-box">
-                            <div class="label-percentage d-flex align-item-center justify-content-between">
-                                <label>Overall Progress</label>
-                                <div class="progress-label">0%</div>
-                            </div>
-                            <div class="progress-bar">
-                                <span style="width:0%;"></span>
-                            </div>
-
-                        </div>
-
-                        <div class="Bordercard">
-                            <div class="polices-task-add d-flex align-items-center justify-content-between">
-                                <h4>Add Policies</h4>
-                                @* <div class="add-task"><i class="fa fa-plus" style="cursor:pointer" id="add_task_policy">Add Task</i></div> *@
-                            </div>
-                            <div class="form-box" id="div_Policy">
-                                <input type="text" placeholder="Task title..." id="task_policy_title">
-                                <textarea placeholder="Task description..." id="task_policy_description"></textarea>
-                                <div class="form-actions">
-                                    <button class="btn btn-add" id="submit_task_policy" type="button">Add Task</button>
-                                    <button class="btn btn-cancel" id="cancel_task_policy" type="button">Cancel</button>
-                                </div>
-                            </div>
-
-                            <div class="task-grid IVPolicyList">
-                                @foreach (var item in Model.IVPolicyList)
+                                @foreach (var item in Model.IVIncidentTeamUser)
                                 {
-                                    @*  <div class="task-card">
-                                        <h5>@item.Name</h5>
-                                        <p>@item.Description</p>
-                                        <a href="#" id="add_policy_workflow" data-id="@item.PolicyId"
-                                           data-teams='@Html.Raw(Json.Serialize(item.assignTeams))'><i class="fa-solid fa-plus"></i> Add to Workflow</a>
-                                    </div> *@
+                                    <div class="team-section">
+                                        <div class="form-check teamSelect">
+                                            <input class="form-check-input team-check" type="checkbox" id="teamAlpha" data-team-id="@item.TeamId">
+                                            <label class="form-check-label fw-semibold" for="teamAlpha">@item.TeamName</label>
+                                        </div>
+                                        <div id="alphaDetails" class="team-details d-none">
+                                            <div class="team-members ">
+                                                <label class="form-label fw-semibold">Select Team Members <span class="text-danger">*</span>(at least one)</label><br>
+                                                <div class="row">
+                                                    @foreach (var itemUser in item.Users)
+                                                    {
+                                                        <div class="col-md-6">
+                                                            <div class="form-check form-check-inline">
+                                                                <input class="form-check-input" type="checkbox" id="user_@($"{item.TeamId}_{itemUser.Id}")">
+                                                                <label class="form-check-label">@($"{itemUser.LastName} {itemUser.FirstName}")</label>
 
-                                    <div class="card task-card" id="div_@item.PolicyId">
-                                        <h3>@item.Name</h3>
-                                        <ul>
-                                            @if (item.PolicySteps != null && item.PolicySteps.Count > 0)
-                                            {
-                                                @foreach (var step in item.PolicySteps)
-                                                {
-                                                    <li> <input type="checkbox" checked> @step</li>
-                                                }
-                                            }
-                                        </ul>
-                                        <a href="#" id="add_policy_workflow" data-id="@item.PolicyId"
-                                           data-teams='@Html.Raw(Json.Serialize(item.assignTeams))' 
-                                           class="add-step"><i class="fa-solid fa-plus"></i> Add to Workflow</a>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+
+                                            </div>
+                                            <div class="work-steps mb-3">
+                                                <label class="form-label fw-semibold"><i class="fa fa-list"></i>Work Steps for Emergency Response Team Alpha</label>
+                                                <div class="work-step d-flex align-items-start justify-content-between">
+                                                    <div>
+                                                        <div class="fw-semibold StepName">Gas Step</div>
+                                                        <div class="StepDescription">This is the test description</div>
+                                                    </div>
+                                                    <div class="del-workstep"><i class="far fa-trash-alt"></i></div>
+                                                </div>
+
+                                                <div class="add-step-area mt-2">
+                                                    <input type="text" class="form-control mb-2" placeholder="Step name (e.g., Isolate gas line)..."> <input type="text" class="form-control mb-2" placeholder="Description (optional)..."> <input type="text" class="form-control mb-2" placeholder="Assign to specific person (optional)..."> <button class="btn btn-primary w-100">Add Work Step</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-
                                 }
-
                             </div>
-                        </div>
-                        <div class="Bordercard selectPoliciesTask">
-                            <div class="section-title">Selected Policies & Tasks</div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class=" shadow-sm step-content d-none" id="step-4">
-                    <div class="details-sec communication-detail-sec p-6">
-                        <div class="info-box">
-                            <i class="fa-regular fa-comment-dots"></i>
-                            Communication Center
-                            <small>
-                                Communicate with response teams, add notes, and share files related to this incident.
-                            </small>
-                        </div>
-
-                        <div class="Bordercard newCommunication">
-                            <h3>New Communication</h3>
-                            <div>
-                                <label for="message">Message</label>
-                                <textarea id="message" placeholder="Enter your message..."></textarea>
-                            </div>
-
-                            <div class="col-sm-12">
-                                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                                    <input asp-for="@Model.IVCommunication.File" multiple="true" type="file" class="form-control" placeholder="Upload Image" id="Image" onchange="ShowImage(this)" />
-                                    <span>
-                                        <a href="javascript:void(0)" class="input-group-addon btn btn-default fileinput-exists"
-                                           onclick='RemoveImage()' data-dismiss="fileinput">Remove</a>
-                                    </span>
-                                </div>
-                                <div class="col-sm-12 mt-2">
-                                    <div id="image-thumbnails" class="d-flex flex-wrap">
-                                        <img class="img-responsive img-thumbnail me-2 mb-2"
-                                             src="@Model.IVCommunication.ImageUrl"
-                                             style="max-width:120px; max-height:120px;">
-                                    </div>
-
-                                    <input type="hidden" asp-for="@Model.IVCommunication.ImageUrl"
-                                           value="@Model.@Model.IVCommunication.ImageUrl"
-                                           id="hidden-image-url" />
-                                </div>
-                            </div>
-
-
-
-                            <button class="send-btn" type="button" id="btnSendCommunication"><i class="fa-regular fa-paper-plane"></i> Send Communication</button>
-                        </div>
-                        <div class="Bordercard communicationHistory">
-                            <h3>Communication History</h3>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- Navigation Buttons -->
@@ -1130,5 +717,140 @@
         const newLocSection = document.querySelector('.new-location');
         if (newLocSection) newLocSection.classList.add('d-none');
       }
+    });
+</script>
+
+<script>
+        $("#newAddress").on("input", function () {
+        let query = $(this).val();
+        if (query.length > 2) {
+            $.getJSON("/Incidents/Suggest", { text: query }, function (data) {
+                let $list = $("#suggestionsnewAddress");
+                $list.empty().show();
+
+                $.each(data, function (i, item) {
+                    $list.append(
+                        `<li onclick="selectnewAddress('${item.text.replace(/'/g, "\\'")}')">${item.text}</li>`
+                    );
+                });
+            });
+        } else {
+            $("#suggestionsnewAddress").hide();
+        }
+    });
+
+    function selectnewAddress(address) {
+        $("#newAddress").val(address);
+        $("#suggestionsnewAddress").empty();
+    }
+</script>
+<script>
+    // Ensure the form has data-incident-id attribute in the view:
+
+    // Use event delegation on a static parent (like document or container)
+    $(document).on("click", "#dltAddLoc", async function () {
+        const $element = $(this).closest(".location-card");
+        const id = $element.attr("data-location");
+
+        const payload = { incidentId: id };
+        const res = await fetch("/Validation/DeleteAdditionalLocation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const json = await res.json();
+        if (json.success) {
+            $element.remove();
+        }
+    });
+
+
+    $("#addBtn").on("click", async function (e) {
+        e.preventDefault();
+        const address = $("#newAddress").val()?.trim();
+        if (!address) {
+            alert("Please enter/select an address.");
+            return;
+        }
+
+        // Determine incidentId: prefer data attribute on form or fallback to Model value
+        const incidentIdAttr = $("#incident_validation_form").data("incident-id");
+        // const incidentId = incidentIdAttr ? parseInt(incidentIdAttr, 10) : @Model.Id;
+        const incidentId = $("#hdn_Id").val();
+
+        try {
+            const payload = { incidentId: incidentId, address: address };
+            const res = await fetch("/Validation/AddLocation", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            const json = await res.json();
+
+            if (json.success) {
+                const item = json.item;
+                // build UI card
+                const leftPanel = $(".left-panel");
+                const newCard = $(`
+                    <div class="location-card" data-location="${item.id}" data-lat="${item.lat}" data-lng="${item.lng}">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="ms-2">
+                                <div class="location-title fw-semibold">${item.address}</div>
+                                <span class="badge-status">In Progress</span>
+                            </div>
+                             <div class="ms-1">
+                               <i class="far fa-trash-alt dltAddLoc"></i>
+                            </div>
+                        </div>
+                    </div>
+                `);
+
+                // insert before newLocation div
+                const newLocationDiv = $("#newLocation");
+                if (newLocationDiv.length) {
+                    newCard.insertBefore(newLocationDiv);
+                    newLocationDiv.addClass("d-none");
+                } else {
+                    leftPanel.append(newCard);
+                }
+
+                // clear input
+                $("#newAddress").val("");
+                $("#suggestionsnewAddress").empty().hide();
+
+                // optionally attach click handler to new card (same UX as other cards)
+                newCard.on("click", function () {
+                    $(".location-card").removeClass("active");
+                    $(this).addClass("active");
+                    const location = $(this).find(".location-title").text();
+                    $("#rightPanel h3").text(`Location Validation`);
+                    // update address shown on right panel if you want
+                });
+
+                    // bind click event for this card only
+                newCard.find(".dltAddLoc").on("click", async function () {
+                    const $element = $(this).closest(".location-card");
+                    const id = $element.attr("data-location");
+
+                    const payload = { incidentId: id };
+                    const res = await fetch("/Validation/DeleteAdditionalLocation", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+                    const json = await res.json();
+                    if (json.success) {
+                        $element.remove();
+                    }
+                });
+
+            } else {
+                alert(json.message || "Failed to add location.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Failed to add location (network error).");
+        }
     });
 </script>

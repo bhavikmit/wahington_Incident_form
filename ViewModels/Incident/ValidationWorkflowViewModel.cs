@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+using Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,9 @@ namespace ViewModels.Incident
         public List<IncidentResponseTeamViewModel> IVResponseTeamList { get; set; } = new();
         public List<IncidentPolicyViewModel> IVPolicyList { get; set; } = new();
         public IncidentCommunicationViewModel IVCommunication { get; set; } = new();
+        public List<TeamWithUsersViewModel> IVIncidentTeamUser { get; set; } = new();
+
+        public List<IncidentAdditionalLocationViewModel> IVAdditionalLocations { get; set; } = new();
     }
 
     public class IncidentValidationCountViewModel : BaseIncidentValidationViewModel

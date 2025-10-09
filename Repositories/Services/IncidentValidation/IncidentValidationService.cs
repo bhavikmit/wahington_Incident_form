@@ -34,6 +34,7 @@ using Repositories.Shared.UserInfoServices.Interface;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using ViewModels;
@@ -449,6 +450,181 @@ namespace Repositories.Common
                 return 0;
             }
         }
+        public async Task<List<TeamWithUsersViewModel>> GetIncidentTeamUsers()
+        {
+            try
+            {
+                var usersTeams = await _db.IncidentUsers
+                    .Include(p => p.Team)
+                    .Where(p => !p.IsDeleted && p.TeamId != null)
+                    .ToListAsync();
+
+                var teamWiseUsers = usersTeams
+                    .GroupBy(u => new { u.TeamId, u.Team.Name })
+                    .Select(g => new TeamWithUsersViewModel
+                    {
+                        TeamId = g.Key.TeamId,
+                        TeamName = g.Key.Name,
+                        Users = g.Select(u => new IncidentUser
+                        {
+                            Id = u.Id,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            Telephone = u.Telephone ?? string.Empty,
+                            Email = u.Email ?? string.Empty
+                        }).ToList()
+                    })
+                    .OrderBy(t => t.TeamName)
+                    .ToList();
+
+                return teamWiseUsers;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetIncidentTeamUsers.");
+                return new List<TeamWithUsersViewModel>();
+            }
+        }
+
+        public async Task<List<IncidentAdditionalLocationViewModel>> GetIncidentAdditionalLocationByIncident(long incidentId)
+        {
+            try
+            {
+                // Get primary location
+                var primary = await _db.Incidents
+                    .Where(p => !p.IsDeleted && p.Id == incidentId)
+                    .Select(p => new IncidentAdditionalLocationViewModel
+                    {
+                        AdditionalLocation = p.LocationAddress ?? string.Empty,
+                        Lat = p.Lat,
+                        Long = p.Lng,
+                        IsPrimaryLocation = true,
+                    })
+                    .FirstOrDefaultAsync();
+
+                // Get additional locations
+                var additionals = await _db.AdditionalLocations
+                    .Where(p => !p.IsDeleted && p.IncidentID == incidentId)
+                    .Select(a => new IncidentAdditionalLocationViewModel
+                    {
+                        AdditionalLocation = a.LocationAddress ?? string.Empty,
+                        Lat = a.Latitude,
+                        Long = a.Longitude,
+                        IsPrimaryLocation = false,
+                        Id = a.Id
+                    })
+                    .ToListAsync();
+
+                // Add primary at the top (if available)
+                if (primary != null)
+                    additionals.Insert(0, primary);
+
+                return additionals;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetIncidentAdditionalLocationByIncident for IncidentId: {IncidentId}", incidentId);
+                return new List<IncidentAdditionalLocationViewModel>();
+            }
+        }
+        public async Task<GeocodeResult?> GetLatLngFromAddress(string address)
+        {
+            if (string.IsNullOrWhiteSpace(address))
+                return new GeocodeResult { Lat = 0, Lng = 0 };
+
+            try
+            {
+                using var client = new HttpClient();
+                string url = $"https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates" +
+                             $"?f=json&SingleLine={Uri.EscapeDataString(address)}";
+
+                var response = await client.GetStringAsync(url);
+
+                using var doc = JsonDocument.Parse(response);
+                if (!doc.RootElement.TryGetProperty("candidates", out var candidates))
+                    return new GeocodeResult { Lat = 0, Lng = 0 };
+
+                if (candidates.GetArrayLength() > 0)
+                {
+                    var location = candidates[0].GetProperty("location");
+                    return new GeocodeResult
+                    {
+                        Lat = location.GetProperty("y").GetDouble(),
+                        Lng = location.GetProperty("x").GetDouble()
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetLatLngFromAddress.");
+                return new GeocodeResult { Lat = 0, Lng = 0 };
+            }
+
+            return new GeocodeResult { Lat = 0, Lng = 0 };
+        }
+
+        // ---------- new: save additional location ----------
+        public async Task<long> AddAdditionalLocationAsync(long incidentId, string address, double lat, double lng)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                // If you have an AdditionalLocation entity defined (Models.AdditionalLocation)
+                var additional = new AdditionalLocations
+                {
+                    IncidentID = incidentId,
+                    LocationAddress = address,
+                    Latitude = lat,
+                    Longitude = lng,
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = GetCurrentUserIdOrDefault(),
+                    IsDeleted = false,
+                    //ActiveStatus = 1
+                };
+
+                await _db.AdditionalLocations.AddAsync(additional);
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return additional.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error AddAdditionalLocationAsync.");
+                return 0;
+            }
+        }
+
+        public async Task<long> DeleteAdditionalLocationAsync(long id)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+
+                var addLocation = await _db.AdditionalLocations.Where(p => p.Id == id).FirstOrDefaultAsync();
+                if (addLocation != null)
+                {
+                    addLocation.IsDeleted = true;
+                }
+                else
+                {
+                    return 0;
+                }
+
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return addLocation.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error SavePolicy.");
+                return 0;
+            }
+        }
+
 
         #region private event
         /// <summary>
@@ -533,6 +709,18 @@ namespace Repositories.Common
                2 => "N/A",
                _ => string.Empty
            };
+        private long GetCurrentUserIdOrDefault()
+        {
+            try
+            {
+                var userId = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+                return !string.IsNullOrEmpty(userId) && long.TryParse(userId, out var parsed) ? parsed : 1L;
+            }
+            catch
+            {
+                return 1L;
+            }
+        }
         #endregion
     }
 }

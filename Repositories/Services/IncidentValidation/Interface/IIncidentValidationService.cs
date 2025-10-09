@@ -27,5 +27,10 @@ namespace Repositories.Common
         Task<long> SavePolicy(PolicyModifyViewModel request);
         Task<List<SelectListItem>> GetTeamsList();
         Task<long> SaveIncidentValidation(IncidentSubmitViewModel request);
+        Task<List<TeamWithUsersViewModel>> GetIncidentTeamUsers();
+        Task<List<IncidentAdditionalLocationViewModel>> GetIncidentAdditionalLocationByIncident(long incidentId);
+        Task<GeocodeResult?> GetLatLngFromAddress(string address);
+        Task<long> AddAdditionalLocationAsync(long incidentId, string address, double lat, double lng);
+        Task<long> DeleteAdditionalLocationAsync(long id);
     }
 }

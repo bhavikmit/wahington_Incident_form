@@ -749,6 +749,12 @@ namespace Models.Mapper
             CreateMap<UserBriefViewModel, IncidentUser>().ReverseMap();
             CreateMap<UserModifyViewModel, UserDetailViewModel>().ReverseMap();
             //IgnoreGlobalProperties();
+
+            // Progress
+            CreateMap<ProgressModifyViewModel, Progress>().ReverseMap();
+            CreateMap<ProgressDetailViewModel, Progress>().ReverseMap();
+            CreateMap<ProgressBriefViewModel, Progress>().ReverseMap();
+            CreateMap<ProgressModifyViewModel, ProgressDetailViewModel>().ReverseMap();
         }
         //private void IgnoreGlobalProperties()
         //{

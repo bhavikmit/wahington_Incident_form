@@ -99,8 +99,8 @@ namespace Repositories.Common
                 var SeverityLevel = new SeverityLevel
                 {
                     Name = viewModel.Name,
-                    Description = viewModel.Description,
-                    Color = viewModel.Color
+                    Description = viewModel.Description ?? string.Empty,
+                    Color = viewModel.Color ?? string.Empty
                 };
 
                 // Save
@@ -133,8 +133,8 @@ namespace Repositories.Common
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
                 SeverityLevel.Name = viewModel.Name;
-                SeverityLevel.Description = viewModel.Description;
-                SeverityLevel.Color = viewModel.Color;
+                SeverityLevel.Description = viewModel.Description ?? string.Empty;
+                SeverityLevel.Color = viewModel.Color ?? string.Empty;
                 try
                 {
                     await _db.SaveChangesAsync();

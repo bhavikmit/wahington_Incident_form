@@ -68,9 +68,10 @@
 
     $(document).off("click", "#nextToIncidentDetials");
     $(document).on("click", "#nextToIncidentDetials", function (e) {
+        debugger;
         e.preventDefault();
         var isValid = true;
-        if ($("#addanotherlocationform").is(":visible")) {
+        if ($("#locationForm").is(":visible")) {
             if ($("#addlocAddress").val() === "") {
                 showError($("#addlocAddress"));
                 isValid = false;
@@ -151,16 +152,30 @@
         var isValid = true;
 
         // Loop through all required fields
-        $("#pills-severity").find("#severity").each(function () {
+        //$("#pills-severity").find("#severity").each(function () {
+        //    var $field = $(this);
+        //    var value = $.trim($field.val());
+
+        //    // Dropdown special check
+        //    if ($field.is("select") && (value === "" || value === "--Select--")) {
+        //        isValid = false;
+        //        showError($field);
+        //    }
+        //    else if (value === "") {
+        //        isValid = false;
+        //        showError($field);
+        //    }
+        //    else {
+        //        clearError($field);
+        //    }
+        //});
+
+        // Loop through all required fields
+        $("#pills-description").find("textarea[data-val-required]").each(function () {
             var $field = $(this);
             var value = $.trim($field.val());
 
-            // Dropdown special check
-            if ($field.is("select") && (value === "" || value === "--Select--")) {
-                isValid = false;
-                showError($field);
-            }
-            else if (value === "") {
+            if (value === "") {
                 isValid = false;
                 showError($field);
             }
@@ -263,9 +278,16 @@
     $(document).on("change", "#isSameCallerAddress", function (e) {
         if ($(this).is(":checked")) {
             $("#locAddress").val($("#callerAddress").val());
+
+            $.getJSON("/Incidents/Resolve", { magicKey: $("#hdnmagicKey").val() }, function (data) {
+                $("#Loc1Latitude").val(data.lat);
+                $("#Loca1Longitude").val(data.lon);
+            });
         }
         else {
             $("#locAddress").val("");
+            $("#Loc1Latitude").val("");
+            $("#Loca1Longitude").val("");
         }
     });
 

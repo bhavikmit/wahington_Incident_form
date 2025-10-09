@@ -1,13 +1,19 @@
 ﻿using AutoMapper;
+
 using Centangle.Common.ResponseHelpers.Models;
+
 using DataLibrary;
+
 using Enums;
+
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 using Models;
 using Models.Common.Interfaces;
+
 using ViewModels;
 using ViewModels.Shared;
 
@@ -78,7 +84,7 @@ namespace Repositories.Common
                     {
                         Id = t.Id,
                         TeamId = t.TeamId,
-                        TeamName = teamName,
+                        TeamName = teamName ?? string.Empty,
                         FirstName = t.FirstName,
                         LastName = t.LastName,
                         Telephone = t.Telephone,

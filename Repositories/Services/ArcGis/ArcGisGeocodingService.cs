@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using DocumentFormat.OpenXml.Bibliography;
+
+using Microsoft.Extensions.Configuration;
 
 using Repositories.Services.ArcGis.Interface;
 
@@ -72,23 +74,62 @@ namespace Repositories.Services.ArcGis
         // Convert a suggestion to lat/lon
         public async Task<(double lat, double lon, string address)?> GetCoordinatesAsync(string magicKey)
         {
-            var url = $"https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates" +
-                      $"?f=json&magicKey={magicKey}&outFields=Match_addr&apiKey={_apiKey}";
+            var url = $"https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates" +
+                      $"?f=json&magicKey={Uri.EscapeDataString(magicKey)}&outFields=Match_addr&apiKey={_apiKey}";
 
             var response = await _httpClient.GetStringAsync(url);
             using var doc = JsonDocument.Parse(response);
 
-            var candidates = doc.RootElement.GetProperty("candidates");
-            if (candidates.GetArrayLength() > 0)
+            if (!doc.RootElement.TryGetProperty("candidates", out var candidates) || candidates.GetArrayLength() == 0)
+                return null; // no candidates found
+
+            var first = candidates[0];
+
+            // Try getting location safely
+            if (!first.TryGetProperty("location", out var location))
+                return null; // invalid response
+
+            double lat = 0, lon = 0;
+            string address = string.Empty;
+
+            if (location.TryGetProperty("y", out var yProp))
+                lat = yProp.GetDouble();
+
+            if (location.TryGetProperty("x", out var xProp))
+                lon = xProp.GetDouble();
+
+            if (first.TryGetProperty("address", out var addrProp))
+                address = addrProp.GetString() ?? string.Empty;
+
+            return (lat, lon, address);
+        }
+
+        public async Task<List<(string Text, string MagicKey)>> GetSuggestionsAsyncWithMagicKey(string text)
+        {
+            var suggestionsUrl = $"https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/suggest" +
+                                 $"?f=json&text={Uri.EscapeDataString(text)}&maxSuggestions=5&apiKey={_apiKey}";
+
+            var suggestionsResponse = await _httpClient.GetStringAsync(suggestionsUrl);
+            using var doc = JsonDocument.Parse(suggestionsResponse);
+
+            var results = new List<(string Text, string MagicKey)>();
+
+            if (doc.RootElement.TryGetProperty("suggestions", out var arr))
             {
-                var first = candidates[0];
-                var location = first.GetProperty("location");
-                var lat = location.GetProperty("y").GetDouble();
-                var lon = location.GetProperty("x").GetDouble();
-                var addr = first.GetProperty("address").GetString();
-                return (lat, lon, addr ?? "");
+                foreach (var s in arr.EnumerateArray())
+                {
+                    var suggestionText = s.GetProperty("text").GetString();
+                    var magicKey = s.GetProperty("magicKey").GetString();
+
+                    results.Add((suggestionText!, magicKey!));
+                }
             }
-            return null;
+            else if (doc.RootElement.TryGetProperty("error", out var err))
+            {
+                throw new Exception($"ArcGIS error: {err}");
+            }
+
+            return results;
         }
 
         public async Task<List<(string Text, double Lat, double Lng)>> GetSuggestionsAsynclat(string text)

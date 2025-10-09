@@ -33,6 +33,7 @@ using Repositories.Shared.UserInfoServices.Interface;
 
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -48,11 +49,13 @@ namespace Repositories.Common
         private readonly ApplicationDbContext _db;
         private readonly ILogger<IncidentService> _logger;
         private readonly IAdditionalLocationsService _iAdditionalLocationsService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IncidentService(ApplicationDbContext db, ILogger<IncidentService> logger, IAdditionalLocationsService iAdditionalLocationsService)
+        public IncidentService(ApplicationDbContext db, ILogger<IncidentService> logger, IHttpContextAccessor httpContextAccessor, IAdditionalLocationsService iAdditionalLocationsService)
         {
             _db = db;
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
             _iAdditionalLocationsService = iAdditionalLocationsService;
         }
 
@@ -153,6 +156,17 @@ namespace Repositories.Common
                                         : it.Name
                                 })
                                 .ToListAsync();
+
+
+                //var progress = await _db.
+                //   .Where(it => !it.IsDeleted)
+                //   .OrderBy(it => it.Name)
+                //   .Select(it => new SelectListItem
+                //   {
+                //       Value = it.Id.ToString(),
+                //       Text = it.Name
+                //   })
+                //   .ToListAsync();
 
                 incidentViewModel.severityLevels = severityLevels;
                 incidentViewModel.statusLegends = statusLegendsList;
@@ -373,11 +387,28 @@ namespace Repositories.Common
                         query = query.Where(p => p.DescriptionIssue.Contains(request.description));
                     }
                 }
-                var incidentsList = await query.ToListAsync();
 
+                // --- Order by "Submitted" status on top ---
+                query = query.OrderByDescending(p => p.StatusLegend.Name == StatusLegendEnum.Submitted.ToString());
+
+                var incidentsList = await query.ToListAsync();
+                var incidentIds = incidentsList.Select(i => i.Id).ToList();
+
+                var additionalCounts = new List<(long IncidentId, int Count)>();
+                if (incidentIds.Any())
+                {
+                    additionalCounts = await _db.AdditionalLocations
+                        .Where(al => !al.IsDeleted && al.IncidentID.HasValue && incidentIds.Contains(al.IncidentID.Value))
+                        .GroupBy(al => al.IncidentID)
+                        .Select(g => new { IncidentId = g.Key.Value, Count = g.Count() })
+                        .ToListAsync()
+                        .ContinueWith(t => t.Result.Select(x => (x.IncidentId, x.Count)).ToList());
+                }
 
                 foreach (var item in incidentsList)
                 {
+                    var addCount = additionalCounts.FirstOrDefault(a => a.IncidentId == item.Id).Count;
+
                     incidentGridViews.Add(new IncidentGridViewModel()
                     {
                         CallDate = GetDate(Convert.ToString(item.CallTime)),
@@ -389,13 +420,14 @@ namespace Repositories.Common
                         Id = item.Id,
                         Intersection = item.Landmark ?? string.Empty,
                         LocationAddress = item.LocationAddress ?? string.Empty,
-                        Severity = item.SeverityLevel?.Name,
+                        Severity = item.SeverityLevel?.Name ?? string.Empty,
                         SeverityId = item?.SeverityLevelId,
-                        StatusLegend = item.StatusLegend?.Name,
-                        StatusLegendColor = item.StatusLegend?.Color,
+                        StatusLegend = item.StatusLegend?.Name ?? string.Empty,
+                        StatusLegendColor = item.StatusLegend?.Color ?? string.Empty,
                         StatusLegendId = item.StatusLegendId,
-                        RelationShipName = item.Relationship?.Name,
+                        RelationShipName = item.Relationship?.Name ?? string.Empty,
                         RelationShipId = item?.RelationshipId,
+                        AdditionalLocationCount = addCount
                     });
                 }
                 return incidentGridViews;
@@ -467,6 +499,9 @@ namespace Repositories.Common
                     return null; // no such status in DB
                 }
 
+                var userId = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userIdParsed = !string.IsNullOrEmpty(userId) ? long.Parse(userId) : 0;
+                
                 // update incident status
                 incident.StatusLegendId = statusLegend.Id;
                 incident.UpdatedOn = DateTime.UtcNow;
@@ -480,9 +515,9 @@ namespace Repositories.Common
                     IsDeleted = false,
                     ActiveStatus = Enums.ActiveStatus.Active,
                     CreatedOn = DateTime.UtcNow,
-                    CreatedBy = 1,  // replace with current user id
+                    CreatedBy = userIdParsed,
                     UpdatedOn = DateTime.UtcNow,
-                    UpdatedBy = 1   // replace with current user id
+                    UpdatedBy = userIdParsed
                 };
 
                 _db.IncidentHistories.Add(history);
@@ -637,13 +672,13 @@ namespace Repositories.Common
                 var viewModel = new IncidentViewModel
                 {
                     Id = incident.Id,
-                    DescriptionIssue = incident.DescriptionIssue,
+                    DescriptionIssue = incident.DescriptionIssue ?? string.Empty,
                     severityLevelId = incident.SeverityLevelId,
 
 
                     incidentDetails = new IncidentDetailsViewModel
                     {
-                        EventTypeIds = incident.EventTypeIds,
+                        EventTypeIds = incident.EventTypeIds ?? string.Empty,
                         IsOtherEvent = incident.IsOtherEvent,
                         OtherEventDetail = incident.OtherEventDetail ?? string.Empty,
                         EventTypes = new List<SelectListItem>()
@@ -664,9 +699,9 @@ namespace Repositories.Common
 
                     incidentCellerInformation = new IncidentCellerInformationViewModel
                     {
-                        CallerName = incident.CallerName,
-                        CallerPhoneNumber = incident.CallerPhoneNumber,
-                        CallerAddress = incident.CallerAddress,
+                        CallerName = incident.CallerName ?? string.Empty,
+                        CallerPhoneNumber = incident.CallerPhoneNumber ?? string.Empty,
+                        CallerAddress = incident.CallerAddress ?? string.Empty,
                         CallTime = incident.CallTime,
                         RelationshipId = incident.RelationshipId,
                         RelationshipName = incident.Relationship?.Name ?? string.Empty,
@@ -676,10 +711,10 @@ namespace Repositories.Common
 
                     incidentiLocation = new IncidentiLocationViewModel
                     {
-                        Address = incident.LocationAddress,
-                        Landmark = incident.Landmark,
+                        Address = incident.LocationAddress ?? string.Empty,
+                        Landmark = incident.Landmark ?? string.Empty,
                         ServiceAccount = incident.ServiceAccount,
-                        AssetIDs = incident.AssetIds,
+                        AssetIDs = incident.AssetIds ?? string.Empty,
                         IsSameCallerAddress = incident.IsSameCallerAddress,
                         AssetsIncidentList = new List<SelectListItem>()
                     },
@@ -705,7 +740,7 @@ namespace Repositories.Common
 
                     incidentSupportingInfoViewModel = new IncidentSupportingInfoViewModel
                     {
-                        Notes = incident.SupportInfoNotes,
+                        Notes = incident.SupportInfoNotes ?? string.Empty,
                         ImageUrl = incident.ImageUrl, // keep original value
 
                         // ✅ split comma-separated image URLs
@@ -851,17 +886,17 @@ namespace Repositories.Common
                 {
                     lat = incident.Lat,
                     lon = incident.Lng,
-                    severity = incident.SeverityLevel?.Name,
-                    color = incident.SeverityLevel?.Color,
-                    incidentloc = incident.LocationAddress,
-                    calleraddress = incident.CallerAddress,
-                    callername = incident.CallerName,
-                    callerphone = incident.CallerPhoneNumber,
+                    severity = incident.SeverityLevel?.Name ?? string.Empty,
+                    color = incident.SeverityLevel?.Color ?? string.Empty,
+                    incidentloc = incident.LocationAddress ?? string.Empty,
+                    calleraddress = incident.CallerAddress ?? string.Empty,
+                    callername = incident.CallerName ?? string.Empty,
+                    callerphone = incident.CallerPhoneNumber ?? string.Empty,
                     incidentid = incident.IncidentID,
                     assettype = await GetAssets(incident.AssetIds ?? string.Empty),
                     description = incident.DescriptionIssue ?? string.Empty,
                     eventtype = await GetEventTypes(incident.EventTypeIds ?? string.Empty),
-                    intersection = incident.Landmark,
+                    intersection = incident.Landmark ?? string.Empty,
                     perimeter = incidentValidation != null ? GetPerimeter(incidentValidation.DiscoveryPerimeterId) : ""
                 });
 
@@ -878,21 +913,26 @@ namespace Repositories.Common
         {
             try
             {
+
+                var userId = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userIdParsed = !string.IsNullOrEmpty(userId) ? long.Parse(userId) : 0;
+                var userName = _httpContextAccessor?.HttpContext?.User.Identity?.Name ?? "Unknown User";
+
                 var imageUrl = await SaveAttachments(request.File);
                 var communicationHistory = new IncidentValidationCommunicationHistory
                 {
                     IncidentId = request.IncidentId,
                     IncidentValidationId = request.IncidentValidationId,
-                    UserName = "admin@eztrak.com", // Replace with actual user name
+                    UserName = userName,
                     Message = request.Message,
                     TimeStamp = DateTime.Now.ToString("MMM dd hh:mm tt"),
                     RecipientsIds = "",
                     ImageUrl = imageUrl ?? "",
                     MessageType = request.MessageType,
                     CreatedOn = DateTime.UtcNow,
-                    CreatedBy = 1, // Replace with actual user ID
+                    CreatedBy = userIdParsed,
                     UpdatedOn = DateTime.UtcNow,
-                    UpdatedBy = 1, // Replace with actual user ID
+                    UpdatedBy = userIdParsed,
                     IsDeleted = false,
                     ActiveStatus = Enums.ActiveStatus.Active
                 };
@@ -907,6 +947,53 @@ namespace Repositories.Common
                 return false;
             }
         }
+        public async Task<List<AdditionalLocationViewModel>> GetAdditionalLocationsByIncidentId(long incidentId)
+        {
+            try
+            {
+                var additionalLocations = await _db.AdditionalLocations
+                    .Where(al => !al.IsDeleted && al.IncidentID.HasValue && al.IncidentID.Value == incidentId)
+                    .OrderBy(al => al.Id)
+                    .ToListAsync();
+
+                var result = new List<AdditionalLocationViewModel>();
+
+                foreach (var al in additionalLocations)
+                {
+                    var vm = new AdditionalLocationViewModel
+                    {
+                        Id = al.Id,
+                        IncidentId = al.IncidentID,
+                        LocationAddress = al.LocationAddress ?? string.Empty,
+                        Latitude = al.Latitude,
+                        Longitude = al.Longitude,
+                        NearestIntersection = al.NearestIntersection ?? string.Empty,
+                        ServiceAccount = al.ServiceAccount ?? string.Empty,
+                        PerimeterType = al.PerimeterType,
+                        PerimeterTypeDigit = al.PerimeterTypeDigit,
+                        AssetIDs = al.AssetIds ?? string.Empty,
+                        AssetNames = new List<string>()
+                    };
+
+                    // Resolve asset names if AssetIds present (re-using your GetAssets helper)
+                    if (!string.IsNullOrWhiteSpace(vm.AssetIDs))
+                    {
+                        vm.AssetNames = new List<string>(); //await GetAssets(vm.AssetIDs);
+                    }
+
+                    result.Add(vm);
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetAdditionalLocationsByIncidentId.");
+                return new List<AdditionalLocationViewModel>();
+            }
+        }
+
+
 
         #region private methods
         private bool TryParseCallTime(string callTime, out DateTime dateTime)

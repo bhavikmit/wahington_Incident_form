@@ -12,5 +12,6 @@ namespace Repositories.Services.ArcGis.Interface
        
         Task<(double lat, double lon, string address)?> GetCoordinatesAsync(string magicKey);
         Task<List<(string Text, double Lat, double Lng)>> GetSuggestionsAsynclat(string text);
+        Task<List<(string Text, string MagicKey)>> GetSuggestionsAsyncWithMagicKey(string text);
     }
 }

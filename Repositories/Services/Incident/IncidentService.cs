@@ -27,7 +27,8 @@ using Models;
 using Models.Common.Interfaces;
 
 using Pagination;
-
+using Repositories.Services.ArcGis;
+using Repositories.Services.ArcGis.Interface;
 using Repositories.Shared.UserInfoServices.Interface;
 
 using System.Linq;
@@ -47,13 +48,15 @@ namespace Repositories.Common
     {
         private readonly ApplicationDbContext _db;
         private readonly ILogger<IncidentService> _logger;
+        private readonly IAdditionalLocationsService _iAdditionalLocationsService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public IncidentService(ApplicationDbContext db, ILogger<IncidentService> logger, IHttpContextAccessor httpContextAccessor)
+        public IncidentService(ApplicationDbContext db, ILogger<IncidentService> logger, IHttpContextAccessor httpContextAccessor, IAdditionalLocationsService iAdditionalLocationsService)
         {
             _db = db;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _iAdditionalLocationsService = iAdditionalLocationsService;
         }
 
         public async Task<IncidentViewModel> GetIncidentDropDown()
@@ -242,6 +245,18 @@ namespace Repositories.Common
                 await _db.Incidents.AddAsync(incident);
                 await _db.SaveChangesAsync();
                 await transaction.CommitAsync();
+
+                if (viewModel.additionalLocations.Count > 0 && incidentId != "")
+                {
+                    long id = await _db.Incidents
+                        .Where(it => !it.IsDeleted && it.IncidentID == incidentId)
+                        .Select(it => it.Id)
+                        .FirstOrDefaultAsync();
+                    viewModel.additionalLocations.ForEach(l => l.IncidentId = id);
+
+                    if (viewModel.additionalLocations[0].IncidentId > 0) 
+                        await _iAdditionalLocationsService.SaveadditionalLocations(viewModel.additionalLocations);
+                }
 
                 return incidentId;
             }
@@ -950,7 +965,7 @@ namespace Repositories.Common
                     var vm = new AdditionalLocationViewModel
                     {
                         Id = al.Id,
-                        IncidentID = al.IncidentID,
+                        IncidentId = al.IncidentID,
                         LocationAddress = al.LocationAddress ?? string.Empty,
                         Latitude = al.Latitude,
                         Longitude = al.Longitude,
@@ -958,14 +973,14 @@ namespace Repositories.Common
                         ServiceAccount = al.ServiceAccount ?? string.Empty,
                         PerimeterType = al.PerimeterType,
                         PerimeterTypeDigit = al.PerimeterTypeDigit,
-                        AssetIds = al.AssetIds ?? string.Empty,
-                        AssetNames = string.Empty
+                        AssetIDs = al.AssetIds ?? string.Empty,
+                        AssetNames = new List<string>()
                     };
 
                     // Resolve asset names if AssetIds present (re-using your GetAssets helper)
-                    if (!string.IsNullOrWhiteSpace(vm.AssetIds))
+                    if (!string.IsNullOrWhiteSpace(vm.AssetIDs))
                     {
-                        vm.AssetNames = await GetAssets(vm.AssetIds);
+                        vm.AssetNames = new List<string>(); //await GetAssets(vm.AssetIDs);
                     }
 
                     result.Add(vm);

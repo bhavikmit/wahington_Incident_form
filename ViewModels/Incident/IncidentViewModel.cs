@@ -36,6 +36,8 @@ namespace ViewModels.Incident
         public string DescriptionIssue { get; set; } = default!;
 
         public List<IncidentLocationMapViewModel> ListIncidentLocationMapViewModel { get; set; } = new();
+        public AdditionalLocationViewModel additionalLocation { get; set; } = new();
+        public List<AdditionalLocationViewModel> additionalLocations { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel
@@ -167,12 +169,12 @@ namespace ViewModels.Incident
         public string ValidationNotes { get; set; }
         public long CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
-        public string CreatedDateInFormat { get; set; } 
+        public string CreatedDateInFormat { get; set; }
         public string CreatedTimeInFormat { get; set; }
-        public string SeverityLevelName { get; set; }   
+        public string SeverityLevelName { get; set; }
         public string SeverityLevelColor { get; set; }
         public List<IncidentValidationCommunicationHistoriesViewModel> IncidentValidationCommunicationHistoriesViewModelList { get; set; }
-    }   
+    }
 
     public class IncidentValidationCommunicationHistoriesViewModel
     {
@@ -225,6 +227,23 @@ namespace ViewModels.Incident
         }
 
         public string TeamsByPolicy { get; set; } = string.Empty;
+    }
+
+    public class AdditionalLocationViewModel
+    {
+
+        public long? Id { get; set; } = default!;
+        public long? IncidentId { get; set; } = default!; 
+        public string LocationAddress { get; set; } = default!;
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public string? NearestIntersection { get; set; }
+        public string? ServiceAccount { get; set; } = default!;
+        public bool PerimeterType { get; set; }
+        public long? PerimeterTypeDigit { get; set; }
+        public string AssetIDs { get; set; } = default!;
+        public List<SelectListItem> AssetsIncidentList { get; set; } = new();
+        public List<string> AssetNames { get; set; } = new();
     }
 
     public class IncidentAdditionalLocationViewModel : BaseIncidentValidationViewModel

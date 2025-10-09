@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ViewModels.Incident
 {
-    public class AdditionalLocationViewModel
+    public class AdditionalLocationViewModel1
     {
         public long Id { get; set; }
         public long? IncidentID { get; set; }

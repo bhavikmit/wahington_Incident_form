@@ -373,8 +373,10 @@ namespace Repositories.Common
                     }
                 }
 
-                // --- Order by "Submitted" status on top ---
-                query = query.OrderByDescending(p => p.StatusLegend.Name == StatusLegendEnum.Submitted.ToString());
+                query = query.OrderByDescending(p => p.CallTime);
+
+                //// --- Order by "Submitted" status on top ---
+                //query = query.OrderByDescending(p => p.StatusLegend.Name == StatusLegendEnum.Submitted.ToString());
 
                 var incidentsList = await query.ToListAsync();
                 var incidentIds = incidentsList.Select(i => i.Id).ToList();

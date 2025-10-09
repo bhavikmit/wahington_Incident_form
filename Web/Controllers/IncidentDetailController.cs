@@ -15,6 +15,8 @@ namespace Web.Controllers
         public async Task<IActionResult> Index(long id)
         {
             var model = await _iIncidentService.GetIncidentDetailsById(id);
+            model.ListIncidentLocationMapViewModel = await _iIncidentService.GetIncidentMapDetailsbyId(id);
+
             return View(model);
         }
     }

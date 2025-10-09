@@ -65,6 +65,9 @@ namespace Web.Controllers
             var incidentPolicy = await _iIncidentValidationService.GetIncidentValidationPolicy();
             validationWorkflow.IVPolicyList = incidentPolicy;
 
+            var incidentUsersTeam = await _iIncidentValidationService.GetIncidentTeamUsers();
+            validationWorkflow.IVIncidentTeamUser = incidentUsersTeam;
+
             return PartialView("_IncidentValidationDetail", validationWorkflow);
         }
 

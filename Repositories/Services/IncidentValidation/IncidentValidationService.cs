@@ -449,6 +449,41 @@ namespace Repositories.Common
                 return 0;
             }
         }
+        public async Task<List<TeamWithUsersViewModel>> GetIncidentTeamUsers()
+        {
+            try
+            {
+                var usersTeams = await _db.IncidentUsers
+                    .Include(p => p.Team)
+                    .Where(p => !p.IsDeleted && p.TeamId != null)
+                    .ToListAsync();
+
+                var teamWiseUsers = usersTeams
+                    .GroupBy(u => new { u.TeamId, u.Team.Name })
+                    .Select(g => new TeamWithUsersViewModel
+                    {
+                        TeamId = g.Key.TeamId,
+                        TeamName = g.Key.Name,
+                        Users = g.Select(u => new IncidentUser
+                        {
+                            Id = u.Id,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            Telephone = u.Telephone ?? string.Empty,
+                            Email = u.Email ?? string.Empty
+                        }).ToList()
+                    })
+                    .OrderBy(t => t.TeamName)
+                    .ToList();
+
+                return teamWiseUsers;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetIncidentTeamUsers.");
+                return new List<TeamWithUsersViewModel>();
+            }
+        }
 
         #region private event
         /// <summary>

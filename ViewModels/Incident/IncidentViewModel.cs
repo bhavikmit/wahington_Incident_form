@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
+
 using Models;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using ViewModels.Dashboard;
 
 namespace ViewModels.Incident
 {
@@ -30,6 +34,8 @@ namespace ViewModels.Incident
         public long? severityLevelId { get; set; } = default!;
         public long? Id { get; set; } = default!;
         public string DescriptionIssue { get; set; } = default!;
+
+        public List<IncidentLocationMapViewModel> ListIncidentLocationMapViewModel { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel

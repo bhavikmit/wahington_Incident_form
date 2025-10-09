@@ -56,14 +56,14 @@
         <div class="col-md-6">
             <div class="mb-3">
                 <label class="form-label">Latitude<span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="Loc1Latitude" placeholder="0.000000" />
+                <input type="text" class="form-control" id="Loc1Latitude" placeholder="0.000000" disabled />
                 <div class="invalid-feedback"></div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="mb-3">
                 <label class="form-label">Longitude</label>
-                <input type="text" class="form-control" id="Loca1Longitude" placeholder="0.000000" />
+                <input type="text" class="form-control" id="Loca1Longitude" placeholder="0.000000" disabled />
             </div>
         </div>
     </div>
@@ -120,17 +120,26 @@
 
                 $.each(data, function (i, item) {
                     $list.append(
-                        `<li onclick="selectAddress('${item.replace(/'/g, "\\'")}')">${item}</li>`
+                        `<li onclick="selectAddress('${item.text.replace(/'/g, "\\'")}', '${item.magicKey}')">${item.text}</li>`
                     );
                 });
             });
-        } 
-        else {
+        }
+        else 
+        {
             $("#suggestions").hide();
+            $("#Loc1Latitude").val("");
+            $("#Loca1Longitude").val("");
         }
     });
 
-    function selectAddress(address) {
+    function selectAddress(address, magicKey) {
+
+        $.getJSON("/Incidents/Resolve", { magicKey: magicKey }, function (data) {
+                $("#Loc1Latitude").val(data.lat);
+                $("#Loca1Longitude").val(data.lon);
+        });
+
         $("#locAddress").val(address);
         $("#suggestions").empty();
     }

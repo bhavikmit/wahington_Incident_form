@@ -1,9 +1,12 @@
 ﻿using DocumentFormat.OpenXml.Presentation;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+
 using Repositories.Common;
 using Repositories.Services.ArcGis;
 using Repositories.Services.ArcGis.Interface;
+
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
@@ -115,16 +118,20 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Suggest(string text)
         {
-            var results = await _iArcGisGeocodingService.GetSuggestionsAsync(text);
-            return Json(results);
+            var results = await _iArcGisGeocodingService.GetSuggestionsAsyncWithMagicKey(text);
+            return Json(results.Select(r => new { text = r.Text, magicKey = r.MagicKey }));
         }
 
         [HttpGet]
         public async Task<IActionResult> Resolve(string magicKey)
         {
             var result = await _iArcGisGeocodingService.GetCoordinatesAsync(magicKey);
-            if (result == null) return NotFound();
-            return Json(result);
+            return Json(new
+            {
+                text = result.GetValueOrDefault().address,
+                lat = result.GetValueOrDefault().lat,
+                lon = result.GetValueOrDefault().lon
+            });
         }
 
         [HttpGet]
@@ -133,7 +140,7 @@ namespace Web.Controllers
             var map = await _iIncidentService.GetIncidentMapDetailsbyId(id);
             return PartialView("_IncidentMap", map ?? new List<ViewModels.Dashboard.IncidentLocationMapViewModel>());
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> SaveCommunicationMessage([FromForm] SaveCommunicationRequest request)
         {
@@ -142,7 +149,7 @@ namespace Web.Controllers
 
             try
             {
-                
+
                 var result = await _iIncidentService.SaveCommunicationMessage(request);
                 if (result)
                     return Ok(new { success = true, message = "Message sent successfully." });
@@ -160,6 +167,6 @@ namespace Web.Controllers
             var locations = await _iIncidentService.GetAdditionalLocationsByIncidentId(incidentId);
             return PartialView("_AdditionalLocations", locations ?? new List<AdditionalLocationViewModel>());
         }
-       
+
     }
-    }
+}

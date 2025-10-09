@@ -13,14 +13,21 @@
                     <option value="" selected>Select severity</option>
                     @foreach (var item in Model.severityLevels)
                     {
-                        <option value="@item.Value">@item.Text</option>
+                        if (item.Text == "Low")
+                        {
+                            <option value="@item.Value" selected>@item.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
                     }
                 </select>
                 <div class="invalid-feedback"></div>
             </div>
 
         </div>
-      
+
     </div>
 
     <div class="d-flex justify-content-end gap-2 mt-3 addIncidentBtns">

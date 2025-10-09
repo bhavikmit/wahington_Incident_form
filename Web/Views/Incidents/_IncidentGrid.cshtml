@@ -2,6 +2,7 @@
 @using Enums
 @using ViewModels.Incident
 @model IncidentViewModel
+
 <style>
     .map i.fa{
         color:darkslategrey;
@@ -14,7 +15,7 @@
         
     }
 </style>
-<table class="table align-middle text-left">
+<table class="table align-middle text-left" id="tbl_IncidnetGrid">
     <thead class="table-light">
         <tr>
             <th style="display:none">
@@ -84,14 +85,13 @@
                     <td>
                         <div class="map" style="display:flex; align-items:center; gap:8px;">
                             <i class="fa fa-map-marker-alt" style="cursor:pointer" onclick="OpenIncidentMap('@item.Id')"></i>
-                            @* <span class="ms-1">@(!string.IsNullOrEmpty(item.LocationAddress) ? item.LocationAddress : "")</span> *@
 
-                            @if (item.AdditionalLocationCount > 0)
+                           @*  @if (item.AdditionalLocationCount > 0)
                             {
                                 <a href="javascript:void(0);" class="ms-2 more-locations-link" data-incident-id="@item.Id" style="font-size:.9rem;">
                                     +@item.AdditionalLocationCount more
                                 </a>
-                            }
+                            } *@
                         </div>
                     </td>
 

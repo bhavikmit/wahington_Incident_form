@@ -75,9 +75,9 @@ namespace Repositories.Common
                         Id = item.Id,
                         Severity = item.SeverityLevel.Name,
                         SeverityColor = item.SeverityLevel.Color,
-                        Description = item?.DescriptionIssue,
+                        Description = item?.DescriptionIssue ?? string.Empty,
                         IncidentId = item.IncidentID,
-                        IncidentLocation = item.LocationAddress,
+                        IncidentLocation = item.LocationAddress ?? string.Empty,
                         IncidentDate = GetDate(Convert.ToString(item.CallTime))
                     });
                 }
@@ -162,22 +162,22 @@ namespace Repositories.Common
                 return new IncidentValidationDetailViewModel
                 {
                     Id = incident.Id,
-                    CallerAddress = incident.CallerAddress,
-                    CallerContact = incident.CallerPhoneNumber,
+                    CallerAddress = incident.CallerAddress ?? string.Empty,
+                    CallerContact = incident.CallerPhoneNumber ?? string.Empty,
                     CallerDateTime = GetDate(incident.CallTime.ToString()),
-                    CallerName = incident.CallerName,
+                    CallerName = incident.CallerName ?? string.Empty,
                     EventType = eventTypesTask,
                     IncidentId = incident.IncidentID,
-                    IncidentLocation = incident.LocationAddress,
-                    NearestIntersection = incident.Landmark,
+                    IncidentLocation = incident.LocationAddress ?? string.Empty,
+                    NearestIntersection = incident.Landmark ?? string.Empty,
                     AffectedAssets = assetsTask,
                     Lat = incident.Lat,
                     Long = incident.Lng,
-                    IncidentStatus = incident.StatusLegend?.Name,
-                    IncidentStatusColor = incident.StatusLegend?.Color,
-                    Severity = incident.SeverityLevel?.Name,
-                    SeverityColor = incident.SeverityLevel?.Color,
-                    DescriptionIssue = incident.DescriptionIssue,
+                    IncidentStatus = incident.StatusLegend?.Name ?? string.Empty,
+                    IncidentStatusColor = incident.StatusLegend?.Color ?? string.Empty,
+                    Severity = incident.SeverityLevel?.Name ?? string.Empty,
+                    SeverityColor = incident.SeverityLevel?.Color ?? string.Empty,
+                    DescriptionIssue = incident.DescriptionIssue ?? string.Empty,
                     EvacuationRequired = GetIndicator(incident.EvacuationRequiredId),
                     GasPresent = GetIndicator(incident.GasPresentId),
                     HissingPresent = GetIndicator(incident.HissingPresentId),
@@ -236,9 +236,9 @@ namespace Repositories.Common
                 {
                     Id = incidentTask.Id,
                     IncidentId = incidentTask.IncidentID,
-                    IncidentLocation = incidentTask.LocationAddress,
+                    IncidentLocation = incidentTask.LocationAddress ?? string.Empty,
                     severityLevels = severityLevelsTask,
-                    severityLevel = incidentTask.SeverityLevel?.Name,
+                    severityLevel = incidentTask.SeverityLevel?.Name ?? string.Empty,
                     Lat = incidentTask.Lat,
                     Long = incidentTask.Lng
                 };
@@ -264,8 +264,8 @@ namespace Repositories.Common
                     {
                         ReponseTeamId = item.Id,
                         Name = item.Name,
-                        Contact = item.Contact,
-                        Specializations = item.Specializations
+                        Contact = item.Contact ?? string.Empty,
+                        Specializations = item.Specializations ?? string.Empty
                     });
                 }
 
@@ -322,7 +322,7 @@ namespace Repositories.Common
                 var policy = new Policy
                 {
                     Name = request.Name,
-                    Description = request.Description
+                    Description = request.Description ?? string.Empty
                 };
 
                 // Save
@@ -342,12 +342,11 @@ namespace Repositories.Common
 
         public async Task<List<SelectListItem>> GetTeamsList()
         {
-            List<SelectListItem> assignResponseTeams = new();
             try
             {
                 var assignResponses = await _db.IncidentTeams.Where(p => !p.IsDeleted)
                              .ToListAsync();
-                assignResponseTeams = assignResponses.Select(p => new SelectListItem()
+                var assignResponseTeams = assignResponses.Select(p => new SelectListItem()
                 {
                     Text = p.Name,
                     Value = p.Id.ToString()

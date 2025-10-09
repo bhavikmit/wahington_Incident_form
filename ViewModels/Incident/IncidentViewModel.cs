@@ -26,6 +26,7 @@ namespace ViewModels.Incident
 
         public List<SelectListItem> statusLegends { get; set; } = new();
         public List<SelectListItem> severityLevels { get; set; } = new();
+        public List<SelectListItem> progressLevels { get; set; } = new();
         public long? severityLevelId { get; set; } = default!;
         public long? Id { get; set; } = default!;
         public string DescriptionIssue { get; set; } = default!;
@@ -120,6 +121,7 @@ namespace ViewModels.Incident
         public string RelationShipName { get; set; }
         public string DescriptionIssue { get; set; }
         public string GasESIndicator { get; set; }
+        public int AdditionalLocationCount { get; set; } = 0;
     }
     public class ChangeStatusRequest
     {

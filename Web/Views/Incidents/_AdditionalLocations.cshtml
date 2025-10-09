@@ -1,0 +1,80 @@
+﻿@model List<ViewModels.Incident.AdditionalLocationViewModel>
+
+<div class="additional-locations-container p-3">
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-secondary">No additional locations found.</div>
+    }
+    else
+    {
+        var grouped = Model.GroupBy(x => x.IncidentID);
+
+        foreach (var group in grouped)
+        {
+            <div class="mb-4">
+                @* <h4 class="text-primary mb-3">
+                    Incident ID: @group.Key — 
+                    <span class="text-muted">(@group.Count() location@(group.Count() > 1 ? "s" : ""))</span>
+                </h4> *@
+
+                @{ int locIndex = 1; }  <!-- ✅ Correctly declare counter inside Razor code block -->
+
+                @foreach (var loc in group)
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">Location @locIndex</h5>
+                                    <p class="mb-1"><strong>Address:</strong> @loc.LocationAddress</p>
+
+                                    @if (!string.IsNullOrWhiteSpace(loc.NearestIntersection))
+                                    {
+                                        <p class="mb-1"><strong>Nearest Intersection:</strong> @loc.NearestIntersection</p>
+                                    }
+
+                                    <p class="mb-1"><strong>Coordinates:</strong> @loc.Latitude, @loc.Longitude</p>
+
+                                   @*  <p class="mb-1">
+                                        <strong>Perimeter:</strong>
+                                        @if (loc.PerimeterType)
+                                        {
+                                            @:Custom polygon area
+                                        }
+                                        else
+                                        {
+                                            @GetPerimeterText(loc.PerimeterTypeDigit)
+                                        }
+                                    </p> *@
+
+                                    <p class="mb-1">
+                                        <strong>Perimeter:</strong> @GetPerimeterText(loc.PerimeterType)
+                                    </p>
+
+
+                                    @if (!string.IsNullOrWhiteSpace(loc.AssetNames))
+                                    {
+                                        <p class="mb-1"><strong>Assets:</strong> @loc.AssetNames</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    { locIndex++; }  <!-- ✅ Increment inside Razor block -->
+                }
+            </div>
+        }
+    }
+</div>
+@functions {
+    private string GetPerimeterText(bool? value)
+    {
+        return value switch
+        {
+            true => "Polygon",
+            false => "Circle",
+            null => "Custom"
+        };
+    }
+}

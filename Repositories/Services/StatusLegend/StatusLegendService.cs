@@ -74,7 +74,7 @@ namespace Repositories.Common
                 {
                     Name = viewModel.Name,
                     Color = viewModel.Color,
-                    Description = viewModel.Description    // <- added
+                    Description = viewModel.Description ?? string.Empty    // <- added
                 };
 
                 // Save
@@ -108,7 +108,7 @@ namespace Repositories.Common
 
                 statusLegend.Name = viewModel.Name;
                 statusLegend.Color = viewModel.Color;
-                statusLegend.Description = viewModel.Description; // <- added
+                statusLegend.Description = viewModel.Description ?? string.Empty; // <- added
 
                 try
                 {

@@ -22,7 +22,7 @@
                 <input type="checkbox" id="selectAll" />
             </th>
             <th>Status</th>
-            <th>Severity</th>
+            <th style="display:none">Severity</th>
             <th>Event Type</th>
             <th>Source</th>
             <th>Asset Type</th>
@@ -55,7 +55,7 @@
                         <td style="text-align:center !important">
                             <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.StatusLegendColor"></span>
                         </td>
-                        <td>
+                        <td style="display:none">
                             @if (item.Severity == SeverityEnum.Low.ToString())
                             {
                                 <span class="badge rounded-pill badge-low px-3 py-2">Low</span>
@@ -167,7 +167,7 @@
                         <td style="text-align:center !important">
                             <span class="dot" style="width: 12px;height: 12px;border-radius: 50%;display: inline-block;background-color:@item.StatusLegendColor"></span>
                         </td>
-                        <td>
+                        <td style="display:none">
                             @if (item.Severity == SeverityEnum.Low.ToString())
                             {
                                 <span class="badge rounded-pill badge-low px-3 py-2">Low</span>

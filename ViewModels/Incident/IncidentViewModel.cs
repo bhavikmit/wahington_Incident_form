@@ -226,4 +226,33 @@ namespace ViewModels.Incident
 
         public string TeamsByPolicy { get; set; } = string.Empty;
     }
+
+    public class IncidentAdditionalLocationViewModel : BaseIncidentValidationViewModel
+    {
+        public long Id { get; set; } = default!;
+        public string AdditionalLocation { get; set; } = default!;
+        public double Lat { get; set; } = default!;
+        public double Long { get; set; } = default!;
+        public bool IsPrimaryLocation { get; set; } = default!;
+    }
+
+    public class IncidentLocationValidationViewModel
+    {
+        public long IncidentId { get; set; }
+        public long IncidentValidationId { get; set; }
+        public long IncidentLocationId { get; set; }
+        public long SeverityLevelId { get; set; }
+        public long DiscoveryPerimeterId { get; set; }
+        public long ResponseTeamId { get; set; }
+        public string TeamMemberIds { get; set; } = default!;
+        public string LocationSpecificNotes { get; set; } = default!;
+        public List<IncidentWorkStepViewModel> WorkSteps { get; set; } = new();
+    }
+
+    public class IncidentWorkStepViewModel
+    {
+        public string WorkStepName { get; set; } = default!;
+        public string WorkStepDescription { get; set; } = default!;
+        public string WorkStepSpecificPersion { get; set; } = default!;
+    }
 }

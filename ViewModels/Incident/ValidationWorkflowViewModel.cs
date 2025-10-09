@@ -29,6 +29,8 @@ namespace ViewModels.Incident
         public List<IncidentPolicyViewModel> IVPolicyList { get; set; } = new();
         public IncidentCommunicationViewModel IVCommunication { get; set; } = new();
         public List<TeamWithUsersViewModel> IVIncidentTeamUser { get; set; } = new();
+
+        public List<IncidentAdditionalLocationViewModel> IVAdditionalLocations { get; set; } = new();
     }
 
     public class IncidentValidationCountViewModel : BaseIncidentValidationViewModel

@@ -44,6 +44,17 @@
         margin: auto;
     }
 
+    .file-upload {
+        margin: 12px 0;
+        padding: 10px;
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s ease;
+        background: #fafafa;
+    }
+
         /* Header */
         .team-communications .header {
             display: flex;
@@ -765,7 +776,7 @@
         align-items: center;
         gap: 8px;
         padding: 10px 0;
-        font-size: 15px;
+        font-size: 18px;
         font-weight: 500;
         color: #6b7280;
         cursor: pointer;
@@ -813,33 +824,170 @@
         color: #333;
         word-break: break-word;
     }
+
+    #incidentDetailsModal{
+        padding: 0 26px;
+        background:#f9fafb;
+    }
+    /*****************Header style***************************/
+    .header {
+        background: #ffffff;
+        padding: 16px;
+        box-shadow: 0px 0px 14px #efefef;
+    }
+
+    .logo-section .title h2 {
+        font-weight: 800;
+        font-size: 28px;
+        margin-bottom: 0;
+        line-height: normal;
+        color: #494949;
+    }
+
+    .logo-section .title span {
+        color: darkgrey;
+    }
+
+    .profile .sidebar-account.dropdown-toggle::before {
+        display: none;
+    }
+
+    .icon {
+        position: relative;
+        font-size: 18px;
+        color: #666;
+        cursor: pointer;
+        margin-right: 16px;
+    }
+
+    .notification-dot {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 8px;
+        height: 8px;
+        background-color: red;
+        border-radius: 50%;
+    }
+
+    .profile {
+        width: 34px;
+        height: 34px;
+        background: #f54e00;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        .profile i.fa {
+            color: #ffffff;
+        }
+
+    .header .logo {
+        background-color: #ededed;
+        color: #f54e00;
+        border-radius: 12px;
+        padding: 10px;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+    }
+
+    .header .dropdown-toggle::before {
+        display: none;
+    }
+    .titleSec{
+        margin-top:20px;
+        padding:22px 0 12px 0;
+    }
+    .backBtn{
+        background: transparent;
+        border: none;
+        font-size: 22px;
+        margin-right: 16px;
+        color: #f54e00;
+    }
 </style>
 
 <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
 <script src="https://js.arcgis.com/4.27/"></script>
 <script type="module" src="https://js.arcgis.com/embeddable-components/4.33/arcgis-embeddable-components.esm.js"></script>
+<header class="header dashboard-header d-flex align-items-center justify-content-between">
+    <!-- Left section -->
+    <div class="logo-section d-flex align-items-center">
+        <div class="logo"><i class="fa-solid fa-home"></i></div>
+        <div class="title">
+            <h2>Incidents</h2>
+            <span>Track and review incidents quickly</span>
+        </div>
+    </div>
 
+    <!-- Right section -->
+    <div class="right-section d-flex align-items-center">
+
+        <div class="icon">
+            <i class="fa-regular fa-bell"></i>
+            <span class="notification-dot"></span>
+        </div>
+        <a class="icon" href="/Settings"><i class="fa fa-gear"></i></a>
+        <div class="profile">
+            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3 " id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-user"></i>
+                @* <div class="d-flex flex-column">
+                        <span class="ml-1 user-name menu-text">Account</span>
+                        <span class="ml-1 user-name menu-text"><small>Admin</small></span>
+                    </div> *@
+            </a>
+            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3"
+                style="background-color: white;">
+                <li class="dropdown-item">
+                    <a class="nav-link d-flex align-items-center" href="/Identity/Account/Manage/ChangePassword">
+                        <i class="fa fa-lock"></i>
+                        <span class="menu-text">Change Password</span>
+                    </a>
+                </li>
+
+                <li class="dropdown-item">
+                    <a class="nav-link d-flex align-items-center" href="/Identity/Account/Logout">
+                        <i class="fa fa-user"></i>
+                        <span class="menu-text">Log Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
 
 <div id="incidentDetailsModal" tabindex="-1" aria-hidden="true">
-    <div>
+    <div class="container-fuild">
         <div id="incidentDetailsContent">
 
-            <div>
+            <div class="d-flex align-items-center  titleSec ">
+                <button type="button" class="backBtn" data-bs-dismiss="modal" id="closeModalBtn"><i class="fa fa-arrow-left-long"></i></button>
                 <h5 class="modal-title"> @Model.incidentDetailByIdViewModel?.IncidentNumber</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+               @*  <button type="button" class="btn-close" data-bs-dismiss="modal" id="closeModalBtn"></button> *@
             </div>
 
             <div>
-
+                
                 <div class="tabs">
-                    <div class="tab-item active" data-tab="incident">
-                        <i class="far fa-file-alt"></i> Incident
+                    <div class="tab-item active" data-tab="incidentMap">
+                        <i class="fa fa-map-marker-alt"></i>Map
                     </div>
                     <div class="tab-item" data-tab="validation">
                         <i class="fas fa-shield-alt"></i> Validation
                     </div>
                     <div class="tab-item" data-tab="worksteps">
-                        <i class="fas fa-tasks"></i> Work Steps
+                        <i class="fas fa-tasks"></i> Policies
+                    </div>
+                    <div class="tab-item " data-tab="incident">
+                        <i class="far fa-file-alt"></i> Personnel
                     </div>
                     <div class="tab-item" data-tab="communication">
                         <i class="fas fa-comment-dots"></i> Communication
@@ -848,7 +996,7 @@
 
                 <div id="incidentMap" class="tab-content active">
                     <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
-                        <div id="map" style="height:500px; width:100%;"></div>
+                        <div id="map" style="height:800px; width:100%;"></div>
                     </div>
                 </div>
 
@@ -1249,6 +1397,10 @@
     <img class="modal-content" id="previewImg" src="~/img/banner.jpg">
 </div>
 <script>
+    document.getElementById("closeModalBtn").addEventListener("click", function () {
+        window.location.href = "/Incidents";
+    });
+
     // Tab click handler
     document.querySelectorAll(".tab-item").forEach(tab => {
       tab.addEventListener("click", function () {

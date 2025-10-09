@@ -978,8 +978,6 @@ namespace Repositories.Common
             }
         }
 
-
-
         #region private methods
         private bool TryParseCallTime(string callTime, out DateTime dateTime)
         {

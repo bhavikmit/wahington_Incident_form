@@ -19,7 +19,7 @@
 
         .IVPolicyList .card.highlight {
             /* border: 2px solid #ff8800 !important;
-                                    background: #fff7f0; */
+                                                background: #fff7f0; */
 
             border: 2px solid #93bfab !important;
             background: #ecfdf5;
@@ -143,20 +143,20 @@
     }
 
     /*  .form-check {
-                                border: 1px solid #dee2e6;
-                                border-radius: 0.4rem;
-                                padding: 0.6rem 1rem;
-                                margin-bottom: 0.6rem;
-                            }
+                                            border: 1px solid #dee2e6;
+                                            border-radius: 0.4rem;
+                                            padding: 0.6rem 1rem;
+                                            margin-bottom: 0.6rem;
+                                        }
 
-                            textarea {
-                                resize: vertical;
-                            } */
+                                        textarea {
+                                            resize: vertical;
+                                        } */
 
     /*   .form-check-input:checked {
-                                background-color: #0d6efd;
-                                border-color: #0d6efd;
-                            } */
+                                            background-color: #0d6efd;
+                                            border-color: #0d6efd;
+                                        } */
 
     .team-section {
         border: 1px solid #dee2e6;
@@ -505,27 +505,41 @@
                         <div class="col-md-3">
                             <div class="left-panel">
                                 <button id="addLocationBtn" type="button" class="btn add-location-btn mb-3"><i class="fa fa-plus"></i>Add Location</button>
-                                <div class="location-card active" data-location="1">
-                                    <div class="d-flex align-items-start">
-                                        <div class="ms-2">
-                                            <div class="location-title fw-semibold">
-                                                4256 Service Ave, City, ST 12345
-                                            </div><span class="badge-primary">Primary</span> <span class="badge-status">In Progress</span>
+
+                                @foreach (var item in Model.IVAdditionalLocations)
+                                {
+                                    if (item.IsPrimaryLocation)
+                                    {
+                                        <div class="location-card active" data-location="@item.Id">
+                                            <div class="d-flex align-items-start">
+                                                <div class="ms-2">
+                                                    <div class="location-title fw-semibold">
+                                                        @item.AdditionalLocation
+                                                    </div><span class="badge-primary">Primary</span> <span class="badge-status">In Progress</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="location-card" data-location="2">
-                                    <div class="d-flex align-items-start">
-                                        <div class="ms-2">
-                                            <div class="location-title fw-semibold">
-                                                9818 Secondary Rd, City, ST 12345
-                                            </div><span class="badge-status">In Progress</span>
+                                    }
+                                    else
+                                    {
+                                        <div class="location-card" data-location="@item.Id">
+                                            <div class="d-flex align-items-start justify-content-between">
+                                                <div class="ms-2">
+                                                    <div class="location-title fw-semibold">
+                                                        @item.AdditionalLocation
+                                                    </div><span class="badge-status">In Progress</span>
+                                                </div>
+                                                <div class="ms-1">
+                                                    <i class="far fa-trash-alt" id="dltAddLoc"></i>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
+                                    }
+                                }
                                 <div id="newLocation" class="new-location d-none">
                                     <label class="form-label small mb-1">New Location Address</label>
                                     <input type="text" id="newAddress" class="form-control mb-2" placeholder="123 Main St, City, ST 12345">
+                                    <ul id="suggestionsnewAddress" class="suggestions-list"></ul>
                                     <div class="d-flex gap-2">
                                         <button id="addBtn" class="btn btn-primary btn-sm w-50">Add</button>
                                         <button id="cancelBtn" class="btn btn-dark btn-sm w-50">Cancel</button>
@@ -703,5 +717,140 @@
         const newLocSection = document.querySelector('.new-location');
         if (newLocSection) newLocSection.classList.add('d-none');
       }
+    });
+</script>
+
+<script>
+        $("#newAddress").on("input", function () {
+        let query = $(this).val();
+        if (query.length > 2) {
+            $.getJSON("/Incidents/Suggest", { text: query }, function (data) {
+                let $list = $("#suggestionsnewAddress");
+                $list.empty().show();
+
+                $.each(data, function (i, item) {
+                    $list.append(
+                        `<li onclick="selectnewAddress('${item.text.replace(/'/g, "\\'")}')">${item.text}</li>`
+                    );
+                });
+            });
+        } else {
+            $("#suggestionsnewAddress").hide();
+        }
+    });
+
+    function selectnewAddress(address) {
+        $("#newAddress").val(address);
+        $("#suggestionsnewAddress").empty();
+    }
+</script>
+<script>
+    // Ensure the form has data-incident-id attribute in the view:
+
+    // Use event delegation on a static parent (like document or container)
+    $(document).on("click", "#dltAddLoc", async function () {
+        const $element = $(this).closest(".location-card");
+        const id = $element.attr("data-location");
+
+        const payload = { incidentId: id };
+        const res = await fetch("/Validation/DeleteAdditionalLocation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const json = await res.json();
+        if (json.success) {
+            $element.remove();
+        }
+    });
+
+
+    $("#addBtn").on("click", async function (e) {
+        e.preventDefault();
+        const address = $("#newAddress").val()?.trim();
+        if (!address) {
+            alert("Please enter/select an address.");
+            return;
+        }
+
+        // Determine incidentId: prefer data attribute on form or fallback to Model value
+        const incidentIdAttr = $("#incident_validation_form").data("incident-id");
+        // const incidentId = incidentIdAttr ? parseInt(incidentIdAttr, 10) : @Model.Id;
+        const incidentId = $("#hdn_Id").val();
+
+        try {
+            const payload = { incidentId: incidentId, address: address };
+            const res = await fetch("/Validation/AddLocation", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+            const json = await res.json();
+
+            if (json.success) {
+                const item = json.item;
+                // build UI card
+                const leftPanel = $(".left-panel");
+                const newCard = $(`
+                    <div class="location-card" data-location="${item.id}" data-lat="${item.lat}" data-lng="${item.lng}">
+                        <div class="d-flex align-items-start justify-content-between">
+                            <div class="ms-2">
+                                <div class="location-title fw-semibold">${item.address}</div>
+                                <span class="badge-status">In Progress</span>
+                            </div>
+                             <div class="ms-1">
+                               <i class="far fa-trash-alt dltAddLoc"></i>
+                            </div>
+                        </div>
+                    </div>
+                `);
+
+                // insert before newLocation div
+                const newLocationDiv = $("#newLocation");
+                if (newLocationDiv.length) {
+                    newCard.insertBefore(newLocationDiv);
+                    newLocationDiv.addClass("d-none");
+                } else {
+                    leftPanel.append(newCard);
+                }
+
+                // clear input
+                $("#newAddress").val("");
+                $("#suggestionsnewAddress").empty().hide();
+
+                // optionally attach click handler to new card (same UX as other cards)
+                newCard.on("click", function () {
+                    $(".location-card").removeClass("active");
+                    $(this).addClass("active");
+                    const location = $(this).find(".location-title").text();
+                    $("#rightPanel h3").text(`Location Validation`);
+                    // update address shown on right panel if you want
+                });
+
+                    // bind click event for this card only
+                newCard.find(".dltAddLoc").on("click", async function () {
+                    const $element = $(this).closest(".location-card");
+                    const id = $element.attr("data-location");
+
+                    const payload = { incidentId: id };
+                    const res = await fetch("/Validation/DeleteAdditionalLocation", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+                    const json = await res.json();
+                    if (json.success) {
+                        $element.remove();
+                    }
+                });
+
+            } else {
+                alert(json.message || "Failed to add location.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Failed to add location (network error).");
+        }
     });
 </script>

@@ -68,6 +68,9 @@ namespace Web.Controllers
             var incidentUsersTeam = await _iIncidentValidationService.GetIncidentTeamUsers();
             validationWorkflow.IVIncidentTeamUser = incidentUsersTeam;
 
+            var additionalsLocs = await _iIncidentValidationService.GetIncidentAdditionalLocationByIncident(id);
+            validationWorkflow.IVAdditionalLocations = additionalsLocs;
+
             return PartialView("_IncidentValidationDetail", validationWorkflow);
         }
 
@@ -152,7 +155,6 @@ namespace Web.Controllers
             return PartialView("_CommunicationHistory", tempRecords);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> SaveIncidentValidation([FromForm] IncidentSubmitViewModel request)
         {
@@ -166,10 +168,10 @@ namespace Web.Controllers
                     .DeserializeObject<List<IncidentSubmitPolicyViewModel>>(request.listPolicyVM) : new List<IncidentSubmitPolicyViewModel>();
 
                 var communications = JsonConvert
-                    .DeserializeObject<List<IncidentSubmitCommunicationViewModel>>(TempData["TempComRecords"].ToString());
+                    .DeserializeObject<List<IncidentSubmitCommunicationViewModel>>(TempData["TempComRecords"]?.ToString() ?? "");
 
                 request.listSubmitPolicyVM = policies;
-                request.listSubmitCommunicationVM = communications;
+                request.listSubmitCommunicationVM = communications ?? new List<IncidentSubmitCommunicationViewModel>();
 
                 var resultId = await _iIncidentValidationService.SaveIncidentValidation(request);
 
@@ -181,6 +183,72 @@ namespace Web.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> AddLocation([FromBody] AddLocationRequest request)
+        {
+            if (request == null || string.IsNullOrWhiteSpace(request.Address))
+            {
+                return Json(new { success = false, message = "Invalid request." });
+            }
+
+            try
+            {
+                // 1) Geocode
+                var geo = await _iIncidentValidationService.GetLatLngFromAddress(request.Address);
+                var lat = geo?.Lat ?? 0;
+                var lng = geo?.Lng ?? 0;
+
+                // 2) Save to AdditionalLocations
+                var addedId = await _iIncidentValidationService.AddAdditionalLocationAsync(request.IncidentId, request.Address, lat, lng);
+
+                if (addedId > 0)
+                {
+                    return Json(new
+                    {
+                        success = true,
+                        item = new
+                        {
+                            id = addedId,
+                            address = request.Address,
+                            lat = lat,
+                            lng = lng
+                        }
+                    });
+                }
+
+                return Json(new { success = false, message = "Failed to save location." });
+            }
+            catch (Exception ex)
+            {
+                // you already have _logger in controller? If not, use try/catch and return generic
+                return Json(new { success = false, message = "Error saving location." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> DeleteAdditionalLocation([FromBody] AddLocationRequest request)
+        {
+            if (request == null)
+            {
+                return Json(new { success = false, message = "Invalid request." });
+            }
+
+            try
+            {
+                long id = await _iIncidentValidationService.DeleteAdditionalLocationAsync(request.IncidentId);
+                if (id > 0)
+                {
+                    return Json(new { success = true, message = "Success" });
+                }
+                return Json(new { success = false, message = "Failed to delete location." });
+            }
+            catch (Exception ex)
+            {
+                // you already have _logger in controller? If not, use try/catch and return generic
+                return Json(new { success = false, message = "Error delete location." });
             }
         }
     }

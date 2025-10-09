@@ -27,7 +27,8 @@ using Models;
 using Models.Common.Interfaces;
 
 using Pagination;
-
+using Repositories.Services.ArcGis;
+using Repositories.Services.ArcGis.Interface;
 using Repositories.Shared.UserInfoServices.Interface;
 
 using System.Linq;
@@ -46,11 +47,13 @@ namespace Repositories.Common
     {
         private readonly ApplicationDbContext _db;
         private readonly ILogger<IncidentService> _logger;
+        private readonly IAdditionalLocationsService _iAdditionalLocationsService;
 
-        public IncidentService(ApplicationDbContext db, ILogger<IncidentService> logger)
+        public IncidentService(ApplicationDbContext db, ILogger<IncidentService> logger, IAdditionalLocationsService iAdditionalLocationsService)
         {
             _db = db;
             _logger = logger;
+            _iAdditionalLocationsService = iAdditionalLocationsService;
         }
 
         public async Task<IncidentViewModel> GetIncidentDropDown()
@@ -228,6 +231,18 @@ namespace Repositories.Common
                 await _db.Incidents.AddAsync(incident);
                 await _db.SaveChangesAsync();
                 await transaction.CommitAsync();
+
+                if (viewModel.additionalLocations.Count > 0 && incidentId != "")
+                {
+                    long id = await _db.Incidents
+                        .Where(it => !it.IsDeleted && it.IncidentID == incidentId)
+                        .Select(it => it.Id)
+                        .FirstOrDefaultAsync();
+                    viewModel.additionalLocations.ForEach(l => l.IncidentId = id);
+
+                    if (viewModel.additionalLocations[0].IncidentId > 0) 
+                        await _iAdditionalLocationsService.SaveadditionalLocations(viewModel.additionalLocations);
+                }
 
                 return incidentId;
             }

@@ -36,7 +36,9 @@
         <form id="addLocationForm" autocomplete="off">
             <div class="row">
                 <div class="col-md-12">
+                    <input type="hidden" value="0" id="hdnaddLocationID" asp-for="additionalLocation.Id" />
                     <div class="mb-3">
+                        
                         <label class="form-label" asp-for="additionalLocation.LocationAddress">Location Address<span class="text-danger">*</span></label>
                         <textarea type="text" class="form-control" id="addlocAddress" asp-for="additionalLocation.LocationAddress" placeholder="Enter incident address for GIS lookup"></textarea>
                         <ul id="addsuggestions" class="suggestions-list" style="display:none;"></ul>
@@ -103,7 +105,7 @@
                             var checkedAttr = Model.incidentiLocation.AssetIDs != null ? (Model.incidentiLocation.AssetIDs.Contains(asset.Value) ? "checked" : "") : "";
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <input name="asset.Id" type="checkbox" class="form-check-input"
+                                    <input name="A_asset.Id" type="checkbox" class="form-check-input"
                                            data-val="true" data-val-required="The Asset field is required." @checkedAttr value="@asset.Value" id="@id">
                                     <label class="form-check-label" for="@id">@asset.Text</label>
                                 </div>
@@ -150,6 +152,7 @@
     });
 
     $("#addlocAddress").on("input", function () {
+        
         let query = $(this).val();
         if (query.length > 2) {
             $.getJSON("/Incidents/Suggest", { text: query }, function (data) {
@@ -157,7 +160,7 @@
                 $list.empty().show();
                 $.each(data, function (i, item) {
                     $list.append(
-                        `<li onclick="selectAddress('${item.replace(/'/g, "\\'")}')">${item}</li>`
+                        `<li onclick="selectAdAddress('${item.replace(/'/g, "\\'")}')">${item}</li>`
                     );
                 });
             });
@@ -173,7 +176,8 @@
         if (data) {
             const locations = JSON.parse(data);
             locations.forEach(function (loc, idx) {
-                let assets = Array.isArray(loc.AssetIDs) ? loc.AssetIDs.join(", ") : "";
+                let assets = Array.isArray(loc.AssetNames) ? loc.AssetNames.join(", ") : "";
+                //let assets = Array.isArray(loc.AssetIDs) ? loc.AssetIDs.join(", ") : "";
                 $list.append(`
                     <div class="card mb-2 p-2 position-relative">
                         <button type="button" class="btn btn-link text-danger position-absolute top-0 end-0 delete-location-btn" data-idx="${idx}" title="Delete" style="font-size:1.2rem;">
@@ -186,11 +190,12 @@
                         <div><strong>Assets:</strong> ${assets}</div>
                     </div>
                 `);
+                
             });
         }
     }
 
-    function selectAddress(address) {
+    function selectAdAddress(address) {
         $.getJSON("/Incidents/GetLatLong", { text: address }, function (data) {
             $("#addLatitude").val(data[0].Item2);
             $("#addLongitude").val(data[0].Item3);
@@ -214,8 +219,10 @@
 
     $("#submitLocationBtn").on("click", function (e) {
         e.preventDefault();
+        debugger;
         // Gather form data
         const formData = {
+            Id: parseInt($("#hdnaddLocationID").val()) + 1,
             LocationAddress: $("#addlocAddress").val(),
             Latitude: $("#addLatitude").val(),
             Longitude: $("#addLongitude").val(),
@@ -223,9 +230,11 @@
             ServiceAccount: $("#addserviceAct").val(),
             PerimeterType: $("input[name='additionalLocation.PerimeterType']:checked").val(),
             PerimeterTypeDigit: $("#addperimetertypedigit").val(),
-            AssetIDs: $("input[name='asset.Id']:checked").map(function () { return $(this).val(); }).get()
+            AssetIDs: $("input[name='A_asset.Id']:checked").map(function () { return $(this).val(); }).get(),
+            AssetNames: $("input[name='A_asset.Id']:checked").map(function () { return $("label[for='" + this.id + "']").first().text().trim(); }).get()
         };
-
+        $("#hdnaddLocationID").val(formData.Id);
+        //AssetNames = $("input[name='asset.Id']:checked").map(function () { return $("label[for='" + this.id + "']").text().trim(); }).get()
         // Get existing list or create new
         let locations = [];
         const data = sessionStorage.getItem("addLocationFormDataList");
@@ -234,6 +243,7 @@
         }
         locations.push(formData);
         sessionStorage.setItem("addLocationFormDataList", JSON.stringify(locations));
+
 
         // Clear form
         $("#addlocAddress").val("");
@@ -244,7 +254,7 @@
         $("input[name='additionalLocation.PerimeterType']").prop("checked", false);
         $("#addperimetertypedigit").val("");
         $("#addperimetertypedigit").hide();
-        $("input[name='asset.Id']").prop("checked", false);
+        $("input[name='A_asset.Id']").prop("checked", false);
         $("#addsuggestions").hide();
         $("#addanotherlocationform").hide();
         renderAdditionalLocations();

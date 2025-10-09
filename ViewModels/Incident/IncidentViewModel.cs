@@ -30,6 +30,7 @@ namespace ViewModels.Incident
         public long? Id { get; set; } = default!;
         public string DescriptionIssue { get; set; } = default!;
         public AdditionalLocationViewModel additionalLocation { get; set; } = new();
+        public List<AdditionalLocationViewModel> additionalLocations { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel
@@ -222,6 +223,9 @@ namespace ViewModels.Incident
 
     public class AdditionalLocationViewModel
     {
+
+        public long? Id { get; set; } = default!;
+        public long? IncidentId { get; set; } = default!; 
         public string LocationAddress { get; set; } = default!;
         public double Latitude { get; set; }
         public double Longitude { get; set; }

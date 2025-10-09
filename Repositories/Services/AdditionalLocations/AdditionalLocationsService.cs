@@ -52,5 +52,38 @@ namespace Repositories.Common
             _db = db;
             _logger = logger;
         }
+
+        public async Task<string> SaveadditionalLocations(List<AdditionalLocationViewModel> additionalLocations) 
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                var locationEntities = additionalLocations.Select(l => new AdditionalLocations
+                {
+                    LocationAddress = l.LocationAddress,
+                    Latitude = l.Latitude,
+                    Longitude = l.Longitude,
+                    IncidentID = l.IncidentId,
+                    NearestIntersection = l.NearestIntersection,
+                    ServiceAccount = l.ServiceAccount,
+                    PerimeterType = l.PerimeterType,
+                    PerimeterTypeDigit = l.PerimeterTypeDigit,
+                    AssetIds = l.AssetIDs,
+                    ActiveStatus = Enums.ActiveStatus.Active
+                }).ToList();
+
+                await _db.AdditionalLocations.AddRangeAsync(locationEntities);
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return "";
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error SaveIncident.");
+                return string.Empty;
+            }
+        }
     }
 }

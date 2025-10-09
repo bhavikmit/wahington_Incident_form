@@ -11,5 +11,6 @@ namespace Repositories.Common
 {
     public interface IAdditionalLocationsService
     {
+        Task<string> SaveadditionalLocations(List<AdditionalLocationViewModel> additionalLocations);
     }
 }

@@ -70,6 +70,12 @@
     $(document).on("click", "#nextToIncidentDetials", function (e) {
         e.preventDefault();
         var isValid = true;
+        if ($("#addanotherlocationform").is(":visible")) {
+            if ($("#addlocAddress").val() === "") {
+                showError($("#addlocAddress"));
+                isValid = false;
+            }
+        }
 
         if (isValid) {
             $("#pills-detail-tab").trigger("click");
@@ -502,6 +508,34 @@ async function SaveIncidentForm() {
                 form.push({ name: val.name, value: val.value });
             }
         });
+        debugger;
+        const data = sessionStorage.getItem("addLocationFormDataList");
+        if (data) {
+            const locations = JSON.parse(data);
+            locations.forEach(function (loc, idx) {
+                let assets = Array.isArray(loc.AssetIDs) ? loc.AssetIDs.join(", ") : "";
+                formData.append(`AdditionalLocations[${idx}].LocationAddress`, loc.LocationAddress);
+                formData.append(`additionalLocations[${idx}].Latitude`, loc.Latitude);
+                formData.append(`additionalLocations[${idx}].Longitude`, loc.Longitude);
+                formData.append(`additionalLocations[${idx}].NearestIntersection`, loc.NearestIntersection);
+                formData.append(`additionalLocations[${idx}].ServiceAccount`, loc.ServiceAccount);
+                formData.append(`additionalLocations[${idx}].PerimeterTypeDigit`, loc.PerimeterTypeDigit);
+                formData.append(`additionalLocations[${idx}].AssetIDs`, assets);
+                // $list.append(`
+                //     <div class="card mb-2 p-2 position-relative">
+                //         <button type="button" class="btn btn-link text-danger position-absolute top-0 end-0 delete-location-btn" data-idx="${idx}" title="Delete" style="font-size:1.2rem;">
+                //             <i class="fa fa-trash"></i>
+                //         </button>
+                //         <div><strong>Address:</strong> ${loc.LocationAddress || ""}</div>
+                //         <div><strong>Latitude:</strong> ${loc.Latitude || ""}</div>
+                //         <div><strong>Longitude:</strong> ${loc.Longitude || ""}</div>
+                //         <div><strong>Nearest:</strong> ${loc.NearestIntersection || ""}</div>
+                //         <div><strong>Assets:</strong> ${assets}</div>
+                //     </div>
+                // `);
+            });
+            sessionStorage.clear();
+        }
 
         //$.each(params, function (i, val) {
         //    if (val.name === "eventTypes.Id") {

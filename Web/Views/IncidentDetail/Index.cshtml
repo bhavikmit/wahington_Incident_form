@@ -914,7 +914,8 @@
         color: #f54e00;
     }
     /********************Personnal design*********************/
-    #personnel .summary-card {
+    #personnel .summary-card ,
+    #assessment .summary-card {
         background: #fff;
         border-radius: 10px;
         padding: 10px 15px;
@@ -1023,6 +1024,87 @@
     #validation .status-text {
         font-weight: 600;
     }
+    /************Assessment*****************/
+    #assessment .main-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    #assessment .section-title {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-top: 15px;
+        border-bottom: 1px solid #e3e3e3;
+        padding-bottom: 5px;
+    }
+
+    #assessment .table th {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    #assessment .table td {
+        font-size: 0.9rem;
+        vertical-align: middle;
+    }
+
+    #assessment .updates-box {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        padding: 15px;
+        height: 100%;
+    }
+
+    #assessment .updates-textarea {
+        resize: none;
+        border-radius: 6px;
+    }
+
+    #assessment .mini-map {
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        padding: 10px;
+        margin-top: 10px;
+        font-size: 0.9rem;
+    }
+
+    #assessment .attachments {
+        margin-top: 10px;
+        font-size: 0.9rem;
+    }
+
+    #assessment .btn-update {
+        font-size: 0.8rem;
+    }
+
+    #assessment .badge-status {
+        font-weight: 500;
+        padding: 0.3em 0.6em;
+        border-radius: 4px;
+        height:auto;
+    }
+      #assessment .form-control{
+        height: auto !important;
+        max-height: fit-content;
+    }
+        #assessment .badge-status.done {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        #assessment .badge-status.progress {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+
+        #assessment .badge-status.pending {
+            background-color: #e2e3e5;
+            color: #343a40;
+        }
 </style>
 
 <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
@@ -1408,7 +1490,7 @@
                     </div>
 
                     <!-- Summary Cards -->
-                    <div class="d-flex flex-wrap gap-3">
+                    <div class="d-flex flex-wrap gap-3 mb-3">
                         <div class="summary-card flex-fill">
                             <span class="fw-semibold text-dark">Onsite Now:</span> 18
                         </div>
@@ -1521,6 +1603,180 @@
                     </div>
                 </div>
 
+                <div id="assessment" class="tab-content">
+                    <div class="d-flex flex-wrap gap-3 mb-3">
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">Open Tasks:</span> 4
+                        </div>
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">Completed:</span> 6
+                        </div>
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">Containment Ready:</span> Yes(FER)
+                        </div>
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">ICP Sites:</span> 3(1 primary, 2staging)
+                        </div>
+                    </div>
+                    <div class="row g-3">
+
+                        <!-- LEFT SECTION -->
+                        <div class="col-lg-8">
+                            <div class="main-card">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="fw-semibold mb-0">All Steps (Assessment Checklist)</h6>
+                                    <div class="d-flex gap-2">
+                                        <input type="text" class="form-control form-control-sm" placeholder="Search steps..." style="width:160px;">
+                                        <select class="form-select form-select-sm">
+                                            <option>All owners</option>
+                                        </select>
+                                        <select class="form-select form-select-sm">
+                                            <option>Status: All</option>
+                                        </select>
+                                        <button class="btn btn-outline-secondary btn-sm">Bulk actions</button>
+                                    </div>
+                                </div>
+
+                                <!-- Incident Commander Section -->
+                                <h6 class="section-title">Incident Commander <span class="text-muted fs-6">Owner: J. Martinez</span></h6>
+                                <table class="table table-sm align-middle mb-3">
+                                    <thead>
+                                        <tr>
+                                            <th>Step</th>
+                                            <th>Status</th>
+                                            <th>Assignee</th>
+                                            <th>Started</th>
+                                            <th>Completed</th>
+                                            <th>Evidence</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Create MCR</td>
+                                            <td><span class="badge-status done">Done</span></td>
+                                            <td>J. Martinez</td>
+                                            <td>09:58</td>
+                                            <td>10:05</td>
+                                            <td><i class="fa-solid fa-paperclip me-1"></i>mcr_1005.pdf</td>
+                                            <td><button class="btn btn-outline-secondary btn-sm btn-update">View</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Notify Claims & Engineering</td>
+                                            <td><span class="badge-status progress">In Progress</span></td>
+                                            <td>J. Martinez</td>
+                                            <td>10:06</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td><button class="btn btn-outline-primary btn-sm btn-update">Update</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Establish ICP (site access verified)</td>
+                                            <td><span class="badge-status done">Done</span></td>
+                                            <td>J. Martinez</td>
+                                            <td>10:12</td>
+                                            <td>10:21</td>
+                                            <td><i class="fa-solid fa-paperclip me-1"></i>2 photos</td>
+                                            <td><button class="btn btn-outline-secondary btn-sm btn-update">View</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Field Environmental Representative -->
+                                <h6 class="section-title">Field Environmental Representative <span class="text-muted fs-6">Owner: L. Chen</span></h6>
+                                <table class="table table-sm align-middle mb-3">
+                                    <tbody>
+                                        <tr>
+                                            <td>Prepare containment area (drums/totes/Baker tank)</td>
+                                            <td><span class="badge-status done">Done</span></td>
+                                            <td>L. Chen</td>
+                                            <td>10:05</td>
+                                            <td>10:35</td>
+                                            <td><i class="fa-solid fa-paperclip me-1"></i>containment_plan.pdf</td>
+                                            <td><button class="btn btn-outline-secondary btn-sm btn-update">View</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Label containers; log IDs and capacity</td>
+                                            <td><span class="badge-status progress">In Progress</span></td>
+                                            <td>L. Chen</td>
+                                            <td>10:36</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td><button class="btn btn-outline-primary btn-sm btn-update">Update</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Engineering & GEC -->
+                                <h6 class="section-title">Engineering & GEC <span class="text-muted fs-6">Owners: D. Tran / R. Alvarez</span></h6>
+                                <table class="table table-sm align-middle">
+                                    <tbody>
+                                        <tr>
+                                            <td>Retrieve system maps (regulators, BO streets, elevations)</td>
+                                            <td><span class="badge-status done">Done</span></td>
+                                            <td>D. Tran</td>
+                                            <td>10:00</td>
+                                            <td>10:18</td>
+                                            <td><i class="fa-solid fa-paperclip me-1"></i>topo_overlay.png</td>
+                                            <td><button class="btn btn-outline-secondary btn-sm btn-update">View</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Mark low points & squeeze points</td>
+                                            <td><span class="badge-status pending">Pending</span></td>
+                                            <td>D. Tran</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td><button class="btn btn-outline-primary btn-sm btn-update">Update</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Initiate cost tracking (RBA) for vendors</td>
+                                            <td><span class="badge-status progress">In Progress</span></td>
+                                            <td>R. Alvarez</td>
+                                            <td>10:19</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td><button class="btn btn-outline-primary btn-sm btn-update">Update</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT SECTION -->
+                        <div class="col-lg-4">
+                            <div class="updates-box">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-semibold mb-0">Updates</h6>
+                                    <button class="btn btn-outline-secondary btn-sm">Filter</button>
+                                </div>
+                                <div class="bg-light p-2 rounded mb-2" style="height: 160px; overflow-y: auto; font-size: 0.9rem;">
+                                    <p class="mb-1"><strong>[10:21 IC]</strong> ICP established (photos uploaded).</p>
+                                    <p class="mb-1"><strong>[10:35 FER]</strong> Containment area ready; labeling next.</p>
+                                    <p class="mb-1"><strong>[10:41 GEC]</strong> Vendor RBA opened; awaiting PO.</p>
+                                    <p class="mb-1"><strong>[10:46 ENG]</strong> Topo overlay added; low points pending.</p>
+                                </div>
+                                <textarea class="form-control updates-textarea mb-2" rows="2" placeholder="Post an update..."></textarea>
+                                <button class="btn btn-primary btn-sm w-100">Post Update</button>
+
+                                <div class="mini-map mt-3">
+                                    <strong>Mini Map</strong><br>
+                                    Shows ICP and newly marked low/squeeze points.
+                                </div>
+
+                                <div class="attachments">
+                                    <strong>Attachments</strong>
+                                    <ul class="mb-0 ps-3">
+                                        <li>mcr_1005.pdf</li>
+                                        <li>topo_overlay.png</li>
+                                        <li>icp_photos.zip</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>

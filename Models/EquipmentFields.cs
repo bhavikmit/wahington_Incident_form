@@ -13,7 +13,7 @@ namespace Models
     {
         public string? EquipmentFieldsID { get; set; }
         public string? Name { get; set; }
-        public long? Category { get; set; }
+        public string? Category { get; set; }
         public long? HourlyRate { get; set; }
     }
 }

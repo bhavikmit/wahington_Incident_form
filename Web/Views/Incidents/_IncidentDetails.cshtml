@@ -17,7 +17,24 @@
                     <div class="form-check form-check-inline eventCheck">
                         <input class="form-check-input" type="checkbox" id="@id" name="incidentDetails.EventTypeIds"
                                value="@et.Value" data-val="true" data-val-required="The Event Type field is required." @checkedAttr>
-                        <label class="form-check-label" for="@id">@et.Text</label>
+                                <label class="form-check-label" for="@id">
+                                    @if(!string.IsNullOrEmpty(et.Text))
+                                    {
+                                        var encodedText = et.Text.ToLower();
+                                        @if (encodedText == "water in the main")
+                                        {
+                                            <b>@et.Text</b>   <!-- This will make it bold -->
+                                        }
+                                        else
+                                        {
+                                            @et.Text
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @et.Text
+                                    }
+                                </label>
                     </div>
                 }
 
@@ -41,7 +58,7 @@
 
 
         <div class="d-flex justify-content-end gap-2 mt-3 addIncidentBtns">
-            <button type="button" class="btn btnBack" id="backButtonToIncidentLoc">Back</button>
+            <button type="button" class="btn btnBack" id="backButtonToAdditionalLoc">Back</button>
             <button type="button" class="btn btn-primary" id="nextToDescriptionIssue">Next</button>
         </div>
     </div>

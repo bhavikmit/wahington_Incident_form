@@ -4,6 +4,7 @@ using Repositories.Common;
 
 using ViewModels;
 using ViewModels.Incident;
+using ViewModels.Policy;
 using ViewModels.Users;
 
 namespace Web.Controllers
@@ -21,13 +22,15 @@ namespace Web.Controllers
         private readonly IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> _iPolicyService;
         private readonly IUserManagementService<UserManagementModifyViewModel, UserManagementModifyViewModel, UserDetailViewModel> _iUserManagementService;
         private readonly IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> _iUsersinService;
+        private readonly IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> _iProgressService;
         #endregion
 
         #region Ctor
         public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService, ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> iSeverityLevelService, IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> iStatusLegendService, IAssetIdService<AssetIdModifyViewModel, AssetIdModifyViewModel, AssetIdDetailViewModel> iAssetIdService,
             IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService, IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> iIncidentTeamService,
             IUserManagementService<UserManagementModifyViewModel,UserManagementModifyViewModel, UserDetailViewModel> iUserManagementService,
-            IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService, IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> iusersinService)
+            IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService, IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> iusersinService,
+            IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService)
         {
             _iRelationshipService = iRelationshipService;
             _iEventTypeService = iEventTypeService;
@@ -39,6 +42,7 @@ namespace Web.Controllers
             _iUserManagementService = iUserManagementService;
             _iPolicyService = iPolicyService;
             _iUsersinService = iusersinService;
+            _iProgressService = iProgressService;
         }
         #endregion
 
@@ -632,6 +636,21 @@ namespace Web.Controllers
 
             try
             {
+                // ensure PolicySteps is populated from the incoming form string (hidden input)
+                var stepsRaw = Request.Form["PolicySteps"].FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(stepsRaw))
+                {
+                    policy.PolicySteps = stepsRaw
+                        .Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => s.Trim())
+                        .Where(s => !string.IsNullOrWhiteSpace(s))
+                        .ToList();
+                }
+                else
+                {
+                    policy.PolicySteps = new List<string>();
+                }
+
                 long Id = 0;
                 if (policy.Id > 0)
                 {
@@ -683,6 +702,27 @@ namespace Web.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+       
+        [HttpPost]
+        public async Task<IActionResult> AddPolicySteps([FromBody] AddPolicyStepsRequest req)
+        {
+            if (req == null || req.PolicyId <= 0 || req.Steps == null || !req.Steps.Any())
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                var updatedId = await _iPolicyService.AddPolicySteps(req.PolicyId, req.Steps);
+                if (updatedId == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "Failed to add procedures." });
+
+                return Ok(new { success = true, data = "Procedures added successfully." });
+            }
+            catch (Exception ex)
+            {
+               // _logger?.LogError(ex, "Error AddPolicySteps");
+                return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "An unexpected error occurred." });
             }
         }
         #endregion
@@ -846,6 +886,88 @@ namespace Web.Controllers
         }
         #endregion
 
+        #region Progress
+        [HttpGet]
+        public async Task<IActionResult> GetAllProgress()
+        {
+            var model = await _iProgressService.GetAllProgress();
+            return PartialView("~/Views/Settings/Progress/_ListProgress.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddProgress()
+        {
+            var model = new ProgressModifyViewModel();
+            return PartialView("~/Views/Settings/Progress/_AddProgress.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProgressById(long id)
+        {
+            var model = await _iProgressService.GetProgressById(id);
+            return PartialView("~/Views/Settings/Progress/_AddProgress.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveProgress([FromForm] ProgressModifyViewModel progress)
+        {
+            if (progress == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (progress.Id > 0)
+                {
+                    Id = await _iProgressService.UpdateProgress(progress);
+                }
+                else
+                {
+                    Id = await _iProgressService.SaveProgress(progress);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save progress." });
+
+                var successMsg = $"Progress saved successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteProgressById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (id > 0)
+                {
+                    Id = await _iProgressService.DeleteProgress(id);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete progress." });
+
+                var successMsg = $"Progress deleted successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        #endregion
     }
 }
-

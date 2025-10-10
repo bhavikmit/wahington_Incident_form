@@ -4,6 +4,9 @@
 
 
 <div class="shadow-sm border border-gray-200 card-body InfoCard">
+    <input type="hidden" class="form-control" id="hdnmagicKey" />
+    @* <input type="hidden" class="form-control" id="hdnLng" /> *@
+
     <h6 class="fw-bold mb-3">Caller / Source Information</h6>
     <div class="row">
         <div class="col-md-6">
@@ -72,7 +75,7 @@
 
                 $.each(data, function (i, item) {
                     $list.append(
-                        `<li onclick="selectcallerAddressAddress('${item.replace(/'/g, "\\'")}')">${item}</li>`
+                        `<li onclick="selectcallerAddressAddress('${item.text.replace(/'/g, "\\'")}', '${item.magicKey}')">${item.text}</li>`
                     );
                 });
             });
@@ -81,7 +84,8 @@
         }
     });
 
-    function selectcallerAddressAddress(address) {
+    function selectcallerAddressAddress(address, magicKey) {
+        $("#hdnmagicKey").val(magicKey);
         $("#callerAddress").val(address);
         $("#suggestionsCallAdd").empty();
     }

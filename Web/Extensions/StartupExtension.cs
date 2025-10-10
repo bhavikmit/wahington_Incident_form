@@ -225,6 +225,7 @@ namespace Web.Extensions
             services.AddScoped(typeof(IUserManagementService<,,>), typeof(UserManagementService<,,>));
             services.AddScoped(typeof(IStatusLegendService<,,>), typeof(StatusLegendService<,,>));
             services.AddScoped(typeof(IAssignResponseTeamsService<,,>),typeof(AssignResponseTeamsService<,,>));
+            services.AddScoped(typeof(IProgressService<,,>), typeof(ProgressService<,,>));
             services.AddScoped<IIncidentService, IncidentService>();
             services.AddScoped<IIncidentNoteService, IncidentNoteService>();
             services.AddScoped<IIncidentHistoryService, IncidentHistoryService>();
@@ -234,6 +235,7 @@ namespace Web.Extensions
             services.AddScoped<IArcGisGeocodingService, ArcGisGeocodingService>();
             services.AddHttpClient<ArcGisGeocodingService>();
             services.AddScoped(typeof(IIncidentTeamService<,,>), typeof(IncidentTeamService<,,>));
+            services.AddScoped(typeof(IAdditionalLocationsService), typeof(AdditionalLocationsService));
             services.AddDefaultCorrelationId();
         }
     }

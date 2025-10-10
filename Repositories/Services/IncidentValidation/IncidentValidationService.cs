@@ -34,6 +34,7 @@ using Repositories.Shared.UserInfoServices.Interface;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using ViewModels;
@@ -75,9 +76,9 @@ namespace Repositories.Common
                         Id = item.Id,
                         Severity = item.SeverityLevel.Name,
                         SeverityColor = item.SeverityLevel.Color,
-                        Description = item?.DescriptionIssue,
+                        Description = item?.DescriptionIssue ?? string.Empty,
                         IncidentId = item.IncidentID,
-                        IncidentLocation = item.LocationAddress,
+                        IncidentLocation = item.LocationAddress ?? string.Empty,
                         IncidentDate = GetDate(Convert.ToString(item.CallTime))
                     });
                 }
@@ -162,22 +163,22 @@ namespace Repositories.Common
                 return new IncidentValidationDetailViewModel
                 {
                     Id = incident.Id,
-                    CallerAddress = incident.CallerAddress,
-                    CallerContact = incident.CallerPhoneNumber,
+                    CallerAddress = incident.CallerAddress ?? string.Empty,
+                    CallerContact = incident.CallerPhoneNumber ?? string.Empty,
                     CallerDateTime = GetDate(incident.CallTime.ToString()),
-                    CallerName = incident.CallerName,
+                    CallerName = incident.CallerName ?? string.Empty,
                     EventType = eventTypesTask,
                     IncidentId = incident.IncidentID,
-                    IncidentLocation = incident.LocationAddress,
-                    NearestIntersection = incident.Landmark,
+                    IncidentLocation = incident.LocationAddress ?? string.Empty,
+                    NearestIntersection = incident.Landmark ?? string.Empty,
                     AffectedAssets = assetsTask,
                     Lat = incident.Lat,
                     Long = incident.Lng,
-                    IncidentStatus = incident.StatusLegend?.Name,
-                    IncidentStatusColor = incident.StatusLegend?.Color,
-                    Severity = incident.SeverityLevel?.Name,
-                    SeverityColor = incident.SeverityLevel?.Color,
-                    DescriptionIssue = incident.DescriptionIssue,
+                    IncidentStatus = incident.StatusLegend?.Name ?? string.Empty,
+                    IncidentStatusColor = incident.StatusLegend?.Color ?? string.Empty,
+                    Severity = incident.SeverityLevel?.Name ?? string.Empty,
+                    SeverityColor = incident.SeverityLevel?.Color ?? string.Empty,
+                    DescriptionIssue = incident.DescriptionIssue ?? string.Empty,
                     EvacuationRequired = GetIndicator(incident.EvacuationRequiredId),
                     GasPresent = GetIndicator(incident.GasPresentId),
                     HissingPresent = GetIndicator(incident.HissingPresentId),
@@ -236,9 +237,9 @@ namespace Repositories.Common
                 {
                     Id = incidentTask.Id,
                     IncidentId = incidentTask.IncidentID,
-                    IncidentLocation = incidentTask.LocationAddress,
+                    IncidentLocation = incidentTask.LocationAddress ?? string.Empty,
                     severityLevels = severityLevelsTask,
-                    severityLevel = incidentTask.SeverityLevel?.Name,
+                    severityLevel = incidentTask.SeverityLevel?.Name ?? string.Empty,
                     Lat = incidentTask.Lat,
                     Long = incidentTask.Lng
                 };
@@ -264,8 +265,8 @@ namespace Repositories.Common
                     {
                         ReponseTeamId = item.Id,
                         Name = item.Name,
-                        Contact = item.Contact,
-                        Specializations = item.Specializations
+                        Contact = item.Contact ?? string.Empty,
+                        Specializations = item.Specializations ?? string.Empty
                     });
                 }
 
@@ -322,7 +323,7 @@ namespace Repositories.Common
                 var policy = new Policy
                 {
                     Name = request.Name,
-                    Description = request.Description
+                    Description = request.Description ?? string.Empty
                 };
 
                 // Save
@@ -342,12 +343,11 @@ namespace Repositories.Common
 
         public async Task<List<SelectListItem>> GetTeamsList()
         {
-            List<SelectListItem> assignResponseTeams = new();
             try
             {
                 var assignResponses = await _db.IncidentTeams.Where(p => !p.IsDeleted)
                              .ToListAsync();
-                assignResponseTeams = assignResponses.Select(p => new SelectListItem()
+                var assignResponseTeams = assignResponses.Select(p => new SelectListItem()
                 {
                     Text = p.Name,
                     Value = p.Id.ToString()
@@ -373,8 +373,8 @@ namespace Repositories.Common
                 {
                     IncidentId = request.Id,
                     IsMarkFalseAlarm = false,
-                    ValidationNotes = request.ValidationNotes,
-                    AssignResponseTeams = request.AssignResponseTeams,
+                    ValidationNotes = request.ValidationNotes ?? "test",
+                    AssignResponseTeams = "1",//request.AssignResponseTeams,
                     ConfirmedSeverityLevelId = request.ConfirmedSeverityLevelId,
                     DiscoveryPerimeterId = request.DiscoveryPerimeterId,
                 };
@@ -450,6 +450,181 @@ namespace Repositories.Common
                 return 0;
             }
         }
+        public async Task<List<TeamWithUsersViewModel>> GetIncidentTeamUsers()
+        {
+            try
+            {
+                var usersTeams = await _db.IncidentUsers
+                    .Include(p => p.Team)
+                    .Where(p => !p.IsDeleted && p.TeamId != null)
+                    .ToListAsync();
+
+                var teamWiseUsers = usersTeams
+                    .GroupBy(u => new { u.TeamId, u.Team.Name })
+                    .Select(g => new TeamWithUsersViewModel
+                    {
+                        TeamId = g.Key.TeamId,
+                        TeamName = g.Key.Name,
+                        Users = g.Select(u => new IncidentUser
+                        {
+                            Id = u.Id,
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            Telephone = u.Telephone ?? string.Empty,
+                            Email = u.Email ?? string.Empty
+                        }).ToList()
+                    })
+                    .OrderBy(t => t.TeamName)
+                    .ToList();
+
+                return teamWiseUsers;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetIncidentTeamUsers.");
+                return new List<TeamWithUsersViewModel>();
+            }
+        }
+
+        public async Task<List<IncidentAdditionalLocationViewModel>> GetIncidentAdditionalLocationByIncident(long incidentId)
+        {
+            try
+            {
+                // Get primary location
+                var primary = await _db.Incidents
+                    .Where(p => !p.IsDeleted && p.Id == incidentId)
+                    .Select(p => new IncidentAdditionalLocationViewModel
+                    {
+                        AdditionalLocation = p.LocationAddress ?? string.Empty,
+                        Lat = p.Lat,
+                        Long = p.Lng,
+                        IsPrimaryLocation = true,
+                    })
+                    .FirstOrDefaultAsync();
+
+                // Get additional locations
+                var additionals = await _db.AdditionalLocations
+                    .Where(p => !p.IsDeleted && p.IncidentID == incidentId)
+                    .Select(a => new IncidentAdditionalLocationViewModel
+                    {
+                        AdditionalLocation = a.LocationAddress ?? string.Empty,
+                        Lat = a.Latitude,
+                        Long = a.Longitude,
+                        IsPrimaryLocation = false,
+                        Id = a.Id
+                    })
+                    .ToListAsync();
+
+                // Add primary at the top (if available)
+                if (primary != null)
+                    additionals.Insert(0, primary);
+
+                return additionals;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetIncidentAdditionalLocationByIncident for IncidentId: {IncidentId}", incidentId);
+                return new List<IncidentAdditionalLocationViewModel>();
+            }
+        }
+        public async Task<GeocodeResult?> GetLatLngFromAddress(string address)
+        {
+            if (string.IsNullOrWhiteSpace(address))
+                return new GeocodeResult { Lat = 0, Lng = 0 };
+
+            try
+            {
+                using var client = new HttpClient();
+                string url = $"https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates" +
+                             $"?f=json&SingleLine={Uri.EscapeDataString(address)}";
+
+                var response = await client.GetStringAsync(url);
+
+                using var doc = JsonDocument.Parse(response);
+                if (!doc.RootElement.TryGetProperty("candidates", out var candidates))
+                    return new GeocodeResult { Lat = 0, Lng = 0 };
+
+                if (candidates.GetArrayLength() > 0)
+                {
+                    var location = candidates[0].GetProperty("location");
+                    return new GeocodeResult
+                    {
+                        Lat = location.GetProperty("y").GetDouble(),
+                        Lng = location.GetProperty("x").GetDouble()
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetLatLngFromAddress.");
+                return new GeocodeResult { Lat = 0, Lng = 0 };
+            }
+
+            return new GeocodeResult { Lat = 0, Lng = 0 };
+        }
+
+        // ---------- new: save additional location ----------
+        public async Task<long> AddAdditionalLocationAsync(long incidentId, string address, double lat, double lng)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                // If you have an AdditionalLocation entity defined (Models.AdditionalLocation)
+                var additional = new AdditionalLocations
+                {
+                    IncidentID = incidentId,
+                    LocationAddress = address,
+                    Latitude = lat,
+                    Longitude = lng,
+                    CreatedOn = DateTime.Now,
+                    CreatedBy = GetCurrentUserIdOrDefault(),
+                    IsDeleted = false,
+                    //ActiveStatus = 1
+                };
+
+                await _db.AdditionalLocations.AddAsync(additional);
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return additional.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error AddAdditionalLocationAsync.");
+                return 0;
+            }
+        }
+
+        public async Task<long> DeleteAdditionalLocationAsync(long id)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+
+                var addLocation = await _db.AdditionalLocations.Where(p => p.Id == id).FirstOrDefaultAsync();
+                if (addLocation != null)
+                {
+                    addLocation.IsDeleted = true;
+                }
+                else
+                {
+                    return 0;
+                }
+
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return addLocation.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error SavePolicy.");
+                return 0;
+            }
+        }
+
 
         #region private event
         /// <summary>
@@ -534,6 +709,18 @@ namespace Repositories.Common
                2 => "N/A",
                _ => string.Empty
            };
+        private long GetCurrentUserIdOrDefault()
+        {
+            try
+            {
+                var userId = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier);
+                return !string.IsNullOrEmpty(userId) && long.TryParse(userId, out var parsed) ? parsed : 1L;
+            }
+            catch
+            {
+                return 1L;
+            }
+        }
         #endregion
     }
 }

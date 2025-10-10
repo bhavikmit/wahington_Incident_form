@@ -108,6 +108,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Progress> Progress { get; set; }
     public DbSet<AdditionalLocations> AdditionalLocations { get; set; }
     public DbSet<EquipmentFields> EquipmentFields { get; set; }
+    public DbSet<Material> Materials { get; set; }
 
     [DbFunction("GetWeekNumber", "dbo")]
     public int GetWeekNumber(DateTime dateToCheck)

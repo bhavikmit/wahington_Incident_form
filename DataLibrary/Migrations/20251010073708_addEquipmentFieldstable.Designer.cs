@@ -4,6 +4,7 @@ using DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251010073708_addEquipmentFieldstable")]
+    partial class addEquipmentFieldstable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1220,8 +1223,8 @@ namespace DataLibrary.Migrations
                     b.Property<int>("ActiveStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long?>("Category")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("CreatedBy")
                         .HasColumnType("bigint");
@@ -1739,55 +1742,6 @@ namespace DataLibrary.Migrations
                     b.ToTable("IncidentValidations");
                 });
 
-            modelBuilder.Entity("Models.IncidentValidationAssignedRole", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("EngineeringLead")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("FieldEnvRep")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("GEC_Coordinator")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IncidentCommander")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IncidentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IncidentValidationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IncidentValidationAssignedRoles");
-                });
-
             modelBuilder.Entity("Models.IncidentValidationCommunicationHistory", b =>
                 {
                     b.Property<long>("Id")
@@ -1850,55 +1804,6 @@ namespace DataLibrary.Migrations
                     b.HasIndex("IncidentValidationId");
 
                     b.ToTable("IncidentValidationCommunicationHistories");
-                });
-
-            modelBuilder.Entity("Models.IncidentValidationGate", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("ContainmentAcknowledgement")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool?>("Exception")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("IncidentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IncidentValidationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool?>("IndependentInspection")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Regulatory")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IncidentValidationGates");
                 });
 
             modelBuilder.Entity("Models.IncidentValidationPolicy", b =>
@@ -2241,52 +2146,6 @@ namespace DataLibrary.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Manufacturers");
-                });
-
-            modelBuilder.Entity("Models.Material", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("MaterialID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Unit")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long?>("UnitCost")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Materials");
                 });
 
             modelBuilder.Entity("Models.Models.Shared.Attachment", b =>

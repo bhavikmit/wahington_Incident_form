@@ -129,10 +129,12 @@ namespace ViewModels.Incident
         public string ValidationNotes { get; set; } = default!;
         public string AssignResponseTeams { get; set; } = default!;
         public string listPolicyVM { get; set; } = default!;
+        public string listValidationLocationVM { get; set; } = default!;
         public bool IsMarkFalseAlarm { get; set; } = false;
 
         //public string listCommunicationVM { get; set; } = default!;
         public List<IncidentSubmitPolicyViewModel> listSubmitPolicyVM { get; set; } = new();
+        public List<IncidentValidationLocationViewModel> listSubmitValidationLocationVM { get; set; } = new();
         public List<IncidentSubmitCommunicationViewModel> listSubmitCommunicationVM { get; set; } = new();
     }
     public class IncidentSubmitPolicyViewModel
@@ -161,5 +163,16 @@ namespace ViewModels.Incident
         public string FileName { get; set; }   // actual saved name
         public string OriginalName { get; set; } // original upload name
         public string TempPath { get; set; }   // path in temp folder
+    }
+
+    public class IncidentValidationLocationViewModel
+    {
+        public long? LocationId { get; set; }
+        public long? SeverityID { get; set; }
+        public long? DiscoveryPerimeter { get; set; }
+        public string ICPLocation { get; set; } = default!;
+        public string Source { get; set; } = default!;
+        public float Lat { get; set; } = default!;
+        public float Lon { get; set; } = default!;
     }
 }

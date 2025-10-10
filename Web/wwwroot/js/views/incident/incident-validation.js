@@ -443,6 +443,7 @@ async function SaveIncidentValidation() {
         let params = $(obj).serializeArray();
         let assignTeamsIds = [];
         var policiesData = [];
+        var ValidationLocationData = [];
 
         var selectedAssignTeams = $("#step-3").find('.responseCard .team-card.selected');
         $.each(selectedAssignTeams, function (i, val) {
@@ -472,6 +473,29 @@ async function SaveIncidentValidation() {
             });
         });
 
+        $("#step-2 .right-panel").each(function () {
+            debugger;
+
+            var loc = $(this).attr("data-add-loc");
+            var severityID = $(`#divaddloc_Severity_${loc}`).find('#severityLevelId').val();
+            var discoveryPerimeter = $(`#divaddloc_DiscoveryPerimeter_${loc}`).find("#RadiusId").val();
+            var icpLocation = $(`#divaddloc_ICP_${loc}`).find(`#ICPLocation_${loc}`).val();
+            var source = $(`#divaddloc_Source_${loc}`).find("#Source").val();
+            var lat = $(`#hdnLat_${loc}`).val();
+            var lon = $(`#hdnLon_${loc}`).val();
+
+            // push object
+            ValidationLocationData.push({
+                LocationId: loc,
+                SeverityID: severityID,
+                DiscoveryPerimeter: discoveryPerimeter,
+                ICPLocation: icpLocation,
+                Source: source,
+                Lat: lat,
+                Lon: lon
+            });
+        });
+
         $.each(params, function (i, val) {
             if (val.name === "IVValidation.severityLevelId") {
                 formData.append("ConfirmedSeverityLevelId", val.value);
@@ -496,6 +520,10 @@ async function SaveIncidentValidation() {
 
         if (policiesData.length > 0) {
             formData.append("listPolicyVM", JSON.stringify(policiesData));
+        }
+
+        if (ValidationLocationData.length > 0) {
+            formData.append("listValidationLocationVM", JSON.stringify(ValidationLocationData));
         }
 
         showLoader($(".main-content"));

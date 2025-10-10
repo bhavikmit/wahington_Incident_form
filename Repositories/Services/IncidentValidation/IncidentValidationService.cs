@@ -422,7 +422,27 @@ namespace Repositories.Common
                 if (communications.Any())
                     await _db.IncidentValidationCommunicationHistories.AddRangeAsync(communications);
 
-                // 4. Update Incident record
+                // 4. Add Incident Validation Locations
+                if (request.listSubmitValidationLocationVM.Any())
+                {
+                    var validationLocation = request.listSubmitValidationLocationVM.Select(item =>
+                    {
+                        return new IncidentValidationLocation
+                        {
+                            IncidentId = request.Id,
+                            IncidentValidationId = incidentValidation.Id,
+                            ICPLocation = item.ICPLocation ?? string.Empty,
+                            DiscoveryPerimeterId = item.DiscoveryPerimeter ?? 0,
+                            Lat = item.Lat,
+                            Lng = item.Lon,
+                            Source = item.Source,
+                            ConfirmedSeverityLevelId = item.SeverityID ?? 0
+                        };
+                    }).ToList();
+                    await _db.IncidentValidationLocations.AddRangeAsync(validationLocation);
+                }
+
+                // 5. Update Incident record
                 var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == request.Id);
                 if (incident != null)
                 {
@@ -490,34 +510,19 @@ namespace Repositories.Common
         {
             try
             {
-                // Get primary location
-                var primary = await _db.Incidents
-                    .Where(p => !p.IsDeleted && p.Id == incidentId)
-                    .Select(p => new IncidentAdditionalLocationViewModel
-                    {
-                        AdditionalLocation = p.LocationAddress ?? string.Empty,
-                        Lat = p.Lat,
-                        Long = p.Lng,
-                        IsPrimaryLocation = true,
-                    })
-                    .FirstOrDefaultAsync();
-
-                // Get additional locations
                 var additionals = await _db.AdditionalLocations
-                    .Where(p => !p.IsDeleted && p.IncidentID == incidentId)
-                    .Select(a => new IncidentAdditionalLocationViewModel
-                    {
-                        AdditionalLocation = a.LocationAddress ?? string.Empty,
-                        Lat = a.Latitude,
-                        Long = a.Longitude,
-                        IsPrimaryLocation = false,
-                        Id = a.Id
-                    })
-                    .ToListAsync();
-
-                // Add primary at the top (if available)
-                if (primary != null)
-                    additionals.Insert(0, primary);
+                                  .Where(p => !p.IsDeleted && p.IncidentID == incidentId)
+                                  .OrderByDescending(p => p.IsPrimaryLocation) // ✅ PrimaryLocation=true first
+                                  .Select(a => new IncidentAdditionalLocationViewModel
+                                  {
+                                      AdditionalLocation = a.LocationAddress ?? string.Empty,
+                                      Lat = a.Latitude,
+                                      Long = a.Longitude,
+                                      IsPrimaryLocation = a.IsPrimaryLocation,
+                                      Id = a.Id,
+                                      IncidentId = a.IncidentID,
+                                  })
+                                  .ToListAsync();
 
                 return additionals;
             }

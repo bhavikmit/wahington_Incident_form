@@ -19,7 +19,7 @@
 
         .IVPolicyList .card.highlight {
             /* border: 2px solid #ff8800 !important;
-                                                                            background: #fff7f0; */
+                                                                                background: #fff7f0; */
 
             border: 2px solid #93bfab !important;
             background: #ecfdf5;
@@ -526,7 +526,7 @@
                                 {
                                     if (item.IsPrimaryLocation)
                                     {
-                                        <div class="location-card active" data-location="@item.Id">
+                                        <div class="location-card active" data-location="@item.Id" data-lat="@item.Lat" data-lng="@item.Long">
                                             <div class="d-flex align-items-start">
                                                 <div class="ms-2">
                                                     <div class="location-title fw-semibold">
@@ -538,7 +538,7 @@
                                     }
                                     else
                                     {
-                                        <div class="location-card" data-location="@item.Id">
+                                        <div class="location-card" data-location="@item.Id" data-lat="@item.Lat" data-lng="@item.Long">
                                             <div class="d-flex align-items-start justify-content-between">
                                                 <div class="ms-2">
                                                     <div class="location-title fw-semibold">
@@ -566,6 +566,10 @@
                         <div class="col-md-9 loaderDiv">
                             @foreach (var itemLoc in Model.IVAdditionalLocations)
                             {
+                                @if (itemLoc.IsPrimaryLocation)
+                                {
+                                    <input type="hidden" id="hdnCloneLocId" value="@itemLoc.Id" />
+                                }
                                 <div id="rightPanel_@itemLoc.Id" data-add-loc="@itemLoc.Id" class="right-panel" style="@(!itemLoc.IsPrimaryLocation ? "display:none" : "display: block")">
                                     <h3>Location Validation</h3>
 
@@ -594,18 +598,20 @@
 
                                     <div class="form-group" id="divaddloc_ICP_@itemLoc.Id">
                                         <label>ICP Location <span style="color:red">*</span></label>
-                                        <input type="hidden" id="hdnLat_@itemLoc.Id" value="0"/>
+                                        <input type="hidden" id="hdnLat_@itemLoc.Id" value="0" />
                                         <input type="hidden" id="hdnLon_@itemLoc.Id" value="0" />
                                         <input type="text" id="ICPLocation_@itemLoc.Id" class="form-control mb-2" placeholder="123 Main St, City, ST 12345">
                                         <ul id="suggestionsICPLocation_@itemLoc.Id" class="suggestions-list"></ul>
 
                                         <div id="map_@itemLoc.Id" style="height:500px; width:100%; display:none" class="mapDivClass"></div>
                                     </div>
+                                   
                                     <script>
-                                        $(document).ready(function() {
+                                        $(document).ready(function () {
                                             initICPLocationAutocomplete(@itemLoc.Id);
                                         });
                                     </script>
+                                    
                                     <div class="form-group" id="divaddloc_Source_@itemLoc.Id">
                                         <label>Source <span style="color:red">*</span></label>
                                         <input type="text" id="Source" class="form-control mb-2">
@@ -685,7 +691,8 @@
     }
 }
 <script>
-       // Handle location card click — updates header
+
+    // Handle location card click — updates header
     document.querySelectorAll('.location-card').forEach(card => {
       card.addEventListener('click', function () {
         showLoader($(".loaderDiv"));
@@ -722,70 +729,96 @@
       });
     });
 
+    function initLocationCardEvents() {
+        document.querySelectorAll('.location-card').forEach(card => {
+            card.removeEventListener('click', onLocationCardClick); // prevent duplicate binding
+            card.addEventListener('click', onLocationCardClick);
+        });
+    }
+    
+    function onLocationCardClick() {
+        showLoader($(".loaderDiv"));
 
+        // Remove active class from all cards
+        document.querySelectorAll('.location-card').forEach(c => c.classList.remove('active'));
 
+        // Add active to current
+        this.classList.add('active');
+
+        const locid = this.getAttribute('data-location');
+
+        // Hide all right panels
+        document.querySelectorAll('#step-2 .right-panel').forEach(panel => {
+            panel.style.display = 'none';
+        });
+
+        // Show the selected one
+        const activePanel = document.querySelector(`#step-2 #rightPanel_${locid}`);
+        if (activePanel) activePanel.style.display = 'block';
+
+        // Hide loader after short delay
+        setTimeout(() => hideLoader($(".loaderDiv")), 500);
+    }
+    
     // Universal Team Expand/Collapse logic
     document.querySelectorAll('.team-check').forEach(check => {
-      check.addEventListener('change', function () {
-        const teamSection = this.closest('.team-section');
-        const details = teamSection.querySelector('.team-details');
+        check.addEventListener('change', function () {
+            const teamSection = this.closest('.team-section');
+            const details = teamSection.querySelector('.team-details');
 
-        if (details) {
-          details.classList.toggle('d-none', !this.checked);
-        } else if (this.checked) {
-          // if no .team-details found, create a new section dynamically
-          const newDetails = document.createElement('div');
-          newDetails.className = 'team-details ms-4 mt-3';
-          newDetails.innerHTML = `
-            <div class="team-members mb-3">
-              <label class="form-label fw-semibold">Select Team Members <span class="text-danger">*</span></label><br>
-              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" checked><label class="form-check-label">Member A</label></div>
-              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" checked><label class="form-check-label">Member B</label></div>
-              <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" checked><label class="form-check-label">Member C</label></div>
-            </div>
-            <div class="work-steps mb-3">
-              <label class="form-label fw-semibold"><i class="fa-solid fa-list-check"></i> Work Steps</label>
-              <div class="work-step">
-                <span class="fw-semibold">Initial Inspection</span><br><small>Perform quick safety check</small>
-                <i class="fa-solid fa-trash delete-btn"></i>
-              </div>
-              <div class="add-step-area mt-2">
-                <input type="text" class="form-control mb-2" placeholder="Step name (e.g., Isolate gas line)...">
-                <input type="text" class="form-control mb-2" placeholder="Description (optional)...">
-                <input type="text" class="form-control mb-2" placeholder="Assign to specific person (optional)...">
-                <button class="btn btn-primary w-100"><i class="fa-solid fa-plus"></i> Add Work Step</button>
-              </div>
-            </div>`;
-          teamSection.appendChild(newDetails);
-        }
-      });
+            if (details) {
+                details.classList.toggle('d-none', !this.checked);
+            } else if (this.checked) {
+                // if no .team-details found, create a new section dynamically
+                const newDetails = document.createElement('div');
+                newDetails.className = 'team-details ms-4 mt-3';
+                newDetails.innerHTML = `
+                <div class="team-members mb-3">
+                  <label class="form-label fw-semibold">Select Team Members <span class="text-danger">*</span></label><br>
+                  <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" checked><label class="form-check-label">Member A</label></div>
+                  <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" checked><label class="form-check-label">Member B</label></div>
+                  <div class="form-check form-check-inline"><input class="form-check-input" type="checkbox" checked><label class="form-check-label">Member C</label></div>
+                </div>
+                <div class="work-steps mb-3">
+                  <label class="form-label fw-semibold"><i class="fa-solid fa-list-check"></i> Work Steps</label>
+                  <div class="work-step">
+                    <span class="fw-semibold">Initial Inspection</span><br><small>Perform quick safety check</small>
+                    <i class="fa-solid fa-trash delete-btn"></i>
+                  </div>
+                  <div class="add-step-area mt-2">
+                    <input type="text" class="form-control mb-2" placeholder="Step name (e.g., Isolate gas line)...">
+                    <input type="text" class="form-control mb-2" placeholder="Description (optional)...">
+                    <input type="text" class="form-control mb-2" placeholder="Assign to specific person (optional)...">
+                    <button class="btn btn-primary w-100"><i class="fa-solid fa-plus"></i> Add Work Step</button>
+                  </div>
+                </div>`;
+                teamSection.appendChild(newDetails);
+            }
+        });
     });
 
     // Optional: handle delete button (remove work step)
     document.addEventListener('click', function (e) {
-      if (e.target.classList.contains('delete-btn')) {
-        e.target.closest('.work-step').remove();
-      }
+        if (e.target.classList.contains('delete-btn')) {
+            e.target.closest('.work-step').remove();
+        }
     });
 
-
-      // ---------- ADD LOCATION SHOW / HIDE ----------
+    // ---------- ADD LOCATION SHOW / HIDE ----------
     document.addEventListener('click', function (e) {
-      // When clicking Add Location button
-      if (e.target.matches('.add-location-btn')) {
-        const newLocSection = document.querySelector('.new-location');
-        if (newLocSection) newLocSection.classList.remove('d-none');
-      }
+        // When clicking Add Location button
+        if (e.target.matches('.add-location-btn')) {
+            const newLocSection = document.querySelector('.new-location');
+            if (newLocSection) newLocSection.classList.remove('d-none');
+        }
 
-      // When clicking Cancel button inside new location section
-      if (e.target.matches('.cancel-location-btn')) {
-        const newLocSection = document.querySelector('.new-location');
-        if (newLocSection) newLocSection.classList.add('d-none');
-      }
+        // When clicking Cancel button inside new location section
+        if (e.target.matches('.cancel-location-btn')) {
+            const newLocSection = document.querySelector('.new-location');
+            if (newLocSection) newLocSection.classList.add('d-none');
+        }
     });
-</script>
 
-<script>
     $("#newAddress").on("input", function () {
         let query = $(this).val();
         if (query.length > 2) {
@@ -842,8 +875,7 @@
         });
     }
 
-
-     function selectICPLocation(itemLocId, address, magicKey) {
+    function selectICPLocation(itemLocId, address, magicKey) {
         $(`#map_${itemLocId}`).show();
         showLoader($(`#map_${itemLocId}`));
 
@@ -908,10 +940,10 @@
                 const popupTemplate = {
                     title: "Selected Location",
                     content: `
-                        <b>Address:</b> ${data.text}<br>
-                        <b>Latitude:</b> ${data.lat}<br>
-                        <b>Longitude:</b> ${data.lon}
-                    `
+                            <b>Address:</b> ${data.text}<br>
+                            <b>Latitude:</b> ${data.lat}<br>
+                            <b>Longitude:</b> ${data.lon}
+                        `
                 };
 
                 const pointGraphic = new Graphic({
@@ -949,29 +981,17 @@
         });
     }
 
-</script>
+    $(document).on("click", "#dltAddLoc", async function (e) {
+       
+        showLoader($(`.left-panel`));
 
-<script>
-    // Ensure the form has data-incident-id attribute in the view:
+        e.preventDefault();
 
-    // Use event delegation on a static parent (like document or container)
-    $(document).on("click", "#dltAddLoc", async function () {
         const $element = $(this).closest(".location-card");
         const id = $element.attr("data-location");
 
-        const payload = { incidentId: id };
-        const res = await fetch("/Validation/DeleteAdditionalLocation", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-        });
-
-        const json = await res.json();
-        if (json.success) {
-            $element.remove();
-        }
+       DeleteLocationItem(id, $element);
     });
-
 
     $("#addBtn").on("click", async function (e) {
         e.preventDefault();
@@ -1000,18 +1020,18 @@
                 // build UI card
                 const leftPanel = $(".left-panel");
                 const newCard = $(`
-                    <div class="location-card" data-location="${item.id}" data-lat="${item.lat}" data-lng="${item.lng}">
-                        <div class="d-flex align-items-start justify-content-between">
-                            <div class="ms-2">
-                                <div class="location-title fw-semibold">${item.address}</div>
-                                <span class="badge-status">In Progress</span>
-                            </div>
-                             <div class="ms-1">
-                               <i class="far fa-trash-alt dltAddLoc"></i>
+                        <div class="location-card" data-location="${item.id}" data-lat="${item.lat}" data-lng="${item.lng}">
+                            <div class="d-flex align-items-start justify-content-between">
+                                <div class="ms-2">
+                                    <div class="location-title fw-semibold">${item.address}</div>
+                                    <span class="badge-status">In Progress</span>
+                                </div>
+                                 <div class="ms-1">
+                                   <i class="far fa-trash-alt dltAddLoc"></i>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `);
+                    `);
 
                 // insert before newLocation div
                 const newLocationDiv = $("#newLocation");
@@ -1026,6 +1046,8 @@
                 $("#newAddress").val("");
                 $("#suggestionsnewAddress").empty().hide();
 
+                cloneRightPanel($("#hdnCloneLocId").val(), item.id);
+
                 // optionally attach click handler to new card (same UX as other cards)
                 newCard.on("click", function () {
                     $(".location-card").removeClass("active");
@@ -1035,7 +1057,7 @@
                     // update address shown on right panel if you want
                 });
 
-                    // bind click event for this card only
+                // bind click event for this card only
                 newCard.find(".dltAddLoc").on("click", async function () {
                     const $element = $(this).closest(".location-card");
                     const id = $element.attr("data-location");
@@ -1061,6 +1083,69 @@
         }
     });
 
+    function cloneRightPanel(itemLocId, newLocId) {
+
+        // Get the HTML content of the existing right panel
+        var content = $(`#rightPanel_${itemLocId}`).prop('outerHTML');
+
+        // Replace all old IDs with new dynamic ID
+        var updatedContent = content.replaceAll(`_${itemLocId}`, `_${newLocId}`)
+            .replaceAll(`(${itemLocId})`, `(${newLocId})`)
+            .replaceAll(`data-add-loc="${itemLocId}"`, `data-add-loc="${newLocId}"`);
+
+        // Convert string to jQuery element
+        var $newElement = $(updatedContent);
+
+        // Hide it initially if needed
+        $newElement.hide();
+
+        // Append to loaderDiv
+        $(".loaderDiv").append($newElement);
+
+        // Reinitialize location autocomplete/map for the new ID
+        initICPLocationAutocomplete(newLocId);
+
+        // Rebind click events to all location cards (including new ones)
+        initLocationCardEvents();
+    }
+
+    function DeleteLocationItem(id, $element) {
+        let confirmBtnText = "Yes, delete it!";
+        let cancelBtnText = "No, cancel!";
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: confirmBtnText,
+            cancelButtonText: cancelBtnText,
+            confirmButtonClass: 'btn btn-success me-2',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(async function (result) {  // <-- make callback async here
+            if (result.isConfirmed) {
+
+                showLoader($(".left-panel")); // optional if you want to show loader
+                const payload = { incidentId: id };
+
+                const res = await fetch("/Validation/DeleteAdditionalLocation", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const json = await res.json();
+                if (json.success) {
+                    $element.remove();
+                    $(`#rightPanel_${id}`).remove();
+                }
+                hideLoader($(`.left-panel`));
+            } else {
+                hideLoader($(`.left-panel`));
+            }
+        });
+    }
 
 </script>
 

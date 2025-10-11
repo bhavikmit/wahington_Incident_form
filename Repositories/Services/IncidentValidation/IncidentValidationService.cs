@@ -48,12 +48,15 @@ namespace Repositories.Common
         private readonly ApplicationDbContext _db;
         private readonly ILogger<IncidentValidationService> _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAdditionalLocationsService _iAdditionalLocationsService;
 
-        public IncidentValidationService(ApplicationDbContext db, ILogger<IncidentValidationService> logger, IHttpContextAccessor httpContextAccessor)
+        public IncidentValidationService(ApplicationDbContext db, ILogger<IncidentValidationService> logger,
+                                        IHttpContextAccessor httpContextAccessor, IAdditionalLocationsService iAdditionalLocationsService)
         {
             _db = db;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
+            _iAdditionalLocationsService = iAdditionalLocationsService;
         }
 
         public async Task<List<IncidentValidationPendingViewModel>> GetValidationPendingList()
@@ -510,28 +513,73 @@ namespace Repositories.Common
         {
             try
             {
-                var additionals = await _db.AdditionalLocations
-                                  .Where(p => !p.IsDeleted && p.IncidentID == incidentId)
-                                  .OrderByDescending(p => p.IsPrimaryLocation) // ✅ PrimaryLocation=true first
-                                  .Select(a => new IncidentAdditionalLocationViewModel
-                                  {
-                                      AdditionalLocation = a.LocationAddress ?? string.Empty,
-                                      Lat = a.Latitude,
-                                      Long = a.Longitude,
-                                      IsPrimaryLocation = a.IsPrimaryLocation,
-                                      Id = a.Id,
-                                      IncidentId = a.IncidentID,
-                                  })
-                                  .ToListAsync();
+                // Check if primary additional location exists
+                bool primaryExists = await _db.AdditionalLocations
+                    .AnyAsync(p => !p.IsDeleted && p.IncidentID == incidentId && p.IsPrimaryLocation);
 
-                return additionals;
+                // If not, create from main incident info
+                if (!primaryExists)
+                {
+                    var incidentInfo = await _db.Incidents
+                        .Where(p => !p.IsDeleted && p.Id == incidentId)
+                        .Select(p => new
+                        {
+                            p.Id,
+                            p.LocationAddress,
+                            p.Lat,
+                            p.Lng,
+                            p.Landmark,
+                            p.ServiceAccount,
+                            p.AssetIds
+                        })
+                        .FirstOrDefaultAsync();
+
+                    if (incidentInfo != null)
+                    {
+                        var additionalLocation = new AdditionalLocationViewModel
+                        {
+                            LocationAddress = incidentInfo.LocationAddress ?? string.Empty,
+                            Latitude = incidentInfo.Lat,
+                            Longitude = incidentInfo.Lng,
+                            IncidentId = incidentInfo.Id,
+                            NearestIntersection = incidentInfo.Landmark,
+                            ServiceAccount = incidentInfo.ServiceAccount,
+                            PerimeterType = false,
+                            PerimeterTypeDigit = 0,
+                            AssetIDs = incidentInfo.AssetIds ?? string.Empty,
+                            IsPrimaryLocation = true
+                        };
+
+                        await _iAdditionalLocationsService.SaveadditionalLocations(
+                            new List<AdditionalLocationViewModel> { additionalLocation });
+                    }
+                }
+
+                // Fetch all locations (primary first)
+                var additionalLocations = await _db.AdditionalLocations
+                    .Where(p => !p.IsDeleted && p.IncidentID == incidentId)
+                    .OrderByDescending(p => p.IsPrimaryLocation)
+                    .Select(a => new IncidentAdditionalLocationViewModel
+                    {
+                        Id = a.Id,
+                        IncidentId = a.IncidentID,
+                        AdditionalLocation = a.LocationAddress ?? string.Empty,
+                        Lat = a.Latitude,
+                        Long = a.Longitude,
+                        IsPrimaryLocation = a.IsPrimaryLocation
+                    })
+                    .ToListAsync();
+
+                return additionalLocations;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error in GetIncidentAdditionalLocationByIncident for IncidentId: {IncidentId}", incidentId);
+                _logger.LogError(ex,
+                    "Error in GetIncidentAdditionalLocationByIncident for IncidentId: {IncidentId}", incidentId);
                 return new List<IncidentAdditionalLocationViewModel>();
             }
         }
+
         public async Task<GeocodeResult?> GetLatLngFromAddress(string address)
         {
             if (string.IsNullOrWhiteSpace(address))

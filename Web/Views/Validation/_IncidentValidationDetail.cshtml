@@ -984,13 +984,32 @@
     $(document).on("click", "#dltAddLoc", async function (e) {
        
         showLoader($(`.left-panel`));
-
         e.preventDefault();
 
         const $element = $(this).closest(".location-card");
         const id = $element.attr("data-location");
+        const payload = { incidentId: id };
 
-       DeleteLocationItem(id, $element);
+        const res = await fetch("/Validation/DeleteAdditionalLocation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const json = await res.json();
+        if (json.success) {
+            $element.remove();
+            $(`#rightPanel_${id}`).remove();
+            document.querySelectorAll('#step-2 .right-panel').forEach(panel => {
+                panel.style.display = 'none';
+            });
+
+            // Show the selected one
+            var primaryLocId = $("#hdnCloneLocId").val();
+            const activePanel = document.querySelector(`#step-2 #rightPanel_${primaryLocId}`);
+            if (activePanel) activePanel.style.display = 'block';
+        }
+        hideLoader($(`.left-panel`));
     });
 
     $("#addBtn").on("click", async function (e) {
@@ -1001,6 +1020,7 @@
             return;
         }
 
+        showLoader($(`.left-panel`));
         // Determine incidentId: prefer data attribute on form or fallback to Model value
         const incidentIdAttr = $("#incident_validation_form").data("incident-id");
         // const incidentId = incidentIdAttr ? parseInt(incidentIdAttr, 10) : @Model.Id;
@@ -1059,6 +1079,9 @@
 
                 // bind click event for this card only
                 newCard.find(".dltAddLoc").on("click", async function () {
+                    
+                    showLoader($(`.left-panel`));
+
                     const $element = $(this).closest(".location-card");
                     const id = $element.attr("data-location");
 
@@ -1071,15 +1094,29 @@
                     const json = await res.json();
                     if (json.success) {
                         $element.remove();
+                        $(`#rightPanel_${id}`).remove();
+
+                        document.querySelectorAll('#step-2 .right-panel').forEach(panel => {
+                            panel.style.display = 'none';
+                        });
+
+                        // Show the selected one
+                        var primaryLocId = $("#hdnCloneLocId").val();
+                        const activePanel = document.querySelector(`#step-2 #rightPanel_${primaryLocId}`);
+                        if (activePanel) activePanel.style.display = 'block';
+
                     }
+                    hideLoader($(`.left-panel`));
                 });
 
             } else {
                 alert(json.message || "Failed to add location.");
             }
+            hideLoader($(`.left-panel`));
         } catch (err) {
             console.error(err);
             alert("Failed to add location (network error).");
+            hideLoader($(`.left-panel`));
         }
     });
 
@@ -1108,44 +1145,5 @@
         // Rebind click events to all location cards (including new ones)
         initLocationCardEvents();
     }
-
-    function DeleteLocationItem(id, $element) {
-        let confirmBtnText = "Yes, delete it!";
-        let cancelBtnText = "No, cancel!";
-
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: confirmBtnText,
-            cancelButtonText: cancelBtnText,
-            confirmButtonClass: 'btn btn-success me-2',
-            cancelButtonClass: 'btn btn-danger',
-            buttonsStyling: false
-        }).then(async function (result) {  // <-- make callback async here
-            if (result.isConfirmed) {
-
-                showLoader($(".left-panel")); // optional if you want to show loader
-                const payload = { incidentId: id };
-
-                const res = await fetch("/Validation/DeleteAdditionalLocation", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload)
-                });
-
-                const json = await res.json();
-                if (json.success) {
-                    $element.remove();
-                    $(`#rightPanel_${id}`).remove();
-                }
-                hideLoader($(`.left-panel`));
-            } else {
-                hideLoader($(`.left-panel`));
-            }
-        });
-    }
-
 </script>
 

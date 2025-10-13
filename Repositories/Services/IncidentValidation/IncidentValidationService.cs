@@ -257,6 +257,15 @@ namespace Repositories.Common
                                    })
                                    .ToListAsync();
 
+                var statusList = await _db.Progress
+                                  .Where(it => !it.IsDeleted)
+                                  .Select(it => new SelectListItem
+                                  {
+                                      Value = it.Id.ToString(),
+                                      Text = it.Name
+                                  })
+                                  .ToListAsync();
+
                 if (incidentTask == null)
                 {
                     return new IncidentValidationViewModel { severityLevels = severityLevelsTask };
@@ -274,7 +283,8 @@ namespace Repositories.Common
                     Long = incidentTask.Lng,
                     CompanyList = companyList,
                     RoleList = rolesList,
-                    ShiftsList = shiftsList
+                    ShiftsList = shiftsList,
+                    StatusList = statusList
                 };
             }
             catch (Exception ex)

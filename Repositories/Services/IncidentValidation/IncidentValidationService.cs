@@ -248,6 +248,15 @@ namespace Repositories.Common
                                    })
                                    .ToListAsync();
 
+                var shiftsList = await _db.IncidentShifts
+                                   .Where(it => !it.IsDeleted)
+                                   .Select(it => new SelectListItem
+                                   {
+                                       Value = it.Id.ToString(),
+                                       Text = it.Name
+                                   })
+                                   .ToListAsync();
+
                 if (incidentTask == null)
                 {
                     return new IncidentValidationViewModel { severityLevels = severityLevelsTask };
@@ -264,7 +273,8 @@ namespace Repositories.Common
                     Lat = incidentTask.Lat,
                     Long = incidentTask.Lng,
                     CompanyList = companyList,
-                    RoleList = rolesList
+                    RoleList = rolesList,
+                    ShiftsList = shiftsList
                 };
             }
             catch (Exception ex)
@@ -404,9 +414,9 @@ namespace Repositories.Common
 
                 await _db.IncidentValidations.AddAsync(incidentValidation);
                 await _db.SaveChangesAsync();
-                
+
                 var insertedValidationId = incidentValidation.Id;
-                
+
                 // 2. Policies
                 var policies = request.listSubmitPolicyVM.Select(item => new IncidentValidationPolicy
                 {
@@ -467,6 +477,24 @@ namespace Repositories.Common
                     await _db.IncidentValidationLocations.AddRangeAsync(validationLocation);
                 }
 
+                // 4. Add Incident Validation Personel Info 
+                if (request.listSubmitPersonalDataVM.Any())
+                {
+                    var validationPersonelInfo = request.listSubmitPersonalDataVM.Select(item =>
+                    {
+                        return new IncidentValidationPersonnel
+                        {
+                            IncidentId = request.Id,
+                            IncidentValidationId = incidentValidation.Id,
+                            CompanyId = item.CompanyId,
+                            RoleId = item.RoleId,
+                            ShiftId = item.ShiftId,
+                            UserId = item.UserId
+                        };
+                    }).ToList();
+                    await _db.IncidentValidationPersonnels.AddRangeAsync(validationPersonelInfo);
+                }
+
                 // 5. Update Incident record
                 var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == request.Id);
                 if (incident != null)
@@ -487,10 +515,10 @@ namespace Repositories.Common
                 {
                     IncidentValidationId = request.Id,
                     IncidentId = insertedValidationId,
-                    IncidentCommander = request.ConfirmedIncidentCommanderId,
-                    FieldEnvRep = request.ConfirmedFieldEnvRepId,
-                    GEC_Coordinator = request.ConfirmedGECCoordinatorId,
-                    EngineeringLead = request.ConfirmedEngineeringLeadId,
+                    IncidentCommander = request.assignedRole.IncidentCommanderId,
+                    FieldEnvRep = request.assignedRole.FieldEnvRepId,
+                    GEC_Coordinator = request.assignedRole.GECCoordinatorId,
+                    EngineeringLead = request.assignedRole.EngineeringLeadId,
                     ActiveStatus = ActiveStatus.Active
                 };
                 await _db.IncidentValidationAssignedRoles.AddAsync(IncidentValidationAssignedRole);

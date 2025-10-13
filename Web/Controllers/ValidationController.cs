@@ -177,11 +177,16 @@ namespace Web.Controllers
                 var communications = JsonConvert
                     .DeserializeObject<List<IncidentSubmitCommunicationViewModel>>(TempData["TempComRecords"]?.ToString() ?? "");
 
+                var personalInfo = !string.IsNullOrWhiteSpace(request.listPersonalDataVM) ? JsonConvert
+                   .DeserializeObject<List<IncidentValidationPersonalViewModel>>(request.listPersonalDataVM) : new List<IncidentValidationPersonalViewModel>();
+
                 request.listSubmitPolicyVM = policies ?? new List<IncidentSubmitPolicyViewModel>();
 
                 request.listSubmitCommunicationVM = communications ?? new List<IncidentSubmitCommunicationViewModel>();
 
                 request.listSubmitValidationLocationVM = validationLocations ?? new List<IncidentValidationLocationViewModel>();
+
+                request.listSubmitPersonalDataVM = personalInfo ?? new List<IncidentValidationPersonalViewModel>();
 
                 //var resultId = await _iIncidentValidationService.SaveIncidentValidation(request);
 

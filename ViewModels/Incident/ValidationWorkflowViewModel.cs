@@ -93,6 +93,7 @@ namespace ViewModels.Incident
         public List<SelectListItem> UserList { get; set; } = new();
         public List<SelectListItem> CompanyList { get; set; } = new();
         public List<SelectListItem> RoleList { get; set; } = new();
+        public List<SelectListItem> ShiftsList { get; set; } = new();
         public string severityLevel { get; set; } = default!;
         public double Lat { get; set; } = default!;
         public double Long { get; set; } = default!;
@@ -100,10 +101,12 @@ namespace ViewModels.Incident
         public long RadiusId { get; set; } = default!;
         public long severityLevelId { get; set; } = default!;
         public long UserId { get; set; } = default!;
-        public long IncidentCommanderId { get; set; } = default!;
-        public long FieldEnvRepId { get; set; } = default!;
-        public long GECCoordinatorId { get; set; } = default!;
-        public long EngineeringLeadId { get; set; } = default!;
+        public IncidentValidationAssignedRoleViewModel assignedRole { get; set; } = new();
+        public IncidentValidationValidationGatesViewModel validationGates { get; set; } = new();
+        //public long IncidentCommanderId { get; set; } = default!;
+        //public long FieldEnvRepId { get; set; } = default!;
+        //public long GECCoordinatorId { get; set; } = default!;
+        //public long EngineeringLeadId { get; set; } = default!;
         public string IncidentLocation { get; set; } = default!;
     }
 
@@ -132,22 +135,22 @@ namespace ViewModels.Incident
     }
     public class IncidentSubmitViewModel : BaseIncidentValidationViewModel
     {
+        public IncidentValidationAssignedRoleViewModel assignedRole { get; set; } = new();
         public long ConfirmedSeverityLevelId { get; set; }
-        public long ConfirmedIncidentCommanderId { get; set; } = default!;
-        public long ConfirmedFieldEnvRepId { get; set; } = default!;
-        public long ConfirmedGECCoordinatorId { get; set; } = default!;
-        public long ConfirmedEngineeringLeadId { get; set; } = default!;
+        
         public long DiscoveryPerimeterId { get; set; }
         public string ValidationNotes { get; set; } = default!;
         public string AssignResponseTeams { get; set; } = default!;
         public string listPolicyVM { get; set; } = default!;
         public string listValidationLocationVM { get; set; } = default!;
+        public string listPersonalDataVM { get; set; } = default!;
         public bool IsMarkFalseAlarm { get; set; } = false;
 
         //public string listCommunicationVM { get; set; } = default!;
         public List<IncidentSubmitPolicyViewModel> listSubmitPolicyVM { get; set; } = new();
         public List<IncidentValidationLocationViewModel> listSubmitValidationLocationVM { get; set; } = new();
         public List<IncidentSubmitCommunicationViewModel> listSubmitCommunicationVM { get; set; } = new();
+        public List<IncidentValidationPersonalViewModel> listSubmitPersonalDataVM { get; set; } = new();
     }
     public class IncidentSubmitPolicyViewModel
     {
@@ -186,5 +189,29 @@ namespace ViewModels.Incident
         public string Source { get; set; } = default!;
         public float Lat { get; set; } = default!;
         public float Lon { get; set; } = default!;
+    }
+    public class IncidentValidationAssignedRoleViewModel
+    {
+        public long? IncidentCommanderId { get; set; }
+        public long? FieldEnvRepId { get; set; }
+        public long? GECCoordinatorId { get; set; }
+        public long? EngineeringLeadId { get; set; }
+    }
+
+    public class IncidentValidationValidationGatesViewModel 
+    {
+        public bool ContainmentAcknowledgement { get; set; }
+        public bool Exception { get; set; }
+        public bool IndependentInspection { get; set; }
+        public string Regulatory { get; set; }
+        public bool IsOtherEvent { get; set; }
+    }
+
+    public class IncidentValidationPersonalViewModel
+    {
+        public long? UserId { get; set; }
+        public long? CompanyId { get; set; }
+        public long? RoleId { get; set; }
+        public long? ShiftId { get; set; }
     }
 }

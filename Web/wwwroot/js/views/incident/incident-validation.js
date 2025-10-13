@@ -2,14 +2,14 @@
 $(function () {
 
     let currentStep = 1;
-    const totalSteps = 3;
+    const totalSteps = 4;
 
     GetValidationsDetail($("#hdn_Id").val());
 
     $(document).off("click", "#nextBtn");
     $(document).on("click", "#nextBtn", function (e) {
 
-        if (currentStep == 3) {
+        if (currentStep == 4) {
             SaveIncidentValidation();
         }
 

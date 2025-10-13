@@ -188,7 +188,7 @@ namespace Web.Controllers
 
                 request.listSubmitPersonalDataVM = personalInfo ?? new List<IncidentValidationPersonalViewModel>();
 
-                //var resultId = await _iIncidentValidationService.SaveIncidentValidation(request);
+                var resultId = await _iIncidentValidationService.SaveIncidentValidation(request);
 
                 var successMsg = $"Incident validation saved successfully!";
 

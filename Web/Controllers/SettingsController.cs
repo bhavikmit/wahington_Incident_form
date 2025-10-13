@@ -27,6 +27,7 @@ namespace Web.Controllers
         private readonly IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> _iEquipmentFieldsService;
         private readonly IIncidentRoleService<IncidentRoleModifyViewModel, IncidentRoleModifyViewModel, IncidentRoleDetailViewModel> _iIncidentRoleService;
         private readonly ICompanyService<CompanyModifyViewModel, CompanyModifyViewModel, CompanyDetailViewModel> _iCompanyService;
+        private readonly IIncidentShiftService<IncidentShiftModifyViewModel, IncidentShiftModifyViewModel, IncidentShiftDetailViewModel> _iIncidentShiftService;
         #endregion
 
         #region Ctor
@@ -35,7 +36,7 @@ namespace Web.Controllers
             IUserManagementService<UserManagementModifyViewModel,UserManagementModifyViewModel, UserDetailViewModel> iUserManagementService,
             IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService, IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> iusersinService,
             IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService, IMaterialService<MaterialModifyViewModel, MaterialModifyViewModel, MaterialDetailViewModel> iMaterialService, IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> iEquipmentFieldsService,IIncidentRoleService<IncidentRoleModifyViewModel, IncidentRoleModifyViewModel, IncidentRoleDetailViewModel> iIncidentRoleService,
-            ICompanyService<CompanyModifyViewModel, CompanyModifyViewModel, CompanyDetailViewModel> iCompanyService)
+            ICompanyService<CompanyModifyViewModel, CompanyModifyViewModel, CompanyDetailViewModel> iCompanyService, IIncidentShiftService<IncidentShiftModifyViewModel, IncidentShiftModifyViewModel, IncidentShiftDetailViewModel> iIncidentShiftService)
         {
             _iRelationshipService = iRelationshipService;
             _iEventTypeService = iEventTypeService;
@@ -52,6 +53,7 @@ namespace Web.Controllers
             _iCompanyService = iCompanyService;
             _iMaterialService = iMaterialService;
             _iIncidentRoleService = iIncidentRoleService;
+            _iIncidentShiftService = iIncidentShiftService;
         }
         #endregion
 
@@ -1304,6 +1306,71 @@ namespace Web.Controllers
             }
         }
         #endregion
+        #region IncidentShift
+        [HttpGet]
+        public async Task<IActionResult> GetAllIncidentShifts()
+        {
+            var model = await _iIncidentShiftService.GetAllIncidentShifts();
+            return PartialView("~/Views/Settings/IncidentShift/_ListIncidentShift.cshtml", model);
+        }
+
+        [HttpGet]
+        public IActionResult AddIncidentShift()
+        {
+            var model = new IncidentShiftModifyViewModel();
+            return PartialView("~/Views/Settings/IncidentShift/_AddIncidentShift.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetIncidentShiftById(long id)
+        {
+            var model = await _iIncidentShiftService.GetIncidentShiftById(id);
+            return PartialView("~/Views/Settings/IncidentShift/_AddIncidentShift.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveIncidentShift([FromForm] IncidentShiftModifyViewModel incidentShift)
+        {
+            if (incidentShift == null) return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (incidentShift.Id > 0)
+                    Id = await _iIncidentShiftService.UpdateIncidentShift(incidentShift);
+                else
+                    Id = await _iIncidentShiftService.SaveIncidentShift(incidentShift);
+
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "Failed to save incident shift." });
+
+                return Ok(new { success = true, data = "Incident shift saved successfully!" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteIncidentShiftById(long id)
+        {
+            if (id == 0) return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                var Id = await _iIncidentShiftService.DeleteIncidentShift(id);
+                if (Id == 0) return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "Failed to delete incident shift." });
+
+                return Ok(new { success = true, data = "Incident shift deleted successfully!" });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+        #endregion
+
 
     }
 }

@@ -10,7 +10,21 @@
                 <label>Team *</label>
                 @Html.DropDownListFor(model => model.TeamId,
                          (SelectList)ViewBag.Teams,
-                         "Select team",
+                         "Select Team",
+                         new { @class = "form-control" })
+            </div>
+            <div>
+                <label>Company *</label>
+                @Html.DropDownListFor(model => model.CompanyId,
+                         (SelectList)ViewBag.Companies,
+                         "Select Company",
+                         new { @class = "form-control" })
+            </div>
+            <div>
+                <label>Role *</label>
+                @Html.DropDownListFor(model => model.IncidentRoleId,
+                         (SelectList)ViewBag.Roles,
+                         "Select Role",
                          new { @class = "form-control" })
             </div>
             <div>

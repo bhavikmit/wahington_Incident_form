@@ -7,6 +7,8 @@
         <tr>
             <th>NAME</th>
             <th>TEAM</th>
+            <th>Company</th>
+            <th>Role</th>
             <th>CONTACT</th>
             <th>PIN</th>
             <th>ACTIONS</th>
@@ -23,6 +25,8 @@
                         @user.Email
                     </td>
                     <td><span class="team-badge">@user.TeamName</span></td>
+                    <td><span class="team-badge">@user.CompanyName</span></td>
+                    <td><span class="team-badge">@user.IncidentRoleName</span></td>
                     <td>@user.Telephone</td>
                     <td>@(new string('*', (user.PinHash?.Length ?? 0)))</td>
                     <td class="editDeIcons">

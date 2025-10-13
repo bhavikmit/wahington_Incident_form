@@ -832,6 +832,10 @@ namespace Web.Controllers
             var model = new UserModifyViewModel();
             var teams = await _iUsersinService.GetAllTeams();
             ViewBag.Teams = new SelectList(teams, "TeamId", "TeamName");
+            var companies = await _iUsersinService.GetAllCompanies();
+            ViewBag.Companies = new SelectList(companies, "CompanyId", "CompanyName");
+            var roles = await _iUsersinService.GetAllIncidentRoles();
+            ViewBag.Roles = new SelectList(roles, "IncidentRoleId", "IncidentRoleName");
             return PartialView("~/Views/Settings/Users/_AddUser.cshtml", model);
         }
 
@@ -840,6 +844,10 @@ namespace Web.Controllers
         {
             var teams = await _iUsersinService.GetAllTeams();
             ViewBag.Teams = new SelectList(teams, "TeamId", "TeamName");
+            var companies = await _iUsersinService.GetAllCompanies();
+            ViewBag.Companies = new SelectList(companies, "CompanyId", "CompanyName");
+            var roles = await _iUsersinService.GetAllIncidentRoles();
+            ViewBag.Roles = new SelectList(roles, "IncidentRoleId", "IncidentRoleName");
             var model = await _iUsersinService.GetUserById(id);
             return PartialView("~/Views/Settings/Users/_AddUser.cshtml", model);
         }

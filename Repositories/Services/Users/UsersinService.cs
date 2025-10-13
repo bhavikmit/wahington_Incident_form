@@ -1,19 +1,14 @@
 ﻿using AutoMapper;
-
 using Centangle.Common.ResponseHelpers.Models;
-
 using DataLibrary;
-
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Enums;
-
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-
 using Models;
 using Models.Common.Interfaces;
-
 using ViewModels;
 using ViewModels.Shared;
 
@@ -63,14 +58,74 @@ namespace Repositories.Common
                 return new List<UserModifyViewModel.TeamViewModel>();
             }
         }
+        public async Task<List<UserModifyViewModel.CompanyViewModel>> GetAllCompanies()
+        {
+            try
+            {
+                var companies = await _db.Company
+                    .Where(c => !c.IsDeleted)
+                    .Select(c => new UserModifyViewModel.CompanyViewModel
+                    {
+                        CompanyId = c.Id,
+                        CompanyName = c.Name
+                    })
+                    .ToListAsync();
+                return companies;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetAllCompanies.");
+                return new List<UserModifyViewModel.CompanyViewModel>();
+            }
+        }
+        public async Task<List<UserModifyViewModel.IncidentRoleViewModel>> GetAllIncidentRoles()
+        {
+            try
+            {
+                var roles = await _db.IncidentRoles
+                    .Where(r => !r.IsDeleted)
+                    .Select(r => new UserModifyViewModel.IncidentRoleViewModel
+                    {
+                        IncidentRoleId = r.Id,
+                        IncidentRoleName = r.Name
+                    })
+                    .ToListAsync();
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetAllIncidentRoles.");
+                return new List<UserModifyViewModel.IncidentRoleViewModel>();
+            }
+        }
         public async Task<List<UserModifyViewModel>> GetAllUsers()
         {
             var list = new List<UserModifyViewModel>();
             try
             {
-                var users = await _db.IncidentUsers
-                    .Where(t => !t.IsDeleted)
-                    .ToListAsync();
+                var users = await (
+                          from u in _db.IncidentUsers
+                              .AsNoTracking()
+                          where !u.IsDeleted
+                          join c in _db.Company on u.CompanyId equals c.Id into companyGroup
+                          from c in companyGroup.DefaultIfEmpty() // <-- LEFT JOIN
+                          join r in _db.IncidentRoles on u.IncidentRoleId equals r.Id into roleGroup
+                          from r in roleGroup.DefaultIfEmpty() // <-- LEFT JOIN
+                          select new
+                          {
+                              u.Id,
+                              TeamId = (long?)u.TeamId ?? 0,
+                              CompanyId = (long?)u.CompanyId ?? 0,
+                              CompanyName = c != null ? c.Name : "",
+                              IncidentRoleId = (long?)u.IncidentRoleId ?? 0,
+                              IncidentRoleName = r != null ? r.Name : "",
+                              FirstName = u.FirstName ?? "",
+                              LastName = u.LastName ?? "",
+                              u.Telephone,
+                              u.Email,
+                              u.PinHash
+                          }
+                      ).ToListAsync();
 
                 foreach (var t in users)
                 {
@@ -85,6 +140,10 @@ namespace Repositories.Common
                         Id = t.Id,
                         TeamId = t.TeamId,
                         TeamName = teamName ?? string.Empty,
+                        CompanyId = t.CompanyId,
+                        CompanyName = t.CompanyName,
+                        IncidentRoleId = t.IncidentRoleId,
+                        IncidentRoleName = t.IncidentRoleName,
                         FirstName = t.FirstName,
                         LastName = t.LastName,
                         Telephone = t.Telephone,
@@ -113,6 +172,8 @@ namespace Repositories.Common
                 var user = new IncidentUser
                 {
                     TeamId = viewModel.TeamId,
+                    CompanyId = viewModel.CompanyId,
+                    IncidentRoleId = viewModel.IncidentRoleId,
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName,
                     Telephone = viewModel.Telephone,
@@ -144,8 +205,27 @@ namespace Repositories.Common
         {
             try
             {
-                var user = await _db.IncidentUsers
-                    .FirstOrDefaultAsync(t => t.Id == viewModel.Id);
+                // Fetch as no tracking (or using projection if you need)
+                var user = await (
+                            from u in _db.IncidentUsers
+                            where !u.IsDeleted && u.Id == viewModel.Id
+                            join c in _db.Company on u.CompanyId equals c.Id into companyGroup
+                            from c in companyGroup.DefaultIfEmpty()
+                            join r in _db.IncidentRoles on u.IncidentRoleId equals r.Id into roleGroup
+                            from r in roleGroup.DefaultIfEmpty()
+                            select new IncidentUser
+                            {
+                                Id = u.Id,
+                                TeamId = (long?)u.TeamId ?? 0,
+                                CompanyId = (long?)u.CompanyId ?? 0,
+                                IncidentRoleId = (long?)u.IncidentRoleId ?? 0,
+                                FirstName = u.FirstName ?? "",
+                                LastName = u.LastName ?? "",
+                                Telephone = u.Telephone,
+                                Email = u.Email,
+                                PinHash = u.PinHash
+                            }
+                        ).FirstOrDefaultAsync();
 
                 if (user == null)
                 {
@@ -153,28 +233,32 @@ namespace Repositories.Common
                     return await SaveUser(viewModel);
                 }
 
-                await using var transaction = await _db.Database.BeginTransactionAsync();
+                // Reattach the entity
+                _db.IncidentUsers.Attach(user);
 
+                // Update properties
                 user.TeamId = viewModel.TeamId;
+                user.CompanyId = viewModel.CompanyId;
+                user.IncidentRoleId = viewModel.IncidentRoleId;
                 user.FirstName = viewModel.FirstName;
                 user.LastName = viewModel.LastName;
                 user.Telephone = viewModel.Telephone;
                 user.Email = viewModel.Email;
                 user.PinHash = viewModel.PinHash;
                 user.UpdatedOn = DateTime.UtcNow;
-                // set UpdatedBy if available
 
-                try
-                {
-                    await _db.SaveChangesAsync();
-                    await transaction.CommitAsync();
-                }
-                catch
-                {
-                    await transaction.RollbackAsync();
-                    throw;
-                }
+                // Mark updated properties explicitly
+                _db.Entry(user).Property(u => u.TeamId).IsModified = true;
+                _db.Entry(user).Property(u => u.CompanyId).IsModified = true;
+                _db.Entry(user).Property(u => u.IncidentRoleId).IsModified = true;
+                _db.Entry(user).Property(u => u.FirstName).IsModified = true;
+                _db.Entry(user).Property(u => u.LastName).IsModified = true;
+                _db.Entry(user).Property(u => u.Telephone).IsModified = true;
+                _db.Entry(user).Property(u => u.Email).IsModified = true;
+                _db.Entry(user).Property(u => u.PinHash).IsModified = true;
+                _db.Entry(user).Property(u => u.UpdatedOn).IsModified = true;
 
+                await _db.SaveChangesAsync();
                 return user.Id;
             }
             catch (Exception ex)
@@ -188,9 +272,28 @@ namespace Repositories.Common
         {
             try
             {
-                var user = await _db.IncidentUsers
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(t => t.Id == id);
+                var user = await (
+                            from u in _db.IncidentUsers.AsNoTracking()
+                            where !u.IsDeleted && u.Id == id
+                            join c in _db.Company on u.CompanyId equals c.Id into companyGroup
+                            from c in companyGroup.DefaultIfEmpty()
+                            join r in _db.IncidentRoles on u.IncidentRoleId equals r.Id into roleGroup
+                            from r in roleGroup.DefaultIfEmpty()
+                            select new
+                            {
+                                u.Id,
+                                TeamId = (long?)u.TeamId ?? 0,
+                                CompanyId = (long?)u.CompanyId ?? 0,
+                                CompanyName = c != null ? c.Name : "",
+                                IncidentRoleId = (long?)u.IncidentRoleId ?? 0,
+                                IncidentRoleName = r != null ? r.Name : "",
+                                FirstName = u.FirstName ?? "",
+                                LastName = u.LastName ?? "",
+                                u.Telephone,
+                                u.Email,
+                                u.PinHash
+                            }
+                        ).FirstOrDefaultAsync();
 
                 if (user == null)
                     return new UserModifyViewModel();
@@ -199,6 +302,8 @@ namespace Repositories.Common
                 {
                     Id = user.Id,
                     TeamId = user.TeamId,
+                    CompanyId = user.CompanyId,
+                    IncidentRoleId = user.IncidentRoleId,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Telephone = user.Telephone,
@@ -218,17 +323,40 @@ namespace Repositories.Common
         {
             try
             {
-                var user = await _db.IncidentUsers
-                    .FirstOrDefaultAsync(t => t.Id == id);
+                var user = await (
+                            from u in _db.IncidentUsers
+                            where !u.IsDeleted && u.Id == id
+                            join c in _db.Company on u.CompanyId equals c.Id into companyGroup
+                            from c in companyGroup.DefaultIfEmpty()
+                            join r in _db.IncidentRoles on u.IncidentRoleId equals r.Id into roleGroup
+                            from r in roleGroup.DefaultIfEmpty()
+                            select new IncidentUser
+                            {
+                                Id = u.Id,
+                                TeamId = (long?)u.TeamId ?? 0,
+                                CompanyId = (long?)u.CompanyId ?? 0,
+                                IncidentRoleId = (long?)u.IncidentRoleId ?? 0,
+                                FirstName = u.FirstName ?? "",
+                                LastName = u.LastName ?? "",
+                                Telephone = u.Telephone,
+                                Email = u.Email,
+                                PinHash = u.PinHash
+                            }
+                        ).FirstOrDefaultAsync();
 
                 if (user == null)
                     return 0;
 
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
+
+                _db.IncidentUsers.Attach(user);
                 user.IsDeleted = true;
                 user.UpdatedOn = DateTime.UtcNow;
-                // set UpdatedBy if available
+
+                _db.Entry(user).Property(x => x.IsDeleted).IsModified = true;
+                _db.Entry(user).Property(x => x.UpdatedOn).IsModified = true;
+
 
                 try
                 {

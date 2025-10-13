@@ -32,9 +32,7 @@
         opacity: 1;
     }
 
-    #incidentDetailsModal .modal-body {
-        background: #f9fafb;
-    }
+    
     /*****************Team Communication************************/
     .team-communications {
         background: #fff;
@@ -155,69 +153,7 @@
             background: #5c89e6;
         }
 
-    /* Timeline */
-    .timeline {
-        margin-top: 20px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        padding: 16px;
-        border-radius: 8px;
-    }
-
-        .timeline h4 {
-            font-size: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .timeline ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .timeline li {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .timeline .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin-top: 6px;
-        }
-
-            .timeline .dot.blue {
-                background: #007bff;
-            }
-
-            .timeline .dot.green {
-                background: #28a745;
-            }
-
-            .timeline .dot.gray {
-                background: #6c757d;
-            }
-
-        .timeline li strong {
-            display: block;
-            font-size: 14px;
-        }
-
-        .timeline li p {
-            margin: 2px 0;
-            font-size: 13px;
-            color: #555;
-        }
-
-        .timeline li small {
-            font-size: 12px;
-            color: #888;
-        }
-
+    
     .task-container {
         background: #fff;
         padding: 20px;
@@ -509,16 +445,26 @@
     }
 
     .section-card {
-        background: #fff;
-        border-radius: 12px;
-        padding: 16px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+           background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    }
+    .section-body{
+        padding:0 16px 16px 16px;
+    }
+    .section-body i{
+        color:#f54e00 !important;
     }
 
         .section-card h3 {
-            margin: 0 0 15px;
             font-size: 18px;
             font-weight: 800;
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 12px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
         }
 
     .info-item {
@@ -826,86 +772,23 @@
     }
 
     #incidentDetailsModal{
-        padding: 0 26px;
-        background:#f9fafb;
+        /* padding: 0 26px; */
+        background: #F9FAFB;
     }
-    /*****************Header style***************************/
-    .header {
-        background: #ffffff;
-        padding: 16px;
-        box-shadow: 0px 0px 14px #efefef;
+    .tabHeader{
+        background:#ffffff;
+        padding:0 26px;
     }
-
-    .logo-section .title h2 {
-        font-weight: 800;
-        font-size: 28px;
-        margin-bottom: 0;
-        line-height: normal;
-        color: #494949;
+    #incidentDetailsModal .tabBody .section{
+        margin-top:0;
     }
-
-    .logo-section .title span {
-        color: darkgrey;
-    }
-
-    .profile .sidebar-account.dropdown-toggle::before {
-        display: none;
-    }
-
-    .icon {
-        position: relative;
-        font-size: 18px;
-        color: #666;
-        cursor: pointer;
-        margin-right: 16px;
-    }
-
-    .notification-dot {
-        position: absolute;
-        top: -4px;
-        right: -4px;
-        width: 8px;
-        height: 8px;
-        background-color: red;
-        border-radius: 50%;
-    }
-
-    .profile {
-        width: 34px;
-        height: 34px;
-        background: #f54e00;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 16px;
-        cursor: pointer;
-    }
-
-        .profile i.fa {
-            color: #ffffff;
-        }
-
-    .header .logo {
-        background-color: #ededed;
-        color: #f54e00;
-        border-radius: 12px;
-        padding: 10px;
-        font-size: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 16px;
-    }
-
-    .header .dropdown-toggle::before {
-        display: none;
-    }
-    .titleSec{
-        margin-top:20px;
+     .titleSec{
+        margin-top:0;
         padding:22px 0 12px 0;
     }
+     #incidentDetailsModal .tabBody{
+        padding: 0 26px;
+     }
     .backBtn{
         background: transparent;
         border: none;
@@ -959,16 +842,30 @@
         background-color: #fff;
         border-radius: 8px;
         box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-        padding: 20px;
+        padding: 16px;
         margin-top: 20px;
     }
 
     #validation .header-section {
         background-color: #fff;
         border-radius: 8px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        /* box-shadow: 0 1px 4px rgba(0,0,0,0.1); */
         padding: 20px;
         margin-bottom: 15px;
+        border:1px solid #e5e7eb;
+    }
+
+    .validation-process-status p{
+        font-size:16px;
+    }
+    .validation-process-status p span{
+        font-size:20px;
+        font-weight:600;
+    }
+
+    .validation-process-status p span.precentage {
+        font-size:20px;
+        font-weight:600;
     }
 
     #validation .progress-text {
@@ -1105,72 +1002,441 @@
             background-color: #e2e3e5;
             color: #343a40;
         }
+        /*******************Repair*****************************/
+    #repair .info-card ,
+    #restoration .info-card ,
+    #closeout .info-card {
+        background: #fff;
+        border: 1px solid #e2e5e9;
+        border-radius: 0.75rem;
+        padding: 20px 25px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+    }
+
+        #repair .info-card:hover ,
+        #restoration .info-card:hover ,
+        #closeout .info-card:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+    #repair .info-title ,
+    #restoration .info-title ,
+    #closeout .info-title {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    #repair .info-value ,
+    #restoration .info-value ,
+    #closeout .info-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0b1623;
+    }
+
+    #repair .bottomCard .info-value ,
+    #restoration .bottomCard .info-value ,
+    #closeout .bottomCard .info-value {
+        font-size: 16px !important;
+    }
+
+    #repair .bottomCard .info-card ,
+    #restoration .bottomCard .info-card ,
+    #closeout .bottomCard .info-card {
+        padding:12px !important;
+        min-height:97px;
+    }
+
+    #repair .info-sub ,
+    #restoration .info-sub ,
+    #closeout .info-sub {
+        font-size: 1rem;
+        color: #343a40;
+        font-weight: 500;
+    }
+
+    #repair .text-green ,
+    #restoration .text-green ,
+    #closeout .text-green {
+        color: #198754;
+        font-weight: 600;
+    }
+
+    #repair .info-icon ,
+    #restoration .info-icon ,
+    #closeout .info-icon {
+        font-size: 1.25rem;
+        margin-right: 6px;
+        color: #198754;
+    }
+
+    #repair .card ,
+    #restoration .card ,
+    #closeout .card {
+        border: none;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    #repair table th ,
+    #restoration table th ,
+    #closeout table th {
+        font-size: 0.85rem;
+        color: #6c757d;
+      
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        text-align:left;
+    }
+
+    #repair table td ,
+    #restoration table td ,
+    #closeout table td {
+        vertical-align: middle;
+        font-size: 0.95rem;
+        color: #212529;
+        text-align:left;
+    }
+
+    #repair .badge-status ,
+    #restoration .badge-status ,
+    #closeout .badge-status {
+        font-size: 0.8rem;
+        font-weight: 500;
+        border-radius: 0.5rem;
+        padding: 6px 10px;
+    }
+
+    #repair .badge-pending ,
+    #restoration .badge-pending ,
+    #closeout .badge-pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    #repair .badge-complete ,
+    #restoration .badge-complete ,
+    #closeout .badge-complete {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+
+    #repair .badge-progress ,
+    #restoration .badge-progress ,
+    #closeout .badge-progress {
+        background-color: #fce9dc;
+        color: #b35a00;
+    }
+
+    #repair .btn-add ,
+    #restoration .btn-add ,
+    #closeout .btn-add {
+        background-color: #f97316;
+        color: #fff;
+        border-radius: 0.5rem;
+        padding: 6px 14px;
+        font-weight: 500;
+    }
+
+        #repair .btn-add:hover ,
+        #restoration .btn-add:hover ,
+        #closeout .btn-add:hover {
+            background-color: #ea580c;
+            color: #fff;
+        }
+
+    #repair .fa-check-circle ,
+    #restoration .fa-check-circle ,
+    #closeout .fa-check-circle {
+        color: #198754;
+    }
+
+    #repair .fa-file-pdf ,
+    #restoration .fa-file-pdf ,
+    #closeout .fa-file-pdf {
+        color: #6c757d;
+    }
+
+    #repair .fa-location-dot ,
+    #restoration .fa-location-dot ,
+    #closeout .fa-location-dot {
+        color: #0d6efd;
+    }
+
+    #repair .table-rounded ,
+    #restoration .table-rounded ,
+    #closeout .table-rounded {
+        border-radius: 0.75rem;
+        overflow: hidden;
+    }
+
+    #repair .card-stat ,
+        #restoration .card-stat,
+        #closeout .card-stat
+
+    {
+        background: #fff;
+        border: none;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+    }
+
+        #repair .card-stat h2 ,
+        #restoration .card-stat h2 ,
+        #closeout .card-stat h2 {
+            font-weight: 700;
+            color: #000;
+            margin: 0;
+        }
+
+        #repair .card-stat small ,
+        #restoration .card-stat small ,
+        #closeout .card-stat small {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+    #repair .timeline ,
+    #restoration .timeline ,
+    #closeout .timeline {
+        background: #fff;
+        border-radius: 12px;
+        border:1px solid #e5e7eb;
+       
+    }
+    
+    #repair .Timelineheader,
+    #restoration .Timelineheader,
+    #closeout .Timelineheader{
+        background:#F9FAFB;
+        padding:16px;
+        border-top-left-radius:12px;
+        border-top-right-radius:12px;
+    }
+
+        #repair .timeline h5 ,
+        #restoration .timeline h5 ,
+    #closeout .timeline h5 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        #repair .timeline ul ,
+        #restoration .timeline ul,
+    #closeout .timeline ul {
+            list-style: none;
+            padding: 16px;
+            margin: 0;
+        }
+
+            #repair .timeline ul li ,
+        #restoration .timeline ul li,
+        #closeout .timeline ul li
+
+    {
+                margin-bottom: 10px;
+                font-size: 0.95rem;
+            }
+
+                #repair .timeline ul li span ,
+                #restoration .timeline ul li span ,
+            #closeout .timeline ul li span {
+                    font-weight: 700;
+                    margin-right: 8px;
+                }
+
+    #repair .updates ,
+        #restoration .updates,
+    #closeout .updates {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 20px;
+        height: 100%;
+    }
+
+    #repair .update-item ,
+    #restoration .update-item ,
+    #closeout .update-item {
+        background-color: #F9FAFB;
+        border: 1px solid #e5e7eb;
+        padding: 12px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+
+    #repair .update-time ,
+    #restoration .update-time ,
+    #closeout .update-time {
+        font-size: 0.85rem;
+        font-weight: 600;
+        background: #ffead1;
+        color: #d35400;
+        border-radius: 6px;
+        padding: 2px 8px;
+        margin-right: 8px;
+    }
+
+    #repair .update-footer input ,
+    #restoration .update-footer input ,
+    #closeout .update-footer input {
+        border-radius: 10px;
+    }
+
+    #repair .btn-update ,
+    #restoration .btn-update ,
+    #closeout .btn-update {
+        background-color: #f15a29;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 10px;
+        width: 100%;
+    }
+
+        #repair .btn-update:hover ,
+        #restoration .btn-update:hover ,
+        #closeout .btn-update:hover {
+            background-color: #e24d1a;
+        }
+        /************closeout****************/
+    #closeout .card-custom ,
+    #restoration .card-custom {
+        background: #fff;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 0;
+    }
+    #closeout .lessonsCard{
+        padding:16px;
+    }
+
+        #closeout .card-custom h5 ,
+        #restoration .card-custom h5 {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        #closeout .card-custom small ,
+        #restoration .card-custom small {
+            color: #6c757d;
+        }
+
+    #closeout textarea.form-control {
+        resize: none;
+        border-radius: 10px;
+        min-height: 120px;
+    }
+
+    #closeout .btn-submit {
+        background-color: #2563eb;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 8px 18px;
+    }
+
+        #closeout .btn-submit:hover {
+            background-color: #1d4ed8;
+        }
+
+    #closeout .signoffs .status {
+        font-weight: 500;
+    }
+
+    #closeout .status i {
+        margin-right: 6px;
+    }
+
+    #closeout .status.signed {
+        color: #198754;
+    }
+
+    #closeout .status.pending {
+        color: #ff9800;
+    }
+
+    #closeout .attachments li ,
+    #restoration .attachments li {
+        list-style: none;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        font-size: 0.95rem;
+    }
+
+        #closeout .attachments li i ,
+        #restoration .attachments li i {
+            color: #ff5722;
+            margin-right: 8px;
+            font-size: 8px;
+        }
+
+    #closeout .file-section ,
+    #restoration .file-section {
+        border-top: 1px solid #dee2e6;
+        margin-top: 15px;
+        padding: 10px 0;
+    }
+
+    #closeout .comment-icon {
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+    }
+
+        #closeout .comment-icon i {
+            background: #198754;
+            color: white;
+            border-radius: 50%;
+            padding: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .signoffs h6{
+           background:#F9FAFB;
+          border-top-left-radius:12px;
+          border-top-right-radius:12px;
+        padding: 16px;
+        }
+        .signoffs{
+            padding:0;
+        }
+        .signoffContent{
+            padding:16px;
+        }
+        .signoffContent span{
+            font-size:14px;
+        }
+        #closeout .attachments ul,
+         #restoration .attachments ul {
+            padding:0;
+        }
+        .file-section strong{
+            padding-left:16px;
+        }
+        #restoration .signoffContent p{
+            font-size:15px;
+        }
 </style>
 
 <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
 <script src="https://js.arcgis.com/4.27/"></script>
 <script type="module" src="https://js.arcgis.com/embeddable-components/4.33/arcgis-embeddable-components.esm.js"></script>
-<header class="header dashboard-header d-flex align-items-center justify-content-between">
-    <!-- Left section -->
-    <div class="logo-section d-flex align-items-center">
-        <div class="logo"><i class="fa-solid fa-home"></i></div>
-        <div class="title">
-            <h2>Incidents</h2>
-            <span>Track and review incidents quickly</span>
-        </div>
-    </div>
-
-    <!-- Right section -->
-    <div class="right-section d-flex align-items-center">
-
-        <div class="icon">
-            <i class="fa-regular fa-bell"></i>
-            <span class="notification-dot"></span>
-        </div>
-        <a class="icon" href="/Settings"><i class="fa fa-gear"></i></a>
-        <div class="profile">
-            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3 " id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-user"></i>
-                @* <div class="d-flex flex-column">
-                        <span class="ml-1 user-name menu-text">Account</span>
-                        <span class="ml-1 user-name menu-text"><small>Admin</small></span>
-                    </div> *@
-            </a>
-            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3"
-                style="background-color: white;">
-                <li class="dropdown-item">
-                    <a class="nav-link d-flex align-items-center" href="/Identity/Account/Manage/ChangePassword">
-                        <i class="fa fa-lock"></i>
-                        <span class="menu-text">Change Password</span>
-                    </a>
-                </li>
-
-                <li class="dropdown-item">
-                    <a class="nav-link d-flex align-items-center" href="/Identity/Account/Logout">
-                        <i class="fa fa-user"></i>
-                        <span class="menu-text">Log Out</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</header>
-
 <div id="incidentDetailsModal" tabindex="-1" aria-hidden="true">
     <div class="container-fuild"> 
         <div id="incidentDetailsContent">
+            <div class="tabHeader">
+                <div class="d-flex align-items-center  titleSec ">
+                    <button type="button" class="backBtn" data-bs-dismiss="modal" id="closeModalBtn"><i class="fa fa-arrow-left-long"></i></button>
+                    <h5 class="modal-title"> @Model.incidentDetailByIdViewModel?.IncidentNumber</h5>
+                </div>
 
-            <div class="d-flex align-items-center  titleSec ">
-                <button type="button" class="backBtn" data-bs-dismiss="modal" id="closeModalBtn"><i class="fa fa-arrow-left-long"></i></button>
-                <h5 class="modal-title"> @Model.incidentDetailByIdViewModel?.IncidentNumber</h5>
-               
-                
-               @*  <button type="button" class="btn-close" data-bs-dismiss="modal" id="closeModalBtn"></button> *@
-            </div>
-            @* <small class="text-muted">Phase: <span class="text-dark fw-semibold">Assessment</span> (45% Complete)</small> *@
-
-            <div>
-                
                 <div class="tabs">
                     <div class="tab-item active" data-tab="dashboard">
                         <i class="fa fa-map-marker-alt"></i>Map
@@ -1196,7 +1462,7 @@
                     <div class="tab-item" data-tab="closeout">
                         <i class="fas fa-comment-dots"></i> Closeout
                     </div>
-                   
+
                     @* <div class="tab-item" data-tab="worksteps">
                         <i class="fas fa-tasks"></i> Policies
                     </div>
@@ -1205,7 +1471,8 @@
                         <i class="fas fa-comment-dots"></i> Communication
                     </div> *@
                 </div>
-
+            </div>
+            <div class="tabBody">
                 <div id="dashboard" class="tab-content active">
                     <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
                         <div id="map" style="height:800px; width:100%;"></div>
@@ -1213,95 +1480,67 @@
                 </div>
 
                 <div id="overview" class="tab-content">
-                    <!--------------top card sec-------------------->
-                    @* <div class="top-card-sec">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="card">
-                                    <h4><i class="fa-solid fa-circle text-red" style="color:@Model.incidentDetailByIdViewModel?.StatusLegendColor"></i> Status</h4>
-                                    <div class="value">@Model.incidentDetailByIdViewModel?.StatusLegendName</div>
-                                    <div class="subtext">@Model.incidentDetailByIdViewModel?.UpdatedOn</div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="card">
-                                    <h4><i class="fa-solid fa-triangle-exclamation orange"></i> Severity</h4>
-                                    <div class="value" style="color:@Model.incidentDetailByIdViewModel?.SeverityColor">@Model.incidentDetailByIdViewModel?.SeverityName</div>
-                                    <div class="subtext">@Model.incidentDetails.EventTypeNames.FirstOrDefault()</div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="card">
-                                    <h4><i class="fa-solid fa-calendar blue"></i> Created</h4>
-                                    <div class="value">@Model.incidentDetailByIdViewModel?.CreatedOnDate</div>
-                                    <div class="subtext">@Model.incidentDetailByIdViewModel?.CreatedOnTime</div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="card">
-                                    <h4><i class="fa-solid fa-user green"></i> Reporter</h4>
-                                    <div class="value">@Model.incidentCellerInformation?.CallerName</div>
-                                    <div class="subtext">@Model.incidentCellerInformation?.RelationshipName</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> *@
+                   
                     <!-----------------location and incident information--------------------------->
                     <div class="section">
                         <div class="section-card">
                             <h3>Caller Information</h3>
-                            <div class="info-item d-flex align-items-start">
-                                <i class="fa-regular fa-user"></i>
-                                <div>
-                                    <span>@Model.incidentCellerInformation?.CallerName</span>
-                                    <div class="subtext">@Model.incidentCellerInformation?.RelationshipName</div>
+                            <div class="section-body">
+                                <div class="info-item d-flex align-items-start">
+                                    <i class="fa-regular fa-user"></i>
+                                    <div>
+                                        <span>@Model.incidentCellerInformation?.CallerName</span>
+                                        <div class="subtext">@Model.incidentCellerInformation?.RelationshipName</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="info-item d-flex align-items-start">
-                                <i class="fa-solid fa-phone"></i>
-                                <div>
-                                    <strong>@Model.incidentCellerInformation?.CallerPhoneNumber</strong>
-                                    <div class="subtext">Primary contact</div>
+                                <div class="info-item d-flex align-items-start">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <div>
+                                        <strong>@Model.incidentCellerInformation?.CallerPhoneNumber</strong>
+                                        <div class="subtext">Primary contact</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="info-item d-flex align-items-start">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <div>
-                                    <span class="info-title">Caller Address</span>
-                                    <div class="subtext">@Model.incidentCellerInformation?.CallerAddress</div>
+                                <div class="info-item d-flex align-items-start">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <div>
+                                        <span class="info-title">Caller Address</span>
+                                        <div class="subtext">@Model.incidentCellerInformation?.CallerAddress</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="info-item d-flex align-items-start">
-                                <i class="fa-regular fa-calendar"></i>
-                                <div>
-                                    <span class="info-title">Call Time</span>
-                                    <div class="subtext">@Model.incidentCellerInformation?.CallDateInFormat @Model.incidentCellerInformation?.CallTimeInFormat</div>
+                                <div class="info-item d-flex align-items-start">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <div>
+                                        <span class="info-title">Call Time</span>
+                                        <div class="subtext">@Model.incidentCellerInformation?.CallDateInFormat @Model.incidentCellerInformation?.CallTimeInFormat</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="section-card">
                             <h3>Incident Location</h3>
-                            <div class="info-item d-flex align-items-start">
-                                <i class="fa-solid fa-location-dot"></i>
-                                <div>
-                                    <span class="info-title">Address</span>
-                                    <div class="subtext">@Model.incidentiLocation?.Address</div>
+                            <div class="section-body">
+                                <div class="info-item d-flex align-items-start">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    <div>
+                                        <span class="info-title">Address</span>
+                                        <div class="subtext">@Model.incidentiLocation?.Address</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="info-item ">
-                                <span class="info-title">Nearest Intersection</span> <br><span class="subtext">@Model.incidentiLocation?.Landmark</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-title">Service Account</span> <br><span class="subtext">@Model.incidentiLocation?.ServiceAccount</span>
-                            </div>
-                            <div class="info-item">
-                                <span class="info-title">Affected Assets</span> <br>
-                                @foreach (var asset in Model.incidentiLocation?.AssetNames)
-                                {
-                                    <span class="badge">@asset</span>
-                                }
+                                <div class="info-item ">
+                                    <span class="info-title">Nearest Intersection</span> <br><span class="subtext">@Model.incidentiLocation?.Landmark</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-title">Service Account</span> <br><span class="subtext">@Model.incidentiLocation?.ServiceAccount</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-title">Affected Assets</span> <br>
+                                    @foreach (var asset in Model.incidentiLocation?.AssetNames)
+                                    {
+                                        <span class="badge">@asset</span>
+                                    }
 
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1337,28 +1576,28 @@
                     </div> *@
                     <!-----------------Supporting information--------------------------->
                     <div class="supporting-information-sec">
-                        <div class="card">
+                        <div class="section-card">
                             <h3>Supporting Information</h3>
+                            <div class="section-body">
+                                <!-- Service Notes -->
+                                <div class="note-title">
+                                    <i class="fa-regular fa-file-lines"></i> Service Representative Notes
+                                </div>
+                                <div class="note-box">@Model.incidentSupportingInfoViewModel.Notes</div>
 
-                            <!-- Service Notes -->
-                            <div class="note-title">
-                                <i class="fa-regular fa-file-lines"></i> Service Representative Notes
+                                <!-- Photos -->
+                                <div class="photos-title">
+                                    <i class="fa-regular fa-image"></i> Photos (@Model.incidentSupportingInfoViewModel?.ImageUrls.Count())
+                                </div>
+                                <div class="photos-grid">
+                                    @foreach (var imageUrl in Model.incidentSupportingInfoViewModel?.ImageUrls)
+                                    {
+                                        <div class="photo-item">
+                                            <img src="@imageUrl" alt="incidentPhoto" />
+                                        </div>
+                                    }
+                                </div>
                             </div>
-                            <div class="note-box">@Model.incidentSupportingInfoViewModel.Notes</div>
-
-                            <!-- Photos -->
-                            <div class="photos-title">
-                                <i class="fa-regular fa-image"></i> Photos (@Model.incidentSupportingInfoViewModel?.ImageUrls.Count())
-                            </div>
-                            <div class="photos-grid">
-                                @foreach (var imageUrl in Model.incidentSupportingInfoViewModel?.ImageUrls)
-                                {
-                                    <div class="photo-item">
-                                        <img src="@imageUrl" alt="incidentPhoto" />
-                                    </div>
-                                }
-                            </div>
-
                         </div>
                     </div>
                 </div>
@@ -1367,11 +1606,11 @@
                     <!-- Header Section -->
                     <div class="header-section">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <p class="mb-1"><strong>Phase:</strong> Validation</p>
-                                <p class="mb-0"><strong>Progress:</strong> 80% Complete</p>
+                            <div class="validation-process-status">
+                                <p class="mb-1">Phase: <span>Validation</span></p>
+                                <p class="mb-0">Progress: <span class="precentage">80% Complete</span></p>
                             </div>
-                            <button class="btn btn-primary btn-sm btn-assessment">Advance to Assessment</button>
+                           @*  <button class="btn btn-primary btn-sm btn-assessment">Advance to Assessment</button> *@
                         </div>
                     </div>
 
@@ -1777,6 +2016,665 @@
 
                     </div>
                 </div>
+                
+                <div id="repair" class="tab-content">
+                    <div class="topCard mb-3">
+                        <div class="row g-3">
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="info-card text-center text-md-start">
+                                <div class="info-title">Purge Points:</div>
+                                <div><span class="info-value">6</span> <span class="info-sub">Active</span></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="info-card text-center text-md-start">
+                                <div class="info-title">Extraction Volume:</div>
+                                <div><span class="info-value">9,800</span> <span class="info-sub">gal</span></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="info-card text-center text-md-start">
+                                <div class="info-title">Vacuum Trucks:</div>
+                                <div><span class="info-value">2</span> <span class="info-sub">On Site</span></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-6">
+                            <div class="info-card text-center text-md-start">
+                                <div class="info-title">Containment Verified:</div>
+                                <div class="text-green"><i class="fa-regular fa-circle-check info-icon"></i>(FER)</div>
+                            </div>
+                        </div>
+
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="LeftSection">
+                                 <!-- Pre-Operation Setup -->
+                                <div class="card mb-4">
+                                    <div class="card-body p-0">
+                                <h6 class="fw-bold mb-0 p-3">Pre-Operation Setup</h6>
+                                <div class="table-responsive table-rounded">
+                                    <table class="table align-middle text-left">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Step</th>
+                                                <th>Responsible Party</th>
+                                                <th>Status</th>
+                                                <th>Attachments / Notes</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Use "Identifying Source of Leak" Checklist (Pg. 4)</td>
+                                                <td>Engineering / IC</td>
+                                                <td><span class="badge badge-status badge-pending">Pending</span></td>
+                                                <td><i class="fa-solid fa-file-pdf me-2"></i> leak_checklist.pdf</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Identify ideal purge locations to prevent further outage (use engineering data)</td>
+                                                <td>Engineering</td>
+                                                <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                <td><i class="fa-solid fa-location-dot me-2"></i> marked on map</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Verify vacuum truck fittings (2" cam-lock and 2" → ¾" adaptors available)</td>
+                                                <td>IC / FER / Vendor</td>
+                                                <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                <td><i class="fa-regular fa-circle-check me-2 text-success"></i> verified w/ VacTruck A</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                                </div>
+
+                                <!-- Extraction & Purge Log -->
+                                <div class="card mb-4">
+                                    <div class="card-body p-0">
+                                        <div class="d-flex justify-content-between align-items-center mb-0 p-3">
+                                            <h6 class="fw-bold mb-0">Extraction & Purge Log</h6>
+                                            <button class="btn btn-add"><i class="fa-solid fa-plus me-2"></i>Add Purge Point</button>
+                                        </div>
+                                        <div class="table-responsive table-rounded">
+                                            <table class="table align-middle text-left">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Purge ID</th>
+                                                        <th>Location / ICP</th>
+                                                        <th>Start Time</th>
+                                                        <th>End Time</th>
+                                                        <th>Volume (gal)</th>
+                                                        <th>Truck / Vendor</th>
+                                                        <th>FER Verified</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="fw-semibold">PRG-001</td>
+                                                        <td>ICP-1 / Main Gate</td>
+                                                        <td>11:05</td>
+                                                        <td>11:42</td>
+                                                        <td>2,800</td>
+                                                        <td>VacTruck A</td>
+                                                        <td><i class="fa-regular fa-circle-check fa-lg text-success"></i></td>
+                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold">PRG-002</td>
+                                                        <td>ICP-2 / South Yard</td>
+                                                        <td>12:00</td>
+                                                        <td>12:45</td>
+                                                        <td>3,200</td>
+                                                        <td>VacTruck B</td>
+                                                        <td><i class="fa-regular fa-circle-check fa-lg text-success"></i></td>
+                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="fw-semibold">PRG-003</td>
+                                                        <td>ICP-3 / East Staging</td>
+                                                        <td>1:10</td>
+                                                        <td>--</td>
+                                                        <td>--</td>
+                                                        <td>VacTruck A</td>
+                                                        <td>--</td>
+                                                        <td><span class="badge badge-status badge-progress">In Progress</span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3  mb-3 bottomCard">
+
+                                     <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Total Extracted (to-date):</div>
+                                            <div><span class="info-value">9,800</span> <span class="info-sub">gal</span></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Containers Used:</div>
+                                            <div><span class="info-value">12</span> <span class="info-sub">(drums/totes)</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">FER Verified:</div>
+                                            <div class="text-green">100%</div>
+                                        </div>
+                                    </div>
+                                   
+
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Next Action:</div>
+                                            <div><span class="info-value">Pressure Test & Verify Dry Lines</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                             
+
+                                <!-- Timeline -->
+                                <div class="col-md-12">
+                                    <div class="timeline">
+                                        <h6 class="Timelineheader fw-bold mb-0">Timeline (Auto-Log)</h6>
+                                        <ul>
+                                            <li><span>[10:50]</span> Leak source checklist completed (Engineering)</li>
+                                            <li><span>[11:00]</span> Purge locations identified by ENG</li>
+                                            <li><span>[11:05]</span> Verified fittings available for VacTruck A/B</li>
+                                            <li><span>[11:05]</span> PRG-001 started (VacTruck A)</li>
+                                            <li><span>[11:42]</span> PRG-001 completed – 2,800 gal</li>
+                                            <li><span>[12:00]</span> PRG-002 started (VacTruck B)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                              <div class="RightSection">  
+                                  <!-- Updates -->
+                                 <div class="updates d-flex flex-column justify-content-between h-100">
+                                        <div>
+                                            <h6>Updates</h6>
+
+                                            <div class="update-item">
+                                                <span class="update-time">11:42 IC</span>
+                                                <div>ICP-1 purge completed (2,800 gal extracted).</div>
+                                            </div>
+
+                                            <div class="update-item">
+                                                <span class="update-time">12:45 FER</span>
+                                                <div>
+                                                    ICP-2 purge verified and logged.
+                                                </div>
+                                            </div>
+
+                                            <div class="update-item">
+                                                <span class="update-time">13:10 ENG</span>
+                                                <div>Pressure gauge readings stable.</div>
+                                            </div>
+
+                                            <div class="update-item">
+                                                <span class="update-time">13:25 GEC</span>
+                                                <div>Disposal manifest issued for PRG-001.</div>
+                                            </div>
+
+                                            <div class="update-item">
+                                                <span class="update-time">13:35 FER</span>
+                                                <div>Containment labels verified for Baker tank. </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="update-footer mt-3">
+                                            <textarea type="text"  rows="5" class="form-control mb-2" id="post" placeholder="Post an update..."></textarea>
+                                            <button class="btn btn-update"><i class="fa-solid fa-paper-plane me-2"></i>Post Update</button>
+                                        </div>
+                                    </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="restoration" class="tab-content">
+                    <div class="topCard mb-3">
+                        <div class="row g-3">
+
+                            <div class="col-md-3 col-sm-6">
+                                <div class="info-card text-center text-md-start">
+                                    <div class="info-title">Pressure Tests:</div>
+                                    <div><span class="info-value">2</span> <span class="info-sub">of 4 Complete</span></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6">
+                                <div class="info-card text-center text-md-start">
+                                    <div class="info-title">Customers Restored:</div>
+                                    <div><span class="info-value">65</span> <span class="info-sub"> / 120</span></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6">
+                                <div class="info-card text-center text-md-start">
+                                    <div class="info-title">Meters/Regulators Verified:</div>
+                                    <div><span class="info-value">32</span></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6">
+                                <div class="info-card text-center text-md-start">
+                                    <div class="info-title">Relights Remaining:</div>
+                                    <div><span class="info-value">18</span></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="LeftSection">
+                            
+                                <div class="card mb-4">
+                                    <div class="card-body p-0">
+                                        <div class="d-flex justify-content-between align-items-center mb-0 p-3">
+                                            <h6 class="fw-bold mb-0">Restoration Checklist</h6>
+                                            <button class="btn btn-add"><i class="fa-solid fa-plus me-2"></i>Add Task</button>
+                                        </div>
+                                        <div class="table-responsive table-rounded">
+                                            <table class="table align-middle text-left">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Task</th>
+                                                        <th>Responsible Party</th>
+                                                        <th>Status</th>
+                                                        <th>Started</th>
+                                                        <th>Completed</th>
+                                                        <th>Evidence</th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Pressure test completed for Segment A</td>
+                                                        <td>Engineering</td>
+                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                        <td>14:00</td>
+                                                        <td>14:30</td>
+                                                        <td><i class="fa fa-file"></i> <span>pressure_test_A.pdf</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Pressure test completed for Segment A</td>
+                                                        <td>Engineering</td>
+                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                        <td>14:00</td>
+                                                        <td>14:30</td>
+                                                         <td><i class="fa fa-file"></i> <span>pressure_test_A.pdf</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Pressure test completed for Segment A</td>
+                                                        <td>Engineering</td>
+                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                        <td>14:00</td>
+                                                        <td>14:30</td>
+                                                        <td><i class="fa fa-file"></i> <span>pressure_test_A.pdf</span></td>
+                                                    </tr>
+                                                   
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3  mb-3 bottomCard">
+
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Total Customers Restored:</div>
+                                            <div><span class="info-value">65</span> <span class="info-sub"> / 120</span></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Pressure Tests Passed:</div>
+                                            <div><span class="info-value">2</span> <span class="info-sub"> / 4</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Lines Verified Dry:</div>
+                                            <div class="text-green">100%</div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Next Action:</div>
+                                            <div><span class="info-value">Complete relight and finalize reports</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- Timeline -->
+                                <div class="col-md-12">
+                                    <div class="timeline">
+                                        <h6 class="Timelineheader fw-bold mb-0">Timeline (Auto-Log)</h6>
+                                        <ul>
+                                            <li><span>[10:50]</span> Segment A pressure test initiated</li>
+                                            <li><span>[11:00]</span> Segment A pressure test passed</li>
+                                            <li><span>[11:05]</span> Segment B pressure test started</li>
+                                            <li><span>[11:42]</span> Regulator reinstall begun</li>
+                                            <li><span>[12:00]</span> Customer Service notified for relights</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="RightSection">
+                                <!-- Updates -->
+                                <div class="updates d-flex flex-column justify-content-between h-100 mb-3">
+                                    <div>
+                                        <h6>Updates</h6>
+
+                                        <div class="update-item">
+                                            <span class="update-time">11:42 IC</span>
+                                            <div>ICP-1 purge completed (2,800 gal extracted).</div>
+                                        </div>
+
+                                        <div class="update-item">
+                                            <span class="update-time">12:45 FER</span>
+                                            <div>
+                                                ICP-2 purge verified and logged.
+                                            </div>
+                                        </div>
+
+                                        <div class="update-item">
+                                            <span class="update-time">13:10 ENG</span>
+                                            <div>Pressure gauge readings stable.</div>
+                                        </div>
+
+                                        <div class="update-item">
+                                            <span class="update-time">13:25 GEC</span>
+                                            <div>Disposal manifest issued for PRG-001.</div>
+                                        </div>
+
+                                        <div class="update-item">
+                                            <span class="update-time">13:35 FER</span>
+                                            <div>Containment labels verified for Baker tank. </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="update-footer mt-3">
+                                        <textarea type="text" rows="5" class="form-control mb-2" id="post" placeholder="Post an update..."></textarea>
+                                        <button class="btn btn-update"><i class="fa-solid fa-paper-plane me-2"></i>Post Update</button>
+                                    </div>
+                                </div>
+                                <div class="card-custom signoffs">
+                                    <h6>Customer Notifications</h6>
+
+                                    <div class="p-3 signoffContent">
+                                        <p class="mb-0">Residential area relight letters distributed 3:30 PM.Commercial accounts scheduled for 6:00 PM.</p>
+                                    </div>
+
+                                    <div class="file-section">
+                                        <strong>Attachments</strong>
+                                        <ul class="attachments mt-2">
+                                            <li><i class="fa-solid fa-circle"></i>mcr_final.pdf</li>
+                                            <li><i class="fa-solid fa-circle"></i>cpucreport_draft.docx</li>
+                                            <li><i class="fa-solid fa-circle"></i>disposal_manifest.pdf</li>
+                                            <li><i class="fa-solid fa-circle"></i>cost_summary.xlsx</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="closeout" class="tab-content">
+                    <div class="topCard mb-3">
+                        <div class="row g-3">
+
+                            <div class="col-md-3 col-sm-6">
+                                <div class="info-card text-center text-md-start">
+                                    <div class="info-title">Total Duration:</div>
+                                    <div><span class="info-value">2 Days, 8 Hours</span></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6">
+                                <div class="info-card text-center text-md-start">
+                                    <div class="info-title">Total Cost:</div>
+                                    <div><span class="info-value">$38,450</span> <span class="info-sub"> / 120</span></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6">
+                                <div class="info-card text-center text-md-start">
+                                    <div class="info-title">Personnel Involved:</div>
+                                    <div><span class="info-value">24</span></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-6">
+                                <div class="info-card text-center text-md-start">
+                                    <div class="info-title">Reports Completed:</div>
+                                    <div><span class="info-value">3</span> <span class="info-sub"> / 5</span></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="LeftSection">
+                            
+                                <div class="card mb-4">
+                                    <div class="card-body p-0">
+                                        <div class="d-flex justify-content-between align-items-center mb-0 p-3">
+                                            <h6 class="fw-bold mb-0">Closeout & Reporting Tasks</h6>
+                                            <button class="btn btn-add"><i class="fa-solid fa-plus me-2"></i>Add Report</button>
+                                        </div>
+                                        <div class="table-responsive table-rounded">
+                                            <table class="table align-middle text-left">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Task</th>
+                                                        <th>Responsible Party</th>
+                                                        <th>Status</th>
+                                                        <th>Completed</th>
+                                                        <th>Attachment</th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Generate Major Customer Report (MCR)</td>
+                                                        <td>IC / GEC</td>
+                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                        <td>5:00 PM</td>
+                                                        <td><i class="fa fa-file"></i> mcr_final.pdf</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Generate Major Customer Report (MCR)</td>
+                                                        <td>IC / GEC</td>
+                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                        <td>5:00 PM</td>
+                                                        <td><i class="fa fa-file"></i> mcr_final.pdf</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Generate Major Customer Report (MCR)</td>
+                                                        <td>IC / GEC</td>
+                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                        <td>5:00 PM</td>
+                                                        <td><i class="fa fa-file"></i> mcr_final.pdf</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Generate Major Customer Report (MCR)</td>
+                                                        <td>IC / GEC</td>
+                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                        <td>5:00 PM</td>
+                                                        <td><i class="fa fa-file"></i> mcr_final.pdf</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Generate Major Customer Report (MCR)</td>
+                                                        <td>IC / GEC</td>
+                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
+                                                        <td>5:00 PM</td>
+                                                        <td><i class="fa fa-file"></i> mcr_final.pdf</td>
+                                                    </tr>
+                                                   
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                
+                                <div class="card-custom position-relative mb-3 lessonsCard">
+                                  <h5>Lessons Learned & Comments</h5>
+                                  <small>Capture operational insights and recommendations for future incidents.</small>
+
+                                  <div class="mt-3">
+                                    <textarea class="form-control" placeholder="Enter lessons learned, process improvements, or recommendations..."></textarea>
+                                    <div class="comment-icon">
+                                      <i class="fa-solid fa-pen"></i>
+                                    </div>
+                                  </div>
+
+                                  <div class="text-end mt-3">
+                                    <button class="btn btn-submit"><i class="fa-solid fa-paper-plane me-2"></i>Submit Report</button>
+                                  </div>
+                                </div>
+
+                                <div class="row g-3  mb-3 bottomCard">
+
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Incident Duration:</div>
+                                            <div><span class="info-value">56 Hours</span></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Total Cost:</div>
+                                            <div><span class="info-value">$38,450</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Documents Uploaded:</div>
+                                            <div class="text-green">12</div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-md-3 col-sm-6">
+                                        <div class="info-card text-center text-md-start">
+                                            <div class="info-title">Status:</div>
+                                            <div><span class="info-value text-success">Ready to Archive</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="RightSection">
+                                <!-- Updates -->
+                                <div class="updates d-flex flex-column justify-content-between h-100 mb-3">
+                                    <div>
+                                        <h6>Updates & Approvals</h6>
+
+                                        <div class="update-item">
+                                            <span class="update-time">11:42 IC</span>
+                                            <div>ICP-1 purge completed (2,800 gal extracted).</div>
+                                        </div>
+
+                                        <div class="update-item">
+                                            <span class="update-time">12:45 FER</span>
+                                            <div>
+                                                ICP-2 purge verified and logged.
+                                            </div>
+                                        </div>
+
+                                        <div class="update-item">
+                                            <span class="update-time">13:10 ENG</span>
+                                            <div>Pressure gauge readings stable.</div>
+                                        </div>
+
+                                        <div class="update-item">
+                                            <span class="update-time">13:25 GEC</span>
+                                            <div>Disposal manifest issued for PRG-001.</div>
+                                        </div>
+
+                                        <div class="update-item">
+                                            <span class="update-time">13:35 FER</span>
+                                            <div>Containment labels verified for Baker tank. </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="update-footer mt-3">
+                                        <textarea type="text" rows="5" class="form-control mb-2" id="post" placeholder="Post an update..."></textarea>
+                                        <button class="btn btn-update"><i class="fa-solid fa-paper-plane me-2"></i>Post Update</button>
+                                    </div>
+                                </div>
+                                
+                                 
+                                <div class="card-custom signoffs">
+                                      <h6>Management Sign-Offs</h6>
+
+                                      <div class="signoffContent">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                          <span>Incident Commander:</span>
+                                          <span class="status signed"><i class="fa-solid fa-check-circle"></i>Signed 5:20 PM</span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                          <span>Field Env. Rep (FER):</span>
+                                          <span class="status signed"><i class="fa-solid fa-check-circle"></i>Signed 5:25 PM</span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                          <span>Engineering:</span>
+                                          <span class="status pending"><i class="fa-solid fa-triangle-exclamation"></i>Pending</span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                          <span>GEC / Compliance:</span>
+                                          <span class="status pending"><i class="fa-solid fa-triangle-exclamation"></i>Pending</span>
+                                        </div>
+                                      </div>
+
+                                      <div class="file-section">
+                                        <strong>Attachments</strong>
+                                        <ul class="attachments mt-2">
+                                          <li><i class="fa-solid fa-circle"></i>mcr_final.pdf</li>
+                                          <li><i class="fa-solid fa-circle"></i>cpucreport_draft.docx</li>
+                                          <li><i class="fa-solid fa-circle"></i>disposal_manifest.pdf</li>
+                                          <li><i class="fa-solid fa-circle"></i>cost_summary.xlsx</li>
+                                        </ul>
+                                      </div>
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
             </div>
         </div>
     </div>

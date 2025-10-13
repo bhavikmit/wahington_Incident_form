@@ -226,6 +226,7 @@ namespace Web.Extensions
             services.AddScoped(typeof(IStatusLegendService<,,>), typeof(StatusLegendService<,,>));
             services.AddScoped(typeof(IAssignResponseTeamsService<,,>),typeof(AssignResponseTeamsService<,,>));
             services.AddScoped(typeof(IProgressService<,,>), typeof(ProgressService<,,>));
+            services.AddScoped(typeof(IEquipmentFieldsService<,,>), typeof(EquipmentFieldsService<,,>));
             services.AddScoped<IIncidentService, IncidentService>();
             services.AddScoped<IIncidentNoteService, IncidentNoteService>();
             services.AddScoped<IIncidentHistoryService, IncidentHistoryService>();

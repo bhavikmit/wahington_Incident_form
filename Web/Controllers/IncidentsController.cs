@@ -122,13 +122,7 @@ namespace Web.Controllers
             var results = await _iArcGisGeocodingService.GetSuggestionsAsyncWithMagicKey(text);
             return Json(results.Select(r => new { text = r.Text, magicKey = r.MagicKey }));
         }
-        //[HttpGet]
-        //public async Task<IActionResult> Suggest(string text)
-        //{
-        //    var results = await _iArcGisGeocodingService.GetSuggestionsAsync(text);
-        //    return Json(results);
-        //}
-
+       
         [HttpGet]
         public async Task<IActionResult> Resolve(string magicKey)
         {
@@ -140,13 +134,7 @@ namespace Web.Controllers
                 lon = result.GetValueOrDefault().lon
             });
         }
-        //[HttpGet]
-        //public async Task<IActionResult> Resolve(string magicKey)
-        //{
-        //    var result = await _iArcGisGeocodingService.GetCoordinatesAsync(magicKey);
-        //    if (result == null) return NotFound();
-        //    return Json(result);
-        //}
+    
         [HttpGet]
         public async Task<PartialViewResult> GetIncidentMapDetailsbyId(long id)
         {

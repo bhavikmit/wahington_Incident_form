@@ -2,14 +2,14 @@
 $(function () {
 
     let currentStep = 1;
-    const totalSteps = 4;
+    const totalSteps = 2;
 
     GetValidationsDetail($("#hdn_Id").val());
 
     $(document).off("click", "#nextBtn");
     $(document).on("click", "#nextBtn", function (e) {
 
-        if (currentStep == 4) {
+        if (currentStep == 2) {
             SaveIncidentValidation();
         }
 
@@ -443,6 +443,8 @@ async function SaveIncidentValidation() {
         let params = $(obj).serializeArray();
         let assignTeamsIds = [];
         var policiesData = [];
+        var ValidationLocationData = [];
+        var AssignedRole = {};
 
         var selectedAssignTeams = $("#step-3").find('.responseCard .team-card.selected');
         $.each(selectedAssignTeams, function (i, val) {
@@ -472,6 +474,39 @@ async function SaveIncidentValidation() {
             });
         });
 
+        $("#step-2 .right-panel").each(function () {
+            debugger;
+
+            var loc = $(this).attr("data-add-loc");
+            var severityID = $(`#divaddloc_Severity_${loc}`).find('#severityLevelId').val();
+            var discoveryPerimeter = $(`#divaddloc_DiscoveryPerimeter_${loc}`).find("#RadiusId").val();
+            var icpLocation = $(`#divaddloc_ICP_${loc}`).find(`#ICPLocation_${loc}`).val();
+            var source = $(`#divaddloc_Source_${loc}`).find("#Source").val();
+            var lat = $(`#hdnLat_${loc}`).val();
+            var lon = $(`#hdnLon_${loc}`).val();
+
+            // push object
+            ValidationLocationData.push({
+                LocationId: loc,
+                SeverityID: severityID,
+                DiscoveryPerimeter: discoveryPerimeter,
+                ICPLocation: icpLocation,
+                Source: source,
+                Lat: lat,
+                Lon: lon
+            });
+        });
+
+        //var ValidationLocationData = {
+        //    IncidentCommanderId: loc,
+        //    SeverityID: severityID,
+        //    DiscoveryPerimeter: discoveryPerimeter,
+        //    ICPLocation: icpLocation,
+        //    Source: source,
+        //    Lat: lat,
+        //    Lon: lon
+        //};
+
         $.each(params, function (i, val) {
             if (val.name === "IVValidation.severityLevelId") {
                 formData.append("ConfirmedSeverityLevelId", val.value);
@@ -485,20 +520,28 @@ async function SaveIncidentValidation() {
                 formData.append("ValidationNotes", val.value);
                 form.push({ name: val.name, value: val.value });
             }
-            else if (val.name === "IVValidation.IncidentCommanderId") {
-                formData.append("ConfirmedIncidentCommanderId", val.value);
-                form.push({ name: val.name, value: val.value });
-            }
-            else if (val.name === "IVValidation.FieldEnvRepId") {
-                formData.append("ConfirmedFieldEnvRepId", val.value);
-                form.push({ name: val.name, value: val.value });
-            }
-            else if (val.name === "IVValidation.GECCoordinatorId") {
-                formData.append("ConfirmedGECCoordinatorId", val.value);
-                form.push({ name: val.name, value: val.value });
-            }
-            else if (val.name === "IVValidation.EngineeringLeadId") {
-                formData.append("ConfirmedEngineeringLeadId", val.value);
+            //else if (val.name === "IVValidation.assignedRole.IncidentCommanderId") {
+            //    formData.append("IncidentCommanderId", val.value);
+            //    form.push({ name: val.name, value: val.value });
+            //}
+            //else if (val.name === "IVValidation.assignedRole.FieldEnvRepId") {
+            //    formData.append("FieldEnvRepId", val.value);
+            //    form.push({ name: val.name, value: val.value });
+            //}
+            //else if (val.name === "IVValidation.assignedRole.GECCoordinatorId") {
+            //    formData.append("GECCoordinatorId", val.value);
+            //    form.push({ name: val.name, value: val.value });
+            //}
+            //else if (val.name === "IVValidation.assignedRole.EngineeringLeadId") {
+            //    formData.append("EngineeringLeadId", val.value);
+            //    form.push({ name: val.name, value: val.value });
+            //}
+            else if (val.name.startsWith("IVValidation.assignedRole.")) {
+                const roleName = val.name.replace("IVValidation.assignedRole.", "");
+                AssignedRole[roleName] = val.value;
+
+                // if needed, still append flat to formData (optional)
+                formData.append(roleName, val.value);
                 form.push({ name: val.name, value: val.value });
             }
         });
@@ -512,6 +555,10 @@ async function SaveIncidentValidation() {
 
         if (policiesData.length > 0) {
             formData.append("listPolicyVM", JSON.stringify(policiesData));
+        }
+
+        if (ValidationLocationData.length > 0) {
+            formData.append("listValidationLocationVM", JSON.stringify(ValidationLocationData));
         }
 
         showLoader($(".main-content"));

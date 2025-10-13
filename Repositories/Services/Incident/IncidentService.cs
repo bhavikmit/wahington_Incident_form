@@ -27,6 +27,7 @@ using Models;
 using Models.Common.Interfaces;
 
 using Pagination;
+
 using Repositories.Services.ArcGis;
 using Repositories.Services.ArcGis.Interface;
 using Repositories.Shared.UserInfoServices.Interface;
@@ -246,15 +247,33 @@ namespace Repositories.Common
                 await _db.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                if (viewModel.additionalLocations.Count > 0 && incidentId != "")
+                if (viewModel.additionalLocations != null && viewModel.additionalLocations.Count > 0 && !string.IsNullOrEmpty(incidentId))
                 {
-                    long id = await _db.Incidents
-                        .Where(it => !it.IsDeleted && it.IncidentID == incidentId)
-                        .Select(it => it.Id)
-                        .FirstOrDefaultAsync();
-                    viewModel.additionalLocations.ForEach(l => l.IncidentId = id);
+                    // Add primary location first
+                    var primaryLocation = new AdditionalLocationViewModel
+                    {
+                        IncidentId = incident.Id,
+                        Latitude = latLong?.Lat ?? 0,
+                        Longitude = latLong?.Lng ?? 0,
+                        IsPrimaryLocation = true,
+                        LocationAddress = viewModel.incidentiLocation?.Address ?? string.Empty,
+                        AssetIDs = viewModel.incidentiLocation?.AssetIDs ?? string.Empty,
+                        NearestIntersection = viewModel.incidentiLocation?.Landmark ?? string.Empty,
+                        ServiceAccount = viewModel.incidentiLocation?.ServiceAccount ?? string.Empty
+                    };
 
-                    if (viewModel.additionalLocations[0].IncidentId > 0) 
+                    // Make all existing additional locations non-primary and link incident id
+                    viewModel.additionalLocations.ForEach(l =>
+                    {
+                        l.IncidentId = incident.Id;
+                        l.IsPrimaryLocation = false;
+                    });
+
+                    // Add the primary location at the end
+                    viewModel.additionalLocations.Add(primaryLocation);
+
+                    // Save only if we have a valid incident id
+                    if (incident.Id > 0)
                         await _iAdditionalLocationsService.SaveadditionalLocations(viewModel.additionalLocations);
                 }
 
@@ -503,7 +522,7 @@ namespace Repositories.Common
 
                 var userId = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var userIdParsed = !string.IsNullOrEmpty(userId) ? long.Parse(userId) : 0;
-                
+
                 // update incident status
                 incident.StatusLegendId = statusLegend.Id;
                 incident.UpdatedOn = DateTime.UtcNow;
@@ -974,7 +993,8 @@ namespace Repositories.Common
                         PerimeterType = al.PerimeterType,
                         PerimeterTypeDigit = al.PerimeterTypeDigit,
                         AssetIDs = al.AssetIds ?? string.Empty,
-                        AssetNames = new List<string>()
+                        AssetNames = new List<string>(),
+                        IsPrimaryLocation = al.IsPrimaryLocation
                     };
 
                     // Resolve asset names if AssetIds present (re-using your GetAssets helper)

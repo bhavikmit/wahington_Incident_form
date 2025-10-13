@@ -240,15 +240,17 @@ namespace ViewModels.Incident
         public string? NearestIntersection { get; set; }
         public string? ServiceAccount { get; set; } = default!;
         public bool PerimeterType { get; set; }
+        public bool IsPrimaryLocation { get; set; }
         public long? PerimeterTypeDigit { get; set; }
         public string AssetIDs { get; set; } = default!;
         public List<SelectListItem> AssetsIncidentList { get; set; } = new();
         public List<string> AssetNames { get; set; } = new();
     }
 
-    public class IncidentAdditionalLocationViewModel : BaseIncidentValidationViewModel
+    public class IncidentAdditionalLocationViewModel
     {
         public long Id { get; set; } = default!;
+        public long? IncidentId { get; set; } = default!;
         public string AdditionalLocation { get; set; } = default!;
         public double Lat { get; set; } = default!;
         public double Long { get; set; } = default!;

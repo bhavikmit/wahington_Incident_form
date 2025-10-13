@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+
+using Microsoft.AspNetCore.Mvc;
 
 using Models;
 
@@ -51,6 +53,8 @@ namespace Web.Controllers
         public async Task<IActionResult> GetValidationsDetail(long id)
         {
             ValidationWorkflowViewModel validationWorkflow = new();
+
+            validationWorkflow.Id = id;
 
             var incidentValidationDtl = await _iIncidentValidationService.GetIncidentValidationDetail(id);
             validationWorkflow.IVDetails = incidentValidationDtl;
@@ -167,10 +171,14 @@ namespace Web.Controllers
                 var policies = request.listPolicyVM != null ? JsonConvert
                     .DeserializeObject<List<IncidentSubmitPolicyViewModel>>(request.listPolicyVM) : new List<IncidentSubmitPolicyViewModel>();
 
+                var validationLocations = !string.IsNullOrWhiteSpace(request.listValidationLocationVM) ? JsonConvert
+                    .DeserializeObject<List<IncidentValidationLocationViewModel>>(request.listValidationLocationVM) : new List<IncidentValidationLocationViewModel>();
+
                 var communications = JsonConvert
                     .DeserializeObject<List<IncidentSubmitCommunicationViewModel>>(TempData["TempComRecords"]?.ToString() ?? "");
 
-                request.listSubmitPolicyVM = policies;
+                request.listSubmitPolicyVM = policies ?? new List<IncidentSubmitPolicyViewModel>();
+
                 request.listSubmitCommunicationVM = communications ?? new List<IncidentSubmitCommunicationViewModel>();
 
                 request.listSubmitValidationLocationVM = validationLocations ?? new List<IncidentValidationLocationViewModel>();

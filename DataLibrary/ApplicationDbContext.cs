@@ -111,6 +111,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<IncidentValidationAssignedRole> IncidentValidationAssignedRoles { get; set; }
     public DbSet<IncidentValidationGate> IncidentValidationGates { get; set; }
     public DbSet<Material> Materials { get; set; }
+    public DbSet<IncidentValidationLocation> IncidentValidationLocations { get; set; }
+    
 
     [DbFunction("GetWeekNumber", "dbo")]
     public int GetWeekNumber(DateTime dateToCheck)

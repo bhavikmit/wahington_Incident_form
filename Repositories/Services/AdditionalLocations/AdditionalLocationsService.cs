@@ -42,7 +42,7 @@ using ViewModels.Shared;
 
 namespace Repositories.Common
 {
-    public class AdditionalLocationsService: IAdditionalLocationsService
+    public class AdditionalLocationsService : IAdditionalLocationsService
     {
         private readonly ApplicationDbContext _db;
         private readonly ILogger<AdditionalLocationsService> _logger;
@@ -53,7 +53,7 @@ namespace Repositories.Common
             _logger = logger;
         }
 
-        public async Task<string> SaveadditionalLocations(List<AdditionalLocationViewModel> additionalLocations) 
+        public async Task<string> SaveadditionalLocations(List<AdditionalLocationViewModel> additionalLocations)
         {
             await using var transaction = await _db.Database.BeginTransactionAsync();
             try
@@ -69,7 +69,9 @@ namespace Repositories.Common
                     PerimeterType = l.PerimeterType,
                     PerimeterTypeDigit = l.PerimeterTypeDigit,
                     AssetIds = l.AssetIDs,
-                    ActiveStatus = Enums.ActiveStatus.Active
+                    ActiveStatus = Enums.ActiveStatus.Active,
+                    IsPrimaryLocation = l.IsPrimaryLocation,
+
                 }).ToList();
 
                 await _db.AdditionalLocations.AddRangeAsync(locationEntities);

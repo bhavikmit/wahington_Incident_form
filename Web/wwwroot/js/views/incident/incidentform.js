@@ -530,7 +530,6 @@ async function SaveIncidentForm() {
                 form.push({ name: val.name, value: val.value });
             }
         });
-        debugger;
         const data = sessionStorage.getItem("addLocationFormDataList");
         if (data) {
             const locations = JSON.parse(data);

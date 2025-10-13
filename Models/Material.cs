@@ -14,7 +14,7 @@ namespace Models
         public string? Name { get; set; }
         public string? Category { get; set; }
         public string? Unit { get; set; }
-        public long? UnitCost { get; set; }
+        public float? UnitCost { get; set; }
 
     }
 }

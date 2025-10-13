@@ -46,6 +46,9 @@ $(function () {
         else if (tab === "equipmentfields") {
             GetAllEquipmentFields();
         }
+        else if (tab === "incidentRole") {
+            GetAllIncidentRoles();
+        }
     });
 
     $(document).off("click", ".teamAllTab");
@@ -717,6 +720,56 @@ $(document).on("click", ".deleteMaterial", function (e) {
             SaveEquipmentFields();
         }
     });
+    // Incident Role event bindings
+    $(document).off("click", ".btnAddNewIncidentRole");
+    $(document).on("click", ".btnAddNewIncidentRole", function (e) {
+        e.preventDefault();
+        AddIncidentRole();
+    });
+
+    $(document).off("click", ".cancelIncidentRole");
+    $(document).on("click", ".cancelIncidentRole", function (e) {
+        e.preventDefault();
+        $("#addIncidentRole").empty().html('');
+        $('li.active').trigger('click');
+    });
+
+    $(document).off("click", ".saveIncidentRole");
+    $(document).on("click", ".saveIncidentRole", function (e) {
+        e.preventDefault();
+        var isValid = true;
+
+        $("#saveIncidentRoleDiv").find("input[data-val-required], textarea[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            } else {
+                clearError($field);
+            }
+        });
+
+        if (isValid) {
+            SaveIncidentRole();
+        }
+    });
+
+    $(document).off("click", ".editIncidentRole");
+    $(document).on("click", ".editIncidentRole", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetIncidentRoleById(id);
+    });
+
+    $(document).off("click", ".deleteIncidentRole");
+    $(document).on("click", ".deleteIncidentRole", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        DeleteIncidentItem(id);
+    });
+
 })
 
 // Start Source
@@ -2506,3 +2559,160 @@ async function SaveEquipmentFields() {
         hideLoader($(".setting"));
     }
 }
+// Start Incident Role
+async function GetAllIncidentRoles() {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetAllIncidentRoles", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load incident role list");
+
+        const content = await response.text();
+        $("#incidentRoleList").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading incident role list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function AddIncidentRole() {
+    try {
+        debugger;
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/AddIncidentRole", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to add incident role");
+
+        const content = await response.text();
+        $("#addIncidentRole").empty().html(content);
+
+    } catch (error) {
+        console.error("Failed to add incident role:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetIncidentRoleById(id) {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetIncidentRoleById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to get incident role");
+
+        const content = await response.text();
+        $("#addIncidentRole").empty().html(content);
+
+    } catch (error) {
+        console.error("Failed to get incident role:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function DeleteIncidentRoleById(id) {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/DeleteIncidentRoleById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to delete incident role.");
+
+        SwalSuccessAlert("Incident role deleted successfully!");
+        GetAllIncidentRoles();
+
+    } catch (error) {
+        console.error("Failed to delete incident role:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveIncidentRole() {
+    try {
+        let form = [];
+        let formData = new FormData();
+        let obj = $("#NewIncidentRoleForm")[0];
+
+        // Serialize fields
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+            form.push({ name: val.name, value: val.value });
+        });
+
+        showLoader($(".setting"));
+
+        // Send request
+        let response = await fetch("/Settings/SaveIncidentRole", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addIncidentRole").html("");
+            SwalSuccessAlert(result.data);
+            GetAllIncidentRoles();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save incident role.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving incident role!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+function DeleteIncidentItem(id) {
+    let confirmBtnText = "Yes, delete it!";
+    let cancelBtnText = "No, cancel!";
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmBtnText,
+        cancelButtonText: cancelBtnText,
+        confirmButtonClass: 'btn btn-success me-2',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            DeleteIncidentRoleById(id);
+        }
+    });
+}
+// End Incident Role

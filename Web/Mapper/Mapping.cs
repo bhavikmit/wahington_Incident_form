@@ -769,6 +769,13 @@ namespace Models.Mapper
             CreateMap<EquipmentFieldsBriefViewModel, EquipmentFields>().ReverseMap();
             CreateMap<EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel>().ReverseMap();
 
+            // IncidentRole
+            CreateMap<IncidentRoleModifyViewModel, IncidentRole>().ReverseMap();
+            CreateMap<IncidentRoleDetailViewModel, IncidentRole>().ReverseMap();
+            CreateMap<IncidentRoleBriefViewModel, IncidentRole>().ReverseMap();
+            CreateMap<IncidentRoleModifyViewModel, IncidentRoleDetailViewModel>().ReverseMap();
+
+
         }
         //private void IgnoreGlobalProperties()
         //{

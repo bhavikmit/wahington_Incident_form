@@ -91,6 +91,8 @@ namespace ViewModels.Incident
     {
         public List<SelectListItem> severityLevels { get; set; } = new();
         public List<SelectListItem> UserList { get; set; } = new();
+        public List<SelectListItem> CompanyList { get; set; } = new();
+        public List<SelectListItem> RoleList { get; set; } = new();
         public string severityLevel { get; set; } = default!;
         public double Lat { get; set; } = default!;
         public double Long { get; set; } = default!;

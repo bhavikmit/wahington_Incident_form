@@ -410,6 +410,12 @@
                         </div>
                         <div class="step-label">Validation Gates</div>
                     </div>
+                    <div class="step" data-step="5">
+                        <div class="step-icon">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="step-label">Personnel</div>
+                    </div>
                 </div>
 
                 <!-- Navigation Buttons -->
@@ -684,7 +690,7 @@
                     </div>
                 </div>
 
-                <div class="shadow-sm step-content mt-3" id="step-3">
+                <div class="shadow-sm step-content mt-3 d-none" id="step-3">
                     <div class="details-sec incident-details-sec p-6">
                         <div class="Stepcard incidentDetail mt-4">
                             <h3>Incident Details</h3>
@@ -748,7 +754,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="shadow-sm step-content mt-3" id="step-4">
+
+                <div class="shadow-sm step-content mt-3 d-none" id="step-4">
                     <div class="details-sec incident-details-sec p-6">
                         <div class="Stepcard incidentDetail mt-4">
                             @* <h3>Caller Information</h3> *@
@@ -898,6 +905,42 @@
                                     
                                 </div>
                             </div> *@
+                        </div>
+                    </div>
+                </div>
+
+                <div class="shadow-sm step-content mt-3 d-none" id="step-5">
+                    <div class="details-sec incident-details-sec p-6">
+                        <div class="Stepcard incidentDetail mt-4">
+                            <h3>Personnel</h3>
+                            <div class="form-group" id="div_NameofUser">
+                                <label>Name of User <span style="color:red">*</span></label>
+                                <select class="form-select" required id="NameofUserId">
+                                    <option value="" selected>Select User</option>
+                                    @foreach (var item in Model.IVValidation.UserList)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group" id="div_CompanyName">
+                                <label>Company Name <span style="color:red">*</span></label>
+                                <select class="form-select" required id="companyId">
+                                    @foreach (var item in Model.IVValidation.CompanyList)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group" id="div_Role">
+                                <label>Select Role <span style="color:red">*</span></label>
+                                <select class="form-select" required id="roleId">
+                                    @foreach (var item in Model.IVValidation.RoleList)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>

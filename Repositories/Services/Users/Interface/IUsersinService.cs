@@ -17,5 +17,7 @@ namespace Repositories.Common
         Task<UserModifyViewModel> GetUserById(long id);
         Task<long> DeleteUser(long id);
         Task<List<UserModifyViewModel.TeamViewModel>> GetAllTeams();
+        Task<List<UserModifyViewModel.CompanyViewModel>> GetAllCompanies();
+        Task<List<UserModifyViewModel.IncidentRoleViewModel>> GetAllIncidentRoles();
     }
 }

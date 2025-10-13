@@ -185,8 +185,8 @@ $(function () {
     // any other initialization: select2, masks, etc.
 
 
-/* Confirmation + delete helper */
-function DeleteMaterialItem(id) {
+    /* Confirmation + delete helper */
+    function DeleteMaterialItem(id) {
         Swal.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
@@ -204,27 +204,27 @@ function DeleteMaterialItem(id) {
         });
     }
 
-/* Event wiring for list actions (edit/delete/add) */
-$(document).off("click", ".btnAddNewMaterial");
-    $(document).on("click", ".btnAddNewMaterial", function (e) { 
-    e.preventDefault();
-    AddMaterial();
-});
+    /* Event wiring for list actions (edit/delete/add) */
+    $(document).off("click", ".btnAddNewMaterial");
+    $(document).on("click", ".btnAddNewMaterial", function (e) {
+        e.preventDefault();
+        AddMaterial();
+    });
 
-$(document).off("click", ".editMaterial");
-$(document).on("click", ".editMaterial", function (e) {
-    e.preventDefault();
-    const id = $(this).attr("id");
-    if (id) GetMaterialById(id);
-});
+    $(document).off("click", ".editMaterial");
+    $(document).on("click", ".editMaterial", function (e) {
+        e.preventDefault();
+        const id = $(this).attr("id");
+        if (id) GetMaterialById(id);
+    });
 
-$(document).off("click", ".deleteMaterial");
-$(document).on("click", ".deleteMaterial", function (e) {
-    e.preventDefault();
-    const id = $(this).attr("id");
-    if (!id) return;
-    DeleteMaterialItem(id);
-});
+    $(document).off("click", ".deleteMaterial");
+    $(document).on("click", ".deleteMaterial", function (e) {
+        e.preventDefault();
+        const id = $(this).attr("id");
+        if (!id) return;
+        DeleteMaterialItem(id);
+    });
 
     // Start Event Type
     $(document).off("click", ".btnAddNewEvent");
@@ -597,8 +597,16 @@ $(document).on("click", ".deleteMaterial", function (e) {
         e.preventDefault();
         var isValid = true;
         if ($("#TeamId").val() === "" || $("#TeamId").val() === null) {
-            SwalErrorAlert("Please Select Team");
             isValid = false;
+            showError($("#TeamId"));
+        }
+        if ($("#CompanyId").val() === "" || $("#CompanyId").val() === null) {
+            isValid = false;
+            showError($("#CompanyId"));
+        }
+        if ($("#IncidentRoleId").val() === "" || $("#IncidentRoleId").val() === null) {
+            isValid = false;
+            showError($("#IncidentRoleId"));
         }
         var pinhash = $("#pinhash").val();
         var verifyPin = $("#verifypin").val();

@@ -913,6 +913,198 @@
         margin-right: 16px;
         color: #f54e00;
     }
+    /********************Personnal design*********************/
+    #personnel .summary-card ,
+    #assessment .summary-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 10px 15px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        font-size: 0.9rem;
+        min-width: 200px;
+    }
+
+    #personnel .card {
+        border-radius: 12px !important;
+    }
+
+    #personnel .form-label {
+        font-size: 0.8rem;
+        color: #6c757d;
+    }
+
+
+    #personnel .table th {
+        font-size: 0.85rem;
+        color: #555;
+    }
+
+    #personnel .table td {
+        font-size: 0.85rem;
+    }
+
+    #personnel hr {
+        border-color: #eaeaea;
+    }
+
+    #personnel small, #personnel .text-muted {
+        font-size: 0.8rem;
+    }
+
+    #overview .section-card{
+        margin-top:0;
+    }
+    /**************************Validation Tab Design**************************/
+    #validation .incident-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    #validation .header-section {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+
+    #validation .progress-text {
+        font-weight: 500;
+        margin-right: 10px;
+    }
+
+    #validation .btn-assessment {
+        float: right;
+    }
+
+    #validation .card-title {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    #validation .list-item {
+        margin-bottom: 5px;
+    }
+
+    #validation .check-icon {
+        color: #198754;
+        margin-right: 5px;
+    }
+
+    #validation .validation-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    #validation .validation-footer {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        padding: 15px 20px;
+        margin-top: 10px;
+        font-size: 0.95rem;
+    }
+
+    #validation textarea.form-control {
+        border-radius: 6px;
+        resize: none;
+    }
+
+    #validation .note-text {
+        line-height: 1.6;
+    }
+
+    #validation .status-text {
+        font-weight: 600;
+    }
+    /************Assessment*****************/
+    #assessment .main-card {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        padding: 20px;
+        margin-top: 20px;
+    }
+
+    #assessment .section-title {
+        font-weight: 600;
+        font-size: 1rem;
+        margin-top: 15px;
+        border-bottom: 1px solid #e3e3e3;
+        padding-bottom: 5px;
+    }
+
+    #assessment .table th {
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    #assessment .table td {
+        font-size: 0.9rem;
+        vertical-align: middle;
+    }
+
+    #assessment .updates-box {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        padding: 15px;
+        height: 100%;
+    }
+
+    #assessment .updates-textarea {
+        resize: none;
+        border-radius: 6px;
+    }
+
+    #assessment .mini-map {
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        padding: 10px;
+        margin-top: 10px;
+        font-size: 0.9rem;
+    }
+
+    #assessment .attachments {
+        margin-top: 10px;
+        font-size: 0.9rem;
+    }
+
+    #assessment .btn-update {
+        font-size: 0.8rem;
+    }
+
+    #assessment .badge-status {
+        font-weight: 500;
+        padding: 0.3em 0.6em;
+        border-radius: 4px;
+        height:auto;
+    }
+      #assessment .form-control{
+        height: auto !important;
+        max-height: fit-content;
+    }
+        #assessment .badge-status.done {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        #assessment .badge-status.progress {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+
+        #assessment .badge-status.pending {
+            background-color: #e2e3e5;
+            color: #343a40;
+        }
 </style>
 
 <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
@@ -965,44 +1157,64 @@
 </header>
 
 <div id="incidentDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="container-fuild">
+    <div class="container-fuild"> 
         <div id="incidentDetailsContent">
 
             <div class="d-flex align-items-center  titleSec ">
                 <button type="button" class="backBtn" data-bs-dismiss="modal" id="closeModalBtn"><i class="fa fa-arrow-left-long"></i></button>
                 <h5 class="modal-title"> @Model.incidentDetailByIdViewModel?.IncidentNumber</h5>
+               
+                
                @*  <button type="button" class="btn-close" data-bs-dismiss="modal" id="closeModalBtn"></button> *@
             </div>
+            @* <small class="text-muted">Phase: <span class="text-dark fw-semibold">Assessment</span> (45% Complete)</small> *@
 
             <div>
                 
                 <div class="tabs">
-                    <div class="tab-item active" data-tab="incidentMap">
+                    <div class="tab-item active" data-tab="dashboard">
                         <i class="fa fa-map-marker-alt"></i>Map
+                    </div>
+                    <div class="tab-item " data-tab="overview">
+                        <i class="far fa-file-alt"></i> Overview
                     </div>
                     <div class="tab-item" data-tab="validation">
                         <i class="fas fa-shield-alt"></i> Validation
                     </div>
-                    <div class="tab-item" data-tab="worksteps">
+                    <div class="tab-item" data-tab="personnel">
+                        <i class="fas fa-tasks"></i> Personnel
+                    </div>
+                    <div class="tab-item " data-tab="assessment">
+                        <i class="far fa-file-alt"></i> Assessment
+                    </div>
+                    <div class="tab-item" data-tab="repair">
+                        <i class="fas fa-comment-dots"></i> Repair
+                    </div>
+                    <div class="tab-item " data-tab="restoration">
+                        <i class="far fa-file-alt"></i> Restoration
+                    </div>
+                    <div class="tab-item" data-tab="closeout">
+                        <i class="fas fa-comment-dots"></i> Closeout
+                    </div>
+                   
+                    @* <div class="tab-item" data-tab="worksteps">
                         <i class="fas fa-tasks"></i> Policies
                     </div>
-                    <div class="tab-item " data-tab="incident">
-                        <i class="far fa-file-alt"></i> Personnel
-                    </div>
+                    
                     <div class="tab-item" data-tab="communication">
                         <i class="fas fa-comment-dots"></i> Communication
-                    </div>
+                    </div> *@
                 </div>
 
-                <div id="incidentMap" class="tab-content active">
+                <div id="dashboard" class="tab-content active">
                     <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
                         <div id="map" style="height:800px; width:100%;"></div>
                     </div>
                 </div>
 
-                <div id="incident" class="tab-content">
+                <div id="overview" class="tab-content">
                     <!--------------top card sec-------------------->
-                    <div class="top-card-sec">
+                    @* <div class="top-card-sec">
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="card">
@@ -1033,7 +1245,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> *@
                     <!-----------------location and incident information--------------------------->
                     <div class="section">
                         <div class="section-card">
@@ -1094,8 +1306,8 @@
                         </div>
                     </div>
                     <!------------------------incident detail and saftey-------------------------------------->
-                    <div class="incident-detail-sec">
-                        <!-- Incident Details -->
+                   @*  <div class="incident-detail-sec">
+                       
                         <div class="card">
                             <div class="d-flex align-items-center justify-content-between">
                                 <h3>Incident Details</h3>
@@ -1122,7 +1334,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> *@
                     <!-----------------Supporting information--------------------------->
                     <div class="supporting-information-sec">
                         <div class="card">
@@ -1152,242 +1364,419 @@
                 </div>
 
                 <div id="validation" class="tab-content">
-                    <!---------------------Validation details-------------------------->
-                    <div class="validation-detail-sec">
-                        <div class="card">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <h3><i class="fa-regular fa-circle-check"></i>Validation Details</h3>
-                                <div class="header-meta">
-                                    <div><i class="fa-regular fa-user"></i> Validated by Administrator</div>
-                                    <div><i class="fa-regular fa-calendar"></i>@Model.incidentValidationsDetailsViewModel?.CreatedDateInFormat @Model.incidentValidationsDetailsViewModel?.CreatedTimeInFormat</div>
+                    <!-- Header Section -->
+                    <div class="header-section">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="mb-1"><strong>Phase:</strong> Validation</p>
+                                <p class="mb-0"><strong>Progress:</strong> 80% Complete</p>
+                            </div>
+                            <button class="btn btn-primary btn-sm btn-assessment">Advance to Assessment</button>
+                        </div>
+                    </div>
+
+                    <!-- Incident Details Card -->
+                    <div class="incident-card">
+                        <div class="row">
+                            <!-- Incident Details -->
+                            <div class="col-md-4">
+                                <h6 class="card-title">Incident Details</h6>
+                                <p class="list-item"><strong>Severity Level:</strong> Level 2 (Moderate)</p>
+                                <p class="list-item"><strong>Discovery Perimeter:</strong> Drawn on Map (1.5 miles)</p>
+                                <p class="list-item"><strong>ICP Location:</strong> NW corner staging lot</p>
+                                <p class="list-item"><strong>Source:</strong> Imported from CSR System</p>
+                            </div>
+
+                            <!-- Assigned Roles -->
+                            <div class="col-md-4">
+                                <h6 class="card-title">Assigned Roles</h6>
+                                <ul class="list-unstyled mb-2">
+                                    <li><strong>Incident Commander:</strong> J. Martinez</li>
+                                    <li><strong>Field Env. Rep (FER):</strong> L. Chen</li>
+                                    <li><strong>GEC Coordinator:</strong> R. Alvarez</li>
+                                    <li><strong>Engineering Lead:</strong> D. Tran</li>
+                                </ul>
+                                <button class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-pen"></i> Edit Assignments</button>
+                            </div>
+
+                            <!-- Validation Gates -->
+                            <div class="col-md-4">
+                                <h6 class="card-title">Validation Gates</h6>
+                                <p class="list-item">
+                                    <strong>Containment Acknowledgment:</strong>
+                                    <i class="fa-solid fa-check-square check-icon"></i> FER Signed
+                                </p>
+                                <p class="list-item"><strong>Exception Request:</strong> None</p>
+                                <p class="list-item"><strong>Independent Inspection Required:</strong> No</p>
+                                <p class="list-item"><strong>Regulatory Notifications:</strong> CPUC, PHMSA Logged</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Validation Notes Card -->
+                    <div class="validation-card">
+                        <h6 class="fw-semibold mb-3">Validation Notes</h6>
+
+                        <div class="note-text mb-3">
+                            <p><strong>[IC]</strong> Confirmed incident details imported from CSR at 10:12 AM.</p>
+                            <p><strong>[FER]</strong> Verified containment plan; no release risk identified.</p>
+                            <p><strong>[Engineering]</strong> Provided topographic overlay for perimeter confirmation.</p>
+                        </div>
+
+                        <div>
+                            <textarea class="form-control" rows="2" placeholder="Add new note..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Footer Section -->
+                    <div class="validation-footer d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong><i class="fa-solid fa-user-check me-1 text-primary"></i>Validated By:</strong> J. Martinez (IC) |
+                            <strong>Date:</strong> 10/09/2025 10:50 AM
+                        </div>
+                        <div>
+                            <span class="status-text"><strong>Status:</strong> Ready to Launch Assessment Phase</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="personnel" class="tab-content">
+                    <div class="card shadow-sm border-0 rounded-4 p-3 mb-3">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+
+                            <div class="d-flex flex-wrap align-items-center gap-3">
+                                <div>
+                                    <label for="date" class="form-label mb-1 small fw-semibold">Date</label>
+                                    <input type="date" id="date" class="form-control form-control-sm" value="2025-09-10">
+                                </div>
+
+                                <div class="form-check align-self-end mb-1">
+                                    <input class="form-check-input" type="checkbox" id="onsiteCheck" checked>
+                                    <label class="form-check-label small" for="onsiteCheck">
+                                        Show currently onsite only
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <select class="form-select form-select-sm">
+                                        <option>All Roles</option>
+                                        <option>Supervisor</option>
+                                        <option>Technician</option>
+                                        <option>Engineer</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <select class="form-select form-select-sm">
+                                        <option>All Companies</option>
+                                        <option>ABC Ltd</option>
+                                        <option>XYZ Pvt</option>
+                                        <option>Global Tech</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="validated-info">
-                                <div>
-                                    <strong>Validated Severity</strong>
-                                    <div class="badge-red" style="background-color:@Model.incidentValidationsDetailsViewModel?.SeverityLevelColor">@Model.incidentValidationsDetailsViewModel?.SeverityLevelName</div>
+
+                            <div class="d-flex align-items-center gap-2 mt-3 mt-sm-0">
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fa-solid fa-user-plus me-1"></i> Add Person
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm">
+                                    <i class="fa-solid fa-file-export me-1"></i> Export (CSV)
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm">
+                                    <i class="fa-solid fa-print me-1"></i> Print Roster
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Cards -->
+                    <div class="d-flex flex-wrap gap-3 mb-3">
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">Onsite Now:</span> 18
+                        </div>
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">Checked Out Today:</span> 6
+                        </div>
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">Total Hours (Today):</span> 85.2
+                        </div>
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">Avg Hours / Worker (Today):</span> 4.7
+                        </div>
+                    </div>
+                    <div class="card shadow-sm border-0 rounded-4 p-3 mb-3">
+                   
+
+                        <div class="row g-3">
+                            <!-- Table -->
+                            <div class="col-lg-8">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold mb-0">
+                                        <i class="fa-solid fa-users me-2 text-primary"></i>Currently Onsite (Live)
+                                    </h6>
+                                    <small class="text-muted">Auto-refresh: 60s</small>
                                 </div>
-                                <div>
-                                    <strong>Discovery Perimeter</strong>
-                                    <div class="subtext">@Model.incidentValidationsDetailsViewModel?.DiscoveryPerimeterName</div>
-                                </div>
-                                <div>
-                                    <strong>Status</strong>
-                                    <div class="badge-success">Validated</div>
+                                <div class="table-responsive">
+                                    <table class="table table-sm align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Role</th>
+                                                <th>Company</th>
+                                                <th>Type</th>
+                                                <th>Shift</th>
+                                                <th>Time In</th>
+                                                <th>Hours So Far</th>
+                                                <th>Supervisor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>John Martinez</td>
+                                                <td>Incident Commander</td>
+                                                <td>EZTRAK</td>
+                                                <td>Employee</td>
+                                                <td>Day</td>
+                                                <td>07:00</td>
+                                                <td>4.5</td>
+                                                <td>—</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Lily Chen</td>
+                                                <td>FER</td>
+                                                <td>EZTRAK</td>
+                                                <td>Employee</td>
+                                                <td>Day</td>
+                                                <td>07:15</td>
+                                                <td>4.2</td>
+                                                <td>J. Martinez</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Carlos Mendoza</td>
+                                                <td>Vac Truck Operator</td>
+                                                <td>ABC Contractors</td>
+                                                <td>Contractor</td>
+                                                <td>Day</td>
+                                                <td>06:45</td>
+                                                <td>5.0</td>
+                                                <td>L. Chen</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="validation-note">
-                                <strong>Validation Notes</strong>
-                                <div class="notes">
-                                    @Model.incidentValidationsDetailsViewModel?.ValidationNotes
+
+                            <!-- Daily Summary -->
+                            <div class="col-lg-4">
+                                <div class="border rounded-3 p-3 bg-white h-100">
+                                    <h6 class="fw-bold mb-2">Daily Summary <small class="text-muted">(Oct 9, 2025)</small></h6>
+                                    <p class="mb-1"><strong>Total Onsite Today:</strong> 24</p>
+                                    <p class="mb-1"><strong>Total Hours Today:</strong> 85.2</p>
+                                    <p class="mb-1"><strong>Avg Hours / Worker:</strong> 4.7</p>
+                                    <p class="mb-1"><strong>Day Shift:</strong> 18 | <strong>Night Shift:</strong> 6</p>
+                                    <p class="mb-2"><strong>Employees:</strong> 15 | <strong>Contractors:</strong> 9</p>
+                                    <hr class="my-2">
+                                    <h6 class="fw-semibold">Top Contributors (Hours Today)</h6>
+                                    <ol class="small mb-0">
+                                        <li>C. Mendoza – 5.0 hrs</li>
+                                        <li>J. Martinez – 4.5 hrs</li>
+                                        <li>L. Chen – 4.2 hrs</li>
+                                    </ol>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="saftey-assesment">
-                        <!-- Safety Assessment -->
-                        <div class="card">
-                            <h3>Safety Assessment</h3>
-                            <div class="safety-grid">
-                                <div class="safety-item @(Model.incidentEnvironmentalViewModel?.GasodorpresentID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel?.GasodorpresentID == 0 ? "bg-red" : "bg-grey")">
-                                    <h4>Gas Odor Present</h4>
-                                    <strong>@Model.incidentEnvironmentalViewModel?.GasOdorText</strong>
-                                </div>
-                                <div class="safety-item @(Model.incidentEnvironmentalViewModel?.HissingSoundPresentID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel?.HissingSoundPresentID == 0 ? "bg-red" : "bg-grey")">
-                                    <h4>Hissing Sound</h4>
-                                    <strong>@Model.incidentEnvironmentalViewModel?.HissingSoundText</strong>
-                                </div>
-                                <div class="safety-item @(Model.incidentEnvironmentalViewModel?.VisibleDamageID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel?.VisibleDamageID == 0 ? "bg-red" : "bg-grey")">
-                                    <h4>Visible Damage/Fire</h4>
-                                    <strong>@Model.incidentEnvironmentalViewModel?.VisibleDamageText</strong>
-                                </div>
-                                <div class="safety-item @(Model.incidentEnvironmentalViewModel?.PeopleInjuredID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel?.PeopleInjuredID == 0 ? "bg-red" : "bg-grey")">
-                                    <h4>People Injured</h4>
-                                    <strong>@Model.incidentEnvironmentalViewModel?.PeopleInjuredText</strong>
-                                </div>
-                                <div class="safety-item @(Model.incidentEnvironmentalViewModel?.EvacuationRequiredID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel?.EvacuationRequiredID == 0 ? "bg-red" : "bg-grey")">
-                                    <h4>Evacuation Required</h4>
-                                    <strong>@Model.incidentEnvironmentalViewModel?.EvacuationRequiredText</strong>
-                                </div>
-                                <div class="safety-item @(Model.incidentEnvironmentalViewModel?.EmergencyResponseNotifiedID == 1 ? "bg-green" : Model.incidentEnvironmentalViewModel?.EmergencyResponseNotifiedID == 0 ? "bg-red" : "bg-grey")">
-                                    <h4>Emergency Response Notified</h4>
-                                    <strong>@Model.incidentEnvironmentalViewModel?.EmergencyResponseNotifiedText</strong>
-                                </div>
+
+                    <!-- Supervisor + Notes Section -->
+                    <div class="card border-0 shadow-sm rounded-4 p-3">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center">
+                            <div class="fw-semibold text-dark">
+                                <i class="fa-solid fa-user-tie me-2 text-primary"></i>
+                                Supervisor On Duty: <span class="fw-bold">J. Martinez</span> |
+                                <span class="text-muted">Next Shift:</span> 18:00 (Night)
+                            </div>
+                            <div class="text-muted small mt-2 mt-sm-0">
+                                <i class="fa-solid fa-note-sticky me-1 text-warning"></i>
+                                <strong>Notes:</strong> High-priority staffing for extraction ops overnight.
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="worksteps" class="tab-content">
-                    <div class="team-detail">
-                        <h3 class="team-detailTitle">Assigned Policies and Procedures to Team(s)</h3>
-                        <div class="row AllteamSec">
-                            @if (Model.workStepsByPolicy.Count > 0)
-                            {
-                                @foreach (var team in Model.workStepsByPolicy)
-                                {
-                                    <div class="col-md-4">
-                                        <div class="task-section">
-                                            <div class="teamName-icon d-flex align-items-center">
-                                                <div class="avatar"><i class="fa-solid fa-people-group"></i></div>
-                                                <div class="teamName-info">
-                                                    <h5>@team.FirstOrDefault().PolicyName</h5>
-                                                    <div class="specializations">
-                                                        <span>@team.FirstOrDefault().TeamsByPolicy</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="task-list">
-                                                <h5 class="assign-task">Assigned Tasks:</h5>
-                                                <div class="listInfo">
-                                                    @for (int i = 0; i < team.FirstOrDefault().Steps.Count(); i++)
-                                                    {
-                                                        var task = team.FirstOrDefault().Steps[i];
-                                                        string cssClass;
-
-                                                        switch (i % 3)
-                                                        {
-                                                            case 0: // 1st in cycle
-                                                                cssClass = "complete";
-                                                                break;
-                                                            case 1: // 2nd in cycle
-                                                                cssClass = "started";
-                                                                break;
-                                                            default: // 3rd in cycle
-                                                                cssClass = "pending";
-                                                                break;
-                                                        }
-
-                                                        <div class="task-item @cssClass">
-                                                            <span>@task</span>
-                                                        </div>
-                                                    }
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                }
-                            }
+                <div id="assessment" class="tab-content">
+                    <div class="d-flex flex-wrap gap-3 mb-3">
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">Open Tasks:</span> 4
                         </div>
-
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">Completed:</span> 6
+                        </div>
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">Containment Ready:</span> Yes(FER)
+                        </div>
+                        <div class="summary-card flex-fill">
+                            <span class="fw-semibold text-dark">ICP Sites:</span> 3(1 primary, 2staging)
+                        </div>
                     </div>
+                    <div class="row g-3">
 
-                </div>
+                        <!-- LEFT SECTION -->
+                        <div class="col-lg-8">
+                            <div class="main-card">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h6 class="fw-semibold mb-0">All Steps (Assessment Checklist)</h6>
+                                    <div class="d-flex gap-2">
+                                        <input type="text" class="form-control form-control-sm" placeholder="Search steps..." style="width:160px;">
+                                        <select class="form-select form-select-sm">
+                                            <option>All owners</option>
+                                        </select>
+                                        <select class="form-select form-select-sm">
+                                            <option>Status: All</option>
+                                        </select>
+                                        <button class="btn btn-outline-secondary btn-sm">Bulk actions</button>
+                                    </div>
+                                </div>
 
-                <div id="communication" class="tab-content">
-                    <!-------------------------team communication-------------------------------->
-                    <div class="team-communications">
-                        <!-- Header -->
-                        <div class="header">
-                            <h3><i class="fa fa-comments"></i>Team Communications</h3>
-                            <div class="messages-count">
-                                <i class="fa fa-user"></i> @Model.incidentValidationsDetailsViewModel?.IncidentValidationCommunicationHistoriesViewModelList.Count() messages
+                                <!-- Incident Commander Section -->
+                                <h6 class="section-title">Incident Commander <span class="text-muted fs-6">Owner: J. Martinez</span></h6>
+                                <table class="table table-sm align-middle mb-3">
+                                    <thead>
+                                        <tr>
+                                            <th>Step</th>
+                                            <th>Status</th>
+                                            <th>Assignee</th>
+                                            <th>Started</th>
+                                            <th>Completed</th>
+                                            <th>Evidence</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Create MCR</td>
+                                            <td><span class="badge-status done">Done</span></td>
+                                            <td>J. Martinez</td>
+                                            <td>09:58</td>
+                                            <td>10:05</td>
+                                            <td><i class="fa-solid fa-paperclip me-1"></i>mcr_1005.pdf</td>
+                                            <td><button class="btn btn-outline-secondary btn-sm btn-update">View</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Notify Claims & Engineering</td>
+                                            <td><span class="badge-status progress">In Progress</span></td>
+                                            <td>J. Martinez</td>
+                                            <td>10:06</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td><button class="btn btn-outline-primary btn-sm btn-update">Update</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Establish ICP (site access verified)</td>
+                                            <td><span class="badge-status done">Done</span></td>
+                                            <td>J. Martinez</td>
+                                            <td>10:12</td>
+                                            <td>10:21</td>
+                                            <td><i class="fa-solid fa-paperclip me-1"></i>2 photos</td>
+                                            <td><button class="btn btn-outline-secondary btn-sm btn-update">View</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Field Environmental Representative -->
+                                <h6 class="section-title">Field Environmental Representative <span class="text-muted fs-6">Owner: L. Chen</span></h6>
+                                <table class="table table-sm align-middle mb-3">
+                                    <tbody>
+                                        <tr>
+                                            <td>Prepare containment area (drums/totes/Baker tank)</td>
+                                            <td><span class="badge-status done">Done</span></td>
+                                            <td>L. Chen</td>
+                                            <td>10:05</td>
+                                            <td>10:35</td>
+                                            <td><i class="fa-solid fa-paperclip me-1"></i>containment_plan.pdf</td>
+                                            <td><button class="btn btn-outline-secondary btn-sm btn-update">View</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Label containers; log IDs and capacity</td>
+                                            <td><span class="badge-status progress">In Progress</span></td>
+                                            <td>L. Chen</td>
+                                            <td>10:36</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td><button class="btn btn-outline-primary btn-sm btn-update">Update</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Engineering & GEC -->
+                                <h6 class="section-title">Engineering & GEC <span class="text-muted fs-6">Owners: D. Tran / R. Alvarez</span></h6>
+                                <table class="table table-sm align-middle">
+                                    <tbody>
+                                        <tr>
+                                            <td>Retrieve system maps (regulators, BO streets, elevations)</td>
+                                            <td><span class="badge-status done">Done</span></td>
+                                            <td>D. Tran</td>
+                                            <td>10:00</td>
+                                            <td>10:18</td>
+                                            <td><i class="fa-solid fa-paperclip me-1"></i>topo_overlay.png</td>
+                                            <td><button class="btn btn-outline-secondary btn-sm btn-update">View</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Mark low points & squeeze points</td>
+                                            <td><span class="badge-status pending">Pending</span></td>
+                                            <td>D. Tran</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td><button class="btn btn-outline-primary btn-sm btn-update">Update</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Initiate cost tracking (RBA) for vendors</td>
+                                            <td><span class="badge-status progress">In Progress</span></td>
+                                            <td>R. Alvarez</td>
+                                            <td>10:19</td>
+                                            <td>—</td>
+                                            <td>—</td>
+                                            <td><button class="btn btn-outline-primary btn-sm btn-update">Update</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="messageSec">
-                            <!-- Team Message Box -->
-                            <div class="message-box team-message-box">
-                                <div class="send-message-image">
-                                    <textarea id="messageText" placeholder="Type your message here..."></textarea>
-                                    <input type="file" id="fileInput" class="file-upload" accept="image/*">
-                                    <div id="previewContainer"></div>
-                                    <button class="btn-send" onclick="sendMessage()"><i class="fa fa-paper-plane"></i> Send</button>
+
+                        <!-- RIGHT SECTION -->
+                        <div class="col-lg-4">
+                            <div class="updates-box">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-semibold mb-0">Updates</h6>
+                                    <button class="btn btn-outline-secondary btn-sm">Filter</button>
+                                </div>
+                                <div class="bg-light p-2 rounded mb-2" style="height: 160px; overflow-y: auto; font-size: 0.9rem;">
+                                    <p class="mb-1"><strong>[10:21 IC]</strong> ICP established (photos uploaded).</p>
+                                    <p class="mb-1"><strong>[10:35 FER]</strong> Containment area ready; labeling next.</p>
+                                    <p class="mb-1"><strong>[10:41 GEC]</strong> Vendor RBA opened; awaiting PO.</p>
+                                    <p class="mb-1"><strong>[10:46 ENG]</strong> Topo overlay added; low points pending.</p>
+                                </div>
+                                <textarea class="form-control updates-textarea mb-2" rows="2" placeholder="Post an update..."></textarea>
+                                <button class="btn btn-primary btn-sm w-100">Post Update</button>
+
+                                <div class="mini-map mt-3">
+                                    <strong>Mini Map</strong><br>
+                                    Shows ICP and newly marked low/squeeze points.
+                                </div>
+
+                                <div class="attachments">
+                                    <strong>Attachments</strong>
+                                    <ul class="mb-0 ps-3">
+                                        <li>mcr_1005.pdf</li>
+                                        <li>topo_overlay.png</li>
+                                        <li>icp_photos.zip</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
-                        <div id="messagesContainer">
-                            <!-------------------Chat Message--------------------------->
-                            @for (int i = 0; i < Model.incidentValidationsDetailsViewModel?.IncidentValidationCommunicationHistoriesViewModelList.Count; i++)
-                            {
-                                var communication = Model.incidentValidationsDetailsViewModel?.IncidentValidationCommunicationHistoriesViewModelList[i];
-                                bool isEven = i % 2 == 0;
 
-                                if (isEven)
-                                {
-                                    <div class="chat-message bg-yellow">
-                                        <div class="avatar"><i class="fa-regular fa-user"></i></div>
-                                        <div class="message-box">
-                                            <div class="message-header">
-                                                <strong>Administrator</strong>
-                                                @* <span class="role">Super Admin</span>
-                                            <span class="role tag-yellow">Internal</span> *@
-                                            </div>
-                                            <div class="message-text">@communication?.Message</div>
-                                            @if (!string.IsNullOrEmpty(communication.Image))
-                                            {
-                                                <div class="attachments">
-                                                    @*  <strong>Attachments:</strong> *@
-                                                    <i class="fas fa-paperclip"></i>
-                                                    <a href="#">@communication.Image</a>
-                                                </div>
-                                            }
-                                            <div class="timestamp">@communication?.TimeStamp</div>
-                                        </div>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="chat-message bg-blue">
-                                        <div class="avatar"><i class="fa-regular fa-user"></i></div>
-                                        <div class="message-box">
-                                            <div class="message-header">
-                                                <strong>Administrator</strong>
-                                                @* <span class="role">Super Admin</span> *@
-                                                @*  <span class="role tag-green">→ Distribution Emergency Team</span>
-                                            <span class="role tag-purple">Task: Notify & Dispatch</span> *@
-                                            </div>
-                                            <div class="message-text">@communication?.Message</div>
-                                            @if (!string.IsNullOrEmpty(communication.Image))
-                                            {
-                                                <div class="attachments">
-                                                    <strong>Attachments:</strong>
-                                                    <i class="fas fa-paperclip"></i>
-                                                    <a href="#">@communication.Image</a>
-                                                </div>
-                                            }
-                                            <div class="timestamp">@communication?.TimeStamp</div>
-                                        </div>
-                                    </div>
-                                }
-                            }
-                        </div>
-
-                        <!-- Timeline -->
-                        <div class="timeline">
-                            <h4><i class="fa fa-clock"></i> Timeline</h4>
-                            <ul>
-                                <li>
-                                    <span class="dot blue"></span>
-                                    <div>
-                                        <strong>Incident Created</strong>
-                                        <p>@Model.incidentDetailByIdViewModel?.CreatedOnDate @Model.incidentDetailByIdViewModel?.CreatedOnTime</p>
-                                        <small>by @Model.incidentCellerInformation?.CallerName</small>
-                                    </div>
-                                </li>
-                                <li>
-                                    <span class="dot green"></span>
-                                    <div>
-                                        <strong>Incident Validated</strong>
-                                        <p>@Model.incidentValidationsDetailsViewModel?.CreatedDateInFormat @Model.incidentValidationsDetailsViewModel?.CreatedTimeInFormat</p>
-                                        <small>by Administrator</small>
-                                    </div>
-                                </li>
-                                @* <li>
-                                    <span class="dot gray"></span>
-                                    <div>
-                                        <strong>Status: Cancelled</strong>
-                                        <p>Sep 09, 2025 04:02 PM</p>
-                                        <small>by System</small>
-                                    </div>
-                                </li> *@
-                            </ul>
-                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

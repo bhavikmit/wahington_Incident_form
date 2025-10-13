@@ -8,10 +8,17 @@ namespace Models
     public class IncidentUser : BaseDBModel
     {
         public long TeamId { get; set; }
-
         [ForeignKey(nameof(TeamId))]
         public IncidentTeam Team { get; set; }
 
+        public long? CompanyId { get; set; }
+        [ForeignKey(nameof(CompanyId))]
+        public Company Company { get; set; }
+
+        public long? IncidentRoleId { get; set; }
+        [ForeignKey(nameof(IncidentRoleId))]
+        public IncidentRole IncidentRole { get; set; }
+        
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Telephone { get; set; }

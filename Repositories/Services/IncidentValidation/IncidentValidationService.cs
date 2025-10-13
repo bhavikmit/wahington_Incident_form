@@ -542,8 +542,8 @@ namespace Repositories.Common
                     Exception = request.validationGates.Exception,
                     IndependentInspection = request.validationGates.IndependentInspection,
                     Regulatory = request.validationGates.Regulatory,
-                    //IsOtherEvent = request.validationGates.IsOtherEvent,
-                    //OtherEventDetail = request.validationGates.OtherEventDetail,
+                    IsOtherEvent = request.validationGates.IsOtherEvent,
+                    OtherEventDetail = request.validationGates.OtherEventDetail,
                     ActiveStatus = ActiveStatus.Active
                 };
                 await _db.IncidentValidationGates.AddAsync(IncidentValidationGate);

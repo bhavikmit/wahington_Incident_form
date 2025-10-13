@@ -23,5 +23,7 @@ namespace Models
         public bool? Exception { get; set; }
         public bool? IndependentInspection { get; set; }
         public string? Regulatory { get; set; }
+        public bool IsOtherEvent { get; set; }
+        public string? OtherEventDetail { get; set; }
     }
 }

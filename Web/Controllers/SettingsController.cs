@@ -23,6 +23,7 @@ namespace Web.Controllers
         private readonly IUserManagementService<UserManagementModifyViewModel, UserManagementModifyViewModel, UserDetailViewModel> _iUserManagementService;
         private readonly IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> _iUsersinService;
         private readonly IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> _iProgressService;
+        private readonly IMaterialService<MaterialModifyViewModel, MaterialModifyViewModel, MaterialDetailViewModel> _iMaterialService;
         private readonly IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> _iEquipmentFieldsService;
         #endregion
 
@@ -31,7 +32,8 @@ namespace Web.Controllers
             IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService, IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> iIncidentTeamService,
             IUserManagementService<UserManagementModifyViewModel,UserManagementModifyViewModel, UserDetailViewModel> iUserManagementService,
             IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService, IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> iusersinService,
-            IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService, IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> iEquipmentFieldsService)
+            IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService, IMaterialService<MaterialModifyViewModel, MaterialModifyViewModel, MaterialDetailViewModel> iMaterialService, IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> iEquipmentFieldsService)
+            //IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService, IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> iEquipmentFieldsService)
         {
             _iRelationshipService = iRelationshipService;
             _iEventTypeService = iEventTypeService;
@@ -45,6 +47,7 @@ namespace Web.Controllers
             _iUsersinService = iusersinService;
             _iProgressService = iProgressService;
             _iEquipmentFieldsService = iEquipmentFieldsService;
+            _iMaterialService = iMaterialService;
         }
         #endregion
 
@@ -971,6 +974,83 @@ namespace Web.Controllers
         }
 
         #endregion
+        // In appropriate Controller (e.g., SettingsController)
+        #region Materials
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllMaterials()
+        {
+            var model = await _iMaterialService.GetAllMaterials();
+            return PartialView("~/Views/Settings/Material/_ListMaterial.cshtml", model);
+        }
+
+        [HttpGet]
+        public IActionResult AddMaterial()
+        {
+            var model = new MaterialModifyViewModel();
+            return PartialView("~/Views/Settings/Material/_AddMaterial.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMaterialById(long id)
+        {
+            var model = await _iMaterialService.GetMaterialById(id);
+            return PartialView("~/Views/Settings/Material/_AddMaterial.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveMaterial([FromForm] MaterialModifyViewModel material)
+        {
+            if (material == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long id = 0;
+                if (material.Id > 0)
+                    id = await _iMaterialService.UpdateMaterial(material);
+                else
+                    id = await _iMaterialService.SaveMaterial(material);
+
+                if (id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save material." });
+
+                var successMsg = "Material saved successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteMaterialById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                var deletedId = await _iMaterialService.DeleteMaterial(id);
+
+                if (deletedId == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete material." });
+
+                var successMsg = "Material deleted successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+        #endregion
+
 
         #region EquipmentFields
 

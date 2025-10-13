@@ -39,6 +39,10 @@ $(function () {
         else if (tab === "progress") {
             GetAllProgress();
         }
+        else if (tab === "Imaterials") {
+            GetAllMaterials();
+
+        }
         else if (tab === "equipmentfields") {
             GetAllEquipmentFields();
         }
@@ -160,6 +164,64 @@ $(function () {
 
     // End Source
 
+    //Start Material
+
+    $(document).off("click", ".saveMaterial");
+    $(document).on("click", ".saveMaterial", function (e) {
+        e.preventDefault();
+        if (validateMaterialForm()) SaveMaterial();
+    });
+
+    $(document).off("click", ".cancelMaterial");
+    $(document).on("click", ".cancelMaterial", function (e) {
+        e.preventDefault();
+        $("#addMaterial").empty();
+        $('li.active').trigger('click');
+    });
+
+    // any other initialization: select2, masks, etc.
+
+
+/* Confirmation + delete helper */
+function DeleteMaterialItem(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            confirmButtonClass: 'btn btn-success me-2',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                DeleteMaterialById(id);
+            }
+        });
+    }
+
+/* Event wiring for list actions (edit/delete/add) */
+$(document).off("click", ".btnAddNewMaterial");
+    $(document).on("click", ".btnAddNewMaterial", function (e) { 
+    e.preventDefault();
+    AddMaterial();
+});
+
+$(document).off("click", ".editMaterial");
+$(document).on("click", ".editMaterial", function (e) {
+    e.preventDefault();
+    const id = $(this).attr("id");
+    if (id) GetMaterialById(id);
+});
+
+$(document).off("click", ".deleteMaterial");
+$(document).on("click", ".deleteMaterial", function (e) {
+    e.preventDefault();
+    const id = $(this).attr("id");
+    if (!id) return;
+    DeleteMaterialItem(id);
+});
 
     // Start Event Type
     $(document).off("click", ".btnAddNewEvent");
@@ -2110,6 +2172,176 @@ async function SaveProgress() {
         hideLoader($(".setting"));
     }
 }
+async function GetAllMaterials() {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/GetAllMaterials", {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "text/html" }
+        });
+        if (!response.ok) throw new Error("Failed to load material list");
+        const content = await response.text();
+        $("#materialList").empty().html(content);
+        $("#Materials").addClass("active");
+    } catch (error) {
+        console.error("Error loading material list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function AddMaterial() {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/AddMaterial", {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "text/html" }
+        });
+        if (!response.ok) throw new Error("Failed to load material form");
+        const content = await response.text();
+        $("#addMaterial").empty().html(content);
+        if (typeof InitMaterialPartial === "function") InitMaterialPartial();
+    } catch (error) {
+        console.error("Error loading material form:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetMaterialById(id) {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/GetMaterialById?id=" + encodeURIComponent(id), {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "text/html" }
+        });
+        if (!response.ok) throw new Error("Failed to load material");
+        const content = await response.text();
+        $("#addMaterial").empty().html(content);
+        if (typeof InitMaterialPartial === "function") InitMaterialPartial();
+    } catch (error) {
+        console.error("Error loading material:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function DeleteMaterialById(id) {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/DeleteMaterialById?id=" + encodeURIComponent(id), {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" }
+        });
+        if (!response.ok) throw new Error("Failed to delete material");
+        SwalSuccessAlert("Material deleted successfully!");
+        GetAllMaterials();
+    } catch (error) {
+        console.error("Error deleting material:", error);
+        SwalErrorAlert("Error deleting material.");
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveMaterial() {
+    try {
+        debugger;
+        // client validation (basic)
+        if (!validateMaterialForm()) {
+            SwalErrorAlert("Please fix validation errors before submitting.");
+            return;
+        }
+
+        const formEl = $("#NewMaterialForm")[0];
+        if (!formEl) { SwalErrorAlert("Form not found!"); return; }
+
+        // build FormData
+        const formData = new FormData(formEl);
+
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/SaveMaterial", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            $("#addMaterial").html("");
+            SwalSuccessAlert(result.data || "Material saved successfully!");
+            GetAllMaterials();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save material.");
+        }
+    } catch (error) {
+        console.error("Error saving material:", error);
+        SwalErrorAlert("Error while saving material!");
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+/* client-side validator for material form */
+function validateMaterialForm() {
+    const $form = $("#NewMaterialForm");
+    if (!$form || $form.length === 0) {
+        console.warn("NewMaterialForm not found for validation.");
+        return false;
+    }
+
+    // simple manual validation: required fields
+    let isValid = true;
+
+    //const $materialId = $form.find("input[name='MaterialID']");
+    const $name = $form.find("input[name='Name']");
+    const $unitCost = $form.find("input[name='UnitCost']");
+
+    function setInvalid($el, msg) {
+        $el.addClass("is-invalid");
+        if ($el.next(".invalid-feedback").length === 0) {
+            $el.after(`<div class="invalid-feedback">${msg}</div>`);
+        } else {
+            $el.next(".invalid-feedback").text(msg);
+        }
+        isValid = false;
+    }
+
+    function clearInvalid($el) {
+        $el.removeClass("is-invalid");
+        $el.next(".invalid-feedback").remove();
+    }
+
+    //// MaterialID required
+    //clearInvalid($materialId);
+    //if (!$materialId.val() || !$materialId.val().toString().trim()) {
+    //    setInvalid($materialId, "Material ID is required.");
+    //}
+
+    // Name required
+    clearInvalid($name);
+    if (!$name.val() || !$name.val().toString().trim()) {
+        setInvalid($name, "Material name is required.");
+    }
+
+    // UnitCost must be non-negative integer (or zero)
+    clearInvalid($unitCost);
+    const uc = $unitCost.val();
+    if (uc === "" || uc === null || isNaN(Number(uc)) || Number(uc) < 0) {
+        setInvalid($unitCost, "Unit cost must be a non-negative number.");
+    }
+
+    return isValid;
+}
+
+/* Partial initializer - call when partial is loaded */
+function InitMaterialPartial() {
+    // attach simple form validation (optional: you can wire jquery.validate instead)
+    $("#NewMaterialForm").off("submit").on("submit", function (e) {
+        e.preventDefault();
+        SaveMaterial();
+    });
+}
+
 
 async function GetAllEquipmentFields() {
     try {

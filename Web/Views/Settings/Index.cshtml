@@ -1215,6 +1215,7 @@
                     @* <li class="settingAllTab" data-tab="type"><i class="fa-solid fa-building"></i> Asset Types</li> *@
                     <li class="settingAllTab" data-tab="status"><i class="fa-solid fa-palette"></i> Status Legend</li>
                      <li class="settingAllTab" data-tab="Ipolicies"><i class="fa-solid fa-gavel"></i> Policies</li>
+                    <li class="settingAllTab" data-tab="Imaterials"><i class="fa-solid fa-gavel"></i> Materials</li>
                     @* <li class="settingAllTab" data-tab="teams"><i class="fa-brands fa-teamspeak"></i> Assign Response Teams</li> *@
                     <li class="settingAllTab" data-tab="user" onclick="showContent('user')"><i class="fa fa-user-circle"></i> User Management</li>
                     <li class="settingAllTab" data-tab="teamManagement" onclick="showContent('team')">
@@ -1362,6 +1363,20 @@
                     <div id="addProgress">
                     </div>
                     <div id="progressList">
+                    </div>
+                </div>
+                <div id="Imaterials" class="setting-tab-content">
+                    <div class="d-flex align-item-center justify-content-between mb-3">
+                        <h3 class="mb-0">Materials</h3>
+                        <button class="btn btn-primary btnAddNewMaterial"><i class="fa-solid fa-plus"></i> Add Material</button>
+                    </div>
+
+                    <div id="addMaterial">
+                        <!-- Partial for Add/Edit Material will be loaded here via AJAX -->
+                    </div>
+
+                    <div id="materialList">
+                        <!-- Material list partial will be loaded here via AJAX -->
                     </div>
                 </div>
                 <div id="equipmentfields" class="setting-tab-content">

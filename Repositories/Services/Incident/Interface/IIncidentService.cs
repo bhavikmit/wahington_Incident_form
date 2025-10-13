@@ -24,5 +24,6 @@ namespace Repositories.Common
         Task<string> UpdateIncident(IncidentViewModel viewModel);
         Task<List<IncidentLocationMapViewModel>> GetIncidentMapDetailsbyId(long incidentId);
         Task<bool> SaveCommunicationMessage(SaveCommunicationRequest request);
+        Task<List<AdditionalLocationViewModel>> GetAdditionalLocationsByIncidentId(long incidentId);
     }
 }

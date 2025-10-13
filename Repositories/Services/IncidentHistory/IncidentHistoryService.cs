@@ -46,7 +46,7 @@ public class IncidentHistoryService : IIncidentHistoryService
                 Intersection = incident.Landmark ?? "-",
                 EventType = eventTypes,
                 Severity = incident.SeverityLevel?.Name ?? "-",
-                SeverityColor = incident.SeverityLevel?.Color,
+                SeverityColor = incident.SeverityLevel?.Color ?? string.Empty,
                 Description = incident.DescriptionIssue ?? "-",
                 EsIndicators = GetIndicator(incident.GasPresentId)
             }).ToList()

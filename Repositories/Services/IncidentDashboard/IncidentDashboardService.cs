@@ -242,18 +242,18 @@ namespace Repositories.Common
                 {
                     incidentRecents.Add(new IncidentRecentViewModel()
                     {
-                        eventtype = GetEventTypes(eventTypes, item.EventTypeIds),
+                        eventtype = GetEventTypes(eventTypes, item.EventTypeIds ?? string.Empty),
                         incidentId = item.IncidentID,
-                        incidentloc = item.LocationAddress,
-                        incidentstatus = item.StatusLegend?.Name,
-                        incidentstatusColor = item.StatusLegend?.Color,
-                        severity = item.SeverityLevel?.Name,
+                        incidentloc = item.LocationAddress ?? string.Empty,
+                        incidentstatus = item.StatusLegend?.Name ?? string.Empty,
+                        incidentstatusColor = item.StatusLegend?.Color ?? string.Empty,
+                        severity = item.SeverityLevel?.Name ?? string.Empty,
                         lat = item.Lat,
                         lon = item.Lng,
                         perimeter = incidentValidations.Count > 0 ? GetPerimeter(incidentValidations.Where(i => i.IncidentId == item.Id).FirstOrDefault()?.DiscoveryPerimeterId) : "",
-                        assettype = GetAssets(assetIncidents, item.AssetIds),
-                        description = item.DescriptionIssue,
-                        intersection = item.Landmark
+                        assettype = GetAssets(assetIncidents, item.AssetIds ?? string.Empty),
+                        description = item.DescriptionIssue ?? string.Empty,
+                        intersection = item.Landmark ?? string.Empty
                     });
                 }
 
@@ -269,18 +269,18 @@ namespace Repositories.Common
                 {
                     lat = p.Lat,
                     lon = p.Lng,
-                    severity = p.SeverityLevel?.Name,
-                    incidentStatus = p.StatusLegend?.Name,
-                    color = p.StatusLegend?.Color,
-                    incidentloc = p.LocationAddress,
-                    calleraddress = p.CallerAddress,
-                    callername = p.CallerName,
-                    callerphone = p.CallerPhoneNumber,
+                    severity = p.SeverityLevel?.Name ?? string.Empty,
+                    incidentStatus = p.StatusLegend?.Name ?? string.Empty,
+                    color = p.StatusLegend?.Color ?? string.Empty,
+                    incidentloc = p.LocationAddress ?? string.Empty,
+                    calleraddress = p.CallerAddress ?? string.Empty,
+                    callername = p.CallerName ?? string.Empty,
+                    callerphone = p.CallerPhoneNumber ?? string.Empty,
                     incidentid = p.IncidentID,
-                    assettype = GetAssets(assetIncidents, p.AssetIds),
+                    assettype = GetAssets(assetIncidents, p.AssetIds ?? string.Empty),
                     description = p.DescriptionIssue ?? string.Empty,
-                    eventtype = GetEventTypes(eventTypes, p.EventTypeIds),
-                    intersection = p.Landmark,
+                    eventtype = GetEventTypes(eventTypes, p.EventTypeIds ?? string.Empty),
+                    intersection = p.Landmark ?? string.Empty,
                     perimeter = incidentValidations.Count > 0 ? GetPerimeter(incidentValidations.Where(i => i.IncidentId == p.Id).FirstOrDefault()?.DiscoveryPerimeterId) : ""
                 }).ToList();
 

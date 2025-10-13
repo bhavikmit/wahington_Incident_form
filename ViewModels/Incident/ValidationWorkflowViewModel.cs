@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
+using Models;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,9 @@ namespace ViewModels.Incident
         public List<IncidentResponseTeamViewModel> IVResponseTeamList { get; set; } = new();
         public List<IncidentPolicyViewModel> IVPolicyList { get; set; } = new();
         public IncidentCommunicationViewModel IVCommunication { get; set; } = new();
+        public List<TeamWithUsersViewModel> IVIncidentTeamUser { get; set; } = new();
+
+        public List<IncidentAdditionalLocationViewModel> IVAdditionalLocations { get; set; } = new();
     }
 
     public class IncidentValidationCountViewModel : BaseIncidentValidationViewModel
@@ -85,12 +90,18 @@ namespace ViewModels.Incident
     public class IncidentValidationViewModel : BaseIncidentValidationViewModel
     {
         public List<SelectListItem> severityLevels { get; set; } = new();
+        public List<SelectListItem> UserList { get; set; } = new();
         public string severityLevel { get; set; } = default!;
         public double Lat { get; set; } = default!;
         public double Long { get; set; } = default!;
         public string ValidationNotes { get; set; } = default!;
         public long RadiusId { get; set; } = default!;
         public long severityLevelId { get; set; } = default!;
+        public long UserId { get; set; } = default!;
+        public long IncidentCommanderId { get; set; } = default!;
+        public long FieldEnvRepId { get; set; } = default!;
+        public long GECCoordinatorId { get; set; } = default!;
+        public long EngineeringLeadId { get; set; } = default!;
         public string IncidentLocation { get; set; } = default!;
     }
 
@@ -120,14 +131,20 @@ namespace ViewModels.Incident
     public class IncidentSubmitViewModel : BaseIncidentValidationViewModel
     {
         public long ConfirmedSeverityLevelId { get; set; }
+        public long ConfirmedIncidentCommanderId { get; set; } = default!;
+        public long ConfirmedFieldEnvRepId { get; set; } = default!;
+        public long ConfirmedGECCoordinatorId { get; set; } = default!;
+        public long ConfirmedEngineeringLeadId { get; set; } = default!;
         public long DiscoveryPerimeterId { get; set; }
         public string ValidationNotes { get; set; } = default!;
         public string AssignResponseTeams { get; set; } = default!;
         public string listPolicyVM { get; set; } = default!;
+        public string listValidationLocationVM { get; set; } = default!;
         public bool IsMarkFalseAlarm { get; set; } = false;
 
         //public string listCommunicationVM { get; set; } = default!;
         public List<IncidentSubmitPolicyViewModel> listSubmitPolicyVM { get; set; } = new();
+        public List<IncidentValidationLocationViewModel> listSubmitValidationLocationVM { get; set; } = new();
         public List<IncidentSubmitCommunicationViewModel> listSubmitCommunicationVM { get; set; } = new();
     }
     public class IncidentSubmitPolicyViewModel
@@ -156,5 +173,16 @@ namespace ViewModels.Incident
         public string FileName { get; set; }   // actual saved name
         public string OriginalName { get; set; } // original upload name
         public string TempPath { get; set; }   // path in temp folder
+    }
+
+    public class IncidentValidationLocationViewModel
+    {
+        public long? LocationId { get; set; }
+        public long? SeverityID { get; set; }
+        public long? DiscoveryPerimeter { get; set; }
+        public string ICPLocation { get; set; } = default!;
+        public string Source { get; set; } = default!;
+        public float Lat { get; set; } = default!;
+        public float Lon { get; set; } = default!;
     }
 }

@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.FileProviders;
+
 using Models;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using ViewModels.Dashboard;
 
 namespace ViewModels.Incident
 {
@@ -26,9 +30,14 @@ namespace ViewModels.Incident
 
         public List<SelectListItem> statusLegends { get; set; } = new();
         public List<SelectListItem> severityLevels { get; set; } = new();
+        public List<SelectListItem> progressLevels { get; set; } = new();
         public long? severityLevelId { get; set; } = default!;
         public long? Id { get; set; } = default!;
         public string DescriptionIssue { get; set; } = default!;
+
+        public List<IncidentLocationMapViewModel> ListIncidentLocationMapViewModel { get; set; } = new();
+        public AdditionalLocationViewModel additionalLocation { get; set; } = new();
+        public List<AdditionalLocationViewModel> additionalLocations { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel
@@ -120,6 +129,7 @@ namespace ViewModels.Incident
         public string RelationShipName { get; set; }
         public string DescriptionIssue { get; set; }
         public string GasESIndicator { get; set; }
+        public int AdditionalLocationCount { get; set; } = 0;
     }
     public class ChangeStatusRequest
     {
@@ -159,12 +169,12 @@ namespace ViewModels.Incident
         public string ValidationNotes { get; set; }
         public long CreatedBy { get; set; }
         public DateTime CreatedOn { get; set; }
-        public string CreatedDateInFormat { get; set; } 
+        public string CreatedDateInFormat { get; set; }
         public string CreatedTimeInFormat { get; set; }
-        public string SeverityLevelName { get; set; }   
+        public string SeverityLevelName { get; set; }
         public string SeverityLevelColor { get; set; }
         public List<IncidentValidationCommunicationHistoriesViewModel> IncidentValidationCommunicationHistoriesViewModelList { get; set; }
-    }   
+    }
 
     public class IncidentValidationCommunicationHistoriesViewModel
     {
@@ -217,5 +227,53 @@ namespace ViewModels.Incident
         }
 
         public string TeamsByPolicy { get; set; } = string.Empty;
+    }
+
+    public class AdditionalLocationViewModel
+    {
+
+        public long? Id { get; set; } = default!;
+        public long? IncidentId { get; set; } = default!; 
+        public string LocationAddress { get; set; } = default!;
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        public string? NearestIntersection { get; set; }
+        public string? ServiceAccount { get; set; } = default!;
+        public bool PerimeterType { get; set; }
+        public bool IsPrimaryLocation { get; set; }
+        public long? PerimeterTypeDigit { get; set; }
+        public string AssetIDs { get; set; } = default!;
+        public List<SelectListItem> AssetsIncidentList { get; set; } = new();
+        public List<string> AssetNames { get; set; } = new();
+    }
+
+    public class IncidentAdditionalLocationViewModel
+    {
+        public long Id { get; set; } = default!;
+        public long? IncidentId { get; set; } = default!;
+        public string AdditionalLocation { get; set; } = default!;
+        public double Lat { get; set; } = default!;
+        public double Long { get; set; } = default!;
+        public bool IsPrimaryLocation { get; set; } = default!;
+    }
+
+    public class IncidentLocationValidationViewModel
+    {
+        public long IncidentId { get; set; }
+        public long IncidentValidationId { get; set; }
+        public long IncidentLocationId { get; set; }
+        public long SeverityLevelId { get; set; }
+        public long DiscoveryPerimeterId { get; set; }
+        public long ResponseTeamId { get; set; }
+        public string TeamMemberIds { get; set; } = default!;
+        public string LocationSpecificNotes { get; set; } = default!;
+        public List<IncidentWorkStepViewModel> WorkSteps { get; set; } = new();
+    }
+
+    public class IncidentWorkStepViewModel
+    {
+        public string WorkStepName { get; set; } = default!;
+        public string WorkStepDescription { get; set; } = default!;
+        public string WorkStepSpecificPersion { get; set; } = default!;
     }
 }

@@ -2,76 +2,76 @@
 $(function () {
 
     let currentStep = 1;
-    const totalSteps = 5;
+    const totalSteps = 4;
 
     GetValidationsDetail($("#hdn_Id").val());
 
     $(document).off("click", "#nextBtn");
     $(document).on("click", "#nextBtn", function (e) {
 
-        if (currentStep == 5) {
+        if (currentStep == 4) {
             SaveIncidentValidation();
         }
 
-        if (currentStep == 2) {
-            var rediusId = $("#step-2").find("#RadiusId").val();
-            var severityLevelId = $("#step-2").find("#severityLevelId").val();
-            var validationNotes = $("#step-2").find("#IVValidation_ValidationNotes").val();
+        //if (currentStep == 2) {
+        //    var rediusId = $("#step-2").find("#RadiusId").val();
+        //    var severityLevelId = $("#step-2").find("#severityLevelId").val();
+        //    var validationNotes = $("#step-2").find("#IVValidation_ValidationNotes").val();
 
-            if (severityLevelId == "") {
-                SwalErrorAlert("Please select confirmed severity level..!");
-                return;
-            }
+        //    if (severityLevelId == "") {
+        //        SwalErrorAlert("Please select confirmed severity level..!");
+        //        return;
+        //    }
 
-            if (rediusId == "") {
-                SwalErrorAlert("Please select discovery perimeter..!");
-                return;
-            }
+        //    if (rediusId == "") {
+        //        SwalErrorAlert("Please select discovery perimeter..!");
+        //        return;
+        //    }
 
-            if (validationNotes == "") {
-                SwalErrorAlert("Please add validation note..!");
-                return;
-            }
+        //    if (validationNotes == "") {
+        //        SwalErrorAlert("Please add validation note..!");
+        //        return;
+        //    }
 
-        }
+        //}
 
-        if (currentStep == 3) {
-            var selectedTeamCount = document.querySelectorAll(".team-card.selected");
-            if (selectedTeamCount.length == 0) {
-                SwalErrorAlert("Please select any one response team..!");
-                return;
-            }
+        //if (currentStep == 3) {
+        //    var selectedTeamCount = document.querySelectorAll(".team-card.selected");
+        //    if (selectedTeamCount.length == 0) {
+        //        SwalErrorAlert("Please select any one response team..!");
+        //        return;
+        //    }
 
-            var assignTeams = document.querySelectorAll(".team-card.selected");
-            var assignTeamsArray = [];
+        //    var assignTeams = document.querySelectorAll(".team-card.selected");
+        //    var assignTeamsArray = [];
 
-            $.each(assignTeams, function (i, team) {
-                assignTeamsArray.push($(team).attr('data-id'));
-            });
+        //    $.each(assignTeams, function (i, team) {
+        //        assignTeamsArray.push($(team).attr('data-id'));
+        //    });
 
-            $(".selectPoliciesTask .checkbox-group").find('input[type=checkbox]').prop("checked", false);
+        //    $(".selectPoliciesTask .checkbox-group").find('input[type=checkbox]').prop("checked", false);
 
-            assignTeamsArray.forEach(function (id) {
-                $(".selectPoliciesTask .checkbox-group input[type=checkbox][value='" + id + "']").prop("checked", true);
-            });
+        //    assignTeamsArray.forEach(function (id) {
+        //        $(".selectPoliciesTask .checkbox-group input[type=checkbox][value='" + id + "']").prop("checked", true);
+        //    });
 
-            // Build team checkboxes dynamically
-            //var teamHtml = "";
-            //if (teams && teams.length) {
-            //    $.each(teams, function (i, team) {
-            //        var isChecked = assignTeamsArray.includes(team.Value) ? "checked" : "";
-            //        teamHtml += `<label><input type="checkbox" value="${team.Value}" ${isChecked}> ${team.Text}</label>`;
-            //    });
-            //}
-        }
+        //    // Build team checkboxes dynamically
+        //    //var teamHtml = "";
+        //    //if (teams && teams.length) {
+        //    //    $.each(teams, function (i, team) {
+        //    //        var isChecked = assignTeamsArray.includes(team.Value) ? "checked" : "";
+        //    //        teamHtml += `<label><input type="checkbox" value="${team.Value}" ${isChecked}> ${team.Text}</label>`;
+        //    //    });
+        //    //}
+        //}
 
-        if (currentStep == 4) {
-            var selectPoliciesTaskCount = $(".selectPoliciesTask").find(".task-card").length;
-            if (selectPoliciesTaskCount == 0) {
-                SwalErrorAlert("Please select any one policy..!");
-                return;
-            }
-        }
+        //if (currentStep == 3) {
+        //    var selectPoliciesTaskCount = $(".selectPoliciesTask").find(".task-card").length;
+        //    if (selectPoliciesTaskCount == 0) {
+        //        SwalErrorAlert("Please select any one policy..!");
+        //        return;
+        //    }
+        //}
 
         if (currentStep < totalSteps) {
             currentStep++;
@@ -443,6 +443,7 @@ async function SaveIncidentValidation() {
         let params = $(obj).serializeArray();
         let assignTeamsIds = [];
         var policiesData = [];
+        var ValidationLocationData = [];
 
         var selectedAssignTeams = $("#step-3").find('.responseCard .team-card.selected');
         $.each(selectedAssignTeams, function (i, val) {
@@ -472,6 +473,29 @@ async function SaveIncidentValidation() {
             });
         });
 
+        $("#step-2 .right-panel").each(function () {
+            debugger;
+
+            var loc = $(this).attr("data-add-loc");
+            var severityID = $(`#divaddloc_Severity_${loc}`).find('#severityLevelId').val();
+            var discoveryPerimeter = $(`#divaddloc_DiscoveryPerimeter_${loc}`).find("#RadiusId").val();
+            var icpLocation = $(`#divaddloc_ICP_${loc}`).find(`#ICPLocation_${loc}`).val();
+            var source = $(`#divaddloc_Source_${loc}`).find("#Source").val();
+            var lat = $(`#hdnLat_${loc}`).val();
+            var lon = $(`#hdnLon_${loc}`).val();
+
+            // push object
+            ValidationLocationData.push({
+                LocationId: loc,
+                SeverityID: severityID,
+                DiscoveryPerimeter: discoveryPerimeter,
+                ICPLocation: icpLocation,
+                Source: source,
+                Lat: lat,
+                Lon: lon
+            });
+        });
+
         $.each(params, function (i, val) {
             if (val.name === "IVValidation.severityLevelId") {
                 formData.append("ConfirmedSeverityLevelId", val.value);
@@ -485,6 +509,22 @@ async function SaveIncidentValidation() {
                 formData.append("ValidationNotes", val.value);
                 form.push({ name: val.name, value: val.value });
             }
+            else if (val.name === "IVValidation.IncidentCommanderId") {
+                formData.append("ConfirmedIncidentCommanderId", val.value);
+                form.push({ name: val.name, value: val.value });
+            }
+            else if (val.name === "IVValidation.FieldEnvRepId") {
+                formData.append("ConfirmedFieldEnvRepId", val.value);
+                form.push({ name: val.name, value: val.value });
+            }
+            else if (val.name === "IVValidation.GECCoordinatorId") {
+                formData.append("ConfirmedGECCoordinatorId", val.value);
+                form.push({ name: val.name, value: val.value });
+            }
+            else if (val.name === "IVValidation.EngineeringLeadId") {
+                formData.append("ConfirmedEngineeringLeadId", val.value);
+                form.push({ name: val.name, value: val.value });
+            }
         });
 
         formData.append("Id", $("#hdn_Id").val());
@@ -496,6 +536,10 @@ async function SaveIncidentValidation() {
 
         if (policiesData.length > 0) {
             formData.append("listPolicyVM", JSON.stringify(policiesData));
+        }
+
+        if (ValidationLocationData.length > 0) {
+            formData.append("listValidationLocationVM", JSON.stringify(ValidationLocationData));
         }
 
         showLoader($(".main-content"));

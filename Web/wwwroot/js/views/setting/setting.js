@@ -1,4 +1,6 @@
-﻿$(function () {
+﻿
+
+$(function () {
     GetAllRelationships();
 
     // start setting tabs
@@ -34,12 +36,18 @@
         else if (tab === "user") {
             GetAllUserManagement();
         }
+        else if (tab === "progress") {
+            GetAllProgress();
+        }
+        else if (tab === "equipmentfields") {
+            GetAllEquipmentFields();
+        }
     });
 
     $(document).off("click", ".teamAllTab");
     $(document).on("click", ".teamAllTab", function (e) {
         e.preventDefault();
-        var tab = $(this).attr("data-tab");         
+        var tab = $(this).attr("data-tab");
         if (tab === "Iteams") {
             GetAllIncidentTeams();
         }
@@ -362,7 +370,7 @@
         DeleteAssetItem(id);
     });
 
-   
+
 
     $(document).off("click", ".editAssetType");
     $(document).on("click", ".editAssetType", function (e) {
@@ -546,6 +554,105 @@
 
         if (isValid) {
             SaveUser();
+        }
+    });
+
+    // Progress
+    $(document).off("click", ".btnAddNewProgress");
+    $(document).on("click", ".btnAddNewProgress", function (e) {
+        e.preventDefault();
+        AddProgress();
+    });
+
+    $(document).off("click", ".cancelProgress");
+    $(document).on("click", ".cancelProgress", function (e) {
+        e.preventDefault();
+        $("#addProgress").empty().html('');
+        $('li.active').trigger('click')
+    });
+
+    $(document).off("click", ".editProgress");
+    $(document).on("click", ".editProgress", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetProgressById(id);
+    });
+
+    $(document).off("click", ".deleteProgress");
+    $(document).on("click", ".deleteProgress", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        DeleteProgressItem(id);
+    });
+
+    $(document).off("click", ".saveProgress");
+    $(document).on("click", ".saveProgress", function (e) {
+        e.preventDefault();
+        var isValid = true;
+
+        $("#saveProgressDiv").find("input[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            }
+            else {
+                clearError($field);
+            }
+        });
+        if (isValid) {
+            SaveProgress();
+        }
+    });
+
+    //EquipmentFields
+    $(document).off("click", ".btnAddNewEquipmentFields");
+    $(document).on("click", ".btnAddNewEquipmentFields", function (e) {
+        e.preventDefault();
+        AddEquipmentFields();
+    });
+
+    $(document).off("click", ".cancelEquipmentFields");
+    $(document).on("click", ".cancelEquipmentFields", function (e) {
+        e.preventDefault();
+        $("#addEquipmentFields").empty().html('');
+        $('li.active').trigger('click')
+    });
+
+    $(document).off("click", ".editEquipmentFields");
+    $(document).on("click", ".editEquipmentFields", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetEquipmentFieldsById(id);
+    });
+
+    $(document).off("click", ".deleteEquipmentFields");
+    $(document).on("click", ".deleteEquipmentFields", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        DeleteEquipmentFieldsItem(id);
+    });
+
+    $(document).off("click", ".saveEquipmentFields");
+    $(document).on("click", ".saveEquipmentFields", function (e) {
+        e.preventDefault();
+        var isValid = true;
+        $("#saveEquipmentFieldsDiv").find("input[type='text'], select[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            }
+            else {
+                clearError($field);
+            }
+        });
+        if (isValid) {
+            SaveEquipmentFields();
         }
     });
 })
@@ -1618,6 +1725,7 @@ async function DeletePolicyById(id) {
 
 async function SavePolicy() {
     try {
+        debugger;
         let form = [];
         let formData = new FormData();
         let obj = $("#NewPolicyForm")[0];
@@ -1701,7 +1809,7 @@ async function AddUserManagement() {
         });
 
         if (!response.ok) throw new Error("Failed to load User Management");
-        const content = await response.text();       
+        const content = await response.text();
         $("#addUserManagement").empty().html(content);
 
     } catch (error) {
@@ -1837,4 +1945,332 @@ async function GetUserById(id) {
         $("#addUser").empty().html(content);
     } catch (error) { console.error("Error loading user:", error); }
     finally { hideLoader($(".setting")); }
+}
+
+async function GetAllProgress() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetAllProgress", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load progress list");
+
+        const content = await response.text();
+        $("#progressList").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading progress list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function AddProgress() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/AddProgress", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load progress list");
+
+        const content = await response.text();
+        $("#addProgress").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading progress list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetProgressById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetProgressById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load progress list");
+
+        const content = await response.text();
+        $("#addProgress").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading progress list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+function DeleteProgressItem(id) {   // <-- accept id
+    let confirmBtnText = "Yes, delete it!";
+    let cancelBtnText = "No, cancel!";
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmBtnText,
+        cancelButtonText: cancelBtnText,
+        confirmButtonClass: 'btn btn-success me-2',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {   // ✅ correct way
+            DeleteProgressById(id);
+        }
+    });
+}
+
+async function DeleteProgressById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/DeleteProgressById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load progress list");
+
+        SwalSuccessAlert("Progress deleted successfully!");
+        GetAllProgress();
+
+    } catch (error) {
+        console.error("Error loading progress list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveProgress() {
+    try {
+
+        let form = [];
+        let formData = new FormData();
+        let obj = $("#NewProgressForm")[0];
+
+        // Serialize other fields
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+            form.push({ name: val.name, value: val.value });
+        });
+
+
+        showLoader($(".setting"));
+
+        //console.log(formData);
+        console.log(form);
+
+        // Send request
+        let response = await fetch("/Settings/SaveProgress", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addProgress").html("");
+            SwalSuccessAlert(result.data);
+            GetAllProgress();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save progress.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving progress!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetAllEquipmentFields() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetAllEquipmentFields", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load equipment fields list");
+
+        const content = await response.text();
+        $("#equipmentfieldsList").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading equipment fields list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function AddEquipmentFields() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/AddEquipmentFields", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load equipment fields list");
+
+        const content = await response.text();
+        $("#addEquipmentFields").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading equipment fields list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetEquipmentFieldsById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetEquipmentFieldsById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load equipment fields list");
+
+        const content = await response.text();
+        $("#addEquipmentFields").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading equipment fields list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+function DeleteEquipmentFieldsItem(id) {   // <-- accept id
+    let confirmBtnText = "Yes, delete it!";
+    let cancelBtnText = "No, cancel!";
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmBtnText,
+        cancelButtonText: cancelBtnText,
+        confirmButtonClass: 'btn btn-success me-2',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {   // ✅ correct way
+            DeleteEquipmentFieldsById(id);
+        }
+    });
+}
+
+async function DeleteEquipmentFieldsById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/DeleteEquipmentFieldsById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load equipment fields list");
+
+        SwalSuccessAlert("Equipment Field deleted successfully!");
+        GetAllEquipmentFields();
+
+    } catch (error) {
+        console.error("Error loading equipment Fields list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveEquipmentFields() {
+    try {
+
+        let form = [];
+        let formData = new FormData();
+        let obj = $("#NewEquipmentFieldsForm")[0];
+
+        // Serialize other fields
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+            form.push({ name: val.name, value: val.value });
+        });
+
+
+        showLoader($(".setting"));
+
+        //console.log(formData);
+        console.log(form);
+
+        // Send request
+        let response = await fetch("/Settings/SaveEquipmentFields", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addEquipmentFields").html("");
+            SwalSuccessAlert(result.data);
+            GetAllEquipmentFields();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save equipment field.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving equipment field!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
 }

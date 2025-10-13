@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Presentation;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 
 using Repositories.Common;
 using Repositories.Services.ArcGis;
 using Repositories.Services.ArcGis.Interface;
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 using ViewModels;
@@ -16,6 +20,7 @@ namespace Web.Controllers
     {
         private readonly IIncidentService _iIncidentService;
         private readonly IArcGisGeocodingService _iArcGisGeocodingService;
+        //private readonly IAdditionalLocationsService _iAdditionalLocationsService;
 
         public IncidentsController(IIncidentService incidentService, IArcGisGeocodingService iArcGisGeocodingService)
         {
@@ -44,7 +49,7 @@ namespace Web.Controllers
                 }
                 else
                 {
-                    incidentId = await _iIncidentService.SaveIncident(incidentViewModel);
+                    incidentId = await _iIncidentService.SaveIncident(incidentViewModel);                   
                 }
                 if (string.IsNullOrWhiteSpace(incidentId))
                     return StatusCode(StatusCodes.Status500InternalServerError,
@@ -114,18 +119,22 @@ namespace Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Suggest(string text)
         {
-            var results = await _iArcGisGeocodingService.GetSuggestionsAsync(text);
-            return Json(results);
+            var results = await _iArcGisGeocodingService.GetSuggestionsAsyncWithMagicKey(text);
+            return Json(results.Select(r => new { text = r.Text, magicKey = r.MagicKey }));
         }
-
+       
         [HttpGet]
         public async Task<IActionResult> Resolve(string magicKey)
         {
             var result = await _iArcGisGeocodingService.GetCoordinatesAsync(magicKey);
-            if (result == null) return NotFound();
-            return Json(result);
+            return Json(new
+            {
+                text = result.GetValueOrDefault().address,
+                lat = result.GetValueOrDefault().lat,
+                lon = result.GetValueOrDefault().lon
+            });
         }
-
+    
         [HttpGet]
         public async Task<PartialViewResult> GetIncidentMapDetailsbyId(long id)
         {
@@ -141,6 +150,7 @@ namespace Web.Controllers
 
             try
             {
+
                 var result = await _iIncidentService.SaveCommunicationMessage(request);
                 if (result)
                     return Ok(new { success = true, message = "Message sent successfully." });
@@ -151,6 +161,19 @@ namespace Web.Controllers
             {
                 return StatusCode(500, new { success = false, message = "An error occurred while saving the message." });
             }
+        }
+        [HttpGet]
+        public async Task<PartialViewResult> GetAdditionalLocations(long incidentId)
+        {
+            var locations = await _iIncidentService.GetAdditionalLocationsByIncidentId(incidentId);
+            return PartialView("_AdditionalLocations", locations ?? new List<AdditionalLocationViewModel>());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLatLong(string text)
+        {
+            var results = await _iArcGisGeocodingService.GetSuggestionsAsynclat(text);
+            return Json(results);
         }
     }
 }

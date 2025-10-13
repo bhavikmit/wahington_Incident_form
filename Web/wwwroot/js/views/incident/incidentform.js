@@ -36,8 +36,8 @@
         }
     });
 
-    $(document).off("click", "#nextToIncidentDetials");
-    $(document).on("click", "#nextToIncidentDetials", function (e) {
+    $(document).off("click", "#nextToAdditionalLocations");
+    $(document).on("click", "#nextToAdditionalLocations", function (e) {
         e.preventDefault();
 
         var isValid = true;
@@ -60,6 +60,23 @@
                 clearError($field);
             }
         });
+
+        if (isValid) {
+            $("#pills-additional-tab").trigger("click");
+        }
+    });
+
+    $(document).off("click", "#nextToIncidentDetials");
+    $(document).on("click", "#nextToIncidentDetials", function (e) {
+        debugger;
+        e.preventDefault();
+        var isValid = true;
+        if ($("#locationForm").is(":visible")) {
+            if ($("#addlocAddress").val() === "") {
+                showError($("#addlocAddress"));
+                isValid = false;
+            }
+        }
 
         if (isValid) {
             $("#pills-detail-tab").trigger("click");
@@ -135,16 +152,30 @@
         var isValid = true;
 
         // Loop through all required fields
-        $("#pills-severity").find("#severity").each(function () {
+        //$("#pills-severity").find("#severity").each(function () {
+        //    var $field = $(this);
+        //    var value = $.trim($field.val());
+
+        //    // Dropdown special check
+        //    if ($field.is("select") && (value === "" || value === "--Select--")) {
+        //        isValid = false;
+        //        showError($field);
+        //    }
+        //    else if (value === "") {
+        //        isValid = false;
+        //        showError($field);
+        //    }
+        //    else {
+        //        clearError($field);
+        //    }
+        //});
+
+        // Loop through all required fields
+        $("#pills-description").find("textarea[data-val-required]").each(function () {
             var $field = $(this);
             var value = $.trim($field.val());
 
-            // Dropdown special check
-            if ($field.is("select") && (value === "" || value === "--Select--")) {
-                isValid = false;
-                showError($field);
-            }
-            else if (value === "") {
+            if (value === "") {
                 isValid = false;
                 showError($field);
             }
@@ -247,9 +278,16 @@
     $(document).on("change", "#isSameCallerAddress", function (e) {
         if ($(this).is(":checked")) {
             $("#locAddress").val($("#callerAddress").val());
+
+            $.getJSON("/Incidents/Resolve", { magicKey: $("#hdnmagicKey").val() }, function (data) {
+                $("#Loc1Latitude").val(data.lat);
+                $("#Loca1Longitude").val(data.lon);
+            });
         }
         else {
             $("#locAddress").val("");
+            $("#Loc1Latitude").val("");
+            $("#Loca1Longitude").val("");
         }
     });
 
@@ -287,6 +325,12 @@
     $(document).on("click", "#backButtonToCaller", function (e) {
         e.preventDefault();
         $("#pills-caller-tab").trigger("click");
+    });
+
+    $(document).off("click", "#backButtonToAdditionalLoc");
+    $(document).on("click", "#backButtonToAdditionalLoc", function (e) {
+        e.preventDefault();
+        $("#pills-additional-tab").trigger("click");
     });
 
     // Open Add
@@ -486,6 +530,33 @@ async function SaveIncidentForm() {
                 form.push({ name: val.name, value: val.value });
             }
         });
+        const data = sessionStorage.getItem("addLocationFormDataList");
+        if (data) {
+            const locations = JSON.parse(data);
+            locations.forEach(function (loc, idx) {
+                let assets = Array.isArray(loc.AssetIDs) ? loc.AssetIDs.join(", ") : "";
+                formData.append(`AdditionalLocations[${idx}].LocationAddress`, loc.LocationAddress);
+                formData.append(`additionalLocations[${idx}].Latitude`, loc.Latitude);
+                formData.append(`additionalLocations[${idx}].Longitude`, loc.Longitude);
+                formData.append(`additionalLocations[${idx}].NearestIntersection`, loc.NearestIntersection);
+                formData.append(`additionalLocations[${idx}].ServiceAccount`, loc.ServiceAccount);
+                formData.append(`additionalLocations[${idx}].PerimeterTypeDigit`, loc.PerimeterTypeDigit);
+                formData.append(`additionalLocations[${idx}].AssetIDs`, assets);
+                // $list.append(`
+                //     <div class="card mb-2 p-2 position-relative">
+                //         <button type="button" class="btn btn-link text-danger position-absolute top-0 end-0 delete-location-btn" data-idx="${idx}" title="Delete" style="font-size:1.2rem;">
+                //             <i class="fa fa-trash"></i>
+                //         </button>
+                //         <div><strong>Address:</strong> ${loc.LocationAddress || ""}</div>
+                //         <div><strong>Latitude:</strong> ${loc.Latitude || ""}</div>
+                //         <div><strong>Longitude:</strong> ${loc.Longitude || ""}</div>
+                //         <div><strong>Nearest:</strong> ${loc.NearestIntersection || ""}</div>
+                //         <div><strong>Assets:</strong> ${assets}</div>
+                //     </div>
+                // `);
+            });
+            sessionStorage.clear();
+        }
 
         //$.each(params, function (i, val) {
         //    if (val.name === "eventTypes.Id") {
@@ -560,6 +631,65 @@ async function GetIncidentList(statusID, severityID, description) {
         console.error("Error loading incident list:", error);
     } finally {
         hideLoader($(".main-content"));
+        // find your Date/Time header by its text
+        const $dateHeader = $("th:contains('Date/Time')");
+        let ascending = true;
+
+        $dateHeader.css("cursor", "pointer");
+
+        $dateHeader.on("click", function () {
+
+            const $table = $(this).closest("table");
+            const $tbody = $table.find("tbody");
+            const $rows = $tbody.find("tr").has("td"); // skip "no records" row
+
+            $rows.sort(function (a, b) {
+                const aText = $(a).find("td:eq(10)").text().trim(); // adjust index if needed
+                const bText = $(b).find("td:eq(10)").text().trim();
+
+                const aDateTime = parseDateTime(aText);
+                const bDateTime = parseDateTime(bText);
+
+                if (aDateTime < bDateTime) return ascending ? -1 : 1;
+                if (aDateTime > bDateTime) return ascending ? 1 : -1;
+                return 0;
+            });
+
+            $.each($rows, function (index, row) {
+                $tbody.append(row); // reattach sorted rows
+            });
+
+            ascending = !ascending;
+
+            // update icon if exists
+            const $icon = $dateHeader.find("i");
+            if ($icon.length) {
+                $icon.removeClass("fa-sort fa-sort-up fa-sort-down");
+                $icon.addClass(ascending ? "fa-sort-up" : "fa-sort-down");
+            }
+        });
+
+        // helper for "15 Sep, 2025 14:20 PM" format
+        function parseDateTime(dateTimeStr) {
+            // remove commas
+            dateTimeStr = dateTimeStr.replace(",", "").trim();
+
+            // Split into date and time
+            // e.g. "15 Sep 2025 14:20 PM"
+            const parts = dateTimeStr.split(" ");
+            if (parts.length < 4) return new Date(dateTimeStr);
+
+            const [day, monthStr, year, timeWithAmPm] = parts;
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+            const month = monthNames.indexOf(monthStr) + 1;
+            const time = timeWithAmPm.toUpperCase();
+
+            // build "YYYY-MM-DD HH:mm AM/PM"
+            return new Date(`${year}-${month}-${day} ${time}`);
+        }
+
     }
 }
 

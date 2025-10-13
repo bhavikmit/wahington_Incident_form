@@ -237,6 +237,7 @@ namespace Web.Extensions
             services.AddHttpClient<ArcGisGeocodingService>();
             services.AddScoped(typeof(IIncidentTeamService<,,>), typeof(IncidentTeamService<,,>));
             services.AddScoped(typeof(IAdditionalLocationsService), typeof(AdditionalLocationsService));
+            services.AddScoped(typeof(IMaterialService<,,>), typeof(MaterialService<,,>));
             services.AddDefaultCorrelationId();
         }
     }

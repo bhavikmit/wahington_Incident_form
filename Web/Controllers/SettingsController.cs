@@ -25,6 +25,7 @@ namespace Web.Controllers
         private readonly IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> _iProgressService;
         private readonly IMaterialService<MaterialModifyViewModel, MaterialModifyViewModel, MaterialDetailViewModel> _iMaterialService;
         private readonly IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> _iEquipmentFieldsService;
+        private readonly IIncidentRoleService<IncidentRoleModifyViewModel, IncidentRoleModifyViewModel, IncidentRoleDetailViewModel> _iIncidentRoleService;
         private readonly ICompanyService<CompanyModifyViewModel, CompanyModifyViewModel, CompanyDetailViewModel> _iCompanyService;
         #endregion
 
@@ -33,7 +34,7 @@ namespace Web.Controllers
             IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService, IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> iIncidentTeamService,
             IUserManagementService<UserManagementModifyViewModel,UserManagementModifyViewModel, UserDetailViewModel> iUserManagementService,
             IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService, IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> iusersinService,
-            IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService, IMaterialService<MaterialModifyViewModel, MaterialModifyViewModel, MaterialDetailViewModel> iMaterialService, IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> iEquipmentFieldsService,
+            IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService, IMaterialService<MaterialModifyViewModel, MaterialModifyViewModel, MaterialDetailViewModel> iMaterialService, IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> iEquipmentFieldsService,IIncidentRoleService<IncidentRoleModifyViewModel, IncidentRoleModifyViewModel, IncidentRoleDetailViewModel> iIncidentRoleService,
             ICompanyService<CompanyModifyViewModel, CompanyModifyViewModel, CompanyDetailViewModel> iCompanyService)
         {
             _iRelationshipService = iRelationshipService;
@@ -50,6 +51,7 @@ namespace Web.Controllers
             _iEquipmentFieldsService = iEquipmentFieldsService;
             _iCompanyService = iCompanyService;
             _iMaterialService = iMaterialService;
+            _iIncidentRoleService = iIncidentRoleService;
         }
         #endregion
 
@@ -1138,6 +1140,61 @@ namespace Web.Controllers
         }
 
         #endregion
+        #region IncidentRole
+        [HttpGet]
+        public async Task<IActionResult> GetAllIncidentRoles()
+        {
+            var model = await _iIncidentRoleService.GetAllIncidentRoles();
+            return PartialView("~/Views/Settings/IncidentRole/_ListIncidentRole.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddIncidentRole()
+        {
+            var model = new IncidentRoleModifyViewModel();
+            return PartialView("~/Views/Settings/IncidentRole/_AddIncidentRole.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetIncidentRoleById(long id)
+        {
+            var model = await _iIncidentRoleService.GetIncidentRoleById(id);
+            return PartialView("~/Views/Settings/IncidentRole/_AddIncidentRole.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveIncidentRole([FromForm] IncidentRoleModifyViewModel incidentRole)
+        {
+            if (incidentRole == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (incidentRole.Id > 0)
+                {
+                    Id = await _iIncidentRoleService.UpdateIncidentRole(incidentRole);
+                }
+                else
+                {
+                    Id = await _iIncidentRoleService.SaveIncidentRole(incidentRole);
+                }
+
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save incident role." });
+
+                var successMsg = $"Incident role saved successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        #endregion
 
         #region Company
         [HttpGet]
@@ -1220,6 +1277,33 @@ namespace Web.Controllers
                     new { success = false, message = "An unexpected error occurred." });
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> DeleteIncidentRoleById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (id > 0)
+                {
+                    Id = await _iIncidentRoleService.DeleteIncidentRole(id);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete incident role." });
+
+                var successMsg = $"Incident role deleted successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
         #endregion
+
     }
 }

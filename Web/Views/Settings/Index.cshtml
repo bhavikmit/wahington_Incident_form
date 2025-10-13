@@ -1221,8 +1221,9 @@
                     <li class="settingAllTab" data-tab="teamManagement" onclick="showContent('team')">
                         <i class="fa-solid fa-people-group"></i> Team Management
                     </li>
-                    <li class="settingAllTab" data-tab="progress"><i class="fa-solid fa-bars-progress"></i>Progress</li>
+                    <li class="settingAllTab" data-tab="progress"><i class="fa-solid fa-bars-progress"></i>Status Master</li>
                     <li class="settingAllTab" data-tab="equipmentfields"><i class="fa-solid fa-toolbox"></i>Equipment Fields</li>
+                    <li class="settingAllTab" data-tab="company"><i class="fa-solid fa-industry"></i>Company</li>
                 </ul>
             </div>
 
@@ -1275,18 +1276,18 @@
                     </div>
 
                 </div>
-               <div id="Ipolicies" class="setting-tab-content">
-                        <div class="d-flex align-item-center justify-content-between mb-3">
-                            <h3 class="mb-0">Policy</h3>
-                            <button class="btn-add btnAddNewPolicy"><i class="fa-solid fa-plus"></i> Add Policy</button>
-                                                        
-                        </div>
-                        <div id="addPolicy">
-                        </div>
-                        <div id="policyList">
-                        </div>
+                <div id="Ipolicies" class="setting-tab-content">
+                    <div class="d-flex align-item-center justify-content-between mb-3">
+                        <h3 class="mb-0">Policy</h3>
+                        <button class="btn-add btnAddNewPolicy"><i class="fa-solid fa-plus"></i> Add Policy</button>
 
-               </div>
+                    </div>
+                    <div id="addPolicy">
+                    </div>
+                    <div id="policyList">
+                    </div>
+
+                </div>
                 <div id="type" class="setting-tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h3>Asset Type</h3>
@@ -1357,7 +1358,7 @@
                 </div>
                 <div id="progress" class="setting-tab-content">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h3>Progress</h3>
+                        <h3>Status Master</h3>
                         <button class="btn btn-primary btnAddNewProgress"><i class="fa-solid fa-plus"></i> Add New</button>
                     </div>
                     <div id="addProgress">
@@ -1389,6 +1390,19 @@
                     <div id="equipmentfieldsList">
                     </div>
                 </div>
+                <div id="company" class="setting-tab-content">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3>Company</h3>
+                        <button class="btn btn-primary btnAddNewCompany">
+                            <i class="fa-solid fa-plus"></i> Add New
+                        </button>
+                    </div>
+
+                    <div id="addCompany">
+                    </div>
+                    <div id="CompanyList">
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -1408,8 +1422,8 @@
             <div id="UserManagementlist">
             </div>
             <!-- User Table -->
-            
-           
+
+
             <!-------------Role and permisssion-------------->
             <div class="Bordercard rolePermission p-4">
                 <h2>Role Permissions Reference</h2>
@@ -1551,14 +1565,14 @@
                             <h3 class="mb-0">Teams</h3>
                             <button class="btn-add btnAddNewIncidentTeam"><i class="fa-solid fa-plus"></i> Add Team</button>
                         </div>
-                      
-                            <div id="addIncidentTeam">
-                            </div>
-                            <div id="incidentTeamList">
-                            </div>
+
+                        <div id="addIncidentTeam">
+                        </div>
+                        <div id="incidentTeamList">
+                        </div>
                     </div>
-                   
-                   <div id="Iusers" class="team-tab-content userRightSec">
+
+                    <div id="Iusers" class="team-tab-content userRightSec">
                         <div class="d-flex align-items-center justify-content-between mb-3">
                             <h3 class="mb-0">Users</h3>
                             <button class="btn-add btnAddNewUser"><i class="fa-solid fa-plus"></i> Add User</button>
@@ -1573,7 +1587,7 @@
                             <h3 class="mb-0">Policy</h3>
                             <button class="btn-add btnAddNewPolicy"><i class="fa-solid fa-plus"></i> Add Policy</button>
 
-                            
+
                         </div>
                         <div id="addPolicy">
                         </div>

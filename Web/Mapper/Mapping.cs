@@ -775,6 +775,13 @@ namespace Models.Mapper
             CreateMap<IncidentRoleBriefViewModel, IncidentRole>().ReverseMap();
             CreateMap<IncidentRoleModifyViewModel, IncidentRoleDetailViewModel>().ReverseMap();
 
+            // IncidentShift
+            CreateMap<IncidentShiftModifyViewModel, IncidentShift>().ReverseMap();
+            CreateMap<IncidentShiftDetailViewModel, IncidentShift>().ReverseMap();
+            CreateMap<IncidentShiftBriefViewModel, IncidentShift>().ReverseMap();
+            CreateMap<IncidentShiftModifyViewModel, IncidentShiftDetailViewModel>().ReverseMap();
+
+
 
         }
         //private void IgnoreGlobalProperties()

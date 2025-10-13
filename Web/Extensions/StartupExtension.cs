@@ -240,6 +240,8 @@ namespace Web.Extensions
             services.AddScoped(typeof(IAdditionalLocationsService), typeof(AdditionalLocationsService));
             services.AddScoped(typeof(IMaterialService<,,>), typeof(MaterialService<,,>));
             services.AddScoped(typeof(IIncidentRoleService<,,>), typeof(IncidentRoleService<,,>));
+            services.AddScoped(typeof(IIncidentShiftService<,,>), typeof(IncidentShiftService<,,>));
+
 
             services.AddDefaultCorrelationId();
         }

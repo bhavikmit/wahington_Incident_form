@@ -52,6 +52,9 @@ $(function () {
         else if (tab === "company") {
             GetAllCompany();
         }
+        else if (tab === "incidentShift") {
+            GetAllIncidentShifts();
+        }
     });
 
     $(document).off("click", ".teamAllTab");
@@ -822,6 +825,56 @@ $(document).on("click", ".deleteMaterial", function (e) {
             SaveCompany();
         }
     });
+    // Incident Shift event bindings
+    $(document).off("click", ".btnAddNewIncidentShift");
+    $(document).on("click", ".btnAddNewIncidentShift", function (e) {
+        e.preventDefault();
+        AddIncidentShift();
+    });
+
+    $(document).off("click", ".cancelIncidentShift");
+    $(document).on("click", ".cancelIncidentShift", function (e) {
+        e.preventDefault();
+        $("#addIncidentShift").empty().html('');
+        $('li.active').trigger('click');
+    });
+
+    $(document).off("click", ".saveIncidentShift");
+    $(document).on("click", ".saveIncidentShift", function (e) {
+        e.preventDefault();
+        var isValid = true;
+
+        $("#saveIncidentShiftDiv").find("input[data-val-required], textarea[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            } else {
+                clearError($field);
+            }
+        });
+
+        if (isValid) {
+            SaveIncidentShift();
+        }
+    });
+
+    $(document).off("click", ".editIncidentShift");
+    $(document).on("click", ".editIncidentShift", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetIncidentShiftById(id);
+    });
+
+    $(document).off("click", ".deleteIncidentShift");
+    $(document).on("click", ".deleteIncidentShift", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        DeleteIncidentShiftItem(id);
+    });
+
 })
 
 // Start Source
@@ -2930,3 +2983,142 @@ function DeleteIncidentItem(id) {
     });
 }
 // End Incident Role
+// Start Incident Shift
+async function GetAllIncidentShifts() {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetAllIncidentShifts", {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "text/html" }
+        });
+
+        if (!response.ok) throw new Error("Failed to load incident shift list");
+
+        const content = await response.text();
+        $("#incidentShiftList").empty().html(content);
+    } catch (error) {
+        console.error("Error loading incident shift list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function AddIncidentShift() {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/AddIncidentShift", {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "text/html" }
+        });
+
+        if (!response.ok) throw new Error("Failed to add incident shift");
+
+        const content = await response.text();
+        $("#addIncidentShift").empty().html(content);
+    } catch (error) {
+        console.error("Failed to add incident shift:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetIncidentShiftById(id) {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetIncidentShiftById?id=" + id, {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "text/html" }
+        });
+
+        if (!response.ok) throw new Error("Failed to get incident shift");
+
+        const content = await response.text();
+        $("#addIncidentShift").empty().html(content);
+    } catch (error) {
+        console.error("Failed to get incident shift:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function DeleteIncidentShiftById(id) {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/DeleteIncidentShiftById?id=" + id, {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "text/html" }
+        });
+
+        if (!response.ok) throw new Error("Failed to delete incident shift.");
+
+        SwalSuccessAlert("Incident shift deleted successfully!");
+        GetAllIncidentShifts();
+    } catch (error) {
+        console.error("Failed to delete incident shift:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveIncidentShift() {
+    try {
+        let form = [];
+        let formData = new FormData();
+        let obj = $("#NewIncidentShiftForm")[0];
+
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+            form.push({ name: val.name, value: val.value });
+        });
+
+        showLoader($(".setting"));
+
+        let response = await fetch("/Settings/SaveIncidentShift", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addIncidentShift").html("");
+            SwalSuccessAlert(result.data);
+            GetAllIncidentShifts();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save incident shift.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving incident shift!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+function DeleteIncidentShiftItem(id) {
+    let confirmBtnText = "Yes, delete it!";
+    let cancelBtnText = "No, cancel!";
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmBtnText,
+        cancelButtonText: cancelBtnText,
+        confirmButtonClass: 'btn btn-success me-2',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            DeleteIncidentShiftById(id);
+        }
+    });
+}
+// End Incident Shift
+

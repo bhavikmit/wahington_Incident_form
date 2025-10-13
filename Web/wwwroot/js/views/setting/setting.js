@@ -42,6 +42,9 @@ $(function () {
         else if (tab === "equipmentfields") {
             GetAllEquipmentFields();
         }
+        else if (tab === "company") {
+            GetAllCompany();
+        }
     });
 
     $(document).off("click", ".teamAllTab");
@@ -653,6 +656,55 @@ $(function () {
         });
         if (isValid) {
             SaveEquipmentFields();
+        }
+    });
+
+    //Company
+    $(document).off("click", ".btnAddNewCompany");
+    $(document).on("click", ".btnAddNewCompany", function (e) {
+        e.preventDefault();
+        AddCompany();
+    });
+
+    $(document).off("click", ".cancelCompany");
+    $(document).on("click", ".cancelCompany", function (e) {
+        e.preventDefault();
+        $("#addCompany").empty().html('');
+        $('li.active').trigger('click')
+    });
+
+    $(document).off("click", ".editCompany");
+    $(document).on("click", ".editCompany", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetCompanyById(id);
+    });
+
+    $(document).off("click", ".deleteCompany");
+    $(document).on("click", ".deleteCompany", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        DeleteCompanyItem(id);
+    });
+
+    $(document).off("click", ".saveCompany");
+    $(document).on("click", ".saveCompany", function (e) {
+        e.preventDefault();
+        var isValid = true;
+        $("#saveCompanyDiv").find("input[type='text'], select[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            }
+            else {
+                clearError($field);
+            }
+        });
+        if (isValid) {
+            SaveCompany();
         }
     });
 })
@@ -1960,13 +2012,13 @@ async function GetAllProgress() {
             },
         });
 
-        if (!response.ok) throw new Error("Failed to load progress list");
+        if (!response.ok) throw new Error("Failed to load status master list");
 
         const content = await response.text();
         $("#progressList").empty().html(content);
 
     } catch (error) {
-        console.error("Error loading progress list:", error);
+        console.error("Error loading status master list:", error);
     } finally {
         hideLoader($(".setting"));
     }
@@ -1985,13 +2037,13 @@ async function AddProgress() {
             },
         });
 
-        if (!response.ok) throw new Error("Failed to load progress list");
+        if (!response.ok) throw new Error("Failed to load status master list");
 
         const content = await response.text();
         $("#addProgress").empty().html(content);
 
     } catch (error) {
-        console.error("Error loading progress list:", error);
+        console.error("Error loading status master list:", error);
     } finally {
         hideLoader($(".setting"));
     }
@@ -2010,13 +2062,13 @@ async function GetProgressById(id) {
             },
         });
 
-        if (!response.ok) throw new Error("Failed to load progress list");
+        if (!response.ok) throw new Error("Failed to load status master list");
 
         const content = await response.text();
         $("#addProgress").empty().html(content);
 
     } catch (error) {
-        console.error("Error loading progress list:", error);
+        console.error("Error loading status master list:", error);
     } finally {
         hideLoader($(".setting"));
     }
@@ -2056,13 +2108,13 @@ async function DeleteProgressById(id) {
             },
         });
 
-        if (!response.ok) throw new Error("Failed to load progress list");
+        if (!response.ok) throw new Error("Failed to load status master list");
 
-        SwalSuccessAlert("Progress deleted successfully!");
+        SwalSuccessAlert("Status Master deleted successfully!");
         GetAllProgress();
 
     } catch (error) {
-        console.error("Error loading progress list:", error);
+        console.error("Error loading status master list:", error);
     } finally {
         hideLoader($(".setting"));
     }
@@ -2101,10 +2153,10 @@ async function SaveProgress() {
             SwalSuccessAlert(result.data);
             GetAllProgress();
         } else {
-            SwalErrorAlert(result.message || "Failed to save progress.");
+            SwalErrorAlert(result.message || "Failed to save status master.");
         }
     } catch (error) {
-        SwalErrorAlert("Error while saving progress!");
+        SwalErrorAlert("Error while saving status master!");
         console.error(error);
     } finally {
         hideLoader($(".setting"));
@@ -2269,6 +2321,170 @@ async function SaveEquipmentFields() {
         }
     } catch (error) {
         SwalErrorAlert("Error while saving equipment field!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetAllCompany() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetAllCompany", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load company list");
+
+        const content = await response.text();
+        $("#CompanyList").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading company list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function AddCompany() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/AddCompany", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load company list");
+
+        const content = await response.text();
+        $("#addCompany").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading company list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetCompanyById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetCompanyById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load company list");
+
+        const content = await response.text();
+        $("#addCompany").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading company list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+function DeleteCompanyItem(id) {   // <-- accept id
+    let confirmBtnText = "Yes, delete it!";
+    let cancelBtnText = "No, cancel!";
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmBtnText,
+        cancelButtonText: cancelBtnText,
+        confirmButtonClass: 'btn btn-success me-2',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {   // ✅ correct way
+            DeleteCompanyById(id);
+        }
+    });
+}
+
+async function DeleteCompanyById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/DeleteCompanyById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load company list");
+
+        SwalSuccessAlert("Company deleted successfully!");
+        GetAllCompany();
+
+    } catch (error) {
+        console.error("Error loading company list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveCompany() {
+    try {
+
+        let form = [];
+        let formData = new FormData();
+        let obj = $("#NewCompanyForm")[0];
+
+        // Serialize other fields
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+            form.push({ name: val.name, value: val.value });
+        });
+
+
+        showLoader($(".setting"));
+
+        //console.log(formData);
+        console.log(form);
+
+        // Send request
+        let response = await fetch("/Settings/SaveCompany", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addCompany").html("");
+            SwalSuccessAlert(result.data);
+            GetAllCompany();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save company.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving company!");
         console.error(error);
     } finally {
         hideLoader($(".setting"));

@@ -23,6 +23,7 @@ namespace Web.Controllers
         private readonly IUserManagementService<UserManagementModifyViewModel, UserManagementModifyViewModel, UserDetailViewModel> _iUserManagementService;
         private readonly IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> _iUsersinService;
         private readonly IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> _iProgressService;
+        private readonly IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> _iEquipmentFieldsService;
         #endregion
 
         #region Ctor
@@ -30,7 +31,7 @@ namespace Web.Controllers
             IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService, IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> iIncidentTeamService,
             IUserManagementService<UserManagementModifyViewModel,UserManagementModifyViewModel, UserDetailViewModel> iUserManagementService,
             IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService, IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> iusersinService,
-            IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService)
+            IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService, IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> iEquipmentFieldsService)
         {
             _iRelationshipService = iRelationshipService;
             _iEventTypeService = iEventTypeService;
@@ -43,6 +44,7 @@ namespace Web.Controllers
             _iPolicyService = iPolicyService;
             _iUsersinService = iusersinService;
             _iProgressService = iProgressService;
+            _iEquipmentFieldsService = iEquipmentFieldsService;
         }
         #endregion
 
@@ -958,6 +960,91 @@ namespace Web.Controllers
                         new { success = false, message = "Failed to delete progress." });
 
                 var successMsg = $"Progress deleted successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        #endregion
+
+        #region EquipmentFields
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllEquipmentFields()
+        {
+            var model = await _iEquipmentFieldsService.GetAllEquipmentFields();
+            return PartialView("~/Views/Settings/EquipmentFields/_ListEquipmentFields.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddEquipmentFields()
+        {
+            var model = new EquipmentFieldsModifyViewModel();
+            return PartialView("~/Views/Settings/EquipmentFields/_AddEquipmentFields.cshtml", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetEquipmentFieldsById(long id)
+        {
+            var model = await _iEquipmentFieldsService.GetEquipmentFieldsById(id);
+            return PartialView("~/Views/Settings/EquipmentFields/_AddEquipmentFields.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveEquipmentFields([FromForm] EquipmentFieldsModifyViewModel equipmentfields)
+        {
+            if (equipmentfields == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (equipmentfields.Id > 0)
+                {
+                    Id = await _iEquipmentFieldsService.UpdateEquipmentFields(equipmentfields);
+                }
+                else
+                {
+                    Id = await _iEquipmentFieldsService.SaveEquipmentFields(equipmentfields);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to save Equipment Field." });
+
+                var successMsg = $"Equipment Field saved successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteEquipmentFieldsById(long id)
+        {
+            if (id == 0)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                long Id = 0;
+                if (id > 0)
+                {
+                    Id = await _iEquipmentFieldsService.DeleteEquipmentFields(id);
+                }
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to delete equipment field." });
+
+                var successMsg = $"Equipment Field deleted successfully!";
 
                 return Ok(new { success = true, data = successMsg });
             }

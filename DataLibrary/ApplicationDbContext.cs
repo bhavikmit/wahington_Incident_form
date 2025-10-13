@@ -110,6 +110,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<EquipmentFields> EquipmentFields { get; set; }
     public DbSet<IncidentValidationAssignedRole> IncidentValidationAssignedRoles { get; set; }
     public DbSet<IncidentValidationGate> IncidentValidationGates { get; set; }
+    public DbSet<Material> Materials { get; set; }
     public DbSet<IncidentValidationLocation> IncidentValidationLocations { get; set; }
     
 

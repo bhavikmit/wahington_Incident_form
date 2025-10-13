@@ -2,14 +2,14 @@
 $(function () {
 
     let currentStep = 1;
-    const totalSteps = 2;
+    const totalSteps = 3;
 
     GetValidationsDetail($("#hdn_Id").val());
 
     $(document).off("click", "#nextBtn");
     $(document).on("click", "#nextBtn", function (e) {
 
-        if (currentStep == 2) {
+        if (currentStep == 3) {
             SaveIncidentValidation();
         }
 
@@ -444,7 +444,9 @@ async function SaveIncidentValidation() {
         let assignTeamsIds = [];
         var policiesData = [];
         var ValidationLocationData = [];
-        var assignedRole = {};
+        var PersonalData = [];
+        var Regulatory = [];
+        
 
         var selectedAssignTeams = $("#step-3").find('.responseCard .team-card.selected');
         $.each(selectedAssignTeams, function (i, val) {
@@ -496,16 +498,21 @@ async function SaveIncidentValidation() {
             });
         });
 
-        //var ValidationLocationData = {
-        //    IncidentCommanderId: loc,
-        //    SeverityID: severityID,
-        //    DiscoveryPerimeter: discoveryPerimeter,
-        //    ICPLocation: icpLocation,
-        //    Source: source,
-        //    Lat: lat,
-        //    Lon: lon
-        //};
-        let Regulatory = [];
+        $("#step-3 .clonePersonalDiv > .Personnel").each(function () {
+
+            var userId = $(this).find("#div_NameofUser").find('#userId').val();
+            var companyId = $(this).find("#div_CompanyName").find('#companyId').val();
+            var roleId = $(this).find("#div_Role").find('#roleId').val();
+            var shiftId = $(this).find("#div_Shift").find('#shiftId').val();
+
+            // push object
+            PersonalData.push({
+                UserId: userId,
+                CompanyId: companyId,
+                RoleId: roleId,
+                ShiftId: shiftId
+            });
+        });
 
         $.each(params, function (i, val) {
             if (val.name === "IVValidation.severityLevelId") {
@@ -520,22 +527,7 @@ async function SaveIncidentValidation() {
                 formData.append("ValidationNotes", val.value);
                 form.push({ name: val.name, value: val.value });
             }
-            //else if (val.name === "IVValidation.assignedRole.IncidentCommanderId") {
-            //    formData.append("IncidentCommanderId", val.value);
-            //    form.push({ name: val.name, value: val.value });
-            //}
-            //else if (val.name === "IVValidation.assignedRole.FieldEnvRepId") {
-            //    formData.append("FieldEnvRepId", val.value);
-            //    form.push({ name: val.name, value: val.value });
-            //}
-            //else if (val.name === "IVValidation.assignedRole.GECCoordinatorId") {
-            //    formData.append("GECCoordinatorId", val.value);
-            //    form.push({ name: val.name, value: val.value });
-            //}
-            //else if (val.name === "IVValidation.assignedRole.EngineeringLeadId") {
-            //    formData.append("EngineeringLeadId", val.value);
-            //    form.push({ name: val.name, value: val.value });
-            //}
+           
             else if (val.name.startsWith("IVValidation.assignedRole.")) {
                 const roleName = val.name.replace("IVValidation.assignedRole.", "");
                 
@@ -578,6 +570,11 @@ async function SaveIncidentValidation() {
         if (ValidationLocationData.length > 0) {
             formData.append("listValidationLocationVM", JSON.stringify(ValidationLocationData));
         }
+
+        if (PersonalData.length > 0) {
+            formData.append("listPersonalDataVM", JSON.stringify(PersonalData));
+        }
+
 
         showLoader($(".main-content"));
 

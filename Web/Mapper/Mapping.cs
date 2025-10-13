@@ -756,11 +756,25 @@ namespace Models.Mapper
             CreateMap<ProgressBriefViewModel, Progress>().ReverseMap();
             CreateMap<ProgressModifyViewModel, ProgressDetailViewModel>().ReverseMap();
 
+            // Material
+            CreateMap<MaterialModifyViewModel, Material>().ReverseMap();
+            CreateMap<MaterialDetailViewModel, Material>().ReverseMap();
+            CreateMap<MaterialBriefViewModel, Material>().ReverseMap();
+            CreateMap<MaterialModifyViewModel, MaterialDetailViewModel>().ReverseMap();
+
+
             //EquipmentFields
             CreateMap<EquipmentFieldsModifyViewModel, EquipmentFields>().ReverseMap();
             CreateMap<EquipmentFieldsDetailViewModel, EquipmentFields>().ReverseMap();
             CreateMap<EquipmentFieldsBriefViewModel, EquipmentFields>().ReverseMap();
             CreateMap<EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel>().ReverseMap();
+
+            // IncidentRole
+            CreateMap<IncidentRoleModifyViewModel, IncidentRole>().ReverseMap();
+            CreateMap<IncidentRoleDetailViewModel, IncidentRole>().ReverseMap();
+            CreateMap<IncidentRoleBriefViewModel, IncidentRole>().ReverseMap();
+            CreateMap<IncidentRoleModifyViewModel, IncidentRoleDetailViewModel>().ReverseMap();
+
 
         }
         //private void IgnoreGlobalProperties()

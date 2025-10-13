@@ -4,6 +4,7 @@ using DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251013084943_AddIncidentRoleTbl")]
+    partial class AddIncidentRoleTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2077,59 +2080,6 @@ namespace DataLibrary.Migrations
                     b.ToTable("IncidentValidationLocations");
                 });
 
-            modelBuilder.Entity("Models.IncidentValidationPersonnel", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("IncidentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IncidentValidationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<long?>("RoleId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("ShiftId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("UserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IncidentId");
-
-                    b.HasIndex("IncidentValidationId");
-
-                    b.ToTable("IncidentValidationPersonnels");
-                });
-
             modelBuilder.Entity("Models.IncidentValidationPolicy", b =>
                 {
                     b.Property<long>("Id")
@@ -2504,8 +2454,8 @@ namespace DataLibrary.Migrations
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float?>("UnitCost")
-                        .HasColumnType("real");
+                    b.Property<long?>("UnitCost")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("UpdatedBy")
                         .HasColumnType("bigint");
@@ -4889,21 +4839,6 @@ namespace DataLibrary.Migrations
                 });
 
             modelBuilder.Entity("Models.IncidentValidationLocation", b =>
-                {
-                    b.HasOne("Models.Incident", "Incident")
-                        .WithMany()
-                        .HasForeignKey("IncidentId");
-
-                    b.HasOne("Models.IncidentValidation", "IncidentValidation")
-                        .WithMany()
-                        .HasForeignKey("IncidentValidationId");
-
-                    b.Navigation("Incident");
-
-                    b.Navigation("IncidentValidation");
-                });
-
-            modelBuilder.Entity("Models.IncidentValidationPersonnel", b =>
                 {
                     b.HasOne("Models.Incident", "Incident")
                         .WithMany()

@@ -205,18 +205,6 @@ namespace Repositories.Common
                     .Include(p => p.SeverityLevel)
                     .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == id);
 
-                //var severityLevelsTask = await _db.SeverityLevels
-                //    .Where(it => !it.IsDeleted)
-                //    .OrderBy(it => it.Name)
-                //    .Select(it => new SelectListItem
-                //    {
-                //        Value = it.Id.ToString(),
-                //        Text = !string.IsNullOrWhiteSpace(it.Description)
-                //               ? it.Name + " - " + it.Description
-                //               : it.Name
-                //    })
-                //    .ToListAsync();
-
                 var severityLevelsTask = await _db.SeverityLevels
                                    .Where(it => !it.IsDeleted)
                                    .OrderBy(it => it.Name == "High" ? 1 :
@@ -240,6 +228,35 @@ namespace Repositories.Common
                                    })
                                    .ToListAsync();
 
+
+                var companyList = await _db.Company
+                                   .Where(it => !it.IsDeleted)
+                                   .Select(it => new SelectListItem
+                                   {
+                                       Value = it.Id.ToString(),
+                                       Text = it.Name
+                                   })
+                                   .ToListAsync();
+
+
+                var rolesList = await _db.IncidentRoles
+                                   .Where(it => !it.IsDeleted)
+                                   .Select(it => new SelectListItem
+                                   {
+                                       Value = it.Id.ToString(),
+                                       Text = it.Name
+                                   })
+                                   .ToListAsync();
+
+                var shiftsList = await _db.IncidentShifts
+                                   .Where(it => !it.IsDeleted)
+                                   .Select(it => new SelectListItem
+                                   {
+                                       Value = it.Id.ToString(),
+                                       Text = it.Name
+                                   })
+                                   .ToListAsync();
+
                 if (incidentTask == null)
                 {
                     return new IncidentValidationViewModel { severityLevels = severityLevelsTask };
@@ -254,7 +271,10 @@ namespace Repositories.Common
                     UserList = UserLisTTask,
                     severityLevel = incidentTask.SeverityLevel?.Name ?? string.Empty,
                     Lat = incidentTask.Lat,
-                    Long = incidentTask.Lng
+                    Long = incidentTask.Lng,
+                    CompanyList = companyList,
+                    RoleList = rolesList,
+                    ShiftsList = shiftsList
                 };
             }
             catch (Exception ex)
@@ -394,9 +414,9 @@ namespace Repositories.Common
 
                 await _db.IncidentValidations.AddAsync(incidentValidation);
                 await _db.SaveChangesAsync();
-                
+
                 var insertedValidationId = incidentValidation.Id;
-                
+
                 // 2. Policies
                 var policies = request.listSubmitPolicyVM.Select(item => new IncidentValidationPolicy
                 {
@@ -455,6 +475,24 @@ namespace Repositories.Common
                         };
                     }).ToList();
                     await _db.IncidentValidationLocations.AddRangeAsync(validationLocation);
+                }
+
+                // 4. Add Incident Validation Personel Info 
+                if (request.listSubmitPersonalDataVM.Any())
+                {
+                    var validationPersonelInfo = request.listSubmitPersonalDataVM.Select(item =>
+                    {
+                        return new IncidentValidationPersonnel
+                        {
+                            IncidentId = request.Id,
+                            IncidentValidationId = incidentValidation.Id,
+                            CompanyId = item.CompanyId,
+                            RoleId = item.RoleId,
+                            ShiftId = item.ShiftId,
+                            UserId = item.UserId
+                        };
+                    }).ToList();
+                    await _db.IncidentValidationPersonnels.AddRangeAsync(validationPersonelInfo);
                 }
 
                 // 5. Update Incident record

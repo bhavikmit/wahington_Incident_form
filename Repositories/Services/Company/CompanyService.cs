@@ -7,27 +7,30 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models;
 using Models.Common.Interfaces;
+using Pagination;
+using System.Linq.Expressions;
 using ViewModels;
 using ViewModels.Shared;
 
 namespace Repositories.Common
 {
-    public class ProgressService<CreateViewModel, UpdateViewModel, DetailViewModel>
-        : BaseService<Progress, CreateViewModel, UpdateViewModel, DetailViewModel>,
-          IProgressService<CreateViewModel, UpdateViewModel, DetailViewModel>
+    public class CompanyService<CreateViewModel, UpdateViewModel, DetailViewModel>
+        : BaseService<Company, CreateViewModel, UpdateViewModel, DetailViewModel>,
+          ICompanyService<CreateViewModel, UpdateViewModel, DetailViewModel>
         where DetailViewModel : class, IBaseCrudViewModel, new()
         where CreateViewModel : class, IBaseCrudViewModel, new()
         where UpdateViewModel : class, IBaseCrudViewModel, IIdentitifier, new()
     {
         private readonly ModelStateDictionary _modelState;
         private readonly ApplicationDbContext _db;
-        private readonly ILogger<ProgressService<CreateViewModel, UpdateViewModel, DetailViewModel>> _logger;
-        public ProgressService(
+        private readonly ILogger<CompanyService<CreateViewModel, UpdateViewModel, DetailViewModel>> _logger;
+        public CompanyService(
             ApplicationDbContext db,
-            ILogger<ProgressService<CreateViewModel, UpdateViewModel, DetailViewModel>> logger,
+            ILogger<CompanyService<CreateViewModel, UpdateViewModel, DetailViewModel>> logger,
             IMapper mapper,
             IRepositoryResponse response,
-            IActionContextAccessor actionContext)
+            IActionContextAccessor actionContext
+            )
             : base(db, logger, mapper, response)
         {
             _modelState = actionContext.ActionContext.ModelState;
@@ -35,71 +38,73 @@ namespace Repositories.Common
             _logger = logger;
         }
 
-        public async Task<List<ProgressModifyViewModel>> GetAllProgress()
+        public async Task<List<CompanyModifyViewModel>> GetAllCompanys()
         {
-            List<ProgressModifyViewModel> progressre = new();
+            List<CompanyModifyViewModel> companys = new();
             try
             {
+                var companysList = await _db.Company.Where(p => !p.IsDeleted).ToListAsync();
 
-                var progress = await _db.Progress.Where(p => !p.IsDeleted).ToListAsync();
-
-                foreach (var Progress in progress)
+                foreach (var company in companysList)
                 {
-                    progressre.Add(new ProgressModifyViewModel()
+                    companys.Add(new CompanyModifyViewModel()
                     {
-                        Id = Progress.Id,
-                        Name = Progress.Name
+                        Id = company.Id,
+                        Name = company.Name,
+                        Description = company.Description
                     });
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error Get All Status Master.");
-                return new List<ProgressModifyViewModel>()!;
+                _logger.LogError(ex, "Error Get All Companys.");
+                return new List<CompanyModifyViewModel>()!;
             }
-            return progressre;
+            return companys;
         }
-        public async Task<long> SaveProgress(ProgressModifyViewModel viewModel)
+        public async Task<long> SaveCompany(CompanyModifyViewModel viewModel)
         {
             await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
                 // Map ViewModel → Entity
-                var progress = new Progress
+                var company = new Company
                 {
-                    Name = viewModel.Name
+                    Name = viewModel.Name,
+                    Description = viewModel.Description
                 };
 
                 // Save
-                await _db.Progress.AddAsync(progress);
+                await _db.Company.AddAsync(company);
                 await _db.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return progress.Id;
+                return company.Id;
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error Save Status Master.");
+                _logger.LogError(ex, "Error Save Company.");
                 return 0;
             }
         }
-        public async Task<long> UpdateProgress(ProgressModifyViewModel viewModel)
+        public async Task<long> UpdateCompany(CompanyModifyViewModel viewModel)
         {
             try
             {
 
-                var progress = await _db.Progress.Where(p => p.Id == viewModel.Id).FirstOrDefaultAsync();
+                var company = await _db.Company.Where(p => p.Id == viewModel.Id).FirstOrDefaultAsync();
 
-                if (progress == null)
+                if (company == null)
                 {
-                    await SaveProgress(viewModel);
+                    await SaveCompany(viewModel);
                 }
 
                 // Save within transaction
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
-                progress.Name = viewModel.Name;
+                company.Name = viewModel.Name;
+                company.Description = viewModel.Description;
 
                 try
                 {
@@ -112,46 +117,47 @@ namespace Repositories.Common
                     throw;
                 }
 
-                return progress.Id;
+                return company.Id;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error Save Status Master.");
+                _logger.LogError(ex, "Error Update Company.");
                 return 0;
             }
         }
-        public async Task<ProgressModifyViewModel> GetProgressById(long Id)
+        public async Task<CompanyModifyViewModel> GetCompanyById(long Id)
         {
-            var progressView = new ProgressModifyViewModel();
+            var companyView = new CompanyModifyViewModel();
 
             try
             {
-                var progress = await _db.Progress.FirstOrDefaultAsync(p => p.Id == Id);
+                var company = await _db.Company.FirstOrDefaultAsync(p => p.Id == Id);
 
-                if (progress == null)
+                if (company == null)
                 {
-                    return new ProgressModifyViewModel();
+                    return new CompanyModifyViewModel();
                 }
 
-                progressView.Name = progress.Name;
-                progressView.Id = progress.Id;
+                companyView.Name = company.Name;
+                companyView.Description = company.Description;
+                companyView.Id = company.Id;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error GetById.");
-                return new ProgressModifyViewModel();
+                _logger.LogError(ex, "Error Get Company ById.");
+                return new CompanyModifyViewModel();
             }
 
-            return progressView;
+            return companyView;
         }
-        public async Task<long> DeleteProgress(long Id)
+        public async Task<long> DeleteCompany(long Id)
         {
             try
             {
 
-                var progress = await _db.Progress.Where(p => p.Id == Id).FirstOrDefaultAsync();
+                var company = await _db.Company.Where(p => p.Id == Id).FirstOrDefaultAsync();
 
-                if (progress == null)
+                if (company == null)
                 {
                     return 0;
                 }
@@ -159,7 +165,7 @@ namespace Repositories.Common
                 // Save within transaction
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
-                progress.IsDeleted = true;
+                company.IsDeleted = true;
 
                 try
                 {
@@ -172,11 +178,11 @@ namespace Repositories.Common
                     throw;
                 }
 
-                return progress.Id;
+                return company.Id;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error Delete Status Master.");
+                _logger.LogError(ex, "Error Delete Company.");
                 return 0;
             }
         }

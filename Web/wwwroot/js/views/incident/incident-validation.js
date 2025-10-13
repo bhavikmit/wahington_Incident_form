@@ -2,14 +2,14 @@
 $(function () {
 
     let currentStep = 1;
-    const totalSteps = 2;
+    const totalSteps = 4;
 
     GetValidationsDetail($("#hdn_Id").val());
 
     $(document).off("click", "#nextBtn");
     $(document).on("click", "#nextBtn", function (e) {
 
-        if (currentStep == 2) {
+        if (currentStep == 4) {
             SaveIncidentValidation();
         }
 
@@ -507,6 +507,22 @@ async function SaveIncidentValidation() {
             }
             else if (val.name === "IVValidation.ValidationNotes") {
                 formData.append("ValidationNotes", val.value);
+                form.push({ name: val.name, value: val.value });
+            }
+            else if (val.name === "IVValidation.IncidentCommanderId") {
+                formData.append("ConfirmedIncidentCommanderId", val.value);
+                form.push({ name: val.name, value: val.value });
+            }
+            else if (val.name === "IVValidation.FieldEnvRepId") {
+                formData.append("ConfirmedFieldEnvRepId", val.value);
+                form.push({ name: val.name, value: val.value });
+            }
+            else if (val.name === "IVValidation.GECCoordinatorId") {
+                formData.append("ConfirmedGECCoordinatorId", val.value);
+                form.push({ name: val.name, value: val.value });
+            }
+            else if (val.name === "IVValidation.EngineeringLeadId") {
+                formData.append("ConfirmedEngineeringLeadId", val.value);
                 form.push({ name: val.name, value: val.value });
             }
         });

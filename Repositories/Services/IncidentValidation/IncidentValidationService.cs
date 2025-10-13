@@ -231,6 +231,15 @@ namespace Repositories.Common
                                    })
                                    .ToListAsync();
 
+                var UserLisTTask = await _db.IncidentUsers
+                                   .Where(it => !it.IsDeleted)
+                                   .Select(it => new SelectListItem
+                                   {
+                                       Value = it.Id.ToString(),
+                                       Text = it.FirstName + ' ' + it.LastName
+                                   })
+                                   .ToListAsync();
+
                 if (incidentTask == null)
                 {
                     return new IncidentValidationViewModel { severityLevels = severityLevelsTask };
@@ -242,6 +251,7 @@ namespace Repositories.Common
                     IncidentId = incidentTask.IncidentID,
                     IncidentLocation = incidentTask.LocationAddress ?? string.Empty,
                     severityLevels = severityLevelsTask,
+                    UserList = UserLisTTask,
                     severityLevel = incidentTask.SeverityLevel?.Name ?? string.Empty,
                     Lat = incidentTask.Lat,
                     Long = incidentTask.Lng
@@ -384,7 +394,9 @@ namespace Repositories.Common
 
                 await _db.IncidentValidations.AddAsync(incidentValidation);
                 await _db.SaveChangesAsync();
-
+                
+                var insertedValidationId = incidentValidation.Id;
+                
                 // 2. Policies
                 var policies = request.listSubmitPolicyVM.Select(item => new IncidentValidationPolicy
                 {
@@ -460,7 +472,20 @@ namespace Repositories.Common
                     incident.UpdatedBy = userIdParsed;
                 }
 
-                // 5. Save everything in one go
+                // 5. Save main IncidentValidationAssignedRole
+                var IncidentValidationAssignedRole = new IncidentValidationAssignedRole
+                {
+                    IncidentValidationId = request.Id,
+                    IncidentId = insertedValidationId,
+                    IncidentCommander = request.ConfirmedIncidentCommanderId,
+                    FieldEnvRep = request.ConfirmedFieldEnvRepId,
+                    GEC_Coordinator = request.ConfirmedGECCoordinatorId,
+                    EngineeringLead = request.ConfirmedEngineeringLeadId,
+                    ActiveStatus = ActiveStatus.Active
+                };
+                await _db.IncidentValidationAssignedRoles.AddAsync(IncidentValidationAssignedRole);
+
+                // 6. Save everything in one go
                 await _db.SaveChangesAsync();
 
                 await transaction.CommitAsync();

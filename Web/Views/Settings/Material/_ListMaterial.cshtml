@@ -1,0 +1,29 @@
+﻿@using ViewModels
+@model List<MaterialModifyViewModel>
+
+<div class="cards">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var m in Model)
+        {
+            <div class="card">
+                <div class="cardHeader">
+                    <h4>@m.Name</h4>
+                    <div class="editDeIcons">
+                        <i class="fa-regular fa-edit edit editMaterial" id="@m.Id"></i>
+                        <i class="far fa-trash-alt deleteMaterial" id="@m.Id"></i>
+                    </div>
+                </div>
+
+                @* <p><span class="lbl">Material ID:</span> @m.MaterialID</p> *@
+                <p><span class="lbl">Category:</span> @(!string.IsNullOrWhiteSpace(m.Category) ? m.Category : "N/A")</p>
+                <p><span class="lbl">Unit:</span> @(!string.IsNullOrWhiteSpace(m.Unit) ? m.Unit : "N/A")</p>
+                <p><span class="lbl">Unit Cost:</span> @m.UnitCost</p>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="card p-3"><span>No materials found.</span></div>
+    }
+</div>

@@ -39,8 +39,18 @@ $(function () {
         else if (tab === "progress") {
             GetAllProgress();
         }
+        else if (tab === "Imaterials") {
+            GetAllMaterials();
+
+        }
         else if (tab === "equipmentfields") {
             GetAllEquipmentFields();
+        }
+        else if (tab === "incidentRole") {
+            GetAllIncidentRoles();
+        }
+        else if (tab === "company") {
+            GetAllCompany();
         }
     });
 
@@ -160,6 +170,64 @@ $(function () {
 
     // End Source
 
+    //Start Material
+
+    $(document).off("click", ".saveMaterial");
+    $(document).on("click", ".saveMaterial", function (e) {
+        e.preventDefault();
+        if (validateMaterialForm()) SaveMaterial();
+    });
+
+    $(document).off("click", ".cancelMaterial");
+    $(document).on("click", ".cancelMaterial", function (e) {
+        e.preventDefault();
+        $("#addMaterial").empty();
+        $('li.active').trigger('click');
+    });
+
+    // any other initialization: select2, masks, etc.
+
+
+/* Confirmation + delete helper */
+function DeleteMaterialItem(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            confirmButtonClass: 'btn btn-success me-2',
+            cancelButtonClass: 'btn btn-danger',
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.isConfirmed) {
+                DeleteMaterialById(id);
+            }
+        });
+    }
+
+/* Event wiring for list actions (edit/delete/add) */
+$(document).off("click", ".btnAddNewMaterial");
+    $(document).on("click", ".btnAddNewMaterial", function (e) { 
+    e.preventDefault();
+    AddMaterial();
+});
+
+$(document).off("click", ".editMaterial");
+$(document).on("click", ".editMaterial", function (e) {
+    e.preventDefault();
+    const id = $(this).attr("id");
+    if (id) GetMaterialById(id);
+});
+
+$(document).off("click", ".deleteMaterial");
+$(document).on("click", ".deleteMaterial", function (e) {
+    e.preventDefault();
+    const id = $(this).attr("id");
+    if (!id) return;
+    DeleteMaterialItem(id);
+});
 
     // Start Event Type
     $(document).off("click", ".btnAddNewEvent");
@@ -653,6 +721,105 @@ $(function () {
         });
         if (isValid) {
             SaveEquipmentFields();
+        }
+    });
+    // Incident Role event bindings
+    $(document).off("click", ".btnAddNewIncidentRole");
+    $(document).on("click", ".btnAddNewIncidentRole", function (e) {
+        e.preventDefault();
+        AddIncidentRole();
+    });
+
+    $(document).off("click", ".cancelIncidentRole");
+    $(document).on("click", ".cancelIncidentRole", function (e) {
+        e.preventDefault();
+        $("#addIncidentRole").empty().html('');
+        $('li.active').trigger('click');
+    });
+
+    $(document).off("click", ".saveIncidentRole");
+    $(document).on("click", ".saveIncidentRole", function (e) {
+        e.preventDefault();
+        var isValid = true;
+
+        $("#saveIncidentRoleDiv").find("input[data-val-required], textarea[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            } else {
+                clearError($field);
+            }
+        });
+
+        if (isValid) {
+            SaveIncidentRole();
+        }
+    });
+
+    $(document).off("click", ".editIncidentRole");
+    $(document).on("click", ".editIncidentRole", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetIncidentRoleById(id);
+    });
+
+    $(document).off("click", ".deleteIncidentRole");
+    $(document).on("click", ".deleteIncidentRole", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        DeleteIncidentItem(id);
+    });
+
+
+    //Company
+    $(document).off("click", ".btnAddNewCompany");
+    $(document).on("click", ".btnAddNewCompany", function (e) {
+        e.preventDefault();
+        AddCompany();
+    });
+
+    $(document).off("click", ".cancelCompany");
+    $(document).on("click", ".cancelCompany", function (e) {
+        e.preventDefault();
+        $("#addCompany").empty().html('');
+        $('li.active').trigger('click')
+    });
+
+    $(document).off("click", ".editCompany");
+    $(document).on("click", ".editCompany", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        GetCompanyById(id);
+    });
+
+    $(document).off("click", ".deleteCompany");
+    $(document).on("click", ".deleteCompany", function (e) {
+        e.preventDefault();
+        var id = $(this).attr("id");
+        DeleteCompanyItem(id);
+    });
+
+    $(document).off("click", ".saveCompany");
+    $(document).on("click", ".saveCompany", function (e) {
+        e.preventDefault();
+        var isValid = true;
+        $("#saveCompanyDiv").find("input[type='text'], select[data-val-required]").each(function () {
+            var $field = $(this);
+            var value = $.trim($field.val());
+
+            if (value === "") {
+                isValid = false;
+                showError($field);
+            }
+            else {
+                clearError($field);
+            }
+        });
+        if (isValid) {
+            SaveCompany();
         }
     });
 })
@@ -1960,13 +2127,13 @@ async function GetAllProgress() {
             },
         });
 
-        if (!response.ok) throw new Error("Failed to load progress list");
+        if (!response.ok) throw new Error("Failed to load status master list");
 
         const content = await response.text();
         $("#progressList").empty().html(content);
 
     } catch (error) {
-        console.error("Error loading progress list:", error);
+        console.error("Error loading status master list:", error);
     } finally {
         hideLoader($(".setting"));
     }
@@ -1985,13 +2152,13 @@ async function AddProgress() {
             },
         });
 
-        if (!response.ok) throw new Error("Failed to load progress list");
+        if (!response.ok) throw new Error("Failed to load status master list");
 
         const content = await response.text();
         $("#addProgress").empty().html(content);
 
     } catch (error) {
-        console.error("Error loading progress list:", error);
+        console.error("Error loading status master list:", error);
     } finally {
         hideLoader($(".setting"));
     }
@@ -2010,13 +2177,13 @@ async function GetProgressById(id) {
             },
         });
 
-        if (!response.ok) throw new Error("Failed to load progress list");
+        if (!response.ok) throw new Error("Failed to load status master list");
 
         const content = await response.text();
         $("#addProgress").empty().html(content);
 
     } catch (error) {
-        console.error("Error loading progress list:", error);
+        console.error("Error loading status master list:", error);
     } finally {
         hideLoader($(".setting"));
     }
@@ -2056,13 +2223,13 @@ async function DeleteProgressById(id) {
             },
         });
 
-        if (!response.ok) throw new Error("Failed to load progress list");
+        if (!response.ok) throw new Error("Failed to load status master list");
 
-        SwalSuccessAlert("Progress deleted successfully!");
+        SwalSuccessAlert("Status Master deleted successfully!");
         GetAllProgress();
 
     } catch (error) {
-        console.error("Error loading progress list:", error);
+        console.error("Error loading status master list:", error);
     } finally {
         hideLoader($(".setting"));
     }
@@ -2101,15 +2268,185 @@ async function SaveProgress() {
             SwalSuccessAlert(result.data);
             GetAllProgress();
         } else {
-            SwalErrorAlert(result.message || "Failed to save progress.");
+            SwalErrorAlert(result.message || "Failed to save status master.");
         }
     } catch (error) {
-        SwalErrorAlert("Error while saving progress!");
+        SwalErrorAlert("Error while saving status master!");
         console.error(error);
     } finally {
         hideLoader($(".setting"));
     }
 }
+async function GetAllMaterials() {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/GetAllMaterials", {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "text/html" }
+        });
+        if (!response.ok) throw new Error("Failed to load material list");
+        const content = await response.text();
+        $("#materialList").empty().html(content);
+        $("#Materials").addClass("active");
+    } catch (error) {
+        console.error("Error loading material list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function AddMaterial() {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/AddMaterial", {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "text/html" }
+        });
+        if (!response.ok) throw new Error("Failed to load material form");
+        const content = await response.text();
+        $("#addMaterial").empty().html(content);
+        if (typeof InitMaterialPartial === "function") InitMaterialPartial();
+    } catch (error) {
+        console.error("Error loading material form:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetMaterialById(id) {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/GetMaterialById?id=" + encodeURIComponent(id), {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "text/html" }
+        });
+        if (!response.ok) throw new Error("Failed to load material");
+        const content = await response.text();
+        $("#addMaterial").empty().html(content);
+        if (typeof InitMaterialPartial === "function") InitMaterialPartial();
+    } catch (error) {
+        console.error("Error loading material:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function DeleteMaterialById(id) {
+    try {
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/DeleteMaterialById?id=" + encodeURIComponent(id), {
+            method: "GET",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" }
+        });
+        if (!response.ok) throw new Error("Failed to delete material");
+        SwalSuccessAlert("Material deleted successfully!");
+        GetAllMaterials();
+    } catch (error) {
+        console.error("Error deleting material:", error);
+        SwalErrorAlert("Error deleting material.");
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveMaterial() {
+    try {
+        debugger;
+        // client validation (basic)
+        if (!validateMaterialForm()) {
+            SwalErrorAlert("Please fix validation errors before submitting.");
+            return;
+        }
+
+        const formEl = $("#NewMaterialForm")[0];
+        if (!formEl) { SwalErrorAlert("Form not found!"); return; }
+
+        // build FormData
+        const formData = new FormData(formEl);
+
+        showLoader($(".setting"));
+        const response = await fetch("/Settings/SaveMaterial", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            $("#addMaterial").html("");
+            SwalSuccessAlert(result.data || "Material saved successfully!");
+            GetAllMaterials();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save material.");
+        }
+    } catch (error) {
+        console.error("Error saving material:", error);
+        SwalErrorAlert("Error while saving material!");
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+/* client-side validator for material form */
+function validateMaterialForm() {
+    const $form = $("#NewMaterialForm");
+    if (!$form || $form.length === 0) {
+        console.warn("NewMaterialForm not found for validation.");
+        return false;
+    }
+
+    // simple manual validation: required fields
+    let isValid = true;
+
+    //const $materialId = $form.find("input[name='MaterialID']");
+    const $name = $form.find("input[name='Name']");
+    const $unitCost = $form.find("input[name='UnitCost']");
+
+    function setInvalid($el, msg) {
+        $el.addClass("is-invalid");
+        if ($el.next(".invalid-feedback").length === 0) {
+            $el.after(`<div class="invalid-feedback">${msg}</div>`);
+        } else {
+            $el.next(".invalid-feedback").text(msg);
+        }
+        isValid = false;
+    }
+
+    function clearInvalid($el) {
+        $el.removeClass("is-invalid");
+        $el.next(".invalid-feedback").remove();
+    }
+
+    //// MaterialID required
+    //clearInvalid($materialId);
+    //if (!$materialId.val() || !$materialId.val().toString().trim()) {
+    //    setInvalid($materialId, "Material ID is required.");
+    //}
+
+    // Name required
+    clearInvalid($name);
+    if (!$name.val() || !$name.val().toString().trim()) {
+        setInvalid($name, "Material name is required.");
+    }
+
+    // UnitCost must be non-negative integer (or zero)
+    clearInvalid($unitCost);
+    const uc = $unitCost.val();
+    if (uc === "" || uc === null || isNaN(Number(uc)) || Number(uc) < 0) {
+        setInvalid($unitCost, "Unit cost must be a non-negative number.");
+    }
+
+    return isValid;
+}
+
+/* Partial initializer - call when partial is loaded */
+function InitMaterialPartial() {
+    // attach simple form validation (optional: you can wire jquery.validate instead)
+    $("#NewMaterialForm").off("submit").on("submit", function (e) {
+        e.preventDefault();
+        SaveMaterial();
+    });
+}
+
 
 async function GetAllEquipmentFields() {
     try {
@@ -2274,3 +2611,322 @@ async function SaveEquipmentFields() {
         hideLoader($(".setting"));
     }
 }
+// Start Incident Role
+async function GetAllIncidentRoles() {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetAllIncidentRoles", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load incident role list");
+
+        const content = await response.text();
+        $("#incidentRoleList").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading incident role list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function AddIncidentRole() {
+    try {
+        debugger;
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/AddIncidentRole", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to add incident role");
+
+        const content = await response.text();
+        $("#addIncidentRole").empty().html(content);
+
+    } catch (error) {
+        console.error("Failed to add incident role:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetIncidentRoleById(id) {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetIncidentRoleById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to get incident role");
+
+        const content = await response.text();
+        $("#addIncidentRole").empty().html(content);
+
+    } catch (error) {
+        console.error("Failed to get incident role:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function DeleteIncidentRoleById(id) {
+    try {
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/DeleteIncidentRoleById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to delete incident role.");
+
+        SwalSuccessAlert("Incident role deleted successfully!");
+        GetAllIncidentRoles();
+
+    } catch (error) {
+        console.error("Failed to delete incident role:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveIncidentRole() {
+    try {
+        let form = [];
+        let formData = new FormData();
+        let obj = $("#NewIncidentRoleForm")[0];
+
+        // Serialize fields
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+            form.push({ name: val.name, value: val.value });
+        });
+
+        showLoader($(".setting"));
+
+        // Send request
+        let response = await fetch("/Settings/SaveIncidentRole", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addIncidentRole").html("");
+            SwalSuccessAlert(result.data);
+            GetAllIncidentRoles();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save incident role.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving incident role!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetAllCompany() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetAllCompany", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load company list");
+
+        const content = await response.text();
+        $("#CompanyList").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading company list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function AddCompany() {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/AddCompany", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load company list");
+
+        const content = await response.text();
+        $("#addCompany").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading company list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function GetCompanyById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/GetCompanyById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load company list");
+
+        const content = await response.text();
+        $("#addCompany").empty().html(content);
+
+    } catch (error) {
+        console.error("Error loading company list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+function DeleteCompanyItem(id) {   // <-- accept id
+    let confirmBtnText = "Yes, delete it!";
+    let cancelBtnText = "No, cancel!";
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmBtnText,
+        cancelButtonText: cancelBtnText,
+        confirmButtonClass: 'btn btn-success me-2',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {   // ✅ correct way
+            DeleteCompanyById(id);
+        }
+    });
+}
+
+async function DeleteCompanyById(id) {
+    try {
+
+        showLoader($(".setting"));
+
+        const response = await fetch("/Settings/DeleteCompanyById?id=" + id, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "text/html"
+            },
+        });
+
+        if (!response.ok) throw new Error("Failed to load company list");
+
+        SwalSuccessAlert("Company deleted successfully!");
+        GetAllCompany();
+
+    } catch (error) {
+        console.error("Error loading company list:", error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+
+async function SaveCompany() {
+    try {
+
+        let form = [];
+        let formData = new FormData();
+        let obj = $("#NewCompanyForm")[0];
+
+        // Serialize other fields
+        let params = $(obj).serializeArray();
+        $.each(params, function (i, val) {
+            formData.append(val.name, val.value);
+            form.push({ name: val.name, value: val.value });
+        });
+
+
+        showLoader($(".setting"));
+
+        //console.log(formData);
+        console.log(form);
+
+        // Send request
+        let response = await fetch("/Settings/SaveCompany", {
+            method: "POST",
+            body: formData
+        });
+
+        let result = await response.json();
+
+        if (result.success) {
+            $("#addCompany").html("");
+            SwalSuccessAlert(result.data);
+            GetAllCompany();
+        } else {
+            SwalErrorAlert(result.message || "Failed to save company.");
+        }
+    } catch (error) {
+        SwalErrorAlert("Error while saving company!");
+        console.error(error);
+    } finally {
+        hideLoader($(".setting"));
+    }
+}
+function DeleteIncidentItem(id) {
+    let confirmBtnText = "Yes, delete it!";
+    let cancelBtnText = "No, cancel!";
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: confirmBtnText,
+        cancelButtonText: cancelBtnText,
+        confirmButtonClass: 'btn btn-success me-2',
+        cancelButtonClass: 'btn btn-danger',
+        buttonsStyling: false
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            DeleteIncidentRoleById(id);
+        }
+    });
+}
+// End Incident Role

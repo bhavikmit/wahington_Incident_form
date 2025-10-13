@@ -477,10 +477,10 @@ namespace Repositories.Common
                 {
                     IncidentValidationId = request.Id,
                     IncidentId = insertedValidationId,
-                    IncidentCommander = request.ConfirmedIncidentCommanderId,
-                    FieldEnvRep = request.ConfirmedFieldEnvRepId,
-                    GEC_Coordinator = request.ConfirmedGECCoordinatorId,
-                    EngineeringLead = request.ConfirmedEngineeringLeadId,
+                    IncidentCommander = request.assignedRole.IncidentCommanderId,
+                    FieldEnvRep = request.assignedRole.FieldEnvRepId,
+                    GEC_Coordinator = request.assignedRole.GECCoordinatorId,
+                    EngineeringLead = request.assignedRole.EngineeringLeadId,
                     ActiveStatus = ActiveStatus.Active
                 };
                 await _db.IncidentValidationAssignedRoles.AddAsync(IncidentValidationAssignedRole);

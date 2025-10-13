@@ -683,7 +683,7 @@
 
                             <div class="details-sec incident-details-sec p-6">
                                 <div class="Stepcard incidentDetail mt-4">
-                                    <h3>Incident Details</h3>
+                                    <h3>Assigned Roles</h3>
                                     <div class="row">
                                         <div class="col">
                                             <div class="form-group">
@@ -745,7 +745,7 @@
                             </div>
                             <div class="details-sec incident-details-sec p-6">
                                 <div class="Stepcard incidentDetail mt-4">
-                                    <h3>Caller Information</h3>
+                                    <h3>Validation Gates</h3>
                                     <div class="row" id="IncidentValidationGate">
                                         <div class="col-md-12">
                                             <div class="mb-3 d-flex1 align-items-center justify-content-start indicators">
@@ -832,60 +832,45 @@
                                                 <label class="form-label d-block">Regulatory Notifications</label>
 
                                                 <div class="form-check form-check-inline eventCheck">
-                                                    <input class="form-check-input" type="checkbox" id="CPOC" name="validationGates.EventTypeIds" value="26">
+                                                    <input class="form-check-input" type="checkbox" id="CPOC" name="IVValidation.validationGates.Regulatory" value="1">
                                                     <label class="form-check-label" for="eventType_26">
                                                         CPOC
                                                     </label>
                                                 </div>
                                                 <div class="form-check form-check-inline eventCheck">
-                                                    <input class="form-check-input" type="checkbox" id="eventType_6" name="validationGates.EventTypeIds" value="6">
+                                                    <input class="form-check-input" type="checkbox" id="PHMSA" name="IVValidation.validationGates.Regulatory" value="2">
                                                     <label class="form-check-label" for="eventType_6">
                                                         PHMSA
                                                     </label>
                                                 </div>
                                                 <div class="form-check form-check-inline eventCheck">
-                                                    <input class="form-check-input" type="checkbox" id="eventType_7" name="validationGates.EventTypeIds" value="7">
+                                                    <input class="form-check-input" type="checkbox" id="NTSB" name="IVValidation.validationGates.Regulatory" value="3">
                                                     <label class="form-check-label" for="eventType_7">
                                                         NTSB
                                                     </label>
                                                 </div>
                                                 <div class="form-check form-check-inline eventCheck">
-                                                    <input class="form-check-input" type="checkbox" id="eventType_4" name="validationGates.EventTypeIds" value="4">
+                                                    <input class="form-check-input" type="checkbox" id="EPA" name="IVValidation.validationGates.Regulatory" value="4">
                                                     <label class="form-check-label" for="eventType_4">
                                                         EPA
                                                     </label>
                                                 </div>
                                                 <div class="form-check form-check-inline eventCheck">
-                                                    <input class="form-check-input" type="checkbox" id="eventType_11" name="validationGates.EventTypeIds" value="11">
+                                                    <input class="form-check-input" type="checkbox" id="LFD" name="IVValidation.validationGates.Regulatory" value="5">
                                                     <label class="form-check-label" for="eventType_11">
                                                         Local Fire Dept
                                                     </label>
                                                 </div>
                                                 <div class="form-check form-check-inline eventCheck">
                                                     @* <input type="radio" id="IsOtherEvent" class="form-check-input" name="incidentDetails.IsOtherEvent"> *@
-                                                    
-                                                    @* @{
-                                                        var checkedAttrOther = (Model.IVValidation.validationGates.IsOtherEvent ?? false) ? "checked" : "";
-                                                    } *@
-                                                    <input class="form-check-input" type="checkbox" id="eventType_11" asp-for="@Model.IVValidation.validationGates.IsOtherEvent" value=" 11">
-                                                    <label class="form-check-label" for="incidentDetails_IsOtherEvent">Other</label>
+                                                    <input class="form-check-input" type="checkbox" id="IsOtherEventID" asp-for="IVValidation.validationGates.IsOtherEvent">
+                                                    <label class="form-check-label" asp-for="IVValidation.validationGates.IsOtherEvent">Other</label>
                                                 </div>
-                                                <div class="mb-3 OtherEventDetail" style="@((bool)Model.IVValidation.validationGates.IsOtherEvent ? "display:block" : "display:none")">
-                                                    <input type="text" id="OtherEventDetail" class="form-control" data-val="true" data-val-required="The OtherEventDetail field is required." name="validationGates.OtherEventDetail" value="">
+                                                <div class="mb-3 OtherEventDetail" style="display:none">
+                                                    <input type="text" id="OtherEventDetail" class="form-control" asp-for="IVValidation.validationGates.OtherEventDetail" value="">
                                                 </div>
                                             </div>
 
-                                            @* <div class="mb-3">
-                                            @{
-                                            var checkedAttrOther = Model.incidentDetails.IsOtherEvent ? "checked" : "";
-                                            }
-
-                                            <input type="radio" id="IsOtherEvent" class="form-check-input" name="incidentDetails.IsOtherEvent" @checkedAttrOther>
-                                            <label class="form-check-label" asp-for="incidentDetails.IsOtherEvent">Other</label>
-                                            </div>
-                                            <div class="mb-3 OtherEventDetail" style="@(Model.incidentDetails.IsOtherEvent ? "display:block" : "display:none")">
-                                            <input type="text" id="OtherEventDetail" class="form-control" asp-for="incidentDetails.OtherEventDetail">
-                                            </div> *@
                                         </div>
 
 
@@ -935,7 +920,14 @@
     }
 }
 <script>
-
+    $("#IsOtherEventID").change(function () {
+        if ($("#IsOtherEventID").is(":checked")) {
+            $(".OtherEventDetail").show();
+        } else {
+            $(".OtherEventDetail").hide();
+            $("#OtherEventDetail").val(""); // optional: clear value
+        }
+    });
     // Handle location card click — updates header
     document.querySelectorAll('.location-card').forEach(card => {
       card.addEventListener('click', function () {

@@ -133,6 +133,7 @@ namespace ViewModels.Incident
     public class IncidentSubmitViewModel : BaseIncidentValidationViewModel
     {
         public IncidentValidationAssignedRoleViewModel assignedRole { get; set; } = new();
+        public IncidentValidationValidationGatesViewModel validationGates { get; set; } = new();
         public long ConfirmedSeverityLevelId { get; set; }
         //public long ConfirmedIncidentCommanderId { get; set; } = default!;
         //public long ConfirmedFieldEnvRepId { get; set; } = default!;
@@ -203,5 +204,6 @@ namespace ViewModels.Incident
         public bool IndependentInspection { get; set; }
         public string Regulatory { get; set; }
         public bool IsOtherEvent { get; set; }
+        public string OtherEventDetail { get; set; }
     }
 }

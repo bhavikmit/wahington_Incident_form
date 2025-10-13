@@ -472,7 +472,7 @@ namespace Repositories.Common
                     incident.UpdatedBy = userIdParsed;
                 }
 
-                // 5. Save main IncidentValidationAssignedRole
+                // 6. Save main IncidentValidationAssignedRole
                 var IncidentValidationAssignedRole = new IncidentValidationAssignedRole
                 {
                     IncidentValidationId = request.Id,
@@ -484,6 +484,21 @@ namespace Repositories.Common
                     ActiveStatus = ActiveStatus.Active
                 };
                 await _db.IncidentValidationAssignedRoles.AddAsync(IncidentValidationAssignedRole);
+                
+                // 7. Save main IncidentValidationAssignedRole
+                var IncidentValidationGate = new IncidentValidationGate
+                {
+                    IncidentValidationId = request.Id,
+                    IncidentId = insertedValidationId,
+                    ContainmentAcknowledgement = request.validationGates.ContainmentAcknowledgement,
+                    Exception = request.validationGates.Exception,
+                    IndependentInspection = request.validationGates.IndependentInspection,
+                    Regulatory = request.validationGates.Regulatory,
+                    //IsOtherEvent = request.validationGates.IsOtherEvent,
+                    //OtherEventDetail = request.validationGates.OtherEventDetail,
+                    ActiveStatus = ActiveStatus.Active
+                };
+                await _db.IncidentValidationGates.AddAsync(IncidentValidationGate);
 
                 // 6. Save everything in one go
                 await _db.SaveChangesAsync();

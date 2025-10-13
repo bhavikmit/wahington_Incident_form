@@ -444,7 +444,7 @@ async function SaveIncidentValidation() {
         let assignTeamsIds = [];
         var policiesData = [];
         var ValidationLocationData = [];
-        var AssignedRole = {};
+        var assignedRole = {};
 
         var selectedAssignTeams = $("#step-3").find('.responseCard .team-card.selected');
         $.each(selectedAssignTeams, function (i, val) {
@@ -475,8 +475,7 @@ async function SaveIncidentValidation() {
         });
 
         $("#step-2 .right-panel").each(function () {
-            debugger;
-
+            
             var loc = $(this).attr("data-add-loc");
             var severityID = $(`#divaddloc_Severity_${loc}`).find('#severityLevelId').val();
             var discoveryPerimeter = $(`#divaddloc_DiscoveryPerimeter_${loc}`).find("#RadiusId").val();
@@ -506,6 +505,7 @@ async function SaveIncidentValidation() {
         //    Lat: lat,
         //    Lon: lon
         //};
+        let Regulatory = [];
 
         $.each(params, function (i, val) {
             if (val.name === "IVValidation.severityLevelId") {
@@ -538,14 +538,32 @@ async function SaveIncidentValidation() {
             //}
             else if (val.name.startsWith("IVValidation.assignedRole.")) {
                 const roleName = val.name.replace("IVValidation.assignedRole.", "");
-                AssignedRole[roleName] = val.value;
-
-                // if needed, still append flat to formData (optional)
-                formData.append(roleName, val.value);
+                
+                formData.append("assignedRole." + roleName, val.value);
                 form.push({ name: val.name, value: val.value });
+            }
+            else if (val.name.startsWith("IVValidation.validationGates.")) {
+                const fieldName = val.name.replace("IVValidation.validationGates.", "");
+
+                // Convert value to true/false if it's 0 or 1
+                let fieldValue = val.value;
+                if (fieldValue === "1" || fieldValue === 1) fieldValue = true;
+                else if (fieldValue === "0" || fieldValue === 0) fieldValue = false;
+                
+                if (val.name === "IVValidation.validationGates.Regulatory") {
+                    Regulatory.push(val.value);
+                    form.push({ name: val.name, value: val.value });
+                }
+                else {
+                    formData.append("validationGates." + fieldName, fieldValue);
+                    form.push({ name: "validationGates." + fieldName, value: fieldValue });
+                }
             }
         });
 
+        if (Regulatory.length > 0) {
+            formData.append("validationGates.Regulatory", Regulatory.join(","));
+        }
         formData.append("Id", $("#hdn_Id").val());
 
         // Add assign Teams

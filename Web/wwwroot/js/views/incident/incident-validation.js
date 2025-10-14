@@ -2,14 +2,14 @@
 $(function () {
 
     let currentStep = 1;
-    const totalSteps = 4;
+    const totalSteps = 6;
 
     GetValidationsDetail($("#hdn_Id").val());
 
     $(document).off("click", "#nextBtn");
     $(document).on("click", "#nextBtn", function (e) {
 
-        if (currentStep == 4) {
+        if (currentStep == 6) {
             SaveIncidentValidation();
         }
 
@@ -446,7 +446,8 @@ async function SaveIncidentValidation() {
         var ValidationLocationData = [];
         var PersonalData = [];
         var Regulatory = [];
-        
+        var Assessment = {};
+        var TaskData = [];
 
         var selectedAssignTeams = $("#step-3").find('.responseCard .team-card.selected');
         $.each(selectedAssignTeams, function (i, val) {
@@ -477,7 +478,7 @@ async function SaveIncidentValidation() {
         });
 
         $("#step-2 .right-panel").each(function () {
-            
+
             var loc = $(this).attr("data-add-loc");
             var severityID = $(`#divaddloc_Severity_${loc}`).find('#severityLevelId').val();
             var discoveryPerimeter = $(`#divaddloc_DiscoveryPerimeter_${loc}`).find("#RadiusId").val();
@@ -514,6 +515,48 @@ async function SaveIncidentValidation() {
             });
         });
 
+        $("#step-6 .cloneTaskDiv > .Task").each(function () {
+
+            var taskDescription = $(this).find("#div_TaskDescription").find('#taskDescription').val();
+            var taskResponsibleRole = $(this).find("#div_ResponsibleRole").find('#hdn_TaskResponsibleRole').val();
+            var statusId = $(this).find("#div_Status").find('#status').val();
+
+            // push object
+            TaskData.push({
+                TaskDescription: taskDescription,
+                RoleIds: taskResponsibleRole,
+                StatusId: statusId,
+            });
+        });
+
+        function getAssignAndStatus(roleSelector, divId) {
+            const section = $("#step-4").find(`${roleSelector} > #${divId}`);
+            return {
+                assignId: section.find("#div_Assignee #assignId").val(),
+                statusId: section.find("#div_Status #status").val()
+            };
+        }
+
+        const mappings = {
+            IC_MCR: [".IncidentCommander", "div_CreateMCR"],
+            IC_Notify: [".IncidentCommander", "div_NotifyclaimAndEngineering"],
+            IC_EstablishICP: [".IncidentCommander", "div_EstablishICP"],
+            FER_PCA: [".FieldEnvironmentalRepresentative", "div_Preparecontainmentarea"],
+            FER_LC: [".FieldEnvironmentalRepresentative", "div_Labelcontainers"],
+            EGEC_RSM: [".EngineeringAndGEC", "div_Retrievesystemmaps"],
+            EGEC_MLP: [".EngineeringAndGEC", "div_Marklowpoints"],
+            EGEC_ICT: [".EngineeringAndGEC", "div_Initiatecosttracking"]
+        };
+
+        $.each(mappings, function (key, [role, div]) {
+            const { assignId, statusId } = getAssignAndStatus(role, div);
+            Assessment[`${key}_AssignId`] = assignId;
+            Assessment[`${key}_StatusId`] = statusId;
+        });
+
+        formData.append("incidentValidationAssessment", JSON.stringify(Assessment));
+
+
         $.each(params, function (i, val) {
             if (val.name === "IVValidation.severityLevelId") {
                 formData.append("ConfirmedSeverityLevelId", val.value);
@@ -527,10 +570,10 @@ async function SaveIncidentValidation() {
                 formData.append("ValidationNotes", val.value);
                 form.push({ name: val.name, value: val.value });
             }
-           
+
             else if (val.name.startsWith("IVValidation.assignedRole.")) {
                 const roleName = val.name.replace("IVValidation.assignedRole.", "");
-                
+
                 formData.append("assignedRole." + roleName, val.value);
                 form.push({ name: val.name, value: val.value });
             }
@@ -541,7 +584,7 @@ async function SaveIncidentValidation() {
                 let fieldValue = val.value;
                 if (fieldValue === "1" || fieldValue === 1) fieldValue = true;
                 else if (fieldValue === "0" || fieldValue === 0) fieldValue = false;
-                
+
                 if (val.name === "IVValidation.validationGates.Regulatory") {
                     Regulatory.push(val.value);
                     form.push({ name: val.name, value: val.value });
@@ -550,6 +593,12 @@ async function SaveIncidentValidation() {
                     formData.append("validationGates." + fieldName, fieldValue);
                     form.push({ name: "validationGates." + fieldName, value: fieldValue });
                 }
+            }
+            else if (val.name.startsWith("IVValidation.validationRepair.")) {
+                const roleName = val.name.replace("IVValidation.validationRepair.", "");
+
+                formData.append("validationRepair." + roleName, val.value);
+                form.push({ name: val.name, value: val.value });
             }
         });
 
@@ -575,6 +624,9 @@ async function SaveIncidentValidation() {
             formData.append("listPersonalDataVM", JSON.stringify(PersonalData));
         }
 
+        if (TaskData.length > 0) {
+            formData.append("listTaskDataVM", JSON.stringify(TaskData));
+        }
 
         showLoader($(".main-content"));
 

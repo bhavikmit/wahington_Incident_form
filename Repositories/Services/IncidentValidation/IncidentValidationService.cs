@@ -411,6 +411,7 @@ namespace Repositories.Common
             await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
+                #region IncidentValidation
                 // 1. Save main IncidentValidation
                 var incidentValidation = new IncidentValidation
                 {
@@ -425,8 +426,10 @@ namespace Repositories.Common
                 await _db.IncidentValidations.AddAsync(incidentValidation);
                 await _db.SaveChangesAsync();
 
-                var insertedValidationId = incidentValidation.Id;
+                //var insertedValidationId = incidentValidation.Id;
+                #endregion
 
+                #region Policies
                 // 2. Policies
                 var policies = request.listSubmitPolicyVM.Select(item => new IncidentValidationPolicy
                 {
@@ -441,7 +444,9 @@ namespace Repositories.Common
 
                 if (policies.Any())
                     await _db.IncidentValidationPolicies.AddRangeAsync(policies);
+                #endregion
 
+                #region  Communication history
                 // 3. Communication history
                 var uploadRoot = Path.Combine(Directory.GetCurrentDirectory(), "Storage", "uploads", "Communication");
                 if (!Directory.Exists(uploadRoot))
@@ -466,7 +471,9 @@ namespace Repositories.Common
 
                 if (communications.Any())
                     await _db.IncidentValidationCommunicationHistories.AddRangeAsync(communications);
+                #endregion
 
+                #region Incident Validation Locations
                 // 4. Add Incident Validation Locations
                 if (request.listSubmitValidationLocationVM.Any())
                 {
@@ -481,12 +488,44 @@ namespace Repositories.Common
                             Lat = item.Lat,
                             Lng = item.Lon,
                             Source = item.Source,
-                            ConfirmedSeverityLevelId = item.SeverityID ?? 0
+                            ConfirmedSeverityLevelId = item.SeverityID ?? 0,
+                            AdditionalLocationId = item.LocationId
                         };
                     }).ToList();
                     await _db.IncidentValidationLocations.AddRangeAsync(validationLocation);
                 }
 
+                // 6. Save main IncidentValidationAssignedRole
+                var IncidentValidationAssignedRole = new IncidentValidationAssignedRole
+                {
+                    IncidentValidationId = incidentValidation.Id,
+                    IncidentId = request.Id,
+                    IncidentCommander = request.assignedRole.IncidentCommanderId,
+                    FieldEnvRep = request.assignedRole.FieldEnvRepId,
+                    GEC_Coordinator = request.assignedRole.GECCoordinatorId,
+                    EngineeringLead = request.assignedRole.EngineeringLeadId,
+                    ActiveStatus = ActiveStatus.Active
+                };
+                await _db.IncidentValidationAssignedRoles.AddAsync(IncidentValidationAssignedRole);
+
+                // 7. Save main IncidentValidationAssignedRole
+                var IncidentValidationGate = new IncidentValidationGate
+                {
+                    IncidentValidationId = incidentValidation.Id,
+                    IncidentId = request.Id,
+                    ContainmentAcknowledgement = request.validationGates.ContainmentAcknowledgement,
+                    Exception = request.validationGates.Exception,
+                    IndependentInspection = request.validationGates.IndependentInspection,
+                    Regulatory = request.validationGates.Regulatory,
+                    IsOtherEvent = request.validationGates.IsOtherEvent,
+                    OtherEventDetail = request.validationGates.OtherEventDetail,
+                    ActiveStatus = ActiveStatus.Active
+                };
+                await _db.IncidentValidationGates.AddAsync(IncidentValidationGate);
+
+                #endregion
+
+                #region Incident Validation Personel Info 
                 // 4. Add Incident Validation Personel Info 
                 if (request.listSubmitPersonalDataVM.Any())
                 {
@@ -504,7 +543,54 @@ namespace Repositories.Common
                     }).ToList();
                     await _db.IncidentValidationPersonnels.AddRangeAsync(validationPersonelInfo);
                 }
+                #endregion
 
+                #region Incident Validation Assestment
+                if (!string.IsNullOrWhiteSpace(request.incidentValidationAssessment))
+                {
+                    request.incidentSubmitValidationAssessment.IncidentId = request.Id;
+                    request.incidentSubmitValidationAssessment.IncidentValidationId = incidentValidation.Id;
+                    await _db.IncidentValidationAssessments.AddAsync(request.incidentSubmitValidationAssessment);
+                }
+                #endregion
+
+                #region IncidentValidationRepair
+                // 8. Save main IncidentValidationAssignedRole
+                var IncidentValidationRepair = new IncidentValidationRepair
+                {
+                    IncidentValidationId = incidentValidation.Id,
+                    IncidentId = request.Id,
+                    SourceOfLeak = request.validationRepair.SourceOfLeak,
+                    SourceOfLeakStatus = request.validationRepair.SourceOfLeakStatus,
+                    PreventFurtherOutage = request.validationRepair.PreventFurtherOutage,
+                    PreventFurtherOutageStatus = request.validationRepair.PreventFurtherOutageStatus,
+                    VacuumTruckFitting = request.validationRepair.VacuumTruckFitting,
+                    VacuumTruckFittingStatus = request.validationRepair.VacuumTruckFittingStatus,
+                    ActiveStatus = ActiveStatus.Active
+                };
+                await _db.IncidentValidationRepairs.AddAsync(IncidentValidationRepair);
+                #endregion
+
+                #region Incident Validation Task Info 
+                // 4. Add Incident Validation Task Info 
+                if (request.listSubmitTaskDataVM.Any())
+                {
+                    var validationTaskInfo = request.listSubmitTaskDataVM.Select(item =>
+                    {
+                        return new IncidentValidationTask
+                        {
+                            IncidentId = request.Id,
+                            IncidentValidationId = incidentValidation.Id,
+                            RoleIds = item.RoleIds ?? string.Empty,
+                            StatusId = item.StatusId,
+                            TaskDescription = item.TaskDescription ?? string.Empty
+                        };
+                    }).ToList();
+                    await _db.IncidentValidationTasks.AddRangeAsync(validationTaskInfo);
+                }
+                #endregion
+
+                #region Update Incident record
                 // 5. Update Incident record
                 var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == request.Id);
                 if (incident != null)
@@ -516,43 +602,20 @@ namespace Repositories.Common
                     var statusLegend = await _db.StatusLegends.FirstOrDefaultAsync(x => x.Name == StatusLegendEnum.Validated.ToString());
 
                     incident.StatusLegendId = statusLegend?.Id ?? (int)StatusLegendEnum.Validated;
+                    //incident.SeverityLevelId = (int)SeverityEnum.Low;
                     incident.UpdatedOn = DateTime.Now;
                     incident.UpdatedBy = userIdParsed;
                 }
 
-                // 6. Save main IncidentValidationAssignedRole
-                var IncidentValidationAssignedRole = new IncidentValidationAssignedRole
-                {
-                    IncidentValidationId = request.Id,
-                    IncidentId = insertedValidationId,
-                    IncidentCommander = request.assignedRole.IncidentCommanderId,
-                    FieldEnvRep = request.assignedRole.FieldEnvRepId,
-                    GEC_Coordinator = request.assignedRole.GECCoordinatorId,
-                    EngineeringLead = request.assignedRole.EngineeringLeadId,
-                    ActiveStatus = ActiveStatus.Active
-                };
-                await _db.IncidentValidationAssignedRoles.AddAsync(IncidentValidationAssignedRole);
-                
-                // 7. Save main IncidentValidationAssignedRole
-                var IncidentValidationGate = new IncidentValidationGate
-                {
-                    IncidentValidationId = request.Id,
-                    IncidentId = insertedValidationId,
-                    ContainmentAcknowledgement = request.validationGates.ContainmentAcknowledgement,
-                    Exception = request.validationGates.Exception,
-                    IndependentInspection = request.validationGates.IndependentInspection,
-                    Regulatory = request.validationGates.Regulatory,
-                    IsOtherEvent = request.validationGates.IsOtherEvent,
-                    OtherEventDetail = request.validationGates.OtherEventDetail,
-                    ActiveStatus = ActiveStatus.Active
-                };
-                await _db.IncidentValidationGates.AddAsync(IncidentValidationGate);
+                #endregion
 
+                #region  Save everything in one go
                 // 6. Save everything in one go
                 await _db.SaveChangesAsync();
 
                 await transaction.CommitAsync();
                 return incidentValidation.Id;
+                #endregion
             }
             catch (Exception ex)
             {

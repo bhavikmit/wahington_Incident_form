@@ -4,6 +4,7 @@ using DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251014111425_IncidentValidationTaskFK")]
+    partial class IncidentValidationTaskFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2136,9 +2139,6 @@ namespace DataLibrary.Migrations
                     b.Property<int>("ActiveStatus")
                         .HasColumnType("int");
 
-                    b.Property<long?>("AdditionalLocationId")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("ConfirmedSeverityLevelId")
                         .HasColumnType("bigint");
 
@@ -2179,8 +2179,6 @@ namespace DataLibrary.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AdditionalLocationId");
 
                     b.HasIndex("IncidentId");
 
@@ -2269,9 +2267,6 @@ namespace DataLibrary.Migrations
 
                     b.Property<long?>("ShiftId")
                         .HasColumnType("bigint");
-
-                    b.Property<DateTime?>("TimeIn")
-                        .HasColumnType("datetime2");
 
                     b.Property<long>("UpdatedBy")
                         .HasColumnType("bigint");
@@ -4340,52 +4335,6 @@ namespace DataLibrary.Migrations
                     b.ToTable("UserSearchSettings");
                 });
 
-            modelBuilder.Entity("Models.ValidationCloseout", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("IncidentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("IncidentValidationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Role")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ValidationCloseouts");
-                });
-
             modelBuilder.Entity("Models.WorkOrder", b =>
                 {
                     b.Property<long>("Id")
@@ -5235,10 +5184,6 @@ namespace DataLibrary.Migrations
 
             modelBuilder.Entity("Models.IncidentValidationLocation", b =>
                 {
-                    b.HasOne("Models.AdditionalLocations", "AdditionalLocation")
-                        .WithMany()
-                        .HasForeignKey("AdditionalLocationId");
-
                     b.HasOne("Models.Incident", "Incident")
                         .WithMany()
                         .HasForeignKey("IncidentId");
@@ -5246,8 +5191,6 @@ namespace DataLibrary.Migrations
                     b.HasOne("Models.IncidentValidation", "IncidentValidation")
                         .WithMany()
                         .HasForeignKey("IncidentValidationId");
-
-                    b.Navigation("AdditionalLocation");
 
                     b.Navigation("Incident");
 

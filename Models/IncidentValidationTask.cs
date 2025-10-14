@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    public class IncidentValidationPersonnel : BaseDBModel
+    public class IncidentValidationTask : BaseDBModel
     {
         [ForeignKey("IncidentId")]
         public long? IncidentId { get; set; }
@@ -18,10 +18,8 @@ namespace Models
         [ForeignKey("IncidentValidationId")]
         public long? IncidentValidationId { get; set; }
         public IncidentValidation IncidentValidation { get; set; }
-        public long? UserId { get; set; }
-        public long? CompanyId { get; set; }
-        public long? RoleId { get; set; }
-        public long? ShiftId { get; set; }
-        public DateTime? TimeIn { get; set; }
+        public string RoleIds { get; set; }
+        public long? StatusId { get; set; }
+        public string TaskDescription { get; set; }
     }
 }

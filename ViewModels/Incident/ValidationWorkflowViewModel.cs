@@ -104,10 +104,8 @@ namespace ViewModels.Incident
         public long UserId { get; set; } = default!;
         public IncidentValidationAssignedRoleViewModel assignedRole { get; set; } = new();
         public IncidentValidationValidationGatesViewModel validationGates { get; set; } = new();
-        //public long IncidentCommanderId { get; set; } = default!;
-        //public long FieldEnvRepId { get; set; } = default!;
-        //public long GECCoordinatorId { get; set; } = default!;
-        //public long EngineeringLeadId { get; set; } = default!;
+        public IncidentValidationRepairViewModel validationRepair { get; set; } = new();
+
         public string IncidentLocation { get; set; } = default!;
     }
 
@@ -146,13 +144,19 @@ namespace ViewModels.Incident
         public string listPolicyVM { get; set; } = default!;
         public string listValidationLocationVM { get; set; } = default!;
         public string listPersonalDataVM { get; set; } = default!;
+        public string listTaskDataVM { get; set; } = default!;
         public bool IsMarkFalseAlarm { get; set; } = false;
+        public string incidentValidationAssessment { get; set; } = default!;
 
         //public string listCommunicationVM { get; set; } = default!;
         public List<IncidentSubmitPolicyViewModel> listSubmitPolicyVM { get; set; } = new();
         public List<IncidentValidationLocationViewModel> listSubmitValidationLocationVM { get; set; } = new();
         public List<IncidentSubmitCommunicationViewModel> listSubmitCommunicationVM { get; set; } = new();
         public List<IncidentValidationPersonalViewModel> listSubmitPersonalDataVM { get; set; } = new();
+        public IncidentValidationAssessment incidentSubmitValidationAssessment { get; set; } = new();
+        public IncidentValidationRepairViewModel validationRepair { get; set; } = new();
+
+        public List<IncidentValidationTaskViewModel> listSubmitTaskDataVM { get; set; } = new();
     }
     public class IncidentSubmitPolicyViewModel
     {
@@ -216,5 +220,20 @@ namespace ViewModels.Incident
         public long? CompanyId { get; set; }
         public long? RoleId { get; set; }
         public long? ShiftId { get; set; }
+    }
+    public class IncidentValidationRepairViewModel
+    {
+        public string? SourceOfLeak { get; set; }
+        public string? SourceOfLeakStatus { get; set; }
+        public string? PreventFurtherOutage { get; set; }
+        public string? PreventFurtherOutageStatus { get; set; }
+        public string? VacuumTruckFitting { get; set; }
+        public string? VacuumTruckFittingStatus { get; set; }
+    }
+    public class IncidentValidationTaskViewModel
+    {
+        public string RoleIds { get; set; }= string.Empty;
+        public long? StatusId { get; set; }
+        public string TaskDescription { get; set; } = string.Empty;
     }
 }

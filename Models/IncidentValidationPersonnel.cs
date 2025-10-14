@@ -22,5 +22,6 @@ namespace Models
         public long? CompanyId { get; set; }
         public long? RoleId { get; set; }
         public long? ShiftId { get; set; }
+        public DateTime? TimeIn { get; set; }
     }
 }

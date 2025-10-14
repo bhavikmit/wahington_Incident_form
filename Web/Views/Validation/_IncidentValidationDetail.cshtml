@@ -1435,11 +1435,7 @@
 <script>
 
     $(document).ready(function() {
-        //initRoleMultiSelect($("#step-6").find(".Task > #div_ResponsibleRole"));
-
         initMultiselectRepair();
-
-        initMultiselect($(document));
     });
 
     $("#IsOtherEventID").change(function () {
@@ -1967,8 +1963,6 @@
     });
 
     $(document).on("click", "#dltTask", function (e) {
-         debugger
-
          e.preventDefault();
          $(this).closest('.Task').remove();
     });

@@ -553,6 +553,23 @@ namespace Repositories.Common
                 }
                 #endregion
 
+                #region IncidentValidationRepair
+                // 8. Save main IncidentValidationAssignedRole
+                var IncidentValidationRepair = new IncidentValidationRepair
+                {
+                    IncidentValidationId = request.Id,
+                    IncidentId = insertedValidationId,
+                    SourceOfLeak = request.validationRepair.SourceOfLeak,
+                    SourceOfLeakStatus = request.validationRepair.SourceOfLeakStatus,
+                    PreventFurtherOutage = request.validationRepair.PreventFurtherOutage,
+                    PreventFurtherOutageStatus = request.validationRepair.PreventFurtherOutageStatus,
+                    VacuumTruckFitting = request.validationRepair.VacuumTruckFitting,
+                    VacuumTruckFittingStatus = request.validationRepair.VacuumTruckFittingStatus,
+                    ActiveStatus = ActiveStatus.Active
+                };
+                await _db.IncidentValidationRepairs.AddAsync(IncidentValidationRepair); 
+                #endregion
+
                 #region Update Incident record
                 // 5. Update Incident record
                 var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == request.Id);

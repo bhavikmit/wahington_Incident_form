@@ -104,10 +104,8 @@ namespace ViewModels.Incident
         public long UserId { get; set; } = default!;
         public IncidentValidationAssignedRoleViewModel assignedRole { get; set; } = new();
         public IncidentValidationValidationGatesViewModel validationGates { get; set; } = new();
-        //public long IncidentCommanderId { get; set; } = default!;
-        //public long FieldEnvRepId { get; set; } = default!;
-        //public long GECCoordinatorId { get; set; } = default!;
-        //public long EngineeringLeadId { get; set; } = default!;
+        public IncidentValidationRepairViewModel validationRepair { get; set; } = new();
+
         public string IncidentLocation { get; set; } = default!;
     }
 
@@ -155,6 +153,8 @@ namespace ViewModels.Incident
         public List<IncidentSubmitCommunicationViewModel> listSubmitCommunicationVM { get; set; } = new();
         public List<IncidentValidationPersonalViewModel> listSubmitPersonalDataVM { get; set; } = new();
         public IncidentValidationAssessment incidentSubmitValidationAssessment { get; set; } = new();
+        public IncidentValidationRepairViewModel validationRepair { get; set; } = new();
+
     }
     public class IncidentSubmitPolicyViewModel
     {
@@ -218,5 +218,14 @@ namespace ViewModels.Incident
         public long? CompanyId { get; set; }
         public long? RoleId { get; set; }
         public long? ShiftId { get; set; }
+    }
+    public class IncidentValidationRepairViewModel
+    {
+        public string? SourceOfLeak { get; set; }
+        public string? SourceOfLeakStatus { get; set; }
+        public string? PreventFurtherOutage { get; set; }
+        public string? PreventFurtherOutageStatus { get; set; }
+        public string? VacuumTruckFitting { get; set; }
+        public string? VacuumTruckFittingStatus { get; set; }
     }
 }

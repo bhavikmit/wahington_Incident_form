@@ -2,14 +2,14 @@
 $(function () {
 
     let currentStep = 1;
-    const totalSteps = 4;
+    const totalSteps = 6;
 
     GetValidationsDetail($("#hdn_Id").val());
 
     $(document).off("click", "#nextBtn");
     $(document).on("click", "#nextBtn", function (e) {
 
-        if (currentStep == 4) {
+        if (currentStep == 6) {
             SaveIncidentValidation();
         }
 
@@ -578,6 +578,12 @@ async function SaveIncidentValidation() {
                     formData.append("validationGates." + fieldName, fieldValue);
                     form.push({ name: "validationGates." + fieldName, value: fieldValue });
                 }
+            }
+            else if (val.name.startsWith("IVValidation.validationRepair.")) {
+                const roleName = val.name.replace("IVValidation.validationRepair.", "");
+
+                formData.append("validationRepair." + roleName, val.value);
+                form.push({ name: val.name, value: val.value });
             }
         });
 

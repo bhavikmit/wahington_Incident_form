@@ -272,5 +272,7 @@ namespace Web.Controllers
                 return Json(new { success = false, message = "Error delete location." });
             }
         }
+
+        
     }
 }

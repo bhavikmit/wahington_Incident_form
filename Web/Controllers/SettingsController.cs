@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+
 using Repositories.Common;
 
 using ViewModels;
@@ -33,9 +34,9 @@ namespace Web.Controllers
         #region Ctor
         public SettingsController(IRelationshipService<RelationshipModifyViewModel, RelationshipModifyViewModel, RelationshipDetailViewModel> iRelationshipService, IEventTypeService<EventTypeModifyViewModel, EventTypeModifyViewModel, EventTypeDetailViewModel> iEventTypeService, ISeverityLevelService<SeverityLevelModifyViewModel, SeverityLevelModifyViewModel, SeverityLevelDetailViewModel> iSeverityLevelService, IStatusLegendService<StatusLegendModifyViewModel, StatusLegendModifyViewModel, StatusLegendDetailViewModel> iStatusLegendService, IAssetIdService<AssetIdModifyViewModel, AssetIdModifyViewModel, AssetIdDetailViewModel> iAssetIdService,
             IAssetTypeService<AssetTypeModifyViewModel, AssetTypeModifyViewModel, AssetTypeDetailViewModel> iAssetTypeService, IIncidentTeamService<IncidentTeamModifyViewModel, IncidentTeamModifyViewModel, IncidentTeamDetailViewModel> iIncidentTeamService,
-            IUserManagementService<UserManagementModifyViewModel,UserManagementModifyViewModel, UserDetailViewModel> iUserManagementService,
+            IUserManagementService<UserManagementModifyViewModel, UserManagementModifyViewModel, UserDetailViewModel> iUserManagementService,
             IPolicyService<PolicyModifyViewModel, PolicyModifyViewModel, PolicyDetailViewModel> iPolicyService, IUsersinService<UserModifyViewModel, UserModifyViewModel, UserDetailViewModel> iusersinService,
-            IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService, IMaterialService<MaterialModifyViewModel, MaterialModifyViewModel, MaterialDetailViewModel> iMaterialService, IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> iEquipmentFieldsService,IIncidentRoleService<IncidentRoleModifyViewModel, IncidentRoleModifyViewModel, IncidentRoleDetailViewModel> iIncidentRoleService,
+            IProgressService<ProgressModifyViewModel, ProgressModifyViewModel, ProgressDetailViewModel> iProgressService, IMaterialService<MaterialModifyViewModel, MaterialModifyViewModel, MaterialDetailViewModel> iMaterialService, IEquipmentFieldsService<EquipmentFieldsModifyViewModel, EquipmentFieldsModifyViewModel, EquipmentFieldsDetailViewModel> iEquipmentFieldsService, IIncidentRoleService<IncidentRoleModifyViewModel, IncidentRoleModifyViewModel, IncidentRoleDetailViewModel> iIncidentRoleService,
             ICompanyService<CompanyModifyViewModel, CompanyModifyViewModel, CompanyDetailViewModel> iCompanyService, IIncidentShiftService<IncidentShiftModifyViewModel, IncidentShiftModifyViewModel, IncidentShiftDetailViewModel> iIncidentShiftService)
         {
             _iRelationshipService = iRelationshipService;
@@ -715,7 +716,7 @@ namespace Web.Controllers
                     new { success = false, message = "An unexpected error occurred." });
             }
         }
-       
+
         [HttpPost]
         public async Task<IActionResult> AddPolicySteps([FromBody] AddPolicyStepsRequest req)
         {
@@ -732,7 +733,7 @@ namespace Web.Controllers
             }
             catch (Exception ex)
             {
-               // _logger?.LogError(ex, "Error AddPolicySteps");
+                // _logger?.LogError(ex, "Error AddPolicySteps");
                 return StatusCode(StatusCodes.Status500InternalServerError, new { success = false, message = "An unexpected error occurred." });
             }
         }
@@ -1379,6 +1380,23 @@ namespace Web.Controllers
         }
         #endregion
 
+        [HttpGet]
+        public async Task<IActionResult> GetCompanyAndRole(long userId)
+        {
+            if (userId == 0)
+                return Json(new { userId = 0, roleId = 0, companyId = 0 });
 
+            var result = await _iUsersinService.GetUserById(userId);
+
+            if (result is null)
+                return Json(new { userId = 0, roleId = 0, companyId = 0 });
+
+            return Json(new
+            {
+                userId = result.Id,
+                roleId = result.IncidentRoleId,
+                companyId = result.CompanyId
+            });
+        }
     }
 }

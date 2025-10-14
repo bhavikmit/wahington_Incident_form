@@ -589,6 +589,25 @@ namespace Repositories.Common
                 }
                 #endregion
 
+                #region Incident Validation Closeout Task Info 
+                // 4. Add Incident Validation Closeout Task Info 
+                if (request.listSubmitCloseoutTaskDataVM.Any())
+                {
+                    var validationCloseoutTaskInfo = request.listSubmitCloseoutTaskDataVM.Select(item =>
+                    {
+                        return new ValidationCloseout
+                        {
+                            IncidentId = request.Id,
+                            IncidentValidationId = incidentValidation.Id,
+                            Role = item.Role ?? string.Empty,
+                            Status = item.Status,
+                            Description = item.Description ?? string.Empty
+                        };
+                    }).ToList();
+                    await _db.ValidationCloseouts.AddRangeAsync(validationCloseoutTaskInfo);
+                }
+                #endregion
+
                 #region Update Incident record
                 // 5. Update Incident record
                 var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == request.Id);

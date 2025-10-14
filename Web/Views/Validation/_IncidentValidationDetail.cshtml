@@ -502,6 +502,12 @@
                         </div>
                         <div class="step-label">Restoration</div>
                     </div>
+                    <div class="step" data-step="7">
+                        <div class="step-icon">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="step-label">Closeout</div>
+                    </div>
                 </div>
 
                 <!-- Navigation Buttons -->
@@ -1409,6 +1415,56 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="shadow-sm step-content mt-3 d-none" id="step-7">
+                    <div class="details-sec incident-details-sec p-6">
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-primary btnNext" id="addCloseoutTask" type="button"><i class="fa-solid fa-plus"></i> Add Task</button>
+                        </div>
+                        <div class="cloneCloseoutTaskDiv">
+                            <div class="Stepcard incidentDetail mt-4 CloseoutTask">
+                                <h3>Task</h3>
+
+                                <div class="ms-1 dltCloseoutTaskbtn" style="display:none; cursor:pointer">
+                                    <i class="far fa-trash-alt" id="dltCloseoutTask" style="float:right"></i>
+                                </div>
+
+                                <div class="form-group" id="div_CloseoutTaskDescription">
+                                    <label>Task Description <span style="color:red">*</span></label>
+                                    <textarea class="form-control" id="CloseouttaskDescription" rows="3"></textarea>
+                                </div>
+                                <div class="form-group" id="div_ResponsibleRole">
+
+                                    <input type="hidden" id="hdn_CloseoutTaskResponsibleRole" value="" />
+
+                                    <div class="form-group mb-3" id="div_CloseoutTaskResponsibleRole">
+                                        <label>Responsible Role (Multiple)</label>
+                                        <div class="multiselect-dropdown" id="chk_CloseoutTaskResponsibleRole">
+                                            <div class="dropdown-btn">Choose roles</div>
+                                            <div class="dropdown-list">
+                                                @foreach (var item in Model.IVValidation.RoleList)
+                                                {
+                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group" id="div_Status">
+                                    <label>Status <span style="color:red">*</span></label>
+                                    <select class="form-select" required id="status">
+                                        <option value="" selected>Select Status</option>
+                                        @foreach (var item in Model.IVValidation.StatusList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -1967,6 +2023,21 @@
          $(this).closest('.Task').remove();
     });
 
+    $(document).on("click", "#addCloseoutTask", function (e) {
+
+         e.preventDefault();
+         showLoader($(`#step-7`).find(".cloneCloseoutTaskDiv"));
+
+        cloneCloseoutTaskContent();
+
+         hideLoader($(`#step-7`).find(".cloneCloseoutTaskDiv"));
+    });
+
+    $(document).on("click", "#dltCloseoutTask", function (e) {
+         e.preventDefault();
+        $(this).closest('.CloseoutTask').remove();
+    });
+
     function initMultiselectTask(context) {
         $(context).find(".multiselect-dropdown").each(function () {
             const $dropdown = $(this);
@@ -2025,6 +2096,65 @@
         $("#step-6").find(".cloneTaskDiv").append($newElement);
 
         initMultiselectTask($newElement);
+    }
+    function initMultiselectCloseoutTask(context) {
+        $(context).find(".multiselect-dropdown").each(function () {
+            const $dropdown = $(this);
+            const $btn = $dropdown.find(".dropdown-btn");
+            const $list = $dropdown.find(".dropdown-list");
+            const $hidden = $dropdown.closest("#div_ResponsibleRole").find("#hdn_CloseoutTaskResponsibleRole");
+
+            // Hide dropdown initially
+            $list.hide();
+
+            // Toggle dropdown open/close
+            $btn.off("click").on("click", function (e) {
+                e.stopPropagation();
+                // Close other dropdowns
+                $(".dropdown-list").not($list).hide();
+                // Toggle current one
+                $list.toggle();
+            });
+
+            // ✅ Keep dropdown open while selecting checkboxes
+            $list.off("click").on("click", function (e) {
+                e.stopPropagation(); // prevent closing dropdown
+            });
+
+            // Handle checkbox changes
+            $list.find("input[type='checkbox']").off("change").on("change", function () {
+                const selected = [];
+                const selectedNames = [];
+
+                $list.find("input[type='checkbox']:checked").each(function () {
+                    selected.push($(this).val());
+                    selectedNames.push($(this).data("name"));
+                });
+
+                $hidden.val(selected.join(",")); // store IDs in hidden field
+                $btn.text(selectedNames.length > 0 ? selectedNames.join(", ") : "Choose roles");
+            });
+        });
+
+        // ✅ Close all dropdowns only when clicking outside
+        $(document).off("click.multiselect").on("click.multiselect", function () {
+            $(".dropdown-list").hide();
+        });
+    }
+
+    function cloneCloseoutTaskContent() {
+        var content = $("#step-7").find(".CloseoutTask").first().prop("outerHTML");
+        var $newElement = $(content);
+
+        $newElement.find(".dltCloseoutTaskbtn").show();
+        $newElement.find("select, textarea, input[type=text], input[type=hidden]").val("");
+        $newElement.find(".form-check-input").prop("checked", false);
+        $newElement.find(".dropdown-btn").text("Choose roles");
+        $newElement.find(".select2").remove();
+
+        $("#step-7").find(".cloneCloseoutTaskDiv").append($newElement);
+
+        initMultiselectCloseoutTask($newElement);
     }
 
     function initMultiselectRepair() {

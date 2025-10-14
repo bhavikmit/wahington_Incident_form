@@ -145,6 +145,7 @@ namespace ViewModels.Incident
         public string listValidationLocationVM { get; set; } = default!;
         public string listPersonalDataVM { get; set; } = default!;
         public string listTaskDataVM { get; set; } = default!;
+        public string listCloseoutTaskDataVM { get; set; } = default!;
         public bool IsMarkFalseAlarm { get; set; } = false;
         public string incidentValidationAssessment { get; set; } = default!;
 
@@ -157,6 +158,7 @@ namespace ViewModels.Incident
         public IncidentValidationRepairViewModel validationRepair { get; set; } = new();
 
         public List<IncidentValidationTaskViewModel> listSubmitTaskDataVM { get; set; } = new();
+        public List<IncidentValidationCloseoutTaskViewModel> listSubmitCloseoutTaskDataVM { get; set; } = new();
     }
     public class IncidentSubmitPolicyViewModel
     {
@@ -235,5 +237,11 @@ namespace ViewModels.Incident
         public string RoleIds { get; set; }= string.Empty;
         public long? StatusId { get; set; }
         public string TaskDescription { get; set; } = string.Empty;
+    }
+    public class IncidentValidationCloseoutTaskViewModel
+    {
+        public string Role { get; set; } = string.Empty;
+        public string Status { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 }

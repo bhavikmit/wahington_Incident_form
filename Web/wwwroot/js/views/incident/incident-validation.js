@@ -2,14 +2,14 @@
 $(function () {
 
     let currentStep = 1;
-    const totalSteps = 6;
+    const totalSteps = 7;
 
     GetValidationsDetail($("#hdn_Id").val());
 
     $(document).off("click", "#nextBtn");
     $(document).on("click", "#nextBtn", function (e) {
 
-        if (currentStep == 6) {
+        if (currentStep == 7) {
             SaveIncidentValidation();
         }
 
@@ -448,6 +448,7 @@ async function SaveIncidentValidation() {
         var Regulatory = [];
         var Assessment = {};
         var TaskData = [];
+        var CloseoutTaskData = [];
 
         var selectedAssignTeams = $("#step-3").find('.responseCard .team-card.selected');
         $.each(selectedAssignTeams, function (i, val) {
@@ -526,6 +527,20 @@ async function SaveIncidentValidation() {
                 TaskDescription: taskDescription,
                 RoleIds: taskResponsibleRole,
                 StatusId: statusId,
+            });
+        });
+
+        $("#step-7 .cloneCloseoutTaskDiv > .CloseoutTask").each(function () {
+
+            var CloseouttaskDescription = $(this).find("#div_CloseoutTaskDescription").find('#CloseouttaskDescription').val();
+            var CloseouttaskResponsibleRole = $(this).find("#div_ResponsibleRole").find('#hdn_CloseoutTaskResponsibleRole').val();
+            var statusId = $(this).find("#div_Status").find('#status').val();
+
+            // push object
+            CloseoutTaskData.push({
+                Description: CloseouttaskDescription,
+                Role: CloseouttaskResponsibleRole,
+                Status: statusId,
             });
         });
 
@@ -626,6 +641,9 @@ async function SaveIncidentValidation() {
 
         if (TaskData.length > 0) {
             formData.append("listTaskDataVM", JSON.stringify(TaskData));
+        }
+        if (TaskData.length > 0) {
+            formData.append("listCloseoutTaskDataVM", JSON.stringify(CloseoutTaskData));
         }
 
         showLoader($(".main-content"));

@@ -1106,6 +1106,50 @@ namespace Repositories.Common
             }
         }
 
+        public async Task<long> AddMapChat(IncidentMapChatRequest request)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+
+            try
+            {
+                var notes = new IncidentMapChat
+                {
+                    IncidentId = request.IncidentId,
+                    ChatMessage = request.ChatMessage,
+                    SentBy = request.SentBy,
+                };
+
+                _db.IncidentMapChats.Add(notes);
+
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return notes.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error AddMapChat.");
+                return 0;
+            }
+        }
+
+        public async Task<List<IncidentMapChat>> GetIncidentMapChatChat(long incidentId)
+        {
+            List<IncidentMapChat> IncidentMapChats = new();
+
+            try
+            {
+                IncidentMapChats = await _db.IncidentMapChats.Where(p => !p.IsDeleted && p.IncidentId == incidentId).ToListAsync();
+                return IncidentMapChats;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error GetIncidentMapChatChat.");
+                return new List<IncidentMapChat>();
+            }
+        }
+
         #region private methods
         private bool TryParseCallTime(string callTime, out DateTime dateTime)
         {

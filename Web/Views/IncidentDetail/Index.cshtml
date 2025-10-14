@@ -225,9 +225,9 @@
     .specializations span {
         display: inline-block;
         /*  background: #e9f1ff;
-                    color: #2468f3; */
+                                    color: #2468f3; */
         /* padding: 4px 10px;
-                    border-radius: 20px; */
+                                    border-radius: 20px; */
         font-size: 13px;
         /* margin: 2px; */
         /* margin: 2px; */
@@ -1871,18 +1871,13 @@
 
                                     <!-- Chat Messages -->
                                     <div class="card-body chat-body" id="chatMessages">
-                                        <div class="handoff-item">
-                                            <span class="badge role-badge">IC</span>
-                                            Shift A → Shift B handoff complete.
-                                        </div>
-                                        <div class="handoff-item">
-                                            <span class="badge role-badge">FER</span>
-                                            Containment verified, waiting truck ETA.
-                                        </div>
-                                        <div class="handoff-item">
-                                            <span class="badge role-badge">GEC</span>
-                                            Logged cost adjustments.
-                                        </div>
+                                        @foreach (var item in Model.listIncidentMapChats)
+                                        {
+                                            <div class="handoff-item">
+                                                <span class="badge role-badge">@item.SentBy</span>
+                                                @item.ChatMessage
+                                            </div>
+                                        }
                                     </div>
 
                                     <!-- Input Area -->
@@ -1890,9 +1885,10 @@
                                         <div class="row g-2">
                                             <div class="col-3">
                                                 <select class="form-select" id="roleSelect">
-                                                    <option value="IC">IC</option>
-                                                    <option value="FER">FER</option>
-                                                    <option value="GEC">GEC</option>
+                                                    <option value="IC" data-role-type="1">IC</option>
+                                                    <option value="FER" data-role-type="2">FER</option>
+                                                    <option value="GEC" data-role-type="3">GEC</option>
+                                                    <option value="EL" data-role-type="4">EL</option>
                                                 </select>
                                             </div>
                                             <div class="col-7">
@@ -1918,16 +1914,6 @@
                                 </div>
                                 <div class="card-body d-flex flex-column justify-content-center align-items-center">
                                     <div id="map" style="height:500px;width:100%;"></div>
-                                    @*  <div class="map-icon mb-3">
-                                        <i class="fa-solid fa-location-dot fa-3x text-warning"></i>
-                                    </div>
-                                    <h5 class="fw-bold mb-2">Interactive Map</h5>
-                                    <p class="text-muted mb-4">Displays Incident Boundary, ICPs, Extraction Points, Personnel Positions.</p>
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button class="btn btn-outline-warning btn-sm rounded-3">Incident Boundary</button>
-                                        <button class="btn btn-outline-warning btn-sm rounded-3">ICPs</button>
-                                        <button class="btn btn-outline-warning btn-sm rounded-3">Personnel</button>
-                                    </div> *@
                                 </div>
                             </div>
                         </div>
@@ -2438,8 +2424,6 @@
                         </div>
                     </div>
                 </div>
-
-
 
                 <div id="assessment" class="tab-content">
                     <div class="topCard mb-3">
@@ -3096,6 +3080,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div id="closeout" class="tab-content">
                     <div class="topCard mb-3">
                         <div class="row g-3">
@@ -3676,31 +3661,48 @@
 </script>
 
 <script>
-    const sendBtn = document.getElementById('sendBtn');
-    const messageInput = document.getElementById('messageInput');
-    const roleSelect = document.getElementById('roleSelect');
-    const chatMessages = document.getElementById('chatMessages');
+       const sendBtn = document.getElementById('sendBtn');
+       const messageInput = document.getElementById('messageInput');
+       const roleSelect = document.getElementById('roleSelect');
+       const chatMessages = document.getElementById('chatMessages');
 
     // Handle Send button click
-    sendBtn.addEventListener('click', () => {
+    sendBtn.addEventListener('click', async () => {
       const role = roleSelect.value.trim();
       const message = messageInput.value.trim();
+      const id = @(Model.Id ?? 0);
 
       if (message === '') return; // ignore empty input
 
-      // Create new chat message element
-      const newMsg = document.createElement('div');
-      newMsg.classList.add('handoff-item');
-      newMsg.innerHTML = `<span class="badge role-badge">${role}</span> ${message}`;
+      const payload = { IncidentId: id, ChatMessage: message, SentBy: role };
 
-      // Append to chat section
-      chatMessages.appendChild(newMsg);
+      try {
+        const res = await fetch("/IncidentDetail/AddMapChat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
 
-      // Scroll to bottom
-      chatMessages.scrollTop = chatMessages.scrollHeight;
+        const json = await res.json();
 
-      // Clear input
-      messageInput.value = '';
+        if (json.success) {
+          // Create new chat message element
+          const newMsg = document.createElement('div');
+          newMsg.classList.add('handoff-item');
+          newMsg.innerHTML = `<span class="badge role-badge">${role}</span> ${message}`;
+
+          // Append to chat section
+          chatMessages.appendChild(newMsg);
+
+          // Scroll to bottom
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+
+          // Clear input
+          messageInput.value = '';
+        }
+      } catch (error) {
+        console.error("Error sending chat message:", error);
+      }
     });
 
     // Also allow pressing Enter key to send
@@ -3710,4 +3712,5 @@
         sendBtn.click();
       }
     });
+
 </script>

@@ -7,17 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ViewModels.Incident
+namespace Models
 {
-    public class AddLocationRequest
+    public class IncidentMapChat : BaseDBModel
     {
-        public long IncidentId { get; set; }
-        public string Address { get; set; }
-    }
-
-    public class IncidentMapChatRequest
-    {
+        [ForeignKey("IncidentId")]
         public long? IncidentId { get; set; }
+        public Incident Incident { get; set; }
         public string ChatMessage { get; set; }
         public string SentBy { get; set; }
     }

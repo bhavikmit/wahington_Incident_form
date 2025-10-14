@@ -1,5 +1,6 @@
 ﻿using Centangle.Common.ResponseHelpers.Models;
 
+using Models;
 using Models.Common.Interfaces;
 
 using Pagination;
@@ -25,5 +26,8 @@ namespace Repositories.Common
         Task<List<IncidentLocationMapViewModel>> GetIncidentMapDetailsbyId(long incidentId);
         Task<bool> SaveCommunicationMessage(SaveCommunicationRequest request);
         Task<List<AdditionalLocationViewModel>> GetAdditionalLocationsByIncidentId(long incidentId);
+        Task<long> AddMapChat(IncidentMapChatRequest request);
+
+        Task<List<IncidentMapChat>> GetIncidentMapChatChat(long incidentId);
     }
 }

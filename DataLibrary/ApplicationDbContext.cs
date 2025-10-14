@@ -121,6 +121,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ValidationCloseout> ValidationCloseouts { get; set; }
     public DbSet<IncidentValidationAssessment> IncidentValidationAssessments { get; set; }
     public DbSet<IncidentValidationTask> IncidentValidationTasks { get; set; }
+    public DbSet<IncidentMapChat> IncidentMapChats { get; set; }
+    
 
     [DbFunction("GetWeekNumber", "dbo")]
     public int GetWeekNumber(DateTime dateToCheck)

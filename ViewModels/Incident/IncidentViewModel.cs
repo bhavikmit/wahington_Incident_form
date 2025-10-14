@@ -42,6 +42,8 @@ namespace ViewModels.Incident
         public IncidentValidationAssignedRolesViewModel incidentValidationAssignedRolesViewModel { get; set; } = new();
         public IncidentValidationGatesViewModel incidentValidationGatesViewModel { get; set; } = new();
         public List<IncidentValidationLocationViewModel> IncidentValidationLocations { get; set; } = new();
+
+        public List<IncidentMapChat> listIncidentMapChats { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel
@@ -178,6 +180,7 @@ namespace ViewModels.Incident
         public string SeverityLevelName { get; set; }
         public string SeverityLevelColor { get; set; }
         public List<IncidentValidationCommunicationHistoriesViewModel> IncidentValidationCommunicationHistoriesViewModelList { get; set; }
+        public List<IncidentValidationNoteViewModel> IncidentValidationNotesList { get; set; } = new();
     }
 
     public class IncidentValidationCommunicationHistoriesViewModel
@@ -306,5 +309,18 @@ namespace ViewModels.Incident
         public string Exception { get; set; } = string.Empty;
         public string IndependentInspection { get; set; } = string.Empty;
         public string Regulatory { get; set; } = string.Empty;
+    }
+    public class IncidentValidationNoteViewModel
+    {
+        public long Id { get; set; }
+        public long? IncidentId { get; set; }
+        public long? IncidentValidationId { get; set; }
+        public string Notes { get; set; }
+        public bool IsDeleted { get; set; }
+        public int ActiveStatus { get; set; }
+        public DateTime? CreatedOn { get; set; }
+        public long CreatedBy { get; set; }
+        public DateTime? UpdatedOn { get; set; }
+        public long UpdatedBy { get; set; }
     }
 }

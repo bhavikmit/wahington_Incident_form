@@ -116,6 +116,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<IncidentRole> IncidentRoles { get; set; }
     public DbSet<IncidentShift> IncidentShifts { get; set; }
     public DbSet<IncidentValidationPersonnel> IncidentValidationPersonnels { get; set; }
+    public DbSet<IncidentValidationRepair> IncidentValidationRepairs { get; set; }
+    public DbSet<IncidentValidationNotes> IncidentValidationNotes { get; set; }
     public DbSet<IncidentValidationAssessment> IncidentValidationAssessments { get; set; }
 
     [DbFunction("GetWeekNumber", "dbo")]

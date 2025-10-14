@@ -4,6 +4,7 @@ using DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataLibrary.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251013133812_CreateTableIncidentValidationRepair")]
+    partial class CreateTableIncidentValidationRepair
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1868,95 +1871,6 @@ namespace DataLibrary.Migrations
                     b.ToTable("IncidentValidations");
                 });
 
-            modelBuilder.Entity("Models.IncidentValidationAssessment", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("EGEC_ICT_AssignId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("EGEC_ICT_StatusId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("EGEC_MLP_AssignId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("EGEC_MLP_StatusId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("EGEC_RSM_AssignId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("EGEC_RSM_StatusId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("FER_LC_AssignId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("FER_LC_StatusId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("FER_PCA_AssignId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("FER_PCA_StatusId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IC_EstablishICP_AssignId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IC_EstablishICP_StatusId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IC_MCR_AssignId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IC_MCR_StatusId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IC_Notify_AssignId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IC_Notify_StatusId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IncidentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IncidentValidationId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IncidentId");
-
-                    b.HasIndex("IncidentValidationId");
-
-                    b.ToTable("IncidentValidationAssessments");
-                });
-
             modelBuilder.Entity("Models.IncidentValidationAssignedRole", b =>
                 {
                     b.Property<long>("Id")
@@ -2105,12 +2019,6 @@ namespace DataLibrary.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsOtherEvent")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("OtherEventDetail")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Regulatory")
                         .HasColumnType("nvarchar(max)");
 
@@ -2182,52 +2090,6 @@ namespace DataLibrary.Migrations
                     b.HasIndex("IncidentValidationId");
 
                     b.ToTable("IncidentValidationLocations");
-                });
-
-            modelBuilder.Entity("Models.IncidentValidationNotes", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<int>("ActiveStatus")
-                        .HasColumnType("int");
-
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<long?>("IncidentId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
-
-                    b.Property<long?>("IncidentValidationId")
-                        .IsRequired()
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("UpdatedBy")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("UpdatedOn")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IncidentId");
-
-                    b.HasIndex("IncidentValidationId");
-
-                    b.ToTable("IncidentValidationNotes");
                 });
 
             modelBuilder.Entity("Models.IncidentValidationPersonnel", b =>
@@ -5095,21 +4957,6 @@ namespace DataLibrary.Migrations
                     b.Navigation("Incident");
                 });
 
-            modelBuilder.Entity("Models.IncidentValidationAssessment", b =>
-                {
-                    b.HasOne("Models.Incident", "Incident")
-                        .WithMany()
-                        .HasForeignKey("IncidentId");
-
-                    b.HasOne("Models.IncidentValidation", "IncidentValidation")
-                        .WithMany()
-                        .HasForeignKey("IncidentValidationId");
-
-                    b.Navigation("Incident");
-
-                    b.Navigation("IncidentValidation");
-                });
-
             modelBuilder.Entity("Models.IncidentValidationCommunicationHistory", b =>
                 {
                     b.HasOne("Models.Incident", "Incident")
@@ -5136,25 +4983,6 @@ namespace DataLibrary.Migrations
                     b.HasOne("Models.IncidentValidation", "IncidentValidation")
                         .WithMany()
                         .HasForeignKey("IncidentValidationId");
-
-                    b.Navigation("Incident");
-
-                    b.Navigation("IncidentValidation");
-                });
-
-            modelBuilder.Entity("Models.IncidentValidationNotes", b =>
-                {
-                    b.HasOne("Models.Incident", "Incident")
-                        .WithMany()
-                        .HasForeignKey("IncidentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.IncidentValidation", "IncidentValidation")
-                        .WithMany()
-                        .HasForeignKey("IncidentValidationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Incident");
 

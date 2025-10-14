@@ -19,7 +19,7 @@
 
         .IVPolicyList .card.highlight {
             /* border: 2px solid #ff8800 !important;
-                                                                                                                                    background: #fff7f0; */
+                                                                                                                                        background: #fff7f0; */
 
             border: 2px solid #93bfab !important;
             background: #ecfdf5;
@@ -225,9 +225,10 @@
 
     .right-panel {
         background: #fff;
-        padding: 20px;
-        border-radius: 10px;
+        padding: 0;
+        border-radius: 12px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
     }
 
     .team-section {
@@ -374,32 +375,32 @@
 
 
     /*  .select2-results__option {
-            padding-left: 25px;
-            position: relative;
-        }
-
-            .select2-results__option::before {
-                content: "";
-                position: absolute;
-                left: 5px;
-                top: 8px;
-                width: 14px;
-                height: 14px;
-                border: 1px solid #aaa;
-                border-radius: 3px;
-                background-color: #fff;
+                padding-left: 25px;
+                position: relative;
             }
 
-            .select2-results__option[aria-selected=true]::before {
-                background-color: #007bff;
-                border-color: #007bff;
-                content: "✔";
-                color: white;
-                font-size: 12px;
-                text-align: center;
-                line-height: 14px;
-            }
-     */
+                .select2-results__option::before {
+                    content: "";
+                    position: absolute;
+                    left: 5px;
+                    top: 8px;
+                    width: 14px;
+                    height: 14px;
+                    border: 1px solid #aaa;
+                    border-radius: 3px;
+                    background-color: #fff;
+                }
+
+                .select2-results__option[aria-selected=true]::before {
+                    background-color: #007bff;
+                    border-color: #007bff;
+                    content: "✔";
+                    color: white;
+                    font-size: 12px;
+                    text-align: center;
+                    line-height: 14px;
+                }
+         */
     /* Start Multiple dropdown list for Repair */
     .multiselect-dropdown {
         position: relative;
@@ -449,22 +450,96 @@
                 }
     /* End Multiple dropdown list for Repair */
 
+    /************New design changes************/
+    .tabHeader {
+        background: #ffffff;
+        padding: 16px 26px;
+    }
+
+    .titleSec {
+        margin-top: 0;
+        padding: 0 0 12px 0;
+    }
+
+
+    .backBtn {
+        background: transparent;
+        background: transparent;
+        border: none;
+        font-size: 22px;
+        margin-right: 16px;
+        color: #f54e00;
+    }
+
+    .section-header {
+        font-size: 22px;
+        font-weight: 600;
+        padding: 16px;
+        background: #f9fafb;
+        border-radius: 12px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .section-body {
+        padding: 16px;
+    }
+
+    .validationCard {
+        background: #fff;
+        padding: 0;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e5e7eb;
+    }
+
+    .form-section {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border: 1px solid #eaeaea;
+    }
+
+        .form-section h6 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+    /* Radio and checkbox styling */
+    .form-check-input:checked {
+        background-color: #ff7e00;
+        border-color: #ff7e00;
+    }
+
+    .form-check-label {
+        margin-left: 5px;
+    }
+
+    /* For spacing between inline radios */
+    .form-check-inline {
+        margin-right: 20px;
+    }
+
+    .form-section h6 {
+        font-size: 16px;
+    }
 
 </style>
-<div class="container-fluid">
-    <div class="validation-center">
-        <div class="workflow">
 
-            <form id="incident_validation_form">
+<div class="validation-center">
+    <div class="workflow">
 
-                <!-- Header -->
-                <div class="mb-4 titleofWorkflow">
-                    <h3 class="fw-bold">Validation Workflow - @Model.IVDetails.IncidentId</h3>
-                    <p class="text-muted">Manager validation and response coordination</p>
+        <form id="incident_validation_form">
+
+            <div class="tabHeader">
+                <div class="d-flex align-items-center  titleSec ">
+                    <button type="button" class="backBtn" data-bs-dismiss="modal" id="closeModalBtn"><i class="fa fa-arrow-left-long"></i></button>
+                    <h5 class="modal-title"> @Model.IVDetails.IncidentId</h5>
                 </div>
-
                 <!-- Step Navigation -->
-                <div class="steps mb-4 d-flex justify-content-between">
+                <div class="steps mb-0 d-flex justify-content-between">
                     <div class="step active" data-step="1">
                         <div class="step-icon">
                             <i class="fa-regular fa-file-lines"></i>
@@ -475,7 +550,7 @@
                         <div class="step-icon">
                             <i class="fa-solid fa-triangle-exclamation"></i>
                         </div>
-                        <div class="step-label">Location Validation</div>
+                        <div class="step-label">Validation</div>
                     </div>
                     <div class="step" data-step="3">
                         <div class="step-icon">
@@ -504,6 +579,16 @@
                     </div>
                 </div>
 
+            </div>
+
+            <!-- Header -->
+            @*  <div class="mb-4 titleofWorkflow">
+                    <h3 class="fw-bold">Validation Workflow - @Model.IVDetails.IncidentId</h3>
+                    <p class="text-muted">Manager validation and response coordination</p>
+                </div> *@
+
+
+            <div class="container-fluid">
                 <!-- Navigation Buttons -->
                 <div class="d-flex justify-content-between mt-3">
                     <button class="btn btn-light btnPrevious" id="prevBtn" type="button"><i class="fa-solid fa-arrow-left"></i> Previous</button>
@@ -511,7 +596,7 @@
                 </div>
 
                 <!-- Step Content -->
-                <div class="shadow-sm step-content mt-3" id="step-1">
+                <div class="step-content mt-3" id="step-1">
                     <div class="details-sec incident-details-sec p-6">
                         <div class="detailCard">
                             <div class="Stepcard callerInfo ">
@@ -624,7 +709,7 @@
                     </div>
                 </div>
 
-                <div class="shadow-sm step-content mt-3 d-none" id="step-2">
+                <div class="step-content mt-3 d-none" id="step-2">
                     <div class="row g-3">
                         <div class="col-md-3">
                             <div class="left-panel">
@@ -679,302 +764,314 @@
                                     <input type="hidden" id="hdnCloneLocId" value="@itemLoc.Id" />
                                 }
                                 <div id="rightPanel_@itemLoc.Id" data-add-loc="@itemLoc.Id" class="right-panel" style="@(!itemLoc.IsPrimaryLocation ? "display:none" : "display: block")">
-                                    <h3>Location Validation</h3>
-
-                                    <div class="form-group" id="divaddloc_Severity_@itemLoc.Id">
-                                        <label>Confirmed Severity Level <span style="color:red">*</span></label>
-                                        <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.severityLevelId">
-                                            <option value="" selected>Select confirmed severity</option>
-                                            @foreach (var item in Model.IVValidation.severityLevels)
-                                            {
-                                                <option value="@item.Value">@item.Text</option>
-                                            }
-                                        </select>
-                                        <small>Original severity: <strong>@Model.IVValidation.severityLevel</strong></small>
+                                    <div class="section-header">
+                                        <h6 class="mb-0">Location Validation</h6>
                                     </div>
-
-                                    <div class="form-group" id="divaddloc_DiscoveryPerimeter_@itemLoc.Id">
-                                        <label>Discovery Perimeter <span style="color:red">*</span></label>
-                                        <select class="form-select" required id="RadiusId" asp-for="@Model.IVValidation.RadiusId">
-                                            <option value="" selected>Select radius</option>
-                                            <option value="1">1 Mile</option>
-                                            <option value="2">3 Miles</option>
-                                            <option value="3">5 Miles</option>
-                                        </select>
-                                        <small>This creates a safety perimeter around the incident location</small>
-                                    </div>
-
-                                    <div class="form-group" id="divaddloc_ICP_@itemLoc.Id">
-                                        <label>ICP Location <span style="color:red">*</span></label>
-                                        <input type="hidden" id="hdnLat_@itemLoc.Id" value="0" />
-                                        <input type="hidden" id="hdnLon_@itemLoc.Id" value="0" />
-                                        <input type="text" id="ICPLocation_@itemLoc.Id" class="form-control mb-2" placeholder="123 Main St, City, ST 12345">
-                                        <ul id="suggestionsICPLocation_@itemLoc.Id" class="suggestions-list"></ul>
-
-                                        <div id="map_@itemLoc.Id" style="height:500px; width:100%; display:none" class="mapDivClass"></div>
-                                    </div>
-
-                                    <script>
-                                        $(document).ready(function () {
-                                            initICPLocationAutocomplete(@itemLoc.Id);
-                                        });
-                                    </script>
-
-                                    <div class="form-group" id="divaddloc_Source_@itemLoc.Id">
-                                        <label>Source <span style="color:red">*</span></label>
-                                        <input type="text" id="Source" class="form-control mb-2">
-                                    </div>
-
-                                    <div style="display:none">
-                                        <h6 class="titleOfteams"><i class="fa-solid fa-users"></i> Response Teams <span class="text-danger">*</span> (Select one or more)</h6>
-
-                                        @foreach (var item in Model.IVIncidentTeamUser)
-                                        {
-                                            <div class="team-section">
-                                                <div class="form-check teamSelect">
-                                                    <input class="form-check-input team-check" type="checkbox" id="teamAlpha" data-team-id="@item.TeamId">
-                                                    <label class="form-check-label fw-semibold" for="teamAlpha">@item.TeamName</label>
-                                                </div>
-                                                <div id="alphaDetails" class="team-details d-none">
-                                                    <div class="team-members">
-                                                        <label class="form-label fw-semibold">Select Team Members <span class="text-danger">*</span>(at least one)</label><br>
-                                                        <div class="row">
-                                                            @foreach (var itemUser in item.Users)
-                                                            {
-                                                                <div class="col-md-6">
-                                                                    <div class="form-check form-check-inline">
-                                                                        <input class="form-check-input" type="checkbox" id="user_@($"{item.TeamId}_{itemUser.Id}")">
-                                                                        <label class="form-check-label">@($"{itemUser.LastName} {itemUser.FirstName}")</label>
-
-                                                                    </div>
-                                                                </div>
-                                                            }
-                                                        </div>
-
-                                                    </div>
-                                                    <div class="work-steps mb-3">
-                                                        <label class="form-label fw-semibold"><i class="fa fa-list"></i>Work Steps for Emergency Response Team Alpha</label>
-                                                        <div class="work-step d-flex align-items-start justify-content-between">
-                                                            <div>
-                                                                <div class="fw-semibold StepName">Gas Step</div>
-                                                                <div class="StepDescription">This is the test description</div>
-                                                            </div>
-                                                            <div class="del-workstep"><i class="far fa-trash-alt"></i></div>
-                                                        </div>
-
-                                                        <div class="add-step-area mt-2">
-                                                            <input type="text" class="form-control mb-2" placeholder="Step name (e.g., Isolate gas line)..."> <input type="text" class="form-control mb-2" placeholder="Description (optional)..."> <input type="text" class="form-control mb-2" placeholder="Assign to specific person (optional)..."> <button class="btn btn-primary w-100">Add Work Step</button>
-                                                        </div>
-                                                    </div>
+                                    <div class="section-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="divaddloc_Severity_@itemLoc.Id">
+                                                    <label>Confirmed Severity Level <span style="color:red">*</span></label>
+                                                    <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.severityLevelId">
+                                                        <option value="" selected>Select confirmed severity</option>
+                                                        @foreach (var item in Model.IVValidation.severityLevels)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                    <small>Original severity: <strong>@Model.IVValidation.severityLevel</strong></small>
                                                 </div>
                                             </div>
-                                        }
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="divaddloc_DiscoveryPerimeter_@itemLoc.Id">
+                                                    <label>Discovery Perimeter <span style="color:red">*</span></label>
+                                                    <select class="form-select" required id="RadiusId" asp-for="@Model.IVValidation.RadiusId">
+                                                        <option value="" selected>Select radius</option>
+                                                        <option value="1">1 Mile</option>
+                                                        <option value="2">3 Miles</option>
+                                                        <option value="3">5 Miles</option>
+                                                    </select>
+                                                    <small>This creates a safety perimeter around the incident location</small>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="divaddloc_ICP_@itemLoc.Id">
+                                                    <label>ICP Location <span style="color:red">*</span></label>
+                                                    <input type="hidden" id="hdnLat_@itemLoc.Id" value="0" />
+                                                    <input type="hidden" id="hdnLon_@itemLoc.Id" value="0" />
+                                                    <input type="text" id="ICPLocation_@itemLoc.Id" class="form-control mb-2" placeholder="123 Main St, City, ST 12345">
+                                                    <ul id="suggestionsICPLocation_@itemLoc.Id" class="suggestions-list"></ul>
+
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="divaddloc_Source_@itemLoc.Id">
+                                                    <label>Source <span style="color:red">*</span></label>
+                                                    <input type="text" id="Source" class="form-control mb-2">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div id="map_@itemLoc.Id" style="height:250px; width:100%; display:none" class="mapDivClass"></div>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            $(document).ready(function () {
+                                                initICPLocationAutocomplete(@itemLoc.Id);
+                                            });
+                                        </script>
+                                        <div style="display:none">
+                                            <h6 class="titleOfteams"><i class="fa-solid fa-users"></i> Response Teams <span class="text-danger">*</span> (Select one or more)</h6>
+
+                                            @foreach (var item in Model.IVIncidentTeamUser)
+                                            {
+                                                <div class="team-section">
+                                                    <div class="form-check teamSelect">
+                                                        <input class="form-check-input team-check" type="checkbox" id="teamAlpha" data-team-id="@item.TeamId">
+                                                        <label class="form-check-label fw-semibold" for="teamAlpha">@item.TeamName</label>
+                                                    </div>
+                                                    <div id="alphaDetails" class="team-details d-none">
+                                                        <div class="team-members">
+                                                            <label class="form-label fw-semibold">Select Team Members <span class="text-danger">*</span>(at least one)</label><br>
+                                                            <div class="row">
+                                                                @foreach (var itemUser in item.Users)
+                                                                {
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-check form-check-inline">
+                                                                            <input class="form-check-input" type="checkbox" id="user_@($"{item.TeamId}_{itemUser.Id}")">
+                                                                            <label class="form-check-label">@($"{itemUser.LastName} {itemUser.FirstName}")</label>
+
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="work-steps mb-3">
+                                                            <label class="form-label fw-semibold"><i class="fa fa-list"></i>Work Steps for Emergency Response Team Alpha</label>
+                                                            <div class="work-step d-flex align-items-start justify-content-between">
+                                                                <div>
+                                                                    <div class="fw-semibold StepName">Gas Step</div>
+                                                                    <div class="StepDescription">This is the test description</div>
+                                                                </div>
+                                                                <div class="del-workstep"><i class="far fa-trash-alt"></i></div>
+                                                            </div>
+
+                                                            <div class="add-step-area mt-2">
+                                                                <input type="text" class="form-control mb-2" placeholder="Step name (e.g., Isolate gas line)..."> <input type="text" class="form-control mb-2" placeholder="Description (optional)..."> <input type="text" class="form-control mb-2" placeholder="Assign to specific person (optional)..."> <button class="btn btn-primary w-100">Add Work Step</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             }
                         </div>
-                        <div class="details-sec incident-details-sec p-6">
-                            <div class="Stepcard incidentDetail mt-4">
-                                <h3>Assigned Roles</h3>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label>
-                                                Incident Commander @* <span style="color:red">*</span> *@
-                                            </label>
-                                            <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.IncidentCommanderId">
-                                                <option value="" selected>Select Incident Commander</option>
-                                                @foreach (var item in Model.IVValidation.UserList)
-                                                {
-                                                    <option value="@item.Value">@item.Text</option>
-                                                }
-                                            </select>
+                        <div class="roles-gates-sec">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="validationCard assignedRoles">
+                                        <div class="section-header">
+                                            <h6 class="mb-0">Assigned Roles</h6>
                                         </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label>
-                                                Field Env. Rep (FER) @* <span style="color:red">*</span> *@
-                                            </label>
-                                            <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.FieldEnvRepId">
-                                                <option value="" selected>Select Field Env. Rep</option>
-                                                @foreach (var item in Model.IVValidation.UserList)
-                                                {
-                                                    <option value="@item.Value">@item.Text</option>
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label>GEC Coordinator @* <span style="color:red">*</span> *@</label>
-                                            <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.GECCoordinatorId">
-                                                <option value="" selected>Select GEC Coordinator</option>
-                                                @foreach (var item in Model.IVValidation.UserList)
-                                                {
-                                                    <option value="@item.Value">@item.Text</option>
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label>Engineering Lead @* <span style="color:red">*</span> *@</label>
-                                            <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.EngineeringLeadId">
-                                                <option value="" selected>Select Engineering Lead</option>
-                                                @foreach (var item in Model.IVValidation.UserList)
-                                                {
-                                                    <option value="@item.Value">@item.Text</option>
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="details-sec incident-details-sec p-6">
-                            <div class="Stepcard incidentDetail mt-4">
-                                <h3>Validation Gates</h3>
-                                <div class="row" id="IncidentValidationGate">
-                                    <div class="col-md-12">
-                                        <div class="mb-3 d-flex1 align-items-center justify-content-start indicators">
-                                            <label class="form-label d-block">Containment Acknowledgement</label>
-                                            <div class="selectRadio">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.ContainmentAcknowledgement"
-                                                           id="WaterPresentYes" value="1">
-                                                    <label class="form-check-label" for="WaterPresentYes">Yes</label>
+                                        <div class="section-body">
+                                            <div>
+                                                <div class="form-group">
+                                                    <label>
+                                                        Incident Commander @* <span style="color:red">*</span> *@
+                                                    </label>
+                                                    <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.IncidentCommanderId">
+                                                        <option value="" selected>Select Incident Commander</option>
+                                                        @foreach (var item in Model.IVValidation.UserList)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
                                                 </div>
-                                                <div class="form-check form-check-inline">
-                                                    @if (Model.Id > 0)
-                                                    {
+                                            </div>
+                                            <div>
+                                                <div class="form-group">
+                                                    <label>
+                                                        Field Env. Rep (FER) @* <span style="color:red">*</span> *@
+                                                    </label>
+                                                    <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.FieldEnvRepId">
+                                                        <option value="" selected>Select Field Env. Rep</option>
+                                                        @foreach (var item in Model.IVValidation.UserList)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-group">
+                                                    <label>GEC Coordinator @* <span style="color:red">*</span> *@</label>
+                                                    <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.GECCoordinatorId">
+                                                        <option value="" selected>Select GEC Coordinator</option>
+                                                        @foreach (var item in Model.IVValidation.UserList)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-group">
+                                                    <label>Engineering Lead @* <span style="color:red">*</span> *@</label>
+                                                    <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.EngineeringLeadId">
+                                                        <option value="" selected>Select Engineering Lead</option>
+                                                        @foreach (var item in Model.IVValidation.UserList)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="validationCard validationGates">
+                                        <div class="section-header">
+                                            <h6 class="mb-0">Validation Gates</h6>
+                                        </div>
+                                        <div class="section-body">
+
+                                            <div class="form-section indicators">
+                                                <h6>Containment Acknowledgement</h6>
+                                                <div class="selectRadio">
+                                                    <div class="form-check form-check-inline">
                                                         <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.ContainmentAcknowledgement"
-                                                               id="WaterPresentNo" value="0">
-                                                    }
-                                                    else
-                                                    {
-                                                        <input class="form-check-input" type="radio" checked asp-for="@Model.IVValidation.validationGates.ContainmentAcknowledgement"
-                                                               id="WaterPresentNo" value="0">
-                                                    }
-                                                    <label class="form-check-label" for="WaterPresentNo">No</label>
+                                                               id="WaterPresentYes" value="1">
+                                                        <label class="form-check-label" for="WaterPresentYes">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        @if (Model.Id > 0)
+                                                        {
+                                                            <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.ContainmentAcknowledgement"
+                                                                   id="WaterPresentNo" value="0">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="form-check-input" type="radio" checked asp-for="@Model.IVValidation.validationGates.ContainmentAcknowledgement"
+                                                                   id="WaterPresentNo" value="0">
+                                                        }
+                                                        <label class="form-check-label" for="WaterPresentNo">No</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3 d-flex1 align-items-center justify-content-start indicators">
-                                            <label class="form-label d-block">Exception Request</label>
-                                            <div class="selectRadio">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.Exception"
-                                                           id="WaterPresentYes" value="1">
-                                                    <label class="form-check-label" for="WaterPresentYes">Yes</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    @if (Model.Id > 0)
-                                                    {
+                                            <div class="form-section indicators">
+                                                <h6>Exception Request</h6>
+                                                <div class="selectRadio">
+                                                    <div class="form-check form-check-inline">
                                                         <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.Exception"
-                                                               id="WaterPresentNo" value="0">
-                                                    }
-                                                    else
-                                                    {
-                                                        <input class="form-check-input" type="radio" checked asp-for="@Model.IVValidation.validationGates.Exception"
-                                                               id="WaterPresentNo" value="0">
-                                                    }
-                                                    <label class="form-check-label" for="WaterPresentNo">No</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.Exception"
-                                                           id="WaterPresentUnknown" value="2">
-                                                    <label class="form-check-label" for="WaterPresentUnknown">N/A</label>
+                                                               id="WaterPresentYes" value="1">
+                                                        <label class="form-check-label" for="WaterPresentYes">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        @if (Model.Id > 0)
+                                                        {
+                                                            <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.Exception"
+                                                                   id="WaterPresentNo" value="0">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="form-check-input" type="radio" checked asp-for="@Model.IVValidation.validationGates.Exception"
+                                                                   id="WaterPresentNo" value="0">
+                                                        }
+                                                        <label class="form-check-label" for="WaterPresentNo">No</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.Exception"
+                                                               id="WaterPresentUnknown" value="2">
+                                                        <label class="form-check-label" for="WaterPresentUnknown">N/A</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3 d-flex1 align-items-center justify-content-start indicators">
-                                            <label class="form-label d-block">Independent Inspection Required</label>
-                                            <div class="selectRadio">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.IndependentInspection"
-                                                           id="WaterPresentYes" value="1">
-                                                    <label class="form-check-label" for="WaterPresentYes">Yes</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    @if (Model.Id > 0)
-                                                    {
+                                            <div class="form-section indicators">
+                                                <h6>Independent Inspection Required</h6>
+                                                <div class="selectRadio">
+                                                    <div class="form-check form-check-inline">
                                                         <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.IndependentInspection"
-                                                               id="WaterPresentNo" value="0">
-                                                    }
-                                                    else
-                                                    {
-                                                        <input class="form-check-input" type="radio" checked asp-for="@Model.IVValidation.validationGates.IndependentInspection"
-                                                               id="WaterPresentNo" value="0">
-                                                    }
-                                                    <label class="form-check-label" for="WaterPresentNo">No</label>
+                                                               id="WaterPresentYes" value="1">
+                                                        <label class="form-check-label" for="WaterPresentYes">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        @if (Model.Id > 0)
+                                                        {
+                                                            <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.IndependentInspection"
+                                                                   id="WaterPresentNo" value="0">
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="form-check-input" type="radio" checked asp-for="@Model.IVValidation.validationGates.IndependentInspection"
+                                                                   id="WaterPresentNo" value="0">
+                                                        }
+                                                        <label class="form-check-label" for="WaterPresentNo">No</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-section indicators">
+                                                <h6>Regulatory Notifications</h6>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <div class="form-check form-check-inline eventCheck">
+                                                        <input class="form-check-input" type="checkbox" id="CPOC" name="IVValidation.validationGates.Regulatory" value="1">
+                                                        <label class="form-check-label" for="eventType_26">
+                                                            CPOC
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline eventCheck">
+                                                        <input class="form-check-input" type="checkbox" id="PHMSA" name="IVValidation.validationGates.Regulatory" value="2">
+                                                        <label class="form-check-label" for="eventType_6">
+                                                            PHMSA
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline eventCheck">
+                                                        <input class="form-check-input" type="checkbox" id="NTSB" name="IVValidation.validationGates.Regulatory" value="3">
+                                                        <label class="form-check-label" for="eventType_7">
+                                                            NTSB
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline eventCheck">
+                                                        <input class="form-check-input" type="checkbox" id="EPA" name="IVValidation.validationGates.Regulatory" value="4">
+                                                        <label class="form-check-label" for="eventType_4">
+                                                            EPA
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline eventCheck">
+                                                        <input class="form-check-input" type="checkbox" id="LFD" name="IVValidation.validationGates.Regulatory" value="5">
+                                                        <label class="form-check-label" for="eventType_11">
+                                                            Local Fire Dept
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline eventCheck">
+                                                        @* <input type="radio" id="IsOtherEvent" class="form-check-input" name="incidentDetails.IsOtherEvent"> *@
+                                                        <input class="form-check-input" type="checkbox" id="IsOtherEventID" asp-for="IVValidation.validationGates.IsOtherEvent">
+                                                        <label class="form-check-label" asp-for="IVValidation.validationGates.IsOtherEvent">Other</label>
+                                                    </div>
+                                                    <div class="mb-3 OtherEventDetail" style="display:none">
+                                                        <input type="text" id="OtherEventDetail" class="form-control" asp-for="IVValidation.validationGates.OtherEventDetail" value="">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
-                                        <div class="mb-3 d-flex1 align-items-center justify-content-start indicators">
-                                            <label class="form-label d-block">Regulatory Notifications</label>
-
-                                            <div class="form-check form-check-inline eventCheck">
-                                                <input class="form-check-input" type="checkbox" id="CPOC" name="IVValidation.validationGates.Regulatory" value="1">
-                                                <label class="form-check-label" for="eventType_26">
-                                                    CPOC
-                                                </label>
-                                            </div>
-                                            <div class="form-check form-check-inline eventCheck">
-                                                <input class="form-check-input" type="checkbox" id="PHMSA" name="IVValidation.validationGates.Regulatory" value="2">
-                                                <label class="form-check-label" for="eventType_6">
-                                                    PHMSA
-                                                </label>
-                                            </div>
-                                            <div class="form-check form-check-inline eventCheck">
-                                                <input class="form-check-input" type="checkbox" id="NTSB" name="IVValidation.validationGates.Regulatory" value="3">
-                                                <label class="form-check-label" for="eventType_7">
-                                                    NTSB
-                                                </label>
-                                            </div>
-                                            <div class="form-check form-check-inline eventCheck">
-                                                <input class="form-check-input" type="checkbox" id="EPA" name="IVValidation.validationGates.Regulatory" value="4">
-                                                <label class="form-check-label" for="eventType_4">
-                                                    EPA
-                                                </label>
-                                            </div>
-                                            <div class="form-check form-check-inline eventCheck">
-                                                <input class="form-check-input" type="checkbox" id="LFD" name="IVValidation.validationGates.Regulatory" value="5">
-                                                <label class="form-check-label" for="eventType_11">
-                                                    Local Fire Dept
-                                                </label>
-                                            </div>
-                                            <div class="form-check form-check-inline eventCheck">
-                                                @* <input type="radio" id="IsOtherEvent" class="form-check-input" name="incidentDetails.IsOtherEvent"> *@
-                                                <input class="form-check-input" type="checkbox" id="IsOtherEventID" asp-for="IVValidation.validationGates.IsOtherEvent">
-                                                <label class="form-check-label" asp-for="IVValidation.validationGates.IsOtherEvent">Other</label>
-                                            </div>
-                                            <div class="mb-3 OtherEventDetail" style="display:none">
-                                                <input type="text" id="OtherEventDetail" class="form-control" asp-for="IVValidation.validationGates.OtherEventDetail" value="">
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-
                                 </div>
-                              
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="shadow-sm step-content mt-3 d-none" id="step-3">
-
+                <div class="step-content mt-3 d-none" id="step-3">
                     <div class="details-sec incident-details-sec p-6">
                         <div class="d-flex justify-content-between mt-3">
                             <button class="btn btn-primary btnNext" id="addPersonal" type="button"><i class="fa-solid fa-plus"></i> Add Personnel</button>
@@ -1030,9 +1127,70 @@
                             </div>
                         </div>
                     </div>
+                    @* <div class="validationCard personnelSec">
+                        <div class="section-header d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0">Personnel</h6>
+                            <button class="btn btn-primary btnNext" id="addPersonal" type="button"><i class="fa-solid fa-plus"></i> Add Personnel</button>
+                        </div>
+                        <div class="section-body clonePersonalDiv">
+                            <div class="title-delete  d-flex align-items-center justify-content-between">
+                                <p class="AddTitle">Personnel</p>
+                                <div class="ms-1 dltPersonnelbtn" style="display:none; cursor:pointer">
+                                    <i class="far fa-trash-alt" id="dltPersonnel" style="float:right"></i>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-md-6">
+                                    <div class="form-group" id="div_NameofUser">
+                                        <label>Name of User <span style="color:red">*</span></label>
+                                        <select class="form-select" required id="userId" onchange="getCompanyAndRole($(this))">
+                                            <option value="" selected>Select User</option>
+                                            @foreach (var item in Model.IVValidation.UserList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="div_CompanyName">
+                                        <label>Company Name <span style="color:red">*</span></label>
+                                        <select class="form-select" required id="companyId" disabled>
+                                            <option value="" selected>Select Company</option>
+                                            @foreach (var item in Model.IVValidation.CompanyList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group" id="div_Role">
+                                        <label>Select Role <span style="color:red">*</span></label>
+                                        <select class="form-select" required id="roleId" disabled>
+                                            <option value="" selected>Select Role</option>
+                                            @foreach (var item in Model.IVValidation.RoleList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="div_Shift">
+                                        <label>Select Shift <span style="color:red">*</span></label>
+                                        <select class="form-select" required id="shiftId">
+                                            <option value="" selected>Select Shift</option>
+                                            @foreach (var item in Model.IVValidation.ShiftsList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div> *@
                 </div>
 
-                <div class="shadow-sm step-content mt-3 d-none" id="step-4">
+                <div class="step-content mt-3 d-none" id="step-4">
                     <div class="details-sec incident-details-sec p-6">
                         <div class="Stepcard incidentDetail mt-4 IncidentCommander">
                             <h3>
@@ -1262,7 +1420,7 @@
                     </div>
                 </div>
 
-                <div class="shadow-sm step-content mt-3 d-none" id="step-5">
+                <div class="step-content mt-3 d-none" id="step-5">
                     <div class="row g-3">
                         <div class="col-md-12">
                             <div class="right-panel">
@@ -1360,7 +1518,7 @@
                     </div>
                 </div>
 
-                <div class="shadow-sm step-content mt-3 d-none" id="step-6">
+                <div class="step-content mt-3 d-none" id="step-6">
                     <div class="details-sec incident-details-sec p-6">
                         <div class="d-flex justify-content-between mt-3">
                             <button class="btn btn-primary btnNext" id="addTask" type="button"><i class="fa-solid fa-plus"></i> Add Task</button>
@@ -1378,7 +1536,7 @@
                                     <textarea class="form-control" id="taskDescription" rows="3"></textarea>
                                 </div>
                                 <div class="form-group" id="div_ResponsibleRole">
-                                   
+
                                     <input type="hidden" id="hdn_TaskResponsibleRole" value="" />
 
                                     <div class="form-group mb-3" id="div_TaskResponsibleRole">
@@ -1409,10 +1567,11 @@
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 </div>
+
 
 @functions {
     string GetBoxClass(string value)

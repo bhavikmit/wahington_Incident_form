@@ -426,7 +426,7 @@ namespace Repositories.Common
                 await _db.IncidentValidations.AddAsync(incidentValidation);
                 await _db.SaveChangesAsync();
 
-                var insertedValidationId = incidentValidation.Id;
+                //var insertedValidationId = incidentValidation.Id;
                 #endregion
 
                 #region Policies
@@ -497,8 +497,8 @@ namespace Repositories.Common
                 // 6. Save main IncidentValidationAssignedRole
                 var IncidentValidationAssignedRole = new IncidentValidationAssignedRole
                 {
-                    IncidentValidationId = request.Id,
-                    IncidentId = insertedValidationId,
+                    IncidentValidationId = incidentValidation.Id,
+                    IncidentId = request.Id,
                     IncidentCommander = request.assignedRole.IncidentCommanderId,
                     FieldEnvRep = request.assignedRole.FieldEnvRepId,
                     GEC_Coordinator = request.assignedRole.GECCoordinatorId,
@@ -510,8 +510,8 @@ namespace Repositories.Common
                 // 7. Save main IncidentValidationAssignedRole
                 var IncidentValidationGate = new IncidentValidationGate
                 {
-                    IncidentValidationId = request.Id,
-                    IncidentId = insertedValidationId,
+                    IncidentValidationId = incidentValidation.Id,
+                    IncidentId = request.Id,
                     ContainmentAcknowledgement = request.validationGates.ContainmentAcknowledgement,
                     Exception = request.validationGates.Exception,
                     IndependentInspection = request.validationGates.IndependentInspection,
@@ -557,8 +557,8 @@ namespace Repositories.Common
                 // 8. Save main IncidentValidationAssignedRole
                 var IncidentValidationRepair = new IncidentValidationRepair
                 {
-                    IncidentValidationId = request.Id,
-                    IncidentId = insertedValidationId,
+                    IncidentValidationId = incidentValidation.Id,
+                    IncidentId = request.Id,
                     SourceOfLeak = request.validationRepair.SourceOfLeak,
                     SourceOfLeakStatus = request.validationRepair.SourceOfLeakStatus,
                     PreventFurtherOutage = request.validationRepair.PreventFurtherOutage,
@@ -567,7 +567,26 @@ namespace Repositories.Common
                     VacuumTruckFittingStatus = request.validationRepair.VacuumTruckFittingStatus,
                     ActiveStatus = ActiveStatus.Active
                 };
-                await _db.IncidentValidationRepairs.AddAsync(IncidentValidationRepair); 
+                await _db.IncidentValidationRepairs.AddAsync(IncidentValidationRepair);
+                #endregion
+
+                #region Incident Validation Task Info 
+                // 4. Add Incident Validation Task Info 
+                if (request.listSubmitTaskDataVM.Any())
+                {
+                    var validationTaskInfo = request.listSubmitTaskDataVM.Select(item =>
+                    {
+                        return new IncidentValidationTask
+                        {
+                            IncidentId = request.Id,
+                            IncidentValidationId = incidentValidation.Id,
+                            RoleIds = item.RoleIds ?? string.Empty,
+                            StatusId = item.StatusId,
+                            TaskDescription = item.TaskDescription ?? string.Empty
+                        };
+                    }).ToList();
+                    await _db.IncidentValidationTasks.AddRangeAsync(validationTaskInfo);
+                }
                 #endregion
 
                 #region Update Incident record
@@ -593,7 +612,7 @@ namespace Repositories.Common
                 await _db.SaveChangesAsync();
 
                 await transaction.CommitAsync();
-                return incidentValidation.Id; 
+                return incidentValidation.Id;
                 #endregion
             }
             catch (Exception ex)

@@ -144,6 +144,7 @@ namespace ViewModels.Incident
         public string listPolicyVM { get; set; } = default!;
         public string listValidationLocationVM { get; set; } = default!;
         public string listPersonalDataVM { get; set; } = default!;
+        public string listTaskDataVM { get; set; } = default!;
         public bool IsMarkFalseAlarm { get; set; } = false;
         public string incidentValidationAssessment { get; set; } = default!;
 
@@ -155,6 +156,7 @@ namespace ViewModels.Incident
         public IncidentValidationAssessment incidentSubmitValidationAssessment { get; set; } = new();
         public IncidentValidationRepairViewModel validationRepair { get; set; } = new();
 
+        public List<IncidentValidationTaskViewModel> listSubmitTaskDataVM { get; set; } = new();
     }
     public class IncidentSubmitPolicyViewModel
     {
@@ -227,5 +229,11 @@ namespace ViewModels.Incident
         public string? PreventFurtherOutageStatus { get; set; }
         public string? VacuumTruckFitting { get; set; }
         public string? VacuumTruckFittingStatus { get; set; }
+    }
+    public class IncidentValidationTaskViewModel
+    {
+        public string RoleIds { get; set; }= string.Empty;
+        public long? StatusId { get; set; }
+        public string TaskDescription { get; set; } = string.Empty;
     }
 }

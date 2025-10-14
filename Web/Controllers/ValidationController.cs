@@ -180,6 +180,8 @@ namespace Web.Controllers
                 var personalInfo = !string.IsNullOrWhiteSpace(request.listPersonalDataVM) ? JsonConvert
                    .DeserializeObject<List<IncidentValidationPersonalViewModel>>(request.listPersonalDataVM) : new List<IncidentValidationPersonalViewModel>();
 
+                var taskInfo = !string.IsNullOrWhiteSpace(request.listTaskDataVM) ? JsonConvert
+                  .DeserializeObject<List<IncidentValidationTaskViewModel>>(request.listTaskDataVM) : new List<IncidentValidationTaskViewModel>();
 
                 var incidentValidationAssessment = !string.IsNullOrWhiteSpace(request.incidentValidationAssessment) ? JsonConvert
                    .DeserializeObject<IncidentValidationAssessment>(request.incidentValidationAssessment) : new IncidentValidationAssessment();
@@ -191,6 +193,8 @@ namespace Web.Controllers
                 request.listSubmitValidationLocationVM = validationLocations ?? new List<IncidentValidationLocationViewModel>();
 
                 request.listSubmitPersonalDataVM = personalInfo ?? new List<IncidentValidationPersonalViewModel>();
+
+                request.listSubmitTaskDataVM = taskInfo ?? new List<IncidentValidationTaskViewModel>();
 
                 request.incidentSubmitValidationAssessment = incidentValidationAssessment ?? new IncidentValidationAssessment();
 

@@ -447,6 +447,7 @@ async function SaveIncidentValidation() {
         var PersonalData = [];
         var Regulatory = [];
         var Assessment = {};
+        var TaskData = [];
 
         var selectedAssignTeams = $("#step-3").find('.responseCard .team-card.selected');
         $.each(selectedAssignTeams, function (i, val) {
@@ -511,6 +512,20 @@ async function SaveIncidentValidation() {
                 CompanyId: companyId,
                 RoleId: roleId,
                 ShiftId: shiftId
+            });
+        });
+
+        $("#step-6 .cloneTaskDiv > .Task").each(function () {
+
+            var taskDescription = $(this).find("#div_TaskDescription").find('#taskDescription').val();
+            var taskResponsibleRole = $(this).find("#div_ResponsibleRole").find('#hdn_TaskResponsibleRole').val();
+            var statusId = $(this).find("#div_Status").find('#status').val();
+
+            // push object
+            TaskData.push({
+                TaskDescription: taskDescription,
+                RoleIds: taskResponsibleRole,
+                StatusId: statusId,
             });
         });
 
@@ -609,6 +624,9 @@ async function SaveIncidentValidation() {
             formData.append("listPersonalDataVM", JSON.stringify(PersonalData));
         }
 
+        if (TaskData.length > 0) {
+            formData.append("listTaskDataVM", JSON.stringify(TaskData));
+        }
 
         showLoader($(".main-content"));
 

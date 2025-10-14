@@ -183,6 +183,9 @@ namespace Web.Controllers
                 var taskInfo = !string.IsNullOrWhiteSpace(request.listTaskDataVM) ? JsonConvert
                   .DeserializeObject<List<IncidentValidationTaskViewModel>>(request.listTaskDataVM) : new List<IncidentValidationTaskViewModel>();
 
+                var CloseouttaskInfo = !string.IsNullOrWhiteSpace(request.listCloseoutTaskDataVM) ? JsonConvert
+                  .DeserializeObject<List<IncidentValidationCloseoutTaskViewModel>>(request.listCloseoutTaskDataVM) : new List<IncidentValidationCloseoutTaskViewModel>();
+
                 var incidentValidationAssessment = !string.IsNullOrWhiteSpace(request.incidentValidationAssessment) ? JsonConvert
                    .DeserializeObject<IncidentValidationAssessment>(request.incidentValidationAssessment) : new IncidentValidationAssessment();
 
@@ -195,6 +198,7 @@ namespace Web.Controllers
                 request.listSubmitPersonalDataVM = personalInfo ?? new List<IncidentValidationPersonalViewModel>();
 
                 request.listSubmitTaskDataVM = taskInfo ?? new List<IncidentValidationTaskViewModel>();
+                request.listSubmitCloseoutTaskDataVM = CloseouttaskInfo ?? new List<IncidentValidationCloseoutTaskViewModel>();
 
                 request.incidentSubmitValidationAssessment = incidentValidationAssessment ?? new IncidentValidationAssessment();
 

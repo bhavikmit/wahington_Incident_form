@@ -123,7 +123,8 @@ namespace Repositories.Common
                               LastName = u.LastName ?? "",
                               u.Telephone,
                               u.Email,
-                              u.PinHash
+                              u.PinHash,
+                              u.EmployeeType
                           }
                       ).ToListAsync();
 
@@ -148,7 +149,8 @@ namespace Repositories.Common
                         LastName = t.LastName,
                         Telephone = t.Telephone,
                         Email = t.Email,
-                        PinHash = t.PinHash
+                        PinHash = t.PinHash,
+                        EmployeeType = t.EmployeeType
                     });
                 }
             }
@@ -184,7 +186,8 @@ namespace Repositories.Common
                     CreatedOn = now,
                     CreatedBy = userId,
                     UpdatedOn = now,
-                    UpdatedBy = userId
+                    UpdatedBy = userId,
+                    EmployeeType = viewModel.EmployeeType
                 };
 
                 await _db.IncidentUsers.AddAsync(user);
@@ -223,7 +226,8 @@ namespace Repositories.Common
                                 LastName = u.LastName ?? "",
                                 Telephone = u.Telephone,
                                 Email = u.Email,
-                                PinHash = u.PinHash
+                                PinHash = u.PinHash,
+                                EmployeeType = u.EmployeeType
                             }
                         ).FirstOrDefaultAsync();
 
@@ -246,6 +250,7 @@ namespace Repositories.Common
                 user.Email = viewModel.Email;
                 user.PinHash = viewModel.PinHash;
                 user.UpdatedOn = DateTime.UtcNow;
+                user.EmployeeType = viewModel.EmployeeType;
 
                 // Mark updated properties explicitly
                 _db.Entry(user).Property(u => u.TeamId).IsModified = true;
@@ -257,6 +262,7 @@ namespace Repositories.Common
                 _db.Entry(user).Property(u => u.Email).IsModified = true;
                 _db.Entry(user).Property(u => u.PinHash).IsModified = true;
                 _db.Entry(user).Property(u => u.UpdatedOn).IsModified = true;
+                _db.Entry(user).Property(u => u.EmployeeType).IsModified = true;
 
                 await _db.SaveChangesAsync();
                 return user.Id;
@@ -291,7 +297,8 @@ namespace Repositories.Common
                                 LastName = u.LastName ?? "",
                                 u.Telephone,
                                 u.Email,
-                                u.PinHash
+                                u.PinHash,
+                                u.EmployeeType
                             }
                         ).FirstOrDefaultAsync();
 
@@ -309,7 +316,8 @@ namespace Repositories.Common
                     Telephone = user.Telephone,
                     Email = user.Email,
                     PinHash = user.PinHash,
-                    VerifyPIN = user.PinHash
+                    VerifyPIN = user.PinHash,
+                    EmployeeType = user.EmployeeType
                 };
             }
             catch (Exception ex)
@@ -340,7 +348,8 @@ namespace Repositories.Common
                                 LastName = u.LastName ?? "",
                                 Telephone = u.Telephone,
                                 Email = u.Email,
-                                PinHash = u.PinHash
+                                PinHash = u.PinHash,
+                                EmployeeType = u.EmployeeType
                             }
                         ).FirstOrDefaultAsync();
 

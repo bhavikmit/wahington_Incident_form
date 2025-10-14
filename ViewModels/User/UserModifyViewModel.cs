@@ -42,5 +42,6 @@ namespace ViewModels
             public string IncidentRoleName { get; set; }
         }
         public List<IncidentRoleViewModel> IncidentRoles { get; set; } = new List<IncidentRoleViewModel>();
+        public string? EmployeeType { get; set; }
     }
 }

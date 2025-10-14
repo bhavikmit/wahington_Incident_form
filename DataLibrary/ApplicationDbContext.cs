@@ -118,6 +118,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<IncidentValidationPersonnel> IncidentValidationPersonnels { get; set; }
     public DbSet<IncidentValidationRepair> IncidentValidationRepairs { get; set; }
     public DbSet<IncidentValidationNotes> IncidentValidationNotes { get; set; }
+    public DbSet<ValidationCloseout> ValidationCloseouts { get; set; }
     public DbSet<IncidentValidationAssessment> IncidentValidationAssessments { get; set; }
     public DbSet<IncidentValidationTask> IncidentValidationTasks { get; set; }
 

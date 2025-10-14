@@ -147,12 +147,14 @@ namespace ViewModels.Incident
         public string listValidationLocationVM { get; set; } = default!;
         public string listPersonalDataVM { get; set; } = default!;
         public bool IsMarkFalseAlarm { get; set; } = false;
+        public string incidentValidationAssessment { get; set; } = default!;
 
         //public string listCommunicationVM { get; set; } = default!;
         public List<IncidentSubmitPolicyViewModel> listSubmitPolicyVM { get; set; } = new();
         public List<IncidentValidationLocationViewModel> listSubmitValidationLocationVM { get; set; } = new();
         public List<IncidentSubmitCommunicationViewModel> listSubmitCommunicationVM { get; set; } = new();
         public List<IncidentValidationPersonalViewModel> listSubmitPersonalDataVM { get; set; } = new();
+        public IncidentValidationAssessment incidentSubmitValidationAssessment { get; set; } = new();
     }
     public class IncidentSubmitPolicyViewModel
     {

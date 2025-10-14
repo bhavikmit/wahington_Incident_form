@@ -180,6 +180,10 @@ namespace Web.Controllers
                 var personalInfo = !string.IsNullOrWhiteSpace(request.listPersonalDataVM) ? JsonConvert
                    .DeserializeObject<List<IncidentValidationPersonalViewModel>>(request.listPersonalDataVM) : new List<IncidentValidationPersonalViewModel>();
 
+
+                var incidentValidationAssessment = !string.IsNullOrWhiteSpace(request.incidentValidationAssessment) ? JsonConvert
+                   .DeserializeObject<IncidentValidationAssessment>(request.incidentValidationAssessment) : new IncidentValidationAssessment();
+
                 request.listSubmitPolicyVM = policies ?? new List<IncidentSubmitPolicyViewModel>();
 
                 request.listSubmitCommunicationVM = communications ?? new List<IncidentSubmitCommunicationViewModel>();
@@ -187,6 +191,8 @@ namespace Web.Controllers
                 request.listSubmitValidationLocationVM = validationLocations ?? new List<IncidentValidationLocationViewModel>();
 
                 request.listSubmitPersonalDataVM = personalInfo ?? new List<IncidentValidationPersonalViewModel>();
+
+                request.incidentSubmitValidationAssessment = incidentValidationAssessment ?? new IncidentValidationAssessment();
 
                 var resultId = await _iIncidentValidationService.SaveIncidentValidation(request);
 

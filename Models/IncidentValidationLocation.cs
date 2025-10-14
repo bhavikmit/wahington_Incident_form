@@ -18,6 +18,11 @@ namespace Models
         [ForeignKey("IncidentValidationId")]
         public long? IncidentValidationId { get; set; }
         public IncidentValidation IncidentValidation { get; set; }
+
+        [ForeignKey("AdditionalLocationId")]
+        public long? AdditionalLocationId { get; set; }
+        public AdditionalLocations AdditionalLocation { get; set; }
+
         public long? ConfirmedSeverityLevelId { get; set; }
         public long? DiscoveryPerimeterId { get; set; }
         public string? ICPLocation { get; set; }

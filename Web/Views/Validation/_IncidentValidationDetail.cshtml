@@ -19,7 +19,7 @@
 
         .IVPolicyList .card.highlight {
             /* border: 2px solid #ff8800 !important;
-                                                                                                                    background: #fff7f0; */
+                                                                                                                                    background: #fff7f0; */
 
             border: 2px solid #93bfab !important;
             background: #ecfdf5;
@@ -371,6 +371,85 @@
     .d-flex1 {
         display: flex !important;
     }
+
+
+    /*  .select2-results__option {
+            padding-left: 25px;
+            position: relative;
+        }
+
+            .select2-results__option::before {
+                content: "";
+                position: absolute;
+                left: 5px;
+                top: 8px;
+                width: 14px;
+                height: 14px;
+                border: 1px solid #aaa;
+                border-radius: 3px;
+                background-color: #fff;
+            }
+
+            .select2-results__option[aria-selected=true]::before {
+                background-color: #007bff;
+                border-color: #007bff;
+                content: "✔";
+                color: white;
+                font-size: 12px;
+                text-align: center;
+                line-height: 14px;
+            }
+     */
+    /* Start Multiple dropdown list for Repair */
+    .multiselect-dropdown {
+        position: relative;
+        width: 100%;
+    }
+
+        .multiselect-dropdown .dropdown-btn {
+            background: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            padding: 6px 10px;
+            text-align: left;
+            width: 100%;
+            cursor: pointer;
+        }
+
+            .multiselect-dropdown .dropdown-btn:after {
+                content: "▼";
+                float: right;
+                font-size: 10px;
+                margin-top: 6px;
+                color: #999;
+            }
+
+        .multiselect-dropdown .dropdown-list {
+            display: none;
+            position: absolute;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-top: 2px;
+            z-index: 10;
+            width: 100%;
+            max-height: 180px;
+            overflow-y: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+            .multiselect-dropdown .dropdown-list label {
+                display: block;
+                padding: 6px 10px;
+                cursor: pointer;
+            }
+
+                .multiselect-dropdown .dropdown-list label:hover {
+                    background-color: #f1f1f1;
+                }
+    /* End Multiple dropdown list for Repair */
+
+
 </style>
 <div class="container-fluid">
     <div class="validation-center">
@@ -409,6 +488,19 @@
                             <i class="fa-solid fa-triangle-exclamation"></i>
                         </div>
                         <div class="step-label">Assessment</div>
+                    </div>
+
+                    <div class="step" data-step="5">
+                        <div class="step-icon">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="step-label">Repair</div>
+                    </div>
+                    <div class="step" data-step="6">
+                        <div class="step-icon">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="step-label">Restoration</div>
                     </div>
                 </div>
 
@@ -875,15 +967,7 @@
 
 
                                 </div>
-                                @*
-                                <!-- Incident Location -->
-                                <div class="Stepcard incidentLoc ">
-                                <h3>Incident Location</h3>
-                                <div class="row">
-                                <label class="form-label">Type of Event<span class="text-danger">*</span></label>
-
-                                </div>
-                                </div> *@
+                              
                             </div>
                         </div>
                     </div>
@@ -905,7 +989,7 @@
 
                                 <div class="form-group" id="div_NameofUser">
                                     <label>Name of User <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="userId">
+                                    <select class="form-select" required id="userId" onchange="getCompanyAndRole($(this))">
                                         <option value="" selected>Select User</option>
                                         @foreach (var item in Model.IVValidation.UserList)
                                         {
@@ -915,7 +999,7 @@
                                 </div>
                                 <div class="form-group" id="div_CompanyName">
                                     <label>Company Name <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="companyId">
+                                    <select class="form-select" required id="companyId" disabled>
                                         <option value="" selected>Select Company</option>
                                         @foreach (var item in Model.IVValidation.CompanyList)
                                         {
@@ -925,7 +1009,7 @@
                                 </div>
                                 <div class="form-group" id="div_Role">
                                     <label>Select Role <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="roleId">
+                                    <select class="form-select" required id="roleId" disabled>
                                         <option value="" selected>Select Role</option>
                                         @foreach (var item in Model.IVValidation.RoleList)
                                         {
@@ -1177,6 +1261,154 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="shadow-sm step-content mt-3 d-none" id="step-5">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <div class="right-panel">
+                                <h5>Per-Operation Setup</h5>
+                                <div class="Stepcard incidentDetail mt-4 SourceOfLeak">
+                                    <h3>
+                                        Use "Identifying Source of Leak" Checklist
+                                    </h3>
+                                    <div class="form-group mb-3" id="div_ResponsibleRole">
+                                        <input type="hidden" id="hdn_SOLResponsibleRole" asp-for="IVValidation.validationRepair.SourceOfLeak" name="IVValidation.validationRepair.SourceOfLeak" />
+                                        <label>Responsible Role (Multiple)</label>
+                                        <div class="multiselect-dropdown" id="chk_SOLResponsibleRole">
+                                            <div class="dropdown-btn">Choose roles</div>
+                                            <div class="dropdown-list">
+                                                @foreach (var item in Model.IVValidation.RoleList)
+                                                {
+                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="div_Status">
+                                        <label>Status <span style="color:red">*</span></label>
+                                        <select class="form-select" required id="chk_SOLStatus" asp-for="@Model.IVValidation.validationRepair.SourceOfLeakStatus">
+                                            <option value="" selected>Select Status</option>
+                                            @foreach (var item in Model.IVValidation.StatusList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="Stepcard incidentDetail mt-4 PreventFurtherOutage">
+                                    <h3>
+                                        Identify ideal purge locations to prevent further outage (use engineering data)
+                                    </h3>
+                                    <div class="form-group mb-3" id="div_ResponsibleRole">
+                                        <input type="hidden" id="hdn_PFOResponsibleRole" name="IVValidation.validationRepair.PreventFurtherOutage" asp-for="IVValidation.validationRepair.PreventFurtherOutage" />
+                                        <label>Responsible Role (Multiple)</label>
+                                        <div class="multiselect-dropdown" id="chk_PFOResponsibleRole">
+                                            <div class="dropdown-btn">Choose roles</div>
+                                            <div class="dropdown-list">
+                                                @foreach (var item in Model.IVValidation.RoleList)
+                                                {
+                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="div_Status">
+                                        <label>Status <span style="color:red">*</span></label>
+                                        <select class="form-select" required id="chk_PFOStatus" asp-for="@Model.IVValidation.validationRepair.PreventFurtherOutageStatus">
+                                            <option value="" selected>Select Status</option>
+                                            @foreach (var item in Model.IVValidation.StatusList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="Stepcard incidentDetail mt-4 VacuumTruckFittings">
+                                    <h3>
+                                        Verify vacuum truck fittings (2" cam-lock and 2" → ¾" adaptors available)
+                                    </h3>
+                                    <div class="form-group" id="div_ResponsibleRole">
+                                        <input type="hidden" id="hdn_VTFResponsibleRole" name="IVValidation.validationRepair.VacuumTruckFitting" asp-for="IVValidation.validationRepair.VacuumTruckFitting" />
+
+                                        <div class="form-group mb-3" id="div_ResponsibleRole">
+                                            <label>Responsible Role (Multiple)</label>
+                                            <div class="multiselect-dropdown" id="chk_VTFResponsibleRole">
+                                                <div class="dropdown-btn">Choose roles</div>
+                                                <div class="dropdown-list">
+                                                    @foreach (var item in Model.IVValidation.RoleList)
+                                                    {
+                                                        <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="div_Status">
+                                        <label>Status <span style="color:red">*</span></label>
+                                        <select class="form-select" required id="chk_VTFStatus" asp-for="@Model.IVValidation.validationRepair.VacuumTruckFittingStatus">
+                                            <option value="" selected>Select Status</option>
+                                            @foreach (var item in Model.IVValidation.StatusList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="shadow-sm step-content mt-3 d-none" id="step-6">
+                    <div class="details-sec incident-details-sec p-6">
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-primary btnNext" id="addTask" type="button"><i class="fa-solid fa-plus"></i> Add Task</button>
+                        </div>
+                        <div class="cloneTaskDiv">
+                            <div class="Stepcard incidentDetail mt-4 Task">
+                                <h3>Task</h3>
+
+                                <div class="ms-1 dltTaskbtn" style="display:none; cursor:pointer">
+                                    <i class="far fa-trash-alt" id="dltTask" style="float:right"></i>
+                                </div>
+
+                                <div class="form-group" id="div_TaskDescription">
+                                    <label>Task Description <span style="color:red">*</span></label>
+                                    <textarea class="form-control" id="taskDescription" rows="3"></textarea>
+                                </div>
+                                <div class="form-group" id="div_ResponsibleRole">
+                                   
+                                    <input type="hidden" id="hdn_TaskResponsibleRole" value="" />
+
+                                    <div class="form-group mb-3" id="div_TaskResponsibleRole">
+                                        <label>Responsible Role (Multiple)</label>
+                                        <div class="multiselect-dropdown" id="chk_TaskResponsibleRole">
+                                            <div class="dropdown-btn">Choose roles</div>
+                                            <div class="dropdown-list">
+                                                @foreach (var item in Model.IVValidation.RoleList)
+                                                {
+                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group" id="div_Status">
+                                    <label>Status <span style="color:red">*</span></label>
+                                    <select class="form-select" required id="status">
+                                        <option value="" selected>Select Status</option>
+                                        @foreach (var item in Model.IVValidation.StatusList)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -1201,6 +1433,11 @@
     }
 }
 <script>
+
+    $(document).ready(function() {
+        initMultiselectRepair();
+    });
+
     $("#IsOtherEventID").change(function () {
         if ($("#IsOtherEventID").is(":checked")) {
             $(".OtherEventDetail").show();
@@ -1664,20 +1901,43 @@
     }
 
 
-     $(document).on("click", "#addPersonal", function (e) {
+    $(document).on("click", "#addPersonal", function (e) {
          showLoader($(`#step-3`).find(".clonePersonalDiv"));
          e.preventDefault();
          clonePersonalContent();
          hideLoader($(`#step-3`).find(".clonePersonalDiv"));
      })
 
-      $(document).on("click", "#dltPersonnel", function (e) {
-          debugger
+    $(document).on("click", "#dltPersonnel", function (e) {
          showLoader($(`#step-3`).find(".Personnel"));
          e.preventDefault();
          $(this).closest('.Personnel').remove();
          hideLoader($(`#step-3`).find(".Personnel"));
      })
+
+
+    function getCompanyAndRole($this){
+
+        showLoader($(".clonePersonalDiv"));
+
+        $.getJSON('/Settings/GetCompanyAndRole', { userId: $($this).val() }, function (data) {
+
+            var closestClonediv = $($this).closest('.Personnel');
+            var $company = closestClonediv.find('#div_CompanyName');
+            var $role = closestClonediv.find('#div_Role');
+
+            if(data.userId > 0)
+            {
+                $company.find('#companyId').val(data.companyId > 0 ? data.companyId : '');
+                $role.find('#roleId').val(data.roleId > 0 ? data.roleId : '');
+            }
+            else {
+              $company.find('#companyId').val('');
+                $role.find('#roleId').val('');
+            }
+            hideLoader($(".clonePersonalDiv"));
+        });
+    }
 
     function clonePersonalContent()
     {
@@ -1690,6 +1950,133 @@
         $($newElement).find(".dltPersonnelbtn").show();
 
         $(`#step-3`).find(".clonePersonalDiv").append($newElement);
+    }
+
+    $(document).on("click", "#addTask", function (e) {
+
+         e.preventDefault();
+         showLoader($(`#step-6`).find(".cloneTaskDiv"));
+
+         cloneTaskContent();
+
+         hideLoader($(`#step-6`).find(".cloneTaskDiv"));
+    });
+
+    $(document).on("click", "#dltTask", function (e) {
+         e.preventDefault();
+         $(this).closest('.Task').remove();
+    });
+
+    function initMultiselectTask(context) {
+        $(context).find(".multiselect-dropdown").each(function () {
+            const $dropdown = $(this);
+            const $btn = $dropdown.find(".dropdown-btn");
+            const $list = $dropdown.find(".dropdown-list");
+            const $hidden = $dropdown.closest("#div_ResponsibleRole").find("#hdn_TaskResponsibleRole");
+
+            // Hide dropdown initially
+            $list.hide();
+
+            // Toggle dropdown open/close
+            $btn.off("click").on("click", function (e) {
+                e.stopPropagation();
+                // Close other dropdowns
+                $(".dropdown-list").not($list).hide();
+                // Toggle current one
+                $list.toggle();
+            });
+
+            // ✅ Keep dropdown open while selecting checkboxes
+            $list.off("click").on("click", function (e) {
+                e.stopPropagation(); // prevent closing dropdown
+            });
+
+            // Handle checkbox changes
+            $list.find("input[type='checkbox']").off("change").on("change", function () {
+                const selected = [];
+                const selectedNames = [];
+
+                $list.find("input[type='checkbox']:checked").each(function () {
+                    selected.push($(this).val());
+                    selectedNames.push($(this).data("name"));
+                });
+
+                $hidden.val(selected.join(",")); // store IDs in hidden field
+                $btn.text(selectedNames.length > 0 ? selectedNames.join(", ") : "Choose roles");
+            });
+        });
+
+        // ✅ Close all dropdowns only when clicking outside
+        $(document).off("click.multiselect").on("click.multiselect", function () {
+            $(".dropdown-list").hide();
+        });
+    }
+
+     function cloneTaskContent() {
+        var content = $("#step-6").find(".Task").first().prop("outerHTML");
+        var $newElement = $(content);
+
+        $newElement.find(".dltTaskbtn").show();
+        $newElement.find("select, textarea, input[type=text], input[type=hidden]").val("");
+        $newElement.find(".form-check-input").prop("checked", false);
+        $newElement.find(".dropdown-btn").text("Choose roles");
+        $newElement.find(".select2").remove();
+
+        $("#step-6").find(".cloneTaskDiv").append($newElement);
+
+        initMultiselectTask($newElement);
+    }
+
+    function initMultiselectRepair() {
+        $('.multiselect-dropdown').each(function () {
+            var $dropdown = $(this);
+            var $btn = $dropdown.find('.dropdown-btn');
+            var $list = $dropdown.find('.dropdown-list');
+            var $hidden = $dropdown.find('input[type="hidden"]'); // your hidden input
+
+            // 🔽 Toggle dropdown open/close
+            $btn.on('click', function (e) {
+                e.stopPropagation();
+                $('.dropdown-list').not($list).hide();
+                $list.toggle();
+            });
+
+            // ✅ Handle checkbox changes (event delegation)
+            $list.on('change', 'input[type="checkbox"]', function () {
+                var $checkboxes = $list.find('input[type="checkbox"]');
+
+                // Get selected items (id + name)
+                var selected = $checkboxes
+                    .filter(':checked')
+                    .map(function () {
+                        return {
+                            id: $(this).val(),
+                            name: $(this).data('name') || $(this).parent().text().trim()
+                        };
+                    })
+                    .get();
+
+                // Update button text
+                var selectedNames = selected.map(function (s) { return s.name; });
+                $btn.text(selectedNames.length ? selectedNames.join(', ') : 'Choose roles');
+
+                var dropdownId = $dropdown.attr('id'); // e.g., chk_VTFResponsibleRole
+                var hiddenId = dropdownId.replace('chk_', 'hdn_'); // => hdn_VTFResponsibleRole
+                var $hidden = $('#' + hiddenId);
+
+                // 🟢 Update hidden input value
+                if ($hidden.length) {
+                    $hidden.val(selected.map(function (s) { return s.id; }).join(','));
+                }
+            });
+
+            // 🧩 Hide dropdown when clicking outside
+            $(document).on('click', function (e) {
+                if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0) {
+                    $list.hide();
+                }
+            });
+        });
     }
 
 </script>

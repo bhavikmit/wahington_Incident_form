@@ -22,7 +22,7 @@
 
         .IVPolicyList .card.highlight {
             /* border: 2px solid #ff8800 !important;
-                                                                                                                                background: #fff7f0; */
+                                                                                                                                    background: #fff7f0; */
 
             border: 2px solid #93bfab !important;
             background: #ecfdf5;
@@ -376,33 +376,33 @@
     }
 
 
-   /*  .select2-results__option {
-        padding-left: 25px;
-        position: relative;
-    }
-
-        .select2-results__option::before {
-            content: "";
-            position: absolute;
-            left: 5px;
-            top: 8px;
-            width: 14px;
-            height: 14px;
-            border: 1px solid #aaa;
-            border-radius: 3px;
-            background-color: #fff;
+    /*  .select2-results__option {
+            padding-left: 25px;
+            position: relative;
         }
 
-        .select2-results__option[aria-selected=true]::before {
-            background-color: #007bff;
-            border-color: #007bff;
-            content: "✔";
-            color: white;
-            font-size: 12px;
-            text-align: center;
-            line-height: 14px;
-        }
- */
+            .select2-results__option::before {
+                content: "";
+                position: absolute;
+                left: 5px;
+                top: 8px;
+                width: 14px;
+                height: 14px;
+                border: 1px solid #aaa;
+                border-radius: 3px;
+                background-color: #fff;
+            }
+
+            .select2-results__option[aria-selected=true]::before {
+                background-color: #007bff;
+                border-color: #007bff;
+                content: "✔";
+                color: white;
+                font-size: 12px;
+                text-align: center;
+                line-height: 14px;
+            }
+     */
     /* Start Multiple dropdown list for Repair */
     .multiselect-dropdown {
         position: relative;
@@ -1389,13 +1389,29 @@
                                     <textarea class="form-control" id="taskDescription" rows="3"></textarea>
                                 </div>
                                 <div class="form-group" id="div_ResponsibleRole">
-                                    <label>Responsible Role (Multiple) <span style="color:red">*</span></label>
+                                    @* <label>Responsible Role (Multiple) <span style="color:red">*</span></label>
                                     <select class="form-select" required id="roleId" multiple="multiple">
                                         @foreach (var item in Model.IVValidation.RoleList)
                                         {
                                             <option value="@item.Value">@item.Text</option>
                                         }
-                                    </select>
+                                    </select> *@
+
+                                    <input type="hidden" id="hdn_TaskResponsibleRole" value="" />
+
+                                    <div class="form-group mb-3" id="div_TaskResponsibleRole">
+                                        <label>Responsible Role (Multiple)</label>
+                                        <div class="multiselect-dropdown" id="chk_TaskResponsibleRole">
+                                            <div class="dropdown-btn">Choose roles</div>
+                                            <div class="dropdown-list">
+                                                @foreach (var item in Model.IVValidation.RoleList)
+                                                {
+                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="form-group" id="div_Status">
                                     <label>Status <span style="color:red">*</span></label>
@@ -1436,9 +1452,12 @@
 }
 <script>
 
-        // Initialize for default personnel
     $(document).ready(function() {
-        initRoleMultiSelect($("#step-6").find(".Task > #div_ResponsibleRole"));
+        //initRoleMultiSelect($("#step-6").find(".Task > #div_ResponsibleRole"));
+
+        initMultiselectRepair();
+
+        initMultiselect($(document));
     });
 
     $("#IsOtherEventID").change(function () {
@@ -1957,100 +1976,132 @@
 
     $(document).on("click", "#addTask", function (e) {
 
-        debugger
-
-        e.preventDefault();
+         e.preventDefault();
          showLoader($(`#step-6`).find(".cloneTaskDiv"));
 
          cloneTaskContent();
 
          hideLoader($(`#step-6`).find(".cloneTaskDiv"));
     });
-    
+
     $(document).on("click", "#dltTask", function (e) {
          debugger
-         
+
          e.preventDefault();
          $(this).closest('.Task').remove();
     });
-    
-    function cloneTaskContent() {
 
-        debugger
+    function initMultiselectTask(context) {
+        $(context).find(".multiselect-dropdown").each(function () {
+            const $dropdown = $(this);
+            const $btn = $dropdown.find(".dropdown-btn");
+            const $list = $dropdown.find(".dropdown-list");
+            const $hidden = $dropdown.closest("#div_ResponsibleRole").find("#hdn_TaskResponsibleRole");
 
-        var content = $(`#step-6`).find(".Task").prop('outerHTML');
+            // Hide dropdown initially
+            $list.hide();
+
+            // Toggle dropdown open/close
+            $btn.off("click").on("click", function (e) {
+                e.stopPropagation();
+                // Close other dropdowns
+                $(".dropdown-list").not($list).hide();
+                // Toggle current one
+                $list.toggle();
+            });
+
+            // ✅ Keep dropdown open while selecting checkboxes
+            $list.off("click").on("click", function (e) {
+                e.stopPropagation(); // prevent closing dropdown
+            });
+
+            // Handle checkbox changes
+            $list.find("input[type='checkbox']").off("change").on("change", function () {
+                const selected = [];
+                const selectedNames = [];
+
+                $list.find("input[type='checkbox']:checked").each(function () {
+                    selected.push($(this).val());
+                    selectedNames.push($(this).data("name"));
+                });
+
+                $hidden.val(selected.join(",")); // store IDs in hidden field
+                $btn.text(selectedNames.length > 0 ? selectedNames.join(", ") : "Choose roles");
+            });
+        });
+
+        // ✅ Close all dropdowns only when clicking outside
+        $(document).off("click.multiselect").on("click.multiselect", function () {
+            $(".dropdown-list").hide();
+        });
+    }
+
+     function cloneTaskContent() {
+        var content = $("#step-6").find(".Task").first().prop("outerHTML");
         var $newElement = $(content);
 
         $newElement.find(".dltTaskbtn").show();
-        $newElement.find('select').val(''); // reset dropdowns
-        $newElement.find('.select2').remove(); // remove old select2 markup
+        $newElement.find("select, textarea, input[type=text], input[type=hidden]").val("");
+        $newElement.find(".form-check-input").prop("checked", false);
+        $newElement.find(".dropdown-btn").text("Choose roles");
+        $newElement.find(".select2").remove();
 
-        // Append and re-init select2
-        $(`#step-6`).find(".cloneTaskDiv").append($newElement);
+        $("#step-6").find(".cloneTaskDiv").append($newElement);
 
-        $newElement.find("#div_ResponsibleRole");
-
-        initRoleMultiSelect($newElement);
+        initMultiselectTask($newElement);
     }
 
-    function initRoleMultiSelect(context) {
-        $(context).find('#roleId').select2({
-            placeholder: "Select Role",
-            width: '100%',
-            closeOnSelect: false
+    function initMultiselectRepair() {
+        $('.multiselect-dropdown').each(function () {
+            var $dropdown = $(this);
+            var $btn = $dropdown.find('.dropdown-btn');
+            var $list = $dropdown.find('.dropdown-list');
+            var $hidden = $dropdown.find('input[type="hidden"]'); // your hidden input
+
+            // 🔽 Toggle dropdown open/close
+            $btn.on('click', function (e) {
+                e.stopPropagation();
+                $('.dropdown-list').not($list).hide();
+                $list.toggle();
+            });
+
+            // ✅ Handle checkbox changes (event delegation)
+            $list.on('change', 'input[type="checkbox"]', function () {
+                var $checkboxes = $list.find('input[type="checkbox"]');
+
+                // Get selected items (id + name)
+                var selected = $checkboxes
+                    .filter(':checked')
+                    .map(function () {
+                        return {
+                            id: $(this).val(),
+                            name: $(this).data('name') || $(this).parent().text().trim()
+                        };
+                    })
+                    .get();
+
+                // Update button text
+                var selectedNames = selected.map(function (s) { return s.name; });
+                $btn.text(selectedNames.length ? selectedNames.join(', ') : 'Choose roles');
+
+                var dropdownId = $dropdown.attr('id'); // e.g., chk_VTFResponsibleRole
+                var hiddenId = dropdownId.replace('chk_', 'hdn_'); // => hdn_VTFResponsibleRole
+                var $hidden = $('#' + hiddenId);
+
+                // 🟢 Update hidden input value
+                if ($hidden.length) {
+                    $hidden.val(selected.map(function (s) { return s.id; }).join(','));
+                }
+            });
+
+            // 🧩 Hide dropdown when clicking outside
+            $(document).on('click', function (e) {
+                if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0) {
+                    $list.hide();
+                }
+            });
         });
     }
 
-
-     $('.multiselect-dropdown').each(function () {
-        var $dropdown = $(this);
-        var $btn = $dropdown.find('.dropdown-btn');
-        var $list = $dropdown.find('.dropdown-list');
-        var $hidden = $dropdown.find('input[type="hidden"]'); // your hidden input
-
-        // 🔽 Toggle dropdown open/close
-        $btn.on('click', function (e) {
-            e.stopPropagation();
-            $('.dropdown-list').not($list).hide();
-            $list.toggle();
-        });
-
-        // ✅ Handle checkbox changes (event delegation)
-        $list.on('change', 'input[type="checkbox"]', function () {
-            var $checkboxes = $list.find('input[type="checkbox"]');
-
-            // Get selected items (id + name)
-            var selected = $checkboxes
-                .filter(':checked')
-                .map(function () {
-                    return {
-                        id: $(this).val(),
-                        name: $(this).data('name') || $(this).parent().text().trim()
-                    };
-                })
-                .get();
-
-            // Update button text
-            var selectedNames = selected.map(function (s) { return s.name; });
-            $btn.text(selectedNames.length ? selectedNames.join(', ') : 'Choose roles');
-
-            var dropdownId = $dropdown.attr('id'); // e.g., chk_VTFResponsibleRole
-            var hiddenId = dropdownId.replace('chk_', 'hdn_'); // => hdn_VTFResponsibleRole
-            var $hidden = $('#' + hiddenId);
-
-            // 🟢 Update hidden input value
-            if ($hidden.length) {
-                $hidden.val(selected.map(function (s) { return s.id; }).join(','));
-            }
-        });
-
-        // 🧩 Hide dropdown when clicking outside
-        $(document).on('click', function (e) {
-            if (!$dropdown.is(e.target) && $dropdown.has(e.target).length === 0) {
-                $list.hide();
-            }
-        });
-    });
-    // End Multiple dropdown list for Repair
 </script>
 

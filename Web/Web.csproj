@@ -28,6 +28,7 @@
 		<None Remove="wwwroot\css\themes\**" />
 		<None Remove="wwwroot\js\validation\bootstrap\**" />
 		<None Remove="wwwroot\js\validation\jquery\**" />
+		<None Remove="Views\IncidentDetail\Index.cshtml~RF22f5bec.TMP" />
 		<None Remove="Views\Upload\" />
 		<None Remove="Views\AssignedPermission\" />
 		<None Remove="Views\Policy\" />

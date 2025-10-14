@@ -32,5 +32,6 @@ namespace Models
 
         [NotMapped]
         public string VerifyPin { get; set; } // for incoming form only (not persisted)
+        public string? EmployeeType { get; set; } // e.g. "Employee", "Contractor"
     }
 }

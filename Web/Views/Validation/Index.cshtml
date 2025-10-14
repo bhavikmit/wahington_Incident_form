@@ -111,9 +111,9 @@
         padding: 6px 14px;
     }
 
-    .validation-center {
+    /* .validation-center {
         padding: 20px 0;
-    }
+    } */
 
     .topCard .icon {
         margin-right: 16px;
@@ -200,13 +200,13 @@
     /*************************Stepper Design****************************/
     /* Step Navigation */
 
-    .steps {
+    /* .steps {
         background: #fff;
         padding: 1rem;
         border-radius: 12px;
         box-shadow: 0px 2px 6px rgba(0,0,0,0.05);
     }
-
+ */
         .steps .step {
             flex: 1;
             text-align: center;
@@ -1364,49 +1364,7 @@
 <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
 <script src="https://js.arcgis.com/4.27/"></script>
 
-<header class="header validation-header d-flex align-items-center justify-content-between">
-    <!-- Left section -->
-    <div class="logo-section d-flex align-items-center">
-        <div class="logo"><i class="fa-regular fa-circle-check"></i></div>
-        <div class="title">
-            <h2>Validation</h2>
-            <span>Review and validate submitted incidents</span>
-        </div>
-    </div>
 
-    <!-- Right section -->
-    <div class="right-section d-flex align-items-center">
-
-        <div class="icon">
-            <i class="fa-regular fa-bell"></i>
-            <span class="notification-dot"></span>
-        </div>
-        <a class="icon" href="/Settings"><i class="fa fa-gear"></i></a>
-        <div class="profile">
-            <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3 " id="dropdownUser2"
-               data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-user"></i>
-
-            </a>
-            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3"
-                style="background-color: white;">
-                <li class="dropdown-item">
-                    <a class="nav-link d-flex align-items-center" href="/Identity/Account/Manage/ChangePassword">
-                        <i class="fa fa-lock"></i>
-                        <span class="menu-text">Change Password</span>
-                    </a>
-                </li>
-
-                <li class="dropdown-item">
-                    <a class="nav-link d-flex align-items-center" href="/Identity/Account/Logout">
-                        <i class="fa fa-user"></i>
-                        <span class="menu-text">Log Out</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</header>
 
 <input type="hidden" id="hdn_Id" value="@Model.Id" />
 <input type="hidden" id="hdn_user_name" value="@User.Identity.Name" />

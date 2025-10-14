@@ -38,6 +38,10 @@ namespace ViewModels.Incident
         public List<IncidentLocationMapViewModel> ListIncidentLocationMapViewModel { get; set; } = new();
         public AdditionalLocationViewModel additionalLocation { get; set; } = new();
         public List<AdditionalLocationViewModel> additionalLocations { get; set; } = new();
+
+        public IncidentValidationAssignedRolesViewModel incidentValidationAssignedRolesViewModel { get; set; } = new();
+        public IncidentValidationGatesViewModel incidentValidationGatesViewModel { get; set; } = new();
+        public List<IncidentValidationLocationViewModel> IncidentValidationLocations { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel
@@ -275,5 +279,32 @@ namespace ViewModels.Incident
         public string WorkStepName { get; set; } = default!;
         public string WorkStepDescription { get; set; } = default!;
         public string WorkStepSpecificPersion { get; set; } = default!;
+    }
+
+    public class IncidentValidationAssignedRolesViewModel
+    {
+        public long Id { get; set; }
+        public long IncidentId { get; set; }
+        public long IncidentValidationId { get; set; }
+        public long? IncidentCommanderId { get; set; }
+        public long? FieldEnvRepId { get; set; }
+        public long? GEC_CoordinatorId { get; set; }
+        public long? EngineeringLeadId { get; set; }
+
+        public string? IncidentCommanderName { get; set; }
+        public string? FieldEnvRepName { get; set; }
+        public string? GEC_CoordinatorName { get; set; }
+        public string? EngineeringLeadName { get; set; }
+    }
+
+    public class IncidentValidationGatesViewModel
+    {
+        public long Id { get; set; }
+        public long IncidentId { get; set; }
+        public long IncidentValidationId { get; set; }
+        public string ContainmentAcknowledgement { get; set; } = string.Empty;
+        public string Exception { get; set; } = string.Empty;
+        public string IndependentInspection { get; set; } = string.Empty;
+        public string Regulatory { get; set; } = string.Empty;
     }
 }

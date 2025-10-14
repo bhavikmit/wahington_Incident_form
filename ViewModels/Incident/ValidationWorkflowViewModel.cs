@@ -193,6 +193,7 @@ namespace ViewModels.Incident
         public long? DiscoveryPerimeter { get; set; }
         public string ICPLocation { get; set; } = default!;
         public string Source { get; set; } = default!;
+        public string SeverityName { get; set; } = default!;
         public float Lat { get; set; } = default!;
         public float Lon { get; set; } = default!;
     }

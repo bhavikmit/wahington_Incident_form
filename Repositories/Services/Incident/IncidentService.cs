@@ -621,9 +621,6 @@ namespace Repositories.Common
                     .Include(i => i.Relationship)
                     .FirstOrDefaultAsync(i => i.Id == id);
 
-                //var incidentValidation = await _db.IncidentValidations
-                //    .FirstOrDefaultAsync(iv => iv.IncidentId == id);
-
                 var incidentValidation = (from i in _db.IncidentValidations
                                           join s in _db.SeverityLevels on i.ConfirmedSeverityLevelId equals s.Id
                                           where i.IncidentId == id
@@ -661,6 +658,7 @@ namespace Repositories.Common
 
                 var teams = await _db.IncidentTeams.ToListAsync();
                 var policies = await _db.Policies.ToListAsync();
+                var severityLevels = await _db.SeverityLevels.Where(p => !p.IsDeleted).ToListAsync();
 
                 var workStepsData = incidentPolicies
                     .SelectMany(ivp => ivp.TeamIds.Split(',', StringSplitOptions.RemoveEmptyEntries)
@@ -684,8 +682,95 @@ namespace Repositories.Common
                     .Select(g => g.ToList())  // each group is a list
                     .ToList(); // list of lists
 
+                #region IncidentValidationAssignedRoles
+                var roles = await _db.IncidentValidationAssignedRoles
+                                          .AsNoTracking()
+                                          .Where(p => !p.IsDeleted && p.IncidentId == id)
+                                          .ToListAsync();
 
+                var userIds = roles
+                            .SelectMany(r => new long?[] { r.EngineeringLead, r.FieldEnvRep, r.GEC_Coordinator, r.IncidentCommander })
+                            .Where(x => x.HasValue)
+                            .Select(x => x!.Value)
+                            .Distinct()
+                            .ToList();
 
+                // only fetch referenced users (and ignore IsDeleted users)
+                var users = userIds.Count == 0
+                    ? new List<IncidentUser>() // replace IncidentUser with your user entity type
+                    : await _db.IncidentUsers
+                        .AsNoTracking()
+                        .Where(u => !u.IsDeleted && userIds.Contains(u.Id))
+                        .ToListAsync();
+
+                // build dictionary for fast lookup
+                var usersDict = users.ToDictionary(u => u.Id);
+
+                // helper to get full name
+                string GetFullName(long? userId)
+                {
+                    if (!userId.HasValue) return string.Empty;
+                    return usersDict.TryGetValue(userId.Value, out var u)
+                        ? $"{u.LastName} {u.FirstName}".Trim()
+                        : string.Empty;
+                }
+
+                // project to your view models
+                var IncidentValidationAssignedRoles = roles.Select(p => new IncidentValidationAssignedRolesViewModel
+                {
+                    Id = p.Id,
+                    IncidentId = p.IncidentId,
+                    IncidentValidationId = p.IncidentValidationId,
+
+                    EngineeringLeadId = p.EngineeringLead,
+                    EngineeringLeadName = GetFullName(p.EngineeringLead),
+
+                    FieldEnvRepId = p.FieldEnvRep,
+                    FieldEnvRepName = GetFullName(p.FieldEnvRep),
+
+                    GEC_CoordinatorId = p.GEC_Coordinator,
+                    GEC_CoordinatorName = GetFullName(p.GEC_Coordinator),
+
+                    IncidentCommanderId = p.IncidentCommander,
+                    IncidentCommanderName = GetFullName(p.IncidentCommander)
+                }).ToList();
+                #endregion
+
+                #region IncidentValidationGates
+                var validationGates = await _db.IncidentValidationGates
+                                         .AsNoTracking()
+                                         .Where(p => !p.IsDeleted && p.IncidentId == id)
+                                         .ToListAsync();
+
+                var validationGatesVM = validationGates.Select(p => new IncidentValidationGatesViewModel
+                {
+                    Id = p.Id,
+                    IncidentId = p.IncidentId,
+                    IncidentValidationId = p.IncidentValidationId,
+                    ContainmentAcknowledgement = p.ContainmentAcknowledgement.Value ? "FER Signed" : "No",
+                    Exception = p.Exception.Value ? "Yes" : "No",
+                    IndependentInspection = p.IndependentInspection.Value ? "Yes" : "No",
+                    Regulatory = GetRegulatory(p.Regulatory ?? string.Empty)
+
+                }).ToList();
+                #endregion
+
+                #region IncidentAdditionalLocation
+                var validationAdditionalLocation = await _db.IncidentValidationLocations
+                                         .AsNoTracking()
+                                         .Where(p => !p.IsDeleted && p.IncidentId == id)
+                                         .ToListAsync();
+
+                var validationAdditionalLocationVM = validationAdditionalLocation.Select(p => new IncidentValidationLocationViewModel
+                {
+                    DiscoveryPerimeter = p.DiscoveryPerimeterId,
+                    ICPLocation = p.ICPLocation ?? string.Empty,
+                    LocationId = p.AdditionalLocationId,
+                    SeverityID = p.ConfirmedSeverityLevelId,
+                    Source = p.Source ?? string.Empty,
+                    SeverityName = severityLevels.Where(s => s.Id == p.ConfirmedSeverityLevelId).FirstOrDefault()?.Name
+                }).ToList();
+                #endregion
 
                 if (incident == null)
                     return new IncidentViewModel();
@@ -789,7 +874,13 @@ namespace Repositories.Common
                         IncidentValidationCommunicationHistoriesViewModelList = incidentValidation.FirstOrDefault()?.IncidentValidationCommunicationHistoriesViewModelList
                     },
 
-                    workSteps = workStepsData.SelectMany(x => x).ToList()
+                    workSteps = workStepsData.SelectMany(x => x).ToList(),
+
+                    incidentValidationAssignedRolesViewModel = IncidentValidationAssignedRoles.FirstOrDefault() ?? new IncidentValidationAssignedRolesViewModel(),
+                    incidentValidationGatesViewModel = validationGatesVM.FirstOrDefault() ?? new IncidentValidationGatesViewModel(),
+
+                    IncidentValidationLocations = validationAdditionalLocationVM ?? new List<IncidentValidationLocationViewModel>()
+
                 };
 
                 // ✅ Set TeamsByPolicy for each WorkStepViewModel
@@ -1131,6 +1222,23 @@ namespace Repositories.Common
             return string.Join(",", fileList);
         }
 
+        private string GetRegulatory(string ids)
+        {
+            if (string.IsNullOrWhiteSpace(ids))
+                return string.Empty;
+
+            var idArray = new[] { "1", "2", "3", "4", "5" };
+            var assetNames = new[] { "CPOC", "PHMSA", "NTSB", "EPA", "Local Fire Dept" };
+
+            var inputIds = ids.Split(',').Select(x => x.Trim()).ToList();
+
+            var selected = idArray
+                .Select((id, index) => new { id, name = assetNames[index] })
+                .Where(x => inputIds.Contains(x.id))
+                .Select(x => x.name);
+
+            return string.Join(",", selected);
+        }
         #endregion 
     }
 }

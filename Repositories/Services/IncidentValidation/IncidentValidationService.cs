@@ -488,7 +488,8 @@ namespace Repositories.Common
                             Lat = item.Lat,
                             Lng = item.Lon,
                             Source = item.Source,
-                            ConfirmedSeverityLevelId = item.SeverityID ?? 0
+                            ConfirmedSeverityLevelId = item.SeverityID ?? 0,
+                            AdditionalLocationId = item.LocationId
                         };
                     }).ToList();
                     await _db.IncidentValidationLocations.AddRangeAsync(validationLocation);
@@ -601,6 +602,7 @@ namespace Repositories.Common
                     var statusLegend = await _db.StatusLegends.FirstOrDefaultAsync(x => x.Name == StatusLegendEnum.Validated.ToString());
 
                     incident.StatusLegendId = statusLegend?.Id ?? (int)StatusLegendEnum.Validated;
+                    //incident.SeverityLevelId = (int)SeverityEnum.Low;
                     incident.UpdatedOn = DateTime.Now;
                     incident.UpdatedBy = userIdParsed;
                 }

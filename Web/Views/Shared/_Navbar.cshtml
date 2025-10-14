@@ -39,6 +39,16 @@
         .nav-settting .mega-menu .font-weight-bold {
             font-weight: bold;
         }
+
+    .profile .SidebarIcon i {
+            color:#f54e00 !important;
+        }
+        
+
+    .profile{
+        padding: 0 14px;
+        border: none !important;
+    }
 </style>
 <div class="sidebar">
     <div class="inner">
@@ -82,16 +92,19 @@
                             <span class="name">Settings</span>
                         </a>
                     </li>
-                   @*  <li>
-                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3 sidebar-account" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-user"></i>
-                            <div class="d-flex flex-column">
+                  
+                    <li>
+                        <a href="#" class="text-decoration-none profile dropdown-toggle pl-3 sidebar-account" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="SidebarIcon">
+                                <i class="fa fa-user"></i>
+                            </span>
+                            <span class="name">Profile</span>
+                          @*   <div class="d-flex flex-column">
                                 <span class="ml-1 user-name menu-text">Account</span>
                                 <span class="ml-1 user-name menu-text"><small>Admin</small></span>
-                            </div>
+                            </div> *@
                         </a>
-                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3"
-                            style="background-color: white;">
+                        <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser3" style="background-color: white;">
                             <li class="dropdown-item">
                                 <a class="nav-link d-flex align-items-center" href="/Identity/Account/Manage/ChangePassword">
                                     <i class="fa fa-lock"></i>
@@ -106,7 +119,7 @@
                                 </a>
                             </li>
                         </ul>
-                    </li> *@
+                    </li> 
                     
                     @* <li>
                         <a href="/WorkOrders" class="@(currentPath.Contains("/workorders") ? "active" : "")">
@@ -313,7 +326,7 @@
         }
 
         <div class="sidebar-footer">
-            <div class="dropdown account-dropdown  pt-2 pr-2">
+            @* <div class="dropdown account-dropdown  pt-2 pr-2"> *@
                 @* <ul class="nav nav-pills nav-flush flex-column mb-auto text-center nav-main-ul">
                 <li class="nav-item">
                 <a class="nav-link d-flex align-items-center" href="/Settings/Index">
@@ -334,7 +347,7 @@
                     <span class="name">Support</span>
                 </a> *@
 
-                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser4"
+                @* <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser4"
                     style="background-color: white;">
                     <li>
                         <a class="dropdown-item nav-dropdown-item" attr-parent="support-dropdown"
@@ -348,7 +361,7 @@
                         <a class="dropdown-item nav-dropdown-item" attr-parent="support-dropdown" href="/Ticket/Index"
                            title="Tickets">Tickets</a>
                     </li>
-                </ul>
+                </ul> *@
 
               @*   <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle pl-3 sidebar-account"
                    id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -375,7 +388,7 @@
                     </li>
                 </ul> *@
 
-            </div>
+            @* </div> *@
 
             <div class="collapse_toggle_wrap mt-4  pt-4">
                 <button type="button" class="toggle-menu">

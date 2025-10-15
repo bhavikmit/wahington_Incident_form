@@ -826,24 +826,15 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>Use "Identifying Source of Leak" Checklist (Pg. 4)</td>
-                                                        <td>Engineering / IC</td>
-                                                        <td><span class="badge badge-status badge-pending">Pending</span></td>
-                                                        <td><i class="fa-solid fa-file-pdf me-2"></i> leak_checklist.pdf</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Identify ideal purge locations to prevent further outage (use engineering data)</td>
-                                                        <td>Engineering</td>
-                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
-                                                        <td><i class="fa-solid fa-location-dot me-2"></i> marked on map</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Verify vacuum truck fittings (2" cam-lock and 2" → ¾" adaptors available)</td>
-                                                        <td>IC / FER / Vendor</td>
-                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
-                                                        <td><i class="fa-regular fa-circle-check me-2 text-success"></i> verified w/ VacTruck A</td>
-                                                    </tr>
+                                                    @foreach (var repair in Model.IncidentViewRepairViewModel.listIncidentViewRepairViewModel)
+                                                    {
+                                                        <tr>
+                                                            <td>@repair.FieldType</td>
+                                                            <td>@repair.FieldValue</td>
+                                                            <td><span class="badge badge-status badge-pending">@repair.FieldStatus</span></td>
+                                                            <td><i class="fa-solid fa-file-pdf me-2"></i> leak_checklist.pdf</td>
+                                                        </tr>
+                                                    }
                                                 </tbody>
                                             </table>
                                         </div>
@@ -961,41 +952,10 @@
                             <div class="RightSection">
                                 <!-- Updates -->
                                 <div class="updates d-flex flex-column justify-content-between h-100">
-                                    <div>
-                                        <h6>Updates</h6>
-
-                                        <div class="update-item">
-                                            <span class="update-time">11:42 IC</span>
-                                            <div>ICP-1 purge completed (2,800 gal extracted).</div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">12:45 FER</span>
-                                            <div>
-                                                ICP-2 purge verified and logged.
-                                            </div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">13:10 ENG</span>
-                                            <div>Pressure gauge readings stable.</div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">13:25 GEC</span>
-                                            <div>Disposal manifest issued for PRG-001.</div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">13:35 FER</span>
-                                            <div>Containment labels verified for Baker tank. </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="update-footer mt-3">
-                                        <textarea type="text" rows="5" class="form-control mb-2" id="post" placeholder="Post an update..."></textarea>
-                                        <button class="btn btn-update"><i class="fa-solid fa-paper-plane me-2"></i>Post Update</button>
-                                    </div>
+                                    @{
+                                        Model.IncidentViewPostType = 1; // Repair
+                                    }
+                                    @await Html.PartialAsync("~/Views/IncidentDetail/_PostDetails.cshtml", Model)
                                 </div>
                             </div>
                         </div>
@@ -1258,42 +1218,16 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td>Generate Major Customer Report (MCR)</td>
-                                                        <td>IC / GEC</td>
-                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
-                                                        <td>5:00 PM</td>
-                                                        <td><i class="fa fa-file"></i> mcr_final.pdf</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Generate Major Customer Report (MCR)</td>
-                                                        <td>IC / GEC</td>
-                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
-                                                        <td>5:00 PM</td>
-                                                        <td><i class="fa fa-file"></i> mcr_final.pdf</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Generate Major Customer Report (MCR)</td>
-                                                        <td>IC / GEC</td>
-                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
-                                                        <td>5:00 PM</td>
-                                                        <td><i class="fa fa-file"></i> mcr_final.pdf</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Generate Major Customer Report (MCR)</td>
-                                                        <td>IC / GEC</td>
-                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
-                                                        <td>5:00 PM</td>
-                                                        <td><i class="fa fa-file"></i> mcr_final.pdf</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Generate Major Customer Report (MCR)</td>
-                                                        <td>IC / GEC</td>
-                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
-                                                        <td>5:00 PM</td>
-                                                        <td><i class="fa fa-file"></i> mcr_final.pdf</td>
-                                                    </tr>
-
+                                                    @foreach (var closeout in Model.IncidentViewCloseoutViewModel.listIncidentViewCloseoutViewModel)
+                                                    {
+                                                        <tr>
+                                                            <td>@closeout.Task</td>
+                                                            <td>@closeout.FieldValue</td>
+                                                            <td><span class="badge badge-status badge-complete">@closeout.Status</span></td>
+                                                            <td>5:00 PM</td>
+                                                            <td><i class="fa fa-file"></i> mcr_final.pdf</td>
+                                                        </tr>
+                                                    }
                                                 </tbody>
                                             </table>
                                         </div>
@@ -1354,41 +1288,10 @@
                             <div class="RightSection">
                                 <!-- Updates -->
                                 <div class="updates d-flex flex-column justify-content-between h-100 mb-3">
-                                    <div>
-                                        <h6>Updates & Approvals</h6>
-
-                                        <div class="update-item">
-                                            <span class="update-time">11:42 IC</span>
-                                            <div>ICP-1 purge completed (2,800 gal extracted).</div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">12:45 FER</span>
-                                            <div>
-                                                ICP-2 purge verified and logged.
-                                            </div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">13:10 ENG</span>
-                                            <div>Pressure gauge readings stable.</div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">13:25 GEC</span>
-                                            <div>Disposal manifest issued for PRG-001.</div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">13:35 FER</span>
-                                            <div>Containment labels verified for Baker tank. </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="update-footer mt-3">
-                                        <textarea type="text" rows="5" class="form-control mb-2" id="post" placeholder="Post an update..."></textarea>
-                                        <button class="btn btn-update"><i class="fa-solid fa-paper-plane me-2"></i>Post Update</button>
-                                    </div>
+                                    @{
+                                        Model.IncidentViewPostType = 2; // Close out
+                                    }
+                                    @await Html.PartialAsync("~/Views/IncidentDetail/_PostDetails.cshtml", Model)
                                 </div>
 
 

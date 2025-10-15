@@ -853,6 +853,24 @@ namespace Repositories.Common
                     .ToListAsync();
                 #endregion
 
+                List<IncidentViewPostViewModel> ListPostDetailVM = new List<IncidentViewPostViewModel>();
+                #region IncidentValidationRepair
+                List<IncidentViewRepairListViewModel> ListvalidationRepairVM = await GetvalidationRepairVM(id);
+                ListPostDetailVM = await GetPostDetailVM(id);
+                IncidentViewRepairViewModel validationRepairVM = new IncidentViewRepairViewModel();
+
+                validationRepairVM.listIncidentViewRepairViewModel = ListvalidationRepairVM;
+                validationRepairVM.listIncidentViewPostViewModel = ListPostDetailVM;
+                #endregion
+                #region IncidentValidationCloseout
+                List<IncidentViewCloseoutListViewModel> ListvalidationCloseoutVM = await GetvalidationCloseoutVM(id);
+                ListPostDetailVM = await GetPostDetailVM(id);
+                IncidentViewCloseoutViewModel validationCloseoutVM = new IncidentViewCloseoutViewModel();
+
+                validationCloseoutVM.PersonnelInvolved = await _db.IncidentValidationPersonnels.CountAsync(p => p.IncidentId == id);
+                validationCloseoutVM.listIncidentViewCloseoutViewModel = ListvalidationCloseoutVM;
+                validationCloseoutVM.listIncidentViewPostViewModel = ListPostDetailVM;
+                #endregion
 
                 if (incident == null)
                     return new IncidentViewModel();
@@ -1016,6 +1034,9 @@ namespace Repositories.Common
                     .GroupBy(ws => ws.PolicyName)
                     .Select(g => g.ToList())  // each group is a list
                     .ToList(); // list of lists
+
+                viewModel.IncidentViewRepairViewModel = validationRepairVM;
+                viewModel.IncidentViewCloseoutViewModel = validationCloseoutVM;
                 return viewModel;
             }
             catch (Exception ex)
@@ -1900,6 +1921,213 @@ namespace Repositories.Common
                 _logger.LogError(ex, "Error Update Supervisor.");
                 return 0;
             }
+        }
+        #endregion
+
+        #region IncidentValidationRepair
+        public async Task<List<IncidentViewRepairListViewModel>> GetvalidationRepairVM(long id)
+        {
+
+            //var repairs = await _db.IncidentValidationRepairs.ToListAsync();
+            //var IncidentValidationRepairs = repairs.AsEnumerable()
+            //                .Where(p => !p.IsDeleted && p.IncidentId == id)
+            //                .SelectMany(r => new[]
+            //                {
+            //                        new {
+            //                            r.Id,
+            //                            r.IncidentId,
+            //                            r.IncidentValidationId,
+            //                            FieldType = "Use \"Identifying Source of Leak\" Checklist (Pg. 4)",
+            //                            FieldValue = r.SourceOfLeak,
+            //                            FieldStatus = r.SourceOfLeakStatus
+            //                        },
+            //                        new {
+            //                            r.Id,
+            //                            r.IncidentId,
+            //                            r.IncidentValidationId,
+            //                            FieldType = "Identify ideal purge locations to prevent further outage (use engineering data)",
+            //                            FieldValue = r.PreventFurtherOutage,
+            //                            FieldStatus = r.PreventFurtherOutageStatus
+            //                        },
+            //                        new {
+            //                            r.Id,
+            //                            r.IncidentId,
+            //                            r.IncidentValidationId,
+            //                            FieldType = "Verify vacuum truck fittings (2\" cam-lock and 2\" → ¾\" adaptors available)",
+            //                            FieldValue = r.VacuumTruckFitting,
+            //                            FieldStatus = r.VacuumTruckFittingStatus
+            //                        }
+            //                })
+            //                .OrderBy(x => x.Id)
+            //                .ToList();
+            var roles = await _db.IncidentRoles.ToListAsync();
+            var repairs = await _db.IncidentValidationRepairs
+                .Where(p => !p.IsDeleted && p.IncidentId == id)
+                .ToListAsync();
+            var statuses = await _db.Progress.ToListAsync(); // Your status table
+
+            // Step 2️⃣: Build final projected list
+            var result = repairs
+                .SelectMany(r => new[]
+                {
+                    new {
+                        r.Id,
+                        r.IncidentId,
+                        r.IncidentValidationId,
+                        FieldType = "Use \"Identifying Source of Leak\" Checklist (Pg. 4)",
+                        FieldValue = r.SourceOfLeak,
+                        FieldStatus = r.SourceOfLeakStatus
+                    },
+                    new {
+                        r.Id,
+                        r.IncidentId,
+                        r.IncidentValidationId,
+                        FieldType = "Identify ideal purge locations to prevent further outage (use engineering data)",
+                        FieldValue = r.PreventFurtherOutage,
+                        FieldStatus = r.PreventFurtherOutageStatus
+                    },
+                    new {
+                        r.Id,
+                        r.IncidentId,
+                        r.IncidentValidationId,
+                        FieldType = "Verify vacuum truck fittings (2\" cam-lock and 2\" → ¾\" adaptors available)",
+                        FieldValue = r.VacuumTruckFitting,
+                        FieldStatus = r.VacuumTruckFittingStatus
+                    }
+                })
+                // Step 3️⃣: Replace ID strings with Role Names
+                .Select(x => new
+                {
+                    x.Id,
+                    x.IncidentId,
+                    x.IncidentValidationId,
+                    x.FieldType,
+                    // Convert comma-separated IDs to comma-separated role names
+                    FieldValue = string.Join(" / ",
+                        (x.FieldValue ?? "")
+                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                            .Select(v => v.Trim())
+                            .Select(v => long.TryParse(v, out var vid) ? roles.FirstOrDefault(r => r.Id == vid)?.Name : null)
+                            .Where(name => !string.IsNullOrEmpty(name))
+                    ),
+                    x.FieldStatus
+                })
+                .OrderBy(x => x.Id)
+                .ToList();
+
+
+            return result.Select(p => new IncidentViewRepairListViewModel
+            {
+                Id = p.Id,
+                IncidentId = p.IncidentId,
+                IncidentValidationId = p.IncidentValidationId,
+                FieldType = p.FieldType,
+                FieldValue = p.FieldValue ?? string.Empty,
+                FieldStatus = statuses.FirstOrDefault(s => s.Id == Convert.ToInt64(p.FieldStatus))?.Name
+            }).ToList();
+        }
+        #endregion
+
+        #region IncidentValidationRepair
+        public async Task<List<IncidentViewCloseoutListViewModel>> GetvalidationCloseoutVM(long id)
+        {
+            var roles = await _db.IncidentRoles.ToListAsync();
+            var repairs = await _db.ValidationCloseouts
+                .Where(p => !p.IsDeleted && p.IncidentId == id)
+                .ToListAsync();
+            var statuses = await _db.Progress.ToListAsync(); // Your status table
+            var OnsiteNow = await _db.IncidentValidationPersonnels.CountAsync(p => p.IncidentId == id);
+
+            // Step 2️⃣: Build final projected list
+            var result = repairs
+                .Select(x => new
+                {
+                    x.Id,
+                    x.IncidentId,
+                    x.IncidentValidationId,
+                    x.Description,
+                    x.Role,
+                    // Convert comma-separated IDs to comma-separated role names
+                    FieldValue = string.Join(" / ",
+                        (x.Role ?? "")
+                            .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                            .Select(v => v.Trim())
+                            .Select(v => long.TryParse(v, out var vid) ? roles.FirstOrDefault(r => r.Id == vid)?.Name : null)
+                            .Where(name => !string.IsNullOrEmpty(name))
+                    ),
+                    x.Status
+                })
+                .OrderBy(x => x.Id)
+                .ToList();
+
+
+            return result.Select(p => new IncidentViewCloseoutListViewModel
+            {
+                Id = p.Id,
+                IncidentId = p.IncidentId,
+                IncidentValidationId = p.IncidentValidationId,
+                Task = p.Description,
+                FieldValue = p.FieldValue ?? string.Empty,
+                Status = statuses.FirstOrDefault(s => s.Id == Convert.ToInt64(p.Status))?.Name
+            }).ToList();
+        }
+
+        public async Task<List<IncidentViewPostViewModel>> GetPostDetailVM(long id)
+        {
+            //List <IncidentViewPostViewModel> result = new List <IncidentViewPostViewModel>();
+            //return result.Select(p => new IncidentViewPostViewModel
+            //{
+            //    Id = p.Id,
+            //    IncidentId = p.IncidentId,
+            //    IncidentValidationId = p.IncidentValidationId
+
+            //}).ToList();
+
+            var result = new List<IncidentViewPostViewModel>
+            {
+                new IncidentViewPostViewModel
+                {
+                    Id = 1,
+                    IncidentId = id,
+                    //IncidentValidationId = 1001,
+                    TimeforMessage = "11:42 IC",
+                    Message = "ICP-1 purge completed (2,800 gal extracted)."
+                },
+                new IncidentViewPostViewModel
+                {
+                    Id = 2,
+                    IncidentId = id,
+                    //IncidentValidationId = 1002,
+                    TimeforMessage = "12:45 FER",
+                    Message = "ICP-2 purge verified and logged."
+                },
+                new IncidentViewPostViewModel
+                {
+                    Id = 3,
+                    IncidentId = id,
+                    //IncidentValidationId = 1003,
+                    TimeforMessage = "13:10 ENG",
+                    Message = "Pressure gauge readings stable."
+                },
+                new IncidentViewPostViewModel
+                {
+                    Id = 4,
+                    IncidentId = id,
+                    //IncidentValidationId = 1004,
+                    TimeforMessage = "13:25 GEC",
+                    Message = "Disposal manifest issued for PRG-001."
+                },
+                new IncidentViewPostViewModel
+                {
+                    Id = 5,
+                    IncidentId = id,
+                    //IncidentValidationId = 1005,
+                    TimeforMessage = "13:35 FER",
+                    Message = "Containment labels verified for Baker tank."
+                }
+            };
+
+            return await Task.FromResult(result);
         }
         #endregion
 

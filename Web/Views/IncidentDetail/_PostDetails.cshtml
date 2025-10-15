@@ -1,0 +1,171 @@
+﻿@using System.Web
+@using ViewModels.Incident
+@model IncidentViewModel
+
+
+<form id="NewPostDetailForm">
+    @if (Model.IncidentViewPostType == 1)
+    {
+        <div>
+            <h6>Updates @Model.IncidentViewPostType</h6>
+
+            @if (Model.IncidentViewRepairViewModel?.listIncidentViewPostViewModel != null &&
+                    Model.IncidentViewRepairViewModel.listIncidentViewPostViewModel.Any())
+            {
+                @foreach (var post in Model.IncidentViewRepairViewModel.listIncidentViewPostViewModel)
+                {
+                    <div class="update-item">
+                        <span class="update-time">@post.TimeforMessage</span>
+                        <div>@post.Message</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No updates available.</p>
+            }
+
+            <div class="update-footer mt-3">
+                <textarea rows="5" class="form-control mb-2" id="postvalue" placeholder="Post an update..."></textarea>
+                <button class="btn btn-update">
+                    <i class="fa-solid fa-paper-plane me-2" id="btn_PostDetail_Save"></i>Post Update
+                </button>
+            </div>
+        </div>
+    }
+    else if (Model.IncidentViewPostType == 2)
+    {
+        <div>
+            <h6>Updates @Model.IncidentViewPostType</h6>
+            @if (Model.IncidentViewRepairViewModel?.listIncidentViewPostViewModel != null &&
+                    Model.IncidentViewRepairViewModel.listIncidentViewPostViewModel.Any())
+            {
+                @foreach (var post in Model.IncidentViewRepairViewModel.listIncidentViewPostViewModel)
+                {
+                    <div class="update-item">
+                        <span class="update-time">@post.TimeforMessage</span>
+                        <div>@post.Message</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p>No posts found.</p>
+            }
+
+            <div class="update-footer mt-3">
+                <textarea rows="5" class="form-control mb-2" id="postvalue" placeholder="Post an update..."></textarea>
+                <button class="btn btn-update" id="btn_PostDetail_Save">
+                    <i class="fa-solid fa-paper-plane me-2"></i>Post Update
+                </button>
+            </div>
+        </div>
+    }
+</form>
+
+@* 
+    <div>
+        <h6>Updates & Approvals</h6>
+
+        <div class="update-item">
+            <span class="update-time">11:42 IC</span>
+            <div>ICP-1 purge completed (2,800 gal extracted).</div>
+        </div>
+
+        <div class="update-item">
+            <span class="update-time">12:45 FER</span>
+            <div>
+                ICP-2 purge verified and logged.
+            </div>
+        </div>
+
+        <div class="update-item">
+            <span class="update-time">13:10 ENG</span>
+            <div>Pressure gauge readings stable.</div>
+        </div>
+
+        <div class="update-item">
+            <span class="update-time">13:25 GEC</span>
+            <div>Disposal manifest issued for PRG-001.</div>
+        </div>
+
+        <div class="update-item">
+            <span class="update-time">13:35 FER</span>
+            <div>Containment labels verified for Baker tank. </div>
+        </div>
+    </div>
+
+    <div class="update-footer mt-3">
+        <textarea type="text" rows="5" class="form-control mb-2" id="post" placeholder="Post an update..."></textarea>
+        <button class="btn btn-update"><i class="fa-solid fa-paper-plane me-2"></i>Post Update</button>
+    </div> *@
+
+
+<script>
+
+    $(document).on("click", "#btn_PostDetail_Save", function (e) {
+        e.preventDefault();
+        savePostDetails();
+    })
+
+    async function savePostDetails() {
+        // let response = await fetch("/IncidentDetail/SavePostDetails", {
+        //     method: "POST"
+        // });
+
+        // if (response.ok) {
+        //     let result = await response.json();
+        //     console.log("Saved successfully:", result);
+        // } else {
+        //     console.error("Error saving:", response.status);
+        // }
+        try {
+            debugger;
+
+            let form = [];
+            let formData = new FormData();
+            let obj = $("#NewPostDetailForm")[0];
+
+            // Serialize other fields
+            let params = $(obj).serializeArray();
+
+            formData.append("IncidentViewPostViewModel.TimeforMessage", "11:42 IC");
+            $.each(params, function (i, val) {
+                if (val.name === "incidentDetails.PostMessageTime") {
+                    formData.append("incidentCellerInformation.CallTime", $("#hdnCallTimedatetime").val());
+                    form.push({ name: val.name, value: val.value });
+                }
+                else if (val.name === "IncidentViewPostViewModel.Message") {
+                    formData.append("IncidentViewPostViewModel.Message", $("#postvalue").val());
+                    form.push({ name: val.name, value: val.value });
+                }
+            });
+
+
+            // Send request
+            // let response = await fetch("/IncidentDetail/SavePostDetails", {
+            //     method: "POST",
+            //     body: formData
+            // });
+            let response = await fetch("/IncidentDetail/SavePostDetails", {
+                method: "POST",
+                body: formData
+            });
+
+            let result = await response.json();
+
+            // if (result.success) {
+            //     SwalSuccessAlert(result.data);
+            //     $(".btn-close").trigger("click");
+            //     GetIncidentList(0, 0, "");
+            // } else {
+            //     SwalErrorAlert(result.message || "Failed to save incident.");
+            // }
+        } catch (error) {
+            SwalErrorAlert("Error while saving incident!");
+            console.error(error);
+        } finally {
+            hideLoader($("#addIncidentModal"));
+        }
+    }
+</script>

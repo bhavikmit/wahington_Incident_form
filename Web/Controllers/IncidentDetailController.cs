@@ -174,16 +174,39 @@ namespace Web.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<PartialViewResult> GetIncidentList([FromBody] AssestmentFilterRequest request)
-        //{
-        //    var incidentViewModel = new IncidentViewModel
-        //    {
-        //        incidentGridViewModel = await _iIncidentService.GetIncidentList(request)
-        //    };
+        [HttpPost]
+        //public async Task<IActionResult> SavePostDetails([FromForm] IncidentViewModel incidentViewModel)
+        public async Task<IActionResult> SavePostDetails([FromForm] IncidentViewPostViewModel incidentViewPostViewModel)
+        {
+            //if (incidentViewModel == null)
+            //    return BadRequest(new { success = false, message = "Invalid request data." });
 
-        //    return PartialView("_IncidentGrid", incidentViewModel ?? new IncidentViewModel());
-        //}
+            try
+            {
+                //var incidentId = string.Empty;
+                //if (incidentViewModel.Id > 0)
+                //{
+                //    incidentId = await _iIncidentService.UpdateIncident(incidentViewModel);
+                //}
+                //else
+                //{
+                //    incidentId = await _iIncidentService.SaveIncident(incidentViewModel);
+                //}
+                //if (string.IsNullOrWhiteSpace(incidentId))
+                //    return StatusCode(StatusCodes.Status500InternalServerError,
+                //        new { success = false, message = "Failed to save incident." });
+
+                //var successMsg = $"Incident {incidentId} saved successfully!";
+
+                //return Ok(new { success = true, data = successMsg });
+                return Ok(new { success = true, data = "stromg " });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
         #endregion
     }
 }

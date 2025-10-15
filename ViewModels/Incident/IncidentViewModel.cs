@@ -68,6 +68,10 @@ namespace ViewModels.Incident
         public IncidentValidationPersonnelsCountViewModel incidentValidationPersonnelsCountViewModel { get; set; } = new();
         public List<IncidentValidationPersonnelsTopContributorsViewModel> incidentValidationPersonnelsTopContributorsViewModel { get; set; } = new();
         #endregion
+
+        public long IncidentViewPostType { get; set; }
+        public IncidentViewRepairViewModel IncidentViewRepairViewModel { get; set; } = new();
+        public IncidentViewCloseoutViewModel IncidentViewCloseoutViewModel { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel
@@ -431,4 +435,61 @@ namespace ViewModels.Incident
         public string ClockIn { get; set; } = string.Empty;
         public string ClockOut { get; set; } = string.Empty;
     }
+
+    #region IncidentRepair
+    public class IncidentViewRepairViewModel
+    {
+        public List<IncidentViewRepairListViewModel> listIncidentViewRepairViewModel { get; set; }
+        public List<IncidentViewPostViewModel> listIncidentViewPostViewModel { get; set; }
+    }
+    public class IncidentViewRepairListViewModel
+    {
+        public long Id { get; set; }
+        public long? IncidentId { get; set; }
+        public long? IncidentValidationId { get; set; }
+        public string? FieldType { get; set; }
+        public string? FieldValue { get; set; }
+        public string? FieldStatus { get; set; }
+        public string? SOL_Path { get; set; }
+        public string? SOL_Remark { get; set; }
+        public string? PFO_Path { get; set; }
+        public string? PFO_Remark { get; set; }
+        public string? VTF_Path { get; set; }
+        public string? VTF_Remark { get; set; }
+        //public bool IsDeleted { get; set; }
+        //public int ActiveStatus { get; set; }
+        //public DateTime? CreatedOn { get; set; }
+        //public long CreatedBy { get; set; }
+        //public DateTime? UpdatedOn { get; set; }
+        //public long UpdatedBy { get; set; }
+    }
+    #endregion
+
+    #region IncidentCloseOut
+    public class IncidentViewCloseoutViewModel
+    {
+        public long PersonnelInvolved { get; set; }
+        public List<IncidentViewPostViewModel> listIncidentViewPostViewModel { get; set; }
+        public List<IncidentViewCloseoutListViewModel> listIncidentViewCloseoutViewModel { get; set; } = new();
+    }
+    public class IncidentViewCloseoutListViewModel
+    {
+        public long Id { get; set; }
+        public long IncidentId { get; set; }
+        public long IncidentValidationId { get; set; }
+        public string? Task { get; set; }
+        public string? FieldValue { get; set; }
+        public string? Status { get; set; }
+        public string? Complted { get; set; }
+        public List<IncidentViewPostViewModel> listIncidentViewPostViewModel { get; set; }
+    }
+    public class IncidentViewPostViewModel
+    {
+        public long Id { get; set; }
+        public long IncidentId { get; set; }
+        public string? TimeforMessage { get; set; }
+        public string? Message { get; set; }
+
+    }
+    #endregion
 }

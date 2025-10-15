@@ -28,6 +28,26 @@
                          new { @class = "form-control" })
             </div>
             <div>
+                <label>Employee Type *</label>
+                @{
+                    var depts = new[] { "Employee", "Contractor" };
+                }
+                <select asp-for="EmployeeType" name="EmployeeType" id="employeetypeSelect" class="form-control" data-val-required="Required">
+                    <option value="">Select Type</option>
+                    @foreach (var d in depts)
+                    {
+                        if (string.Equals(d, Model?.EmployeeType, StringComparison.OrdinalIgnoreCase))
+                        {
+                            <option value="@d" selected="selected">@d</option>
+                        }
+                        else
+                        {
+                            <option value="@d">@d</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div>
                 <label>First Name *</label>
                 <input type="text" class="form-control" placeholder="Enter first name" asp-for="FirstName">
             </div>
@@ -41,7 +61,7 @@
             </div>
             <div>
                 <label>Email Address</label>
-                <input type="email" class="form-control" placeholder="Enter mail" asp-for="Email">
+                <input type="text" class="form-control" placeholder="Enter mail" asp-for="Email">
             </div>
             <div>
                 <label>PIN (4 digits) *</label>

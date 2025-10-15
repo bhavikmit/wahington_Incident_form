@@ -620,7 +620,7 @@ $(function () {
             SwalErrorAlert("Pin and VerifyPin are not match");
             isValid = false;
         }
-        $("#saveuserDiv").find("input[data-val-required]").each(function () {
+        $("#saveuserDiv").find("input[type='text'], select[data-val-required]").each(function () {
             var $field = $(this);
             var value = $.trim($field.val());
             if (value === "") {
@@ -1953,7 +1953,6 @@ async function DeletePolicyById(id) {
 
 async function SavePolicy() {
     try {
-        debugger;
         let form = [];
         let formData = new FormData();
         let obj = $("#NewPolicyForm")[0];
@@ -2133,7 +2132,6 @@ async function SaveUser() {
         let form = [], formData = new FormData(), obj = $("#NewUserForm")[0];
         let params = $(obj).serializeArray();
         $.each(params, function (i, val) { formData.append(val.name, val.value); form.push({ name: val.name, value: val.value }); });
-        debugger;
         showLoader($(".setting"));
         let response = await fetch("/Settings/SaveUser", { method: "POST", body: formData });
         let result = await response.json();
@@ -2412,7 +2410,6 @@ async function DeleteMaterialById(id) {
 
 async function SaveMaterial() {
     try {
-        debugger;
         // client validation (basic)
         if (!validateMaterialForm()) {
             SwalErrorAlert("Please fix validation errors before submitting.");
@@ -2699,7 +2696,6 @@ async function GetAllIncidentRoles() {
 
 async function AddIncidentRole() {
     try {
-        debugger;
         showLoader($(".setting"));
 
         const response = await fetch("/Settings/AddIncidentRole", {

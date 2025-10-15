@@ -44,5 +44,6 @@ namespace Repositories.Common
         Task<IncidentAssessmentDetailViewModel> GetAssessmentDetails(AssestmentFilterRequest request);
         Task<IncidentAssessmentEditViewModel> EditAssessmentDetails(long id, long mainstepId, long substepId);
         Task<long> SaveValidationNoteAsync(SaveValidationNoteRequest request);
+        Task<long> UpdateAssessment(IncidentAssessmentEditViewModel request);
     }
 }

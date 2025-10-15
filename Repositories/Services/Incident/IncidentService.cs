@@ -10,6 +10,7 @@ using DataLibrary;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 
@@ -835,22 +836,22 @@ namespace Repositories.Common
                 #endregion
 
                 #region IncidentValidationNotes
-                
-                    
-                    var IncidentvalidationNotes = await _db.IncidentValidationNotes
-                .AsNoTracking()
-                .Where(n => !n.IsDeleted && n.IncidentId == id)
-                .OrderByDescending(n => n.CreatedOn)
-                 .Select(n => new IncidentValidationNoteViewModel
-                {
-                    Id = n.Id,
-                    IncidentId = n.IncidentId,
-                    IncidentValidationId = n.IncidentValidationId,
-                    Notes = n.Notes,
-                    CreatedBy = n.CreatedBy,
-                    CreatedOn = n.CreatedOn
-                    })
-                    .ToListAsync();
+
+
+                var IncidentvalidationNotes = await _db.IncidentValidationNotes
+            .AsNoTracking()
+            .Where(n => !n.IsDeleted && n.IncidentId == id)
+            .OrderByDescending(n => n.CreatedOn)
+             .Select(n => new IncidentValidationNoteViewModel
+             {
+                 Id = n.Id,
+                 IncidentId = n.IncidentId,
+                 IncidentValidationId = n.IncidentValidationId,
+                 Notes = n.Notes,
+                 CreatedBy = n.CreatedBy,
+                 CreatedOn = n.CreatedOn
+             })
+                .ToListAsync();
                 #endregion
 
                 List<IncidentViewPostViewModel> ListPostDetailVM = new List<IncidentViewPostViewModel>();
@@ -957,7 +958,7 @@ namespace Repositories.Common
                             : new List<string>()
                     },
 
-                    
+
 
                     incidentValidationsDetailsViewModel = new IncidentValidationsDetailsViewModel
                     {
@@ -1540,13 +1541,14 @@ namespace Repositories.Common
                     {
                         StatusId = substep.StatusId,
                         AssigneeId = substep.AssigneeId,
-
+                        MainStepId = substep.MainstepId,
+                        SubStepId = substep.SubstepId,
                         Assignees = incidentUsers.Select(user => new SelectListItem
                         {
                             Text = $"{user.Value.LastName} {user.Value.FirstName}",
                             Value = user.Key.ToString()
                         }).ToList(),
-                       
+
                         Status = statusList
                             .Select(p => new SelectListItem
                             {
@@ -1557,6 +1559,7 @@ namespace Repositories.Common
 
                         MainStep = substep.Mainstep,
                         SubStep = substep.Substep,
+                        Id = id
                     };
                 }
 
@@ -1569,7 +1572,113 @@ namespace Repositories.Common
 
             return editViewModel;
         }
+        public async Task<long> UpdateAssessment(IncidentAssessmentEditViewModel request)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                var details = await _db.IncidentValidationAssessments
+                    .FirstOrDefaultAsync(p => !p.IsDeleted && p.Id == request.Id);
 
+                if (details == null)
+                    return 0;
+
+                // Time parsing helper
+                DateTime? ParseTime(string time) =>
+                    TimeSpan.TryParse(time, out var ts) ? DateTime.Today.Add(ts) : (DateTime?)null;
+
+                // Step mapping configuration
+                var stepMap = new Dictionary<(int mainStep, int subStep), Action>
+                {
+                    // Incident Commander
+                    [(1, 1)] = () => {
+                        details.IC_MCR_AssignId = request.AssigneeId;
+                        details.IC_MCR_StatusId = request.StatusId;
+                        details.IC_MCR_StartTime = ParseTime(request.StartedTime);
+                        details.IC_MCR_ComplateTime = ParseTime(request.CompletedTime);
+                        details.IC_MCR_Notes = request.Description;
+                        details.IC_MCR_ImageUrls = request.ImageUrl;
+                    },
+                    [(1, 2)] = () => {
+                        details.IC_Notify_AssignId = request.AssigneeId;
+                        details.IC_Notify_StatusId = request.StatusId;
+                        details.IC_Notify_StartTime = ParseTime(request.StartedTime);
+                        details.IC_Notify_ComplateTime = ParseTime(request.CompletedTime);
+                        details.IC_Notify_Notes = request.Description;
+                        details.IC_Notify_ImageUrls = request.ImageUrl;
+                    },
+                    [(1, 3)] = () => {
+                        details.IC_EstablishICP_AssignId = request.AssigneeId;
+                        details.IC_EstablishICP_StatusId = request.StatusId;
+                        details.IC_EstablishICP_StartTime = ParseTime(request.StartedTime);
+                        details.IC_EstablishICP_ComplateTime = ParseTime(request.CompletedTime);
+                        details.IC_EstablishICP_Notes = request.Description;
+                        details.IC_EstablishICP_ImageUrls = request.ImageUrl;
+                    },
+
+                    // Field Environmental Representative
+                    [(2, 1)] = () => {
+                        details.FER_PCA_AssignId = request.AssigneeId;
+                        details.FER_PCA_StatusId = request.StatusId;
+                        details.FER_PCA_StartTime = ParseTime(request.StartedTime);
+                        details.FER_PCA_ComplateTime = ParseTime(request.CompletedTime);
+                        details.FER_PCA_Notes = request.Description;
+                        details.FER_PCA_ImageUrls = request.ImageUrl;
+                    },
+                    [(2, 2)] = () => {
+                        details.FER_LC_AssignId = request.AssigneeId;
+                        details.FER_LC_StatusId = request.StatusId;
+                        details.FER_LC_StartTime = ParseTime(request.StartedTime);
+                        details.FER_LC_ComplateTime = ParseTime(request.CompletedTime);
+                        details.FER_LC_Notes = request.Description;
+                        details.FER_LC_ImageUrls = request.ImageUrl;
+                    },
+
+                    // Engineering & GEC
+                    [(3, 1)] = () => {
+                        details.EGEC_RSM_AssignId = request.AssigneeId;
+                        details.EGEC_RSM_StatusId = request.StatusId;
+                        details.EGEC_RSM_StartTime = ParseTime(request.StartedTime);
+                        details.EGEC_RSM_ComplateTime = ParseTime(request.CompletedTime);
+                        details.EGEC_RSM_Notes = request.Description;
+                        details.EGEC_RSM_ImageUrls = request.ImageUrl;
+                    },
+                    [(3, 2)] = () => {
+                        details.EGEC_MLP_AssignId = request.AssigneeId;
+                        details.EGEC_MLP_StatusId = request.StatusId;
+                        details.EGEC_MLP_StartTime = ParseTime(request.StartedTime);
+                        details.EGEC_MLP_ComplateTime = ParseTime(request.CompletedTime);
+                        details.EGEC_MLP_Notes = request.Description;
+                        details.EGEC_MLP_ImageUrls = request.ImageUrl;
+                    },
+                    [(3, 3)] = () => {
+                        details.EGEC_ICT_AssignId = request.AssigneeId;
+                        details.EGEC_ICT_StatusId = request.StatusId;
+                        details.EGEC_ICT_StartTime = ParseTime(request.StartedTime);
+                        details.EGEC_ICT_ComplateTime = ParseTime(request.CompletedTime);
+                        details.EGEC_ICT_Notes = request.Description;
+                        details.EGEC_ICT_ImageUrls = request.ImageUrl;
+                    }
+                };
+
+                // Execute correct mapping
+                if (stepMap.TryGetValue(((int)request.MainStepId, (int)request.SubStepId), out var apply))
+                    apply();
+                else
+                    return 0;
+
+                await _db.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return details.Id;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error updating assessment");
+                return 0;
+            }
+        }
 
         #endregion
 

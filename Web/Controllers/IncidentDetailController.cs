@@ -81,6 +81,61 @@ namespace Web.Controllers
             return PartialView("_UpdateAssestmentPartial", model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateAssessment(IncidentAssessmentEditViewModel model, List<IFormFile> Files)
+        {
+            try
+            {
+                var fileUrls = new List<string>();
+
+                if (Files != null && Files.Count > 0)
+                {
+                    var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "Storage", "uploads", "Assessment");
+
+                    if (!Directory.Exists(uploadsPath))
+                        Directory.CreateDirectory(uploadsPath);
+
+                    foreach (var file in Files)
+                    {
+                        if (file.Length > 0)
+                        {
+                            var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                            var filePath = Path.Combine(uploadsPath, fileName);
+
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                            }
+
+                            // Relative URL for use in browser
+                            var relativeUrl = $"/Storage/uploads/Assessment/{fileName}";
+                            fileUrls.Add(relativeUrl);
+                        }
+                    }
+                    model.ImageUrl = string.Join(",", fileUrls);
+                }
+
+                long id = await _iIncidentService.UpdateAssessment(model);
+
+                if (id > 0)
+                {
+                    return Json(new { success = true, files = fileUrls });
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to Update Assessment." });
+                }
+            }
+            catch (Exception ex)
+            {
+                // log ex here if needed
+                return Json(new { success = false, message = "Save failed. " + ex.Message });
+            }
+        }
+        #endregion
+
+
         #region Personnel
         [HttpPost]
         public async Task<IActionResult> UpdateTimeIn(long id, DateTime timeIn)
@@ -207,6 +262,6 @@ namespace Web.Controllers
                     new { success = false, message = "An unexpected error occurred." });
             }
         }
-        #endregion
+
     }
 }

@@ -26,6 +26,64 @@
             GetAssessmentDetails(statusID, ownerId, "");
         }
     });
+
+    $(document).off("click", "#btnUpdateAssessment");
+    $(document).on("click", "#btnUpdateAssessment", async function (e) {
+        debugger
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        // Collect basic fields
+        formData.append("Id", document.getElementById("assessmentId").value);
+        formData.append("StatusId", document.getElementById("status").value);
+        formData.append("AssigneeId", document.getElementById("assignee").value);
+        formData.append("StartedTime", document.getElementById("startedTime").value);
+        formData.append("CompletedTime", document.getElementById("completedTime").value);
+        formData.append("Description", document.getElementById("description").value);
+        formData.append("MainStepId", document.getElementById("mainstepId").value);
+        formData.append("SubStepId", document.getElementById("substepId").value);
+
+        // Append files (multiple)
+        const files = document.getElementById("fileInputAssestment").files;
+        for (let i = 0; i < files.length; i++) {
+            formData.append("Files", files[i]);
+        }
+
+        try {
+            const response = await fetch("/IncidentDetail/UpdateAssessment", {
+                method: "POST",
+                body: formData
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success) {
+
+                    SwalSuccessAlert("Updated Successfully");
+                   
+                    // Optional: close modal and refresh table
+                    $("#updateIncidentAssestmentModal").modal("hide");
+
+                    var statusID = $("#ddlStatus").val() != "" ? $("#ddlStatus").val() : 0;
+                    var ownerId = $("#ddlOwner").val() != "" ? $("#ddlOwner").val() : 0;
+                    var step = $("#global_search_value").val() != "" ? $("#global_search_value").val() : "";
+
+                    GetAssessmentDetails(statusID, ownerId, step);
+
+                } else {
+                    SwalErrorAlert(result.message || "Update failed.");
+                }
+            } else {
+                SwalErrorAlert(result.message || "Update failed.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            SwalErrorAlert(result.message || "Update failed.");
+        }
+    });
+
+
 });
 
 async function GetAssessmentDetails(statusID, ownerId, step) {

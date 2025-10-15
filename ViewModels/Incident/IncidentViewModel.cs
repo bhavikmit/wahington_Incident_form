@@ -408,6 +408,9 @@ namespace ViewModels.Incident
         public long? IncidentValidationId { get; set; }
         public long? StatusId { get; set; }
         public long? AssigneeId { get; set; }
+
+        public long? MainStepId { get; set; }
+        public long? SubStepId { get; set; }
         public List<SelectListItem> Assignees { get; set; } = new();
         public List<SelectListItem> Status { get; set; } = new();
         public string StartedTime { get; set; } = string.Empty;

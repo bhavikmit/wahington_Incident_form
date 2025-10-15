@@ -24,6 +24,11 @@ namespace Models
         public string? PreventFurtherOutageStatus { get; set; }
         public string? VacuumTruckFitting { get; set; }
         public string? VacuumTruckFittingStatus { get; set; }
-
+        public string? SOL_Path { get; set; }
+        public string? SOL_Remark { get; set; }
+        public string? PFO_Path { get; set; }
+        public string? PFO_Remark { get; set; }
+        public string? VTF_Path { get; set; }
+        public string? VTF_Remark { get; set; }
     }
 }

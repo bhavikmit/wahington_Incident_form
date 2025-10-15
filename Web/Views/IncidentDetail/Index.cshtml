@@ -43,7 +43,7 @@
                     @* <div class="tab-item" data-tab="worksteps">
                         <i class="fas fa-tasks"></i> Policies
                     </div>
-                    
+
                     <div class="tab-item" data-tab="communication">
                         <i class="fas fa-comment-dots"></i> Communication
                     </div> *@
@@ -409,22 +409,20 @@
                         <div class="d-flex align-items-center gap-3">
                             <div class="input-group">
                                 <span class="input-group-text bg-white"><i class="fa-regular fa-calendar"></i></span>
-                                <input type="date" id="date" class="form-control dateFilter" value="2025-10-09">
+                                <input type="date" id="reportDate" class="form-control dateFilter" value="@DateTime.Now.ToString("yyyy-MM-dd")">
                             </div>
                             <div class="form-check ms-2">
-                                <input class="form-check-input " type="checkbox" id="onsite" checked>
+                                <input class="form-check-input roleFilter" type="checkbox" id="onsite">
                                 <label class="form-check-label">Show currently onsite only</label>
                             </div>
-                            <select class="form-select w-auto">
-                                <option>All Roles</option>
-                                <option>All Roles</option>
-                                <option>All Roles</option>
-                            </select>
-                            <select class="form-select w-auto">
-                                <option>All Companies</option>
-                                <option>All Companies</option>
-                                <option>All Companies</option>
-                            </select>
+                            @Html.DropDownListFor(model => model.IncidentRoleId,
+                                     (SelectList)ViewBag.Roles,
+                                     "Select Role",
+                                     new { @class = "form-select w-auto roleFilter", id = "RoleFilter" })
+                            @Html.DropDownListFor(model => model.CompanyId,
+                                     (SelectList)ViewBag.Companies,
+                                     "Select Company",
+                                     new { @class = "form-select w-auto roleFilter", id = "CompanyFilter" })
                         </div>
                         <div class="d-flex gap-2 mt-3 mt-md-0">
                             <button class="btn btnAdd text-white btn-common"><i class="fa-solid fa-user-plus me-2"></i>Add Person</button>
@@ -440,25 +438,25 @@
                                 <div class="col-md-3">
                                     <div class="stat-card">
                                         <h6>Onsite Now</h6>
-                                        <h3>18</h3>
+                                        <h3>@Model.incidentValidationPersonnelsCountViewModel.OnsiteNowCount</h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="stat-card">
                                         <h6>Checked Out Today</h6>
-                                        <h3>6</h3>
+                                        <h3>@Model.incidentValidationPersonnelsCountViewModel.CheckedOutTodayCount</h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="stat-card">
                                         <h6>Total Hours (Today)</h6>
-                                        <h3>85.2</h3>
+                                        <h3>@Model.incidentValidationPersonnelsCountViewModel.TotalHoursToday</h3>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="stat-card">
                                         <h6>Avg Hours / Worker</h6>
-                                        <h3>4.7</h3>
+                                        <h3>@Model.incidentValidationPersonnelsCountViewModel.AvgHoursWorker</h3>
                                     </div>
                                 </div>
                             </div>
@@ -484,37 +482,33 @@
                                                     <th>Supervisor</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td><strong>John Martinez</strong></td>
-                                                    <td>Incident Commander</td>
-                                                    <td>EZTRAK</td>
-                                                    <td>Employee</td>
-                                                    <td>Day</td>
-                                                    <td>07:00</td>
-                                                    <td><strong>4.5</strong></td>
-                                                    <td>J. Martinez</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Lily Chen</strong></td>
-                                                    <td>FER</td>
-                                                    <td>EZTRAK</td>
-                                                    <td>Employee</td>
-                                                    <td>Day</td>
-                                                    <td>07:15</td>
-                                                    <td><strong>4.2</strong></td>
-                                                    <td>J. Martinez</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Carlos Mendoza</strong></td>
-                                                    <td>Vac Truck Operator</td>
-                                                    <td>ABC Contractors</td>
-                                                    <td>Contractor</td>
-                                                    <td>Day</td>
-                                                    <td>06:45</td>
-                                                    <td><strong>5.0</strong></td>
-                                                    <td>L. Chen</td>
-                                                </tr>
+                                            <tbody id="personnelTableBody">
+                                                @if (Model.incidentValidationPersonnelsViewModel != null && Model.incidentValidationPersonnelsViewModel.Count > 0)
+                                                {
+                                                    @foreach (var personnels in Model.incidentValidationPersonnelsViewModel)
+                                                    {
+                                                        var hoursSoFar = personnels.TimeIn.HasValue
+                                                        ? (DateTime.Now - personnels.TimeIn.Value).TotalHours
+                                                        : 0;
+
+                                                        <tr>
+                                                            <td>@personnels.Name</td>
+                                                            <td>@personnels.Role</td>
+                                                            <td>@personnels.Company</td>
+                                                            <td>@personnels.Type</td>
+                                                            <td>@personnels.Shift</td>
+                                                            <td class="timeIn" data-id="@personnels.IncidentValidationPersonnelsId">@(personnels.TimeIn?.ToString("HH.mm") ?? "00.00")</td>
+                                                            <td>@hoursSoFar.ToString("0.00")</td>
+                                                            <td class="supervisor" data-UserId="@personnels.UserId" data-CompanyId="@personnels.CompanyId" data-id="@personnels.IncidentValidationPersonnelsId">
+                                                                @(string.IsNullOrEmpty(personnels.Supervisor) ? "Select" : personnels.Supervisor)
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <tr><td colspan="8" class="text-center">No Data found.</td></tr>
+                                                }
                                             </tbody>
                                         </table>
                                     </div>
@@ -545,23 +539,23 @@
                             <div class="card shadow-sm border-0 rounded-4 mb-4 DailysummaryContent">
                                 <div class="card-header rounded-top-4 ">
                                     <h5 class="mb-0"><i class="fa-solid fa-chart-line me-2"></i>Daily Summary</h5>
-                                    <small>Oct 9, 2025</small>
+                                    (<span id="summaryDate">@DateTime.Now.ToString("MMM d, yyyy")</span>)
                                 </div>
                                 <div class="card-body">
                                     <div class="totalSec">
                                         <div class="d-flex align-items-center justify-content-between">
                                             <p class="text-muted mb-0">Total Onsite Today</p>
-                                            <h4 class="fw-bold mb-0">24</h4>
+                                            <h4 class="fw-bold mb-0">@Model.incidentValidationPersonnelsCountViewModel.CheckedOutTodayCount</h4>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between">
 
                                             <p class="text-muted mb-0">Total Hours Today</p>
-                                            <h4 class="fw-bold mb-0">85.2</h4>
+                                            <h4 class="fw-bold mb-0">@Model.incidentValidationPersonnelsCountViewModel.TotalHoursToday</h4>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between">
 
                                             <p class="text-muted mb-0">Avg Hours / Worker</p>
-                                            <h4 class="fw-bold mb-0">4.7</h4>
+                                            <h4 class="fw-bold mb-0">@Model.incidentValidationPersonnelsCountViewModel.AvgHoursWorker</h4>
                                         </div>
                                     </div>
 
@@ -570,22 +564,22 @@
                                             <h6 class="fw-semibold mb-2">Shift Distribution</h6>
                                             <div class="d-flex justify-content-between">
                                                 <span>Day Shift</span>
-                                                <span class="fw-semibold">18</span>
+                                                <span class="fw-semibold">@Model.incidentValidationPersonnelsCountViewModel.TotalDayShift</span>
                                             </div>
                                             <div class="d-flex justify-content-between">
                                                 <span>Night Shift</span>
-                                                <span class="fw-semibold">6</span>
+                                                <span class="fw-semibold">@Model.incidentValidationPersonnelsCountViewModel.TotalNightShift</span>
                                             </div>
                                         </div>
                                         <div class="WorkforceSec">
                                             <h6 class="fw-semibold mb-2">Workforce Type</h6>
                                             <div class="d-flex justify-content-between">
                                                 <span>Employees</span>
-                                                <span class="fw-semibold">15</span>
+                                                <span class="fw-semibold">@Model.incidentValidationPersonnelsCountViewModel.TotalEmployees</span>
                                             </div>
                                             <div class="d-flex justify-content-between">
                                                 <span>Contractors</span>
-                                                <span class="fw-semibold">9</span>
+                                                <span class="fw-semibold">@Model.incidentValidationPersonnelsCountViewModel.TotalContractors</span>
                                             </div>
                                         </div>
                                     </div>
@@ -599,18 +593,16 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="list-group list-group-flush">
-                                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div><span class="badge  me-2">1</span> C. Mendoza</div>
-                                            <span class="fw-semibold text-muted">5 hrs</span>
-                                        </div>
-                                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div><span class="badge me-2">2</span> J. Martinez</div>
-                                            <span class="fw-semibold text-muted">4.5 hrs</span>
-                                        </div>
-                                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                                            <div><span class="badge me-2">3</span> L. Chen</div>
-                                            <span class="fw-semibold text-muted">4.2 hrs</span>
-                                        </div>
+                                        @if (Model.incidentValidationPersonnelsTopContributorsViewModel != null && Model.incidentValidationPersonnelsTopContributorsViewModel.Count > 0)
+                                        {
+                                            @foreach (var contributors in Model.incidentValidationPersonnelsTopContributorsViewModel)
+                                            {
+                                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                    <div><span class="badge me-2">1</span>@contributors.Name</div>
+                                                    <span class="fw-semibold text-muted">@contributors.TotalHoursToday hrs</span>
+                                                </div>
+                                            }
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -1423,6 +1415,36 @@
     <span class="close">&times;</span>
     <img class="modal-content" id="previewImg" src="~/img/banner.jpg">
 </div>
+<div class="modal fade" id="timeInModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content p-3">
+            <div class="modal-header">
+                <h6 class="modal-title">Select Time In</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <label>Hour:</label>
+                <select id="hourSelect" class="form-select form-select-sm d-inline w-auto mx-1">
+                    @for (int h = 0; h < 24; h++)
+                    {
+                        <option value="@h">@h.ToString("00")</option>
+                    }
+                </select>
+
+                <label>Min:</label>
+                <select id="minuteSelect" class="form-select form-select-sm d-inline w-auto mx-1">
+                    @for (int m = 0; m < 60; m += 5)
+                    {
+                        <option value="@m">@m.ToString("00")</option>
+                    }
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="saveTimeBtn">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="div_assestment_modal">
 </div>
@@ -1446,6 +1468,94 @@
         document.getElementById(tabId).classList.add("active");
       });
     });
+
+    let selectedRowId = null;
+    let selectedCell = null;
+    $(document).on("click", ".timeIn", function () {
+        selectedCell = $(this);
+        selectedRowId = $(this).data("id");
+
+        const currentTime = $(this).text().trim();
+        if (currentTime) {
+            const [hour, minute] = currentTime.split(":");
+            $("#hourSelect").val(parseInt(hour));
+            $("#minuteSelect").val(parseInt(minute));
+        }
+
+        $("#timeInModal").modal("show");
+    });
+
+    $("#saveTimeBtn").on("click", function () {
+        const hour = $("#hourSelect").val().padStart(2, "0");
+        const minute = $("#minuteSelect").val().padStart(2, "0");
+        const newTime = `${hour}:${minute}`;
+
+        // Update in UI
+        selectedCell.text(newTime);
+        $("#timeInModal").modal("hide");
+
+        // Send update to backend
+        $.ajax({
+                url: '/IncidentDetail/UpdateTimeIn',
+            type: 'POST',
+            data: { id: selectedRowId, timeIn: newTime },
+            success: function (res) {
+                if (res.success) {
+                    console.log("Time updated successfully");
+                } else {
+                    alert("Failed to update time.");
+                }
+            },
+            error: function () {
+                alert("Error saving time to database.");
+            }
+        });
+    });
+
+    $('td.supervisor').on('click', function () {
+            var td = $(this);
+            var row = td.closest('tr');
+            personnelId = $(this).data("id");
+            var companyId = $(this).data("companyid");
+            var userId = $(this).data("userid");
+            // Prevent multiple dropdowns
+            if (td.find('select').length > 0) return;
+
+            // Fetch users for dropdown via AJAX
+            $.get('/IncidentDetail/GetSupervisors',{ companyId: companyId, userId: userId }, function (data) {
+                debugger;
+                var select = $('<select class="form-select form-select-sm"></select>');
+                select.append('<option value="">Select</option>');
+                $.each(data.Result, function (i, user) {
+                    select.append('<option value="' + user.UsersId + '">' + user.UsersName + '</option>');
+                });
+
+                td.html(select);
+
+                // Auto-focus
+                select.focus();
+
+                // Handle selection
+                select.on('change', function () {
+                    var supervisorId = $(this).val();
+
+                    $.post('/IncidentDetail/UpdateSupervisor', { personnelId: personnelId, supervisorId: supervisorId }, function (response) {
+                        if (response.success) {
+                            td.text(response.supervisorName); // Update cell text
+                        } else {
+                            alert('Failed to update supervisor.');
+                            td.text("Select");
+                        }
+                    });
+                });
+
+                // Optional: restore text if click outside
+                select.on('blur', function () {
+                    td.text(td.text() || "Select");
+                });
+            });
+        });
+
 </script>
 <script>
         document.querySelectorAll('.photo-thumb').forEach(link => {
@@ -1826,6 +1936,71 @@
     });
 
 </script>
+<script>
+    document.getElementById("reportDate").addEventListener("change", function () {
+        const dateInput = this.value; // e.g. "2025-10-09"
+        const selectedDate = new Date(dateInput);
+        const formattedDate = selectedDate.toLocaleString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric'
+        }); // e.g. "Oct 9, 2025"
 
+        // Update Daily Summary date
+        document.getElementById("summaryDate").textContent = formattedDate;
+         });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.roleFilter').on('change', function () {
+            var selectedRoleId = $('#RoleFilter').val();
+            var selectedCompanyId= $('#CompanyFilter').val();
+            var selectedOnsite= $('#onsite').val();
+            var incidentId = '@Model.Id';
+
+            $.ajax({
+                url: '/IncidentDetail/FilterByRole',
+                type: 'GET',
+                data: { incidentId: incidentId,roleId: selectedRoleId,companyid: selectedCompanyId,onsite:selectedOnsite},
+                success: function (response) {
+                    var tbody = $('#personnelTableBody');
+                    tbody.empty();
+                    var data = response.Result || response;
+                    if (data && data.length > 0) {
+                        $.each(data, function (index, personnels) {
+                            var timeIn = personnels.TimeIn
+                                ? new Date(personnels.TimeIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                                : "00.00";
+
+                            var hoursSoFar = personnels.TimeIn
+                                ? ((new Date() - new Date(personnels.TimeIn)) / (1000 * 60 * 60)).toFixed(2)
+                                : "0.00";
+
+                            var supervisor = personnels.Supervisor || "";
+
+                            var row = `<tr>
+                                <td>${personnels.Name}</td>
+                                <td>${personnels.Role}</td>
+                                <td>${personnels.Company}</td>
+                                <td>${personnels.Type}</td>
+                                <td>${personnels.Shift}</td>
+                                <td class="timeIn" data-id="$personnels.IncidentValidationPersonnelsId">${timeIn}</td>
+                                <td>${hoursSoFar}</td>
+                                <td>${supervisor}</td>
+                            </tr>`;
+
+                            tbody.append(row);
+                        });
+                    } else {
+                        tbody.append('<tr><td colspan="8" class="text-center">No Data found.</td></tr>');
+                    }
+                },
+                error: function () {
+                    alert('Error loading data.');
+                }
+            });
+        });
+    });
+</script>
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/views/incident/incident-detail.js"></script>

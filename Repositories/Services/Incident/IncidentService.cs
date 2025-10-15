@@ -8,6 +8,7 @@ using Centangle.Common.ResponseHelpers.Models;
 using DataLibrary;
 
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -775,6 +776,64 @@ namespace Repositories.Common
                 }).ToList();
                 #endregion
 
+                #region Personnel
+                var IncidentValidationPersonnels = (
+                            from ivp in _db.IncidentValidationPersonnels
+                            where ivp.IncidentId == id
+                            join u in _db.IncidentUsers on ivp.UserId equals u.Id into userGroup
+                            from u in userGroup.DefaultIfEmpty()
+
+                            join c in _db.Company on ivp.CompanyId equals c.Id into companyGroup
+                            from c in companyGroup.DefaultIfEmpty()
+
+                            join r in _db.IncidentRoles on ivp.RoleId equals r.Id into roleGroup
+                            from r in roleGroup.DefaultIfEmpty()
+
+                            join s in _db.IncidentShifts on ivp.ShiftId equals s.Id into shiftGroup
+                            from s in shiftGroup.DefaultIfEmpty()
+
+                            select new IncidentValidationPersonnelsViewModel
+                            {
+                                IncidentValidationPersonnelsId = ivp.Id,
+                                UserId = ivp.UserId,
+                                CompanyId = ivp.CompanyId,
+                                Name = (u.FirstName + " " + u.LastName).Trim(),
+                                Company = c.Name,
+                                Role = r.Name,
+                                Type = u.EmployeeType,
+                                Shift = s.Name,
+                                TimeIn = ivp.TimeIn
+                            }
+                        ).ToList() ?? new List<IncidentValidationPersonnelsViewModel>();
+                var now = DateTime.Now;
+                var OnsiteNow = await _db.IncidentValidationPersonnels.CountAsync(p => p.IncidentId == id);
+                var CheckedOutToday = _db.IncidentValidationPersonnels.Count(p => p.IncidentId == id && p.TimeIn != null && p.TimeIn.Value.Date == DateTime.UtcNow.Date);
+                var personnelstime = await _db.IncidentValidationPersonnels.Where(p => !p.IsDeleted && p.IncidentId == id && p.TimeIn.HasValue && p.TimeIn.Value.Date == now.Date)
+                                    .ToListAsync();
+                var totalHoursToday = personnelstime.Sum(p => (now - p.TimeIn.Value).TotalHours);
+                totalHoursToday = Math.Round(totalHoursToday, 2);
+
+                var TotalDayShift = IncidentValidationPersonnels.Count(ds => ds.Shift == "Day Shift");
+                var TotalNightShift = IncidentValidationPersonnels.Count(ds => ds.Shift == "Night Shift");
+                var TotalEmployees = IncidentValidationPersonnels.Count(ds => ds.Type == "Employee");
+                var TotalContractors = IncidentValidationPersonnels.Count(ds => ds.Type == "Contractor");
+                var totalHoursByPerson = IncidentValidationPersonnels
+                                        .Where(p => p.TimeIn.HasValue && p.TimeIn.Value.Date == now.Date)
+                                        .GroupBy(p => p.Name) // or p.PersonnelName / p.FullName / p.EmployeeName (your property name)
+                                        .Select(g => new IncidentValidationPersonnelsTopContributorsViewModel
+                                        {
+                                            Name = g.Key,
+                                            TotalHoursToday = Math.Round(g.Sum(x => (now - x.TimeIn.Value).TotalHours), 2)
+                                        })
+                                        .OrderByDescending(x => x.TotalHoursToday)
+                                        .ToList();
+                double AvgHoursWorker = 0;
+                if (CheckedOutToday > 0)
+                {
+                    AvgHoursWorker = Math.Round(totalHoursToday / CheckedOutToday, 2);
+                }
+                #endregion
+
                 if (incident == null)
                     return new IncidentViewModel();
 
@@ -882,8 +941,23 @@ namespace Repositories.Common
                     incidentValidationAssignedRolesViewModel = IncidentValidationAssignedRoles.FirstOrDefault() ?? new IncidentValidationAssignedRolesViewModel(),
                     incidentValidationGatesViewModel = validationGatesVM.FirstOrDefault() ?? new IncidentValidationGatesViewModel(),
 
-                    IncidentValidationLocations = validationAdditionalLocationVM ?? new List<IncidentValidationLocationViewModel>()
+                    IncidentValidationLocations = validationAdditionalLocationVM ?? new List<IncidentValidationLocationViewModel>(),
 
+                    #region Personnel
+                    incidentValidationPersonnelsViewModel = IncidentValidationPersonnels,
+                    incidentValidationPersonnelsTopContributorsViewModel = totalHoursByPerson,
+                    incidentValidationPersonnelsCountViewModel = new IncidentValidationPersonnelsCountViewModel
+                    {
+                        OnsiteNowCount = OnsiteNow,
+                        CheckedOutTodayCount = CheckedOutToday,
+                        TotalHoursToday = totalHoursToday,
+                        AvgHoursWorker = AvgHoursWorker,
+                        TotalDayShift = TotalDayShift,
+                        TotalNightShift = TotalNightShift,
+                        TotalEmployees = TotalEmployees,
+                        TotalContractors = TotalContractors,
+                    }
+                    #endregion
                 };
 
                 // ✅ Set TeamsByPolicy for each WorkStepViewModel
@@ -1590,6 +1664,186 @@ namespace Repositories.Common
 
             return string.Join(",", selected);
         }
-        #endregion 
+        #endregion
+
+        #region Personnel
+        public async Task<List<IncidentViewModel.CompanyViewModel>> GetAllCompanies()
+        {
+            try
+            {
+                var companies = await _db.Company
+                    .Where(c => !c.IsDeleted)
+                    .Select(c => new IncidentViewModel.CompanyViewModel
+                    {
+                        CompanyId = c.Id,
+                        CompanyName = c.Name
+                    })
+                    .ToListAsync();
+                return companies;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Get All Companies.");
+                return new List<IncidentViewModel.CompanyViewModel>();
+            }
+        }
+        public async Task<List<IncidentViewModel.IncidentRoleViewModel>> GetAllIncidentRoles()
+        {
+            try
+            {
+                var roles = await _db.IncidentRoles
+                    .Where(r => !r.IsDeleted)
+                    .Select(r => new IncidentViewModel.IncidentRoleViewModel
+                    {
+                        IncidentRoleId = r.Id,
+                        IncidentRoleName = r.Name
+                    })
+                    .ToListAsync();
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Get All IncidentRoles.");
+                return new List<IncidentViewModel.IncidentRoleViewModel>();
+            }
+        }
+        public async Task<long> UpdateTimeIn(long Id, DateTime timeIn)
+        {
+            try
+            {
+
+                var personnels = await _db.IncidentValidationPersonnels.Where(p => p.Id == Id).FirstOrDefaultAsync();
+
+                if (personnels == null)
+                {
+                    return 0;
+                }
+
+                await using var transaction = await _db.Database.BeginTransactionAsync();
+
+                personnels.TimeIn = timeIn;
+
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+
+                return personnels.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Update TimeIn.");
+                return 0;
+            }
+        }
+        public async Task<List<IncidentValidationPersonnelsViewModel>> GetFilterByRole(long incidentId, long roleId, long companyid, string onsite)
+        {
+            try
+            {
+                var filteredData = _db.IncidentValidationPersonnels
+                                    .Where(p => p.IncidentId == incidentId && p.RoleId == (roleId == 0 ? p.RoleId : roleId) && p.CompanyId == (companyid == 0 ? p.CompanyId : companyid) && !p.IsDeleted)
+                                    .GroupJoin(_db.IncidentUsers,
+                                               ivp => ivp.UserId,
+                                               u => u.Id,
+                                               (ivp, userGroup) => new { ivp, userGroup })
+                                    .SelectMany(x => x.userGroup.DefaultIfEmpty(), (x, u) => new { x.ivp, u })
+                                    .GroupJoin(_db.Company,
+                                               x => x.ivp.CompanyId,
+                                               c => c.Id,
+                                               (x, companyGroup) => new { x.ivp, x.u, companyGroup })
+                                    .SelectMany(x => x.companyGroup.DefaultIfEmpty(), (x, c) => new { x.ivp, x.u, c })
+                                    .GroupJoin(_db.IncidentRoles,
+                                               x => x.ivp.RoleId,
+                                               r => r.Id,
+                                               (x, roleGroup) => new { x.ivp, x.u, x.c, roleGroup })
+                                    .SelectMany(x => x.roleGroup.DefaultIfEmpty(), (x, r) => new { x.ivp, x.u, x.c, r })
+                                    .GroupJoin(_db.IncidentShifts,
+                                               x => x.ivp.ShiftId,
+                                               s => s.Id,
+                                               (x, shiftGroup) => new { x.ivp, x.u, x.c, x.r, shiftGroup })
+                                    .SelectMany(x => x.shiftGroup.DefaultIfEmpty(), (x, s) => new IncidentValidationPersonnelsViewModel
+                                    {
+                                        IncidentValidationPersonnelsId = x.ivp.Id,
+                                        UserId = x.ivp.UserId,
+                                        CompanyId = x.ivp.CompanyId,
+                                        Name = (x.u != null ? (x.u.FirstName + " " + x.u.LastName).Trim() : string.Empty),
+                                        Company = x.c != null ? x.c.Name : string.Empty,
+                                        Role = x.r != null ? x.r.Name : string.Empty,
+                                        Type = x.u != null ? x.u.EmployeeType : string.Empty,
+                                        Shift = s != null ? s.Name : string.Empty,
+                                        TimeIn = x.ivp.TimeIn
+                                    })
+                                    .ToList();
+                return filteredData;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Get Filter By Role.");
+                return new List<IncidentValidationPersonnelsViewModel>();
+            }
+        }
+        public async Task<List<IncidentViewModel.UsersViewModel>> GetSupervisors(long companyId, long userId)
+        {
+            try
+            {
+                var users = await _db.IncidentUsers
+                    .Where(u => !u.IsDeleted && u.CompanyId == companyId && u.Id != userId)
+                    .Select(u => new IncidentViewModel.UsersViewModel
+                    {
+                        UsersId = u.Id,
+                        UsersName = (u.FirstName + " " + u.LastName).Trim()
+                    })
+                    .ToListAsync();
+                return users;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Get Supervisors.");
+                return new List<IncidentViewModel.UsersViewModel>();
+            }
+        }
+        public async Task<long> UpdateSupervisor(long personnelId, long supervisorId)
+        {
+            try
+            {
+
+                var UpdateSupervisor = await _db.IncidentValidationPersonnels.Where(p => p.Id == personnelId).FirstOrDefaultAsync();
+
+                if (UpdateSupervisor == null)
+                {
+                    return 0;
+                }
+
+                await using var transaction = await _db.Database.BeginTransactionAsync();
+
+                //UpdateSupervisor.SupervisorId = SupervisorId;
+
+                try
+                {
+                    await _db.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+
+                return UpdateSupervisor.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Update Supervisor.");
+                return 0;
+            }
+        }
+        #endregion
+
     }
 }

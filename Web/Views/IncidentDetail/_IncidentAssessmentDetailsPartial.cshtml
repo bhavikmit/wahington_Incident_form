@@ -42,12 +42,19 @@
                             <td>@item.Substep</td>
                             <td><span class="status-badge done">@item.Status</span></td>
                             <td>@item.Assignee</td>
-                            <td>-</td>
-                            <td>-</td>
-                            <td><i class="fa fa-file-alt text-secondary me-1"></i></td>
-                            @if (!string.IsNullOrWhiteSpace(item.ClockIn) && !string.IsNullOrWhiteSpace(item.ClockOut))
+                            <td>@item.ClockIn</td>
+                            <td>@item.ClockOut</td>
+                            @if (item.ImageCount > 0)
                             {
-                                <td><a href="#" class="text-primary text-decoration-none">View</a></td>
+                                <td><i class="fa fa-file-alt text-secondary me-1"></i>@item.ImageCount file </td>
+                            }
+                            else
+                            {
+                                <td><i class="fa fa-file-alt text-secondary me-1"></i></td>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(item.ClockIn) && !string.IsNullOrWhiteSpace(item.ClockOut) && item.ClockIn != "-" && item.ClockOut != "-")
+                            {
+                                <td><a href="#" class="text-primary text-decoration-none" onclick="ViewAssessmentDetails('@Model.Id','@item.MainstepId','@item.SubstepId')">View</a></td>
                             }
                             else
                             {

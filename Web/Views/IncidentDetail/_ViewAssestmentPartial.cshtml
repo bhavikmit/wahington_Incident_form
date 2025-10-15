@@ -1,23 +1,23 @@
-﻿@model ViewModels.Incident.IncidentAssessmentEditViewModel
+﻿@model ViewModels.Incident.IncidentAssessmentReadViewModel
 
 <!-- Update Incident Assessment Modal -->
-<div class="modal fade" id="updateIncidentAssestmentModal" tabindex="-1" aria-labelledby="updateIncidentAssestmentModallabel" aria-hidden="true">
+<div class="modal fade" id="viewIncidentAssestmentModal" tabindex="-1" aria-labelledby="viewIncidentAssestmentModallabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h5 class="modal-title" id="updateIncidentAssestmentModallabel">Update Incident Assessment</h5>
+                <h5 class="modal-title" id="viewIncidentAssestmentModallabel">View Incident Assessment</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <!-- Modal Body -->
             <div class="modal-body">
-                <form id="UpdateIncidentAssessmentForm">
+                <form id="viewIncidentAssessmentForm">
                     <input type="hidden" id="assessmentId" value="@Model.Id" />
                     <input type="hidden" id="mainstepId" value="@Model.MainStepId" />
                     <input type="hidden" id="substepId" value="@Model.SubStepId" />
-                    
+
 
                     <div class="row">
                         <!-- Step -->
@@ -32,38 +32,12 @@
                         <!-- Status -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Status</label>
-                            <select class="form-select" id="status" asp-for="@Model.StatusId">
-                                <option value="">Select status</option>
-                                @foreach (var item in Model.Status)
-                                {
-                                    @if (item.Value == Model.StatusId?.ToString())
-                                    {
-                                        <option value="@item.Value" selected>@item.Text</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@item.Value" >@item.Text</option>
-                                    }
-                                }
-                            </select>
+                            <label asp-for="@Model.StatusId">: <b>@Model.Status</b></label>
                         </div>
                         <!-- Assignee -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Assignee</label>
-                            <select class="form-select" id="assignee" asp-for="@Model.AssigneeId">
-                                <option value="">Select Assignee</option>
-                                @foreach (var item in Model.Assignees)
-                                {
-                                    @if (item.Value == Model.AssigneeId?.ToString())
-                                    {
-                                        <option value="@item.Value" selected>@item.Text</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@item.Value">@item.Text</option>
-                                    }
-                                }
-                            </select>
+                            <label asp-for="@Model.StatusId">: <b>@Model.Assignee</b></label>
                         </div>
                     </div>
 
@@ -72,20 +46,33 @@
                         <!-- Started (Time only) -->
                         <div class="col-md-3 mb-3">
                             <label class="form-label">Started</label>
-                            <input type="time" class="form-control" id="startedTime" asp-for="@Model.StartedTime">
+                            <label asp-for="@Model.StartedTime">: <b>@Model.StartedTime</b></label>
                         </div>
 
                         <!-- Completed (Time only) -->
                         <div class="col-md-3 mb-3">
                             <label class="form-label">Completed</label>
-                            <input type="time" class="form-control" id="completedTime" asp-for="@Model.CompletedTime">
+                            <label asp-for="@Model.CompletedTime">: <b>@Model.CompletedTime</b></label>
                         </div>
 
                         <!-- Evidence -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Evidence</label>
-                            <input type="file" id="fileInputAssestment" multiple class="file-upload" asp-for="@Model.File">
-                            <div id="previewContainerAssestment" class="d-flex flex-wrap gap-2"></div>
+                            @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+                            {
+                                var imgList = Model.ImageUrl.Split(",", StringSplitOptions.RemoveEmptyEntries)
+                                .Select(img => img.Trim())
+                                .ToList();
+
+                                @foreach (var item in imgList)
+                                {
+                                    <img src="@item" alt=""/>
+                                }
+                            }
+                            else
+                            {
+                                <div>No evidence provided.</div>
+                            }
                         </div>
 
                     </div>
@@ -94,7 +81,7 @@
                         <!-- Description -->
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Description</label>
-                            <textarea class="form-control" id="description" rows="3" asp-for="@Model.Description" placeholder="Enter description or notes"></textarea>
+                            <label asp-for="@Model.Description">: <b>@Model.Description</b></label>
                         </div>
                     </div>
                 </form>
@@ -102,9 +89,6 @@
 
             <!-- Modal Footer -->
             <div class="modal-footer d-flex justify-content-end">
-                <button type="submit" class="btn btn-success" id="btnUpdateAssessment">
-                    <i class="fas fa-check"></i> Update
-                </button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-times"></i> Cancel
                 </button>

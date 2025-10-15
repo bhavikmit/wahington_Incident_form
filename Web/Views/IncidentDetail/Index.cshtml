@@ -643,14 +643,14 @@
                             <div class="col-md-3 col-sm-6">
                                 <div class="info-card text-center text-md-start">
                                     <div class="info-title">Open Tasks:</div>
-                                    <div><span class="info-value">@Model.IncidentAssessmentDetails?.OpenTaskCount</span></div>
+                                    <div><span class="info-value" id="openTaskCount">@Model.IncidentAssessmentDetails?.OpenTaskCount</span></div>
                                 </div>
                             </div>
 
                             <div class="col-md-3 col-sm-6">
                                 <div class="info-card text-center text-md-start">
                                     <div class="info-title">Completed:</div>
-                                    <div><span class="info-value">@Model.IncidentAssessmentDetails?.CompletedTaskCount</span></div>
+                                    <div><span class="info-value" id="completedTaskCount">@Model.IncidentAssessmentDetails?.CompletedTaskCount</span></div>
                                 </div>
                             </div>
 
@@ -1376,6 +1376,8 @@
 </div>
 
 <div id="div_assestment_modal">
+</div>
+<div id="div_assestment_view_modal">
 </div>
 <script>
     document.getElementById("closeModalBtn").addEventListener("click", function () {

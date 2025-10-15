@@ -1317,104 +1317,161 @@ namespace Repositories.Common
 
                 // Build all substep entries
                 var incidentCommanderDetails = new List<IncidentCommanderDetailViewModel>
-        {
-            new()
-            {
-                Mainstep = "Incident Commander",
-                MainstepId = 1,
-                Substep = "Create MCR",
-                SubstepId= 1,
-                StatusId = details.IC_MCR_StatusId,
-                Status = GetStatusName(details.IC_MCR_StatusId),
-                AssigneeId = details.IC_MCR_AssignId,
-                Assignee = GetUserFullName(details.IC_MCR_AssignId),
-                IsOwner = IsOwner(details.IC_MCR_AssignId)
-            },
-            new()
-            {
-                Mainstep = "Incident Commander",
-                MainstepId = 1,
-                SubstepId= 2,
-                Substep = "Notify Claims & Engineering",
-                StatusId = details.IC_Notify_StatusId,
-                Status = GetStatusName(details.IC_Notify_StatusId),
-                AssigneeId = details.IC_Notify_AssignId,
-                Assignee = GetUserFullName(details.IC_Notify_AssignId),
-                IsOwner = IsOwner(details.IC_Notify_AssignId)
-            },
-            new()
-            {
-                Mainstep = "Incident Commander",
-                MainstepId = 1,
-                SubstepId= 3,
-                Substep = "Establish ICP (site access verified)",
-                StatusId = details.IC_EstablishICP_StatusId,
-                Status = GetStatusName(details.IC_EstablishICP_StatusId),
-                AssigneeId = details.IC_EstablishICP_AssignId,
-                Assignee = GetUserFullName(details.IC_EstablishICP_AssignId),
-                IsOwner = IsOwner(details.IC_EstablishICP_AssignId)
-            },
-            new()
-            {
-                Mainstep = "Field Environmental Representative",
-                MainstepId = 2,
-                SubstepId= 1,
-                Substep = "Prepare containment area (drums/totes/Baker tank)",
-                StatusId = details.FER_PCA_StatusId,
-                Status = GetStatusName(details.FER_PCA_StatusId),
-                AssigneeId = details.FER_PCA_AssignId,
-                Assignee = GetUserFullName(details.FER_PCA_AssignId),
-                IsOwner = IsOwner(details.FER_PCA_AssignId)
-            },
-            new()
-            {
-                Mainstep = "Field Environmental Representative",
-                MainstepId = 2,
-                SubstepId= 2,
-                Substep = "Label containers; log IDs and capacity",
-                StatusId = details.FER_LC_StatusId,
-                Status = GetStatusName(details.FER_LC_StatusId),
-                AssigneeId = details.FER_LC_AssignId,
-                Assignee = GetUserFullName(details.FER_LC_AssignId),
-                IsOwner = IsOwner(details.FER_LC_AssignId)
-            },
-            new()
-            {
-                Mainstep = "Engineering & GEC",
-                MainstepId = 3,
-                SubstepId= 1,
-                Substep = "Retrieve system maps (regulators, BO streets, elevations)",
-                StatusId = details.EGEC_RSM_StatusId,
-                Status = GetStatusName(details.EGEC_RSM_StatusId),
-                AssigneeId = details.EGEC_RSM_AssignId,
-                Assignee = GetUserFullName(details.EGEC_RSM_AssignId),
-                IsOwner = IsOwner(details.EGEC_RSM_AssignId)
-            },
-            new()
-            {
-                Mainstep = "Engineering & GEC",
-                MainstepId = 3,
-                SubstepId= 2,
-                Substep = "Mark low points & squeeze points",
-                StatusId = details.EGEC_MLP_StatusId,
-                Status = GetStatusName(details.EGEC_MLP_StatusId),
-                AssigneeId = details.EGEC_MLP_AssignId,
-                Assignee = GetUserFullName(details.EGEC_MLP_AssignId),
-                IsOwner = IsOwner(details.EGEC_MLP_AssignId)
-            },
-            new()
-            {
-                Mainstep = "Engineering & GEC",
-                MainstepId = 3,
-                SubstepId= 3,
-                Substep = "Initiate cost tracking (RBA) for vendors",
-                StatusId = details.EGEC_ICT_StatusId,
-                Status = GetStatusName(details.EGEC_ICT_StatusId),
-                AssigneeId = details.EGEC_ICT_AssignId,
-                Assignee = GetUserFullName(details.EGEC_ICT_AssignId),
-                IsOwner = IsOwner(details.EGEC_ICT_AssignId)
-            }
-        };
+{
+    new()
+    {
+        Mainstep = "Incident Commander",
+        MainstepId = 1,
+        Substep = "Create MCR",
+        SubstepId = 1,
+        StatusId = details.IC_MCR_StatusId,
+        Status = GetStatusName(details.IC_MCR_StatusId),
+        AssigneeId = details.IC_MCR_AssignId,
+        Assignee = GetUserFullName(details.IC_MCR_AssignId),
+        IsOwner = IsOwner(details.IC_MCR_AssignId),
+        ClockIn = details.IC_MCR_StartTime?.ToString("HH:mm") ?? "-",
+        ClockOut = details.IC_MCR_ComplateTime?.ToString("HH:mm") ?? "-",
+        ImagesUrl = details.IC_MCR_ImageUrls,
+        ImageCount = string.IsNullOrWhiteSpace(details.IC_MCR_ImageUrls)
+                        ? 0
+                        : details.IC_MCR_ImageUrls.Split(',', StringSplitOptions.RemoveEmptyEntries).Length,
+        Notes = details.IC_MCR_Notes
+    },
+    new()
+    {
+        Mainstep = "Incident Commander",
+        MainstepId = 1,
+        SubstepId = 2,
+        Substep = "Notify Claims & Engineering",
+        StatusId = details.IC_Notify_StatusId,
+        Status = GetStatusName(details.IC_Notify_StatusId),
+        AssigneeId = details.IC_Notify_AssignId,
+        Assignee = GetUserFullName(details.IC_Notify_AssignId),
+        IsOwner = IsOwner(details.IC_Notify_AssignId),
+        ClockIn = details.IC_Notify_StartTime?.ToString("HH:mm") ?? "-",
+        ClockOut = details.IC_Notify_ComplateTime?.ToString("HH:mm") ?? "-",
+        ImagesUrl = details.IC_Notify_ImageUrls,
+        ImageCount = string.IsNullOrWhiteSpace(details.IC_Notify_ImageUrls)
+                        ? 0
+                        : details.IC_Notify_ImageUrls.Split(',', StringSplitOptions.RemoveEmptyEntries).Length,
+        Notes = details.IC_Notify_Notes
+    },
+    new()
+    {
+        Mainstep = "Incident Commander",
+        MainstepId = 1,
+        SubstepId = 3,
+        Substep = "Establish ICP (site access verified)",
+        StatusId = details.IC_EstablishICP_StatusId,
+        Status = GetStatusName(details.IC_EstablishICP_StatusId),
+        AssigneeId = details.IC_EstablishICP_AssignId,
+        Assignee = GetUserFullName(details.IC_EstablishICP_AssignId),
+        IsOwner = IsOwner(details.IC_EstablishICP_AssignId),
+        ClockIn = details.IC_EstablishICP_StartTime?.ToString("HH:mm") ?? "-",
+        ClockOut = details.IC_EstablishICP_ComplateTime?.ToString("HH:mm") ?? "-",
+        ImagesUrl = details.IC_EstablishICP_ImageUrls,
+        ImageCount = string.IsNullOrWhiteSpace(details.IC_EstablishICP_ImageUrls)
+                        ? 0
+                        : details.IC_EstablishICP_ImageUrls.Split(',', StringSplitOptions.RemoveEmptyEntries).Length,
+        Notes = details.IC_EstablishICP_Notes
+    },
+    new()
+    {
+        Mainstep = "Field Environmental Representative",
+        MainstepId = 2,
+        SubstepId = 1,
+        Substep = "Prepare containment area (drums/totes/Baker tank)",
+        StatusId = details.FER_PCA_StatusId,
+        Status = GetStatusName(details.FER_PCA_StatusId),
+        AssigneeId = details.FER_PCA_AssignId,
+        Assignee = GetUserFullName(details.FER_PCA_AssignId),
+        IsOwner = IsOwner(details.FER_PCA_AssignId),
+        ClockIn = details.FER_PCA_StartTime?.ToString("HH:mm") ?? "-",
+        ClockOut = details.FER_PCA_ComplateTime?.ToString("HH:mm") ?? "-",
+        ImagesUrl = details.FER_PCA_ImageUrls,
+        ImageCount = string.IsNullOrWhiteSpace(details.FER_PCA_ImageUrls)
+                        ? 0
+                        : details.FER_PCA_ImageUrls.Split(',', StringSplitOptions.RemoveEmptyEntries).Length,
+        Notes = details.FER_PCA_Notes
+    },
+    new()
+    {
+        Mainstep = "Field Environmental Representative",
+        MainstepId = 2,
+        SubstepId = 2,
+        Substep = "Label containers; log IDs and capacity",
+        StatusId = details.FER_LC_StatusId,
+        Status = GetStatusName(details.FER_LC_StatusId),
+        AssigneeId = details.FER_LC_AssignId,
+        Assignee = GetUserFullName(details.FER_LC_AssignId),
+        IsOwner = IsOwner(details.FER_LC_AssignId),
+        ClockIn = details.FER_LC_StartTime?.ToString("HH:mm") ?? "-",
+        ClockOut = details.FER_LC_ComplateTime?.ToString("HH:mm") ?? "-",
+        ImagesUrl = details.FER_LC_ImageUrls,
+        ImageCount = string.IsNullOrWhiteSpace(details.FER_LC_ImageUrls)
+                        ? 0
+                        : details.FER_LC_ImageUrls.Split(',', StringSplitOptions.RemoveEmptyEntries).Length,
+        Notes = details.FER_LC_Notes
+    },
+    new()
+    {
+        Mainstep = "Engineering & GEC",
+        MainstepId = 3,
+        SubstepId = 1,
+        Substep = "Retrieve system maps (regulators, BO streets, elevations)",
+        StatusId = details.EGEC_RSM_StatusId,
+        Status = GetStatusName(details.EGEC_RSM_StatusId),
+        AssigneeId = details.EGEC_RSM_AssignId,
+        Assignee = GetUserFullName(details.EGEC_RSM_AssignId),
+        IsOwner = IsOwner(details.EGEC_RSM_AssignId),
+        ClockIn = details.EGEC_RSM_StartTime?.ToString("HH:mm") ?? "-",
+        ClockOut = details.EGEC_RSM_ComplateTime?.ToString("HH:mm") ?? "-",
+        ImagesUrl = details.EGEC_RSM_ImageUrls,
+        ImageCount = string.IsNullOrWhiteSpace(details.EGEC_RSM_ImageUrls)
+                        ? 0
+                        : details.EGEC_RSM_ImageUrls.Split(',', StringSplitOptions.RemoveEmptyEntries).Length,
+        Notes = details.EGEC_RSM_Notes
+    },
+    new()
+    {
+        Mainstep = "Engineering & GEC",
+        MainstepId = 3,
+        SubstepId = 2,
+        Substep = "Mark low points & squeeze points",
+        StatusId = details.EGEC_MLP_StatusId,
+        Status = GetStatusName(details.EGEC_MLP_StatusId),
+        AssigneeId = details.EGEC_MLP_AssignId,
+        Assignee = GetUserFullName(details.EGEC_MLP_AssignId),
+        IsOwner = IsOwner(details.EGEC_MLP_AssignId),
+        ClockIn = details.EGEC_MLP_StartTime?.ToString("HH:mm") ?? "-",
+        ClockOut = details.EGEC_MLP_ComplateTime?.ToString("HH:mm") ?? "-",
+        ImagesUrl = details.EGEC_MLP_ImageUrls,
+        ImageCount = string.IsNullOrWhiteSpace(details.EGEC_MLP_ImageUrls)
+                        ? 0
+                        : details.EGEC_MLP_ImageUrls.Split(',', StringSplitOptions.RemoveEmptyEntries).Length,
+        Notes = details.EGEC_MLP_Notes
+    },
+    new()
+    {
+        Mainstep = "Engineering & GEC",
+        MainstepId = 3,
+        SubstepId = 3,
+        Substep = "Initiate cost tracking (RBA) for vendors",
+        StatusId = details.EGEC_ICT_StatusId,
+        Status = GetStatusName(details.EGEC_ICT_StatusId),
+        AssigneeId = details.EGEC_ICT_AssignId,
+        Assignee = GetUserFullName(details.EGEC_ICT_AssignId),
+        IsOwner = IsOwner(details.EGEC_ICT_AssignId),
+        ClockIn = details.EGEC_ICT_StartTime?.ToString("HH:mm") ?? "-",
+        ClockOut = details.EGEC_ICT_ComplateTime?.ToString("HH:mm") ?? "-",
+        ImagesUrl = details.EGEC_ICT_ImageUrls,
+        ImageCount = string.IsNullOrWhiteSpace(details.EGEC_ICT_ImageUrls)
+                        ? 0
+                        : details.EGEC_ICT_ImageUrls.Split(',', StringSplitOptions.RemoveEmptyEntries).Length,
+        Notes = details.EGEC_ICT_Notes
+    }
+};
+
 
                 // --- 🧮 Calculate Task Counts ---
                 var openTaskCount = incidentCommanderDetails.Count(x =>
@@ -1591,7 +1648,8 @@ namespace Repositories.Common
                 var stepMap = new Dictionary<(int mainStep, int subStep), Action>
                 {
                     // Incident Commander
-                    [(1, 1)] = () => {
+                    [(1, 1)] = () =>
+                    {
                         details.IC_MCR_AssignId = request.AssigneeId;
                         details.IC_MCR_StatusId = request.StatusId;
                         details.IC_MCR_StartTime = ParseTime(request.StartedTime);
@@ -1599,7 +1657,8 @@ namespace Repositories.Common
                         details.IC_MCR_Notes = request.Description;
                         details.IC_MCR_ImageUrls = request.ImageUrl;
                     },
-                    [(1, 2)] = () => {
+                    [(1, 2)] = () =>
+                    {
                         details.IC_Notify_AssignId = request.AssigneeId;
                         details.IC_Notify_StatusId = request.StatusId;
                         details.IC_Notify_StartTime = ParseTime(request.StartedTime);
@@ -1607,7 +1666,8 @@ namespace Repositories.Common
                         details.IC_Notify_Notes = request.Description;
                         details.IC_Notify_ImageUrls = request.ImageUrl;
                     },
-                    [(1, 3)] = () => {
+                    [(1, 3)] = () =>
+                    {
                         details.IC_EstablishICP_AssignId = request.AssigneeId;
                         details.IC_EstablishICP_StatusId = request.StatusId;
                         details.IC_EstablishICP_StartTime = ParseTime(request.StartedTime);
@@ -1617,7 +1677,8 @@ namespace Repositories.Common
                     },
 
                     // Field Environmental Representative
-                    [(2, 1)] = () => {
+                    [(2, 1)] = () =>
+                    {
                         details.FER_PCA_AssignId = request.AssigneeId;
                         details.FER_PCA_StatusId = request.StatusId;
                         details.FER_PCA_StartTime = ParseTime(request.StartedTime);
@@ -1625,7 +1686,8 @@ namespace Repositories.Common
                         details.FER_PCA_Notes = request.Description;
                         details.FER_PCA_ImageUrls = request.ImageUrl;
                     },
-                    [(2, 2)] = () => {
+                    [(2, 2)] = () =>
+                    {
                         details.FER_LC_AssignId = request.AssigneeId;
                         details.FER_LC_StatusId = request.StatusId;
                         details.FER_LC_StartTime = ParseTime(request.StartedTime);
@@ -1635,7 +1697,8 @@ namespace Repositories.Common
                     },
 
                     // Engineering & GEC
-                    [(3, 1)] = () => {
+                    [(3, 1)] = () =>
+                    {
                         details.EGEC_RSM_AssignId = request.AssigneeId;
                         details.EGEC_RSM_StatusId = request.StatusId;
                         details.EGEC_RSM_StartTime = ParseTime(request.StartedTime);
@@ -1643,7 +1706,8 @@ namespace Repositories.Common
                         details.EGEC_RSM_Notes = request.Description;
                         details.EGEC_RSM_ImageUrls = request.ImageUrl;
                     },
-                    [(3, 2)] = () => {
+                    [(3, 2)] = () =>
+                    {
                         details.EGEC_MLP_AssignId = request.AssigneeId;
                         details.EGEC_MLP_StatusId = request.StatusId;
                         details.EGEC_MLP_StartTime = ParseTime(request.StartedTime);
@@ -1651,7 +1715,8 @@ namespace Repositories.Common
                         details.EGEC_MLP_Notes = request.Description;
                         details.EGEC_MLP_ImageUrls = request.ImageUrl;
                     },
-                    [(3, 3)] = () => {
+                    [(3, 3)] = () =>
+                    {
                         details.EGEC_ICT_AssignId = request.AssigneeId;
                         details.EGEC_ICT_StatusId = request.StatusId;
                         details.EGEC_ICT_StartTime = ParseTime(request.StartedTime);
@@ -1679,7 +1744,197 @@ namespace Repositories.Common
                 return 0;
             }
         }
+        public async Task<IncidentAssessmentReadViewModel> ViewAssessmentDetails(long id, long mainstepId, long substepId)
+        {
+            IncidentAssessmentReadViewModel editViewModel = new();
 
+            try
+            {
+                // Fetch the incident assessment
+                var details = await _db.IncidentValidationAssessments
+                                       .Where(p => !p.IsDeleted && p.Id == id)
+                                       .FirstOrDefaultAsync();
+
+                var incidentUsers = await _db.IncidentUsers
+                   .Where(p => !p.IsDeleted)
+                   .ToDictionaryAsync(p => p.Id, p => new { p.FirstName, p.LastName });
+
+                var statusList = await _db.Progress
+                                .Where(p => !p.IsDeleted)
+                                .ToDictionaryAsync(p => p.Id, p => p.Name);
+
+                string GetUserFullName(long? userId) =>
+                   userId.HasValue && incidentUsers.TryGetValue(userId.Value, out var user)
+                       ? $"{user.LastName} {user.FirstName}"
+                       : string.Empty;
+
+                string GetStatusName(long? statusId) =>
+                    statusId.HasValue && statusList.TryGetValue(statusId.Value, out var name)
+                        ? name
+                        : string.Empty;
+
+                if (details == null)
+                    return new IncidentAssessmentReadViewModel();
+
+
+                var allSubsteps = new List<IncidentCommanderDetailViewModel>
+                    {
+                        new()
+                        {
+                            Mainstep = "Incident Commander",
+                            MainstepId = 1,
+                            SubstepId = 1,
+                            Substep = "Create MCR",
+                            StatusId = details.IC_MCR_StatusId,
+                            AssigneeId = details.IC_MCR_AssignId,
+                            ImagesUrl = details.IC_MCR_ImageUrls,
+                            ClockIn = details.IC_MCR_StartTime?.ToString("HH:mm") ?? "-",
+                            ClockOut = details.IC_MCR_ComplateTime?.ToString("HH:mm") ?? "-",
+                            Notes = details.IC_MCR_Notes,
+                            Assignee = GetUserFullName(details.IC_MCR_AssignId),
+                            Status = GetStatusName(details.IC_MCR_StatusId)
+                        },
+                        new()
+                        {
+                            Mainstep = "Incident Commander",
+                            MainstepId = 1,
+                            SubstepId = 2,
+                            Substep = "Notify Claims & Engineering",
+                            StatusId = details.IC_Notify_StatusId,
+                            AssigneeId = details.IC_Notify_AssignId,
+                            ImagesUrl = details.IC_Notify_ImageUrls,
+                            ClockIn = details.IC_Notify_StartTime?.ToString("HH:mm") ?? "-",
+                            ClockOut = details.IC_Notify_ComplateTime?.ToString("HH:mm") ?? "-",
+                            Notes = details.IC_Notify_Notes,
+                            Assignee = GetUserFullName(details.IC_Notify_AssignId),
+                            Status = GetStatusName(details.IC_Notify_StatusId)
+                        },
+                        new()
+                        {
+                            Mainstep = "Incident Commander",
+                            MainstepId = 1,
+                            SubstepId = 3,
+                            Substep = "Establish ICP (site access verified)",
+                            StatusId = details.IC_EstablishICP_StatusId,
+                            AssigneeId = details.IC_EstablishICP_AssignId,
+                            ImagesUrl = details.IC_EstablishICP_ImageUrls,
+                            ClockIn = details.IC_EstablishICP_StartTime?.ToString("HH:mm") ?? "-",
+                            ClockOut = details.IC_EstablishICP_ComplateTime?.ToString("HH:mm") ?? "-",
+                            Notes = details.IC_EstablishICP_Notes,
+                            Assignee = GetUserFullName(details.IC_EstablishICP_AssignId),
+                            Status = GetStatusName(details.IC_EstablishICP_StatusId)
+                        },
+                        new()
+                        {
+                            Mainstep = "Field Environmental Representative",
+                            MainstepId = 2,
+                            SubstepId = 1,
+                            Substep = "Prepare containment area (drums/totes/Baker tank)",
+                            StatusId = details.FER_PCA_StatusId,
+                            AssigneeId = details.FER_PCA_AssignId,
+                            ImagesUrl = details.FER_PCA_ImageUrls,
+                            ClockIn = details.FER_PCA_StartTime?.ToString("HH:mm") ?? "-",
+                            ClockOut = details.FER_PCA_ComplateTime?.ToString("HH:mm") ?? "-",
+                            Notes = details.FER_PCA_Notes,
+                            Assignee = GetUserFullName(details.FER_PCA_AssignId),
+                            Status = GetStatusName(details.FER_PCA_StatusId)
+                        },
+                        new()
+                        {
+                            Mainstep = "Field Environmental Representative",
+                            MainstepId = 2,
+                            SubstepId = 2,
+                            Substep = "Label containers; log IDs and capacity",
+                            StatusId = details.FER_LC_StatusId,
+                            AssigneeId = details.FER_LC_AssignId,
+                            ImagesUrl = details.FER_LC_ImageUrls,
+                            ClockIn = details.FER_LC_StartTime?.ToString("HH:mm") ?? "-",
+                            ClockOut = details.FER_LC_ComplateTime?.ToString("HH:mm") ?? "-",
+                            Notes = details.FER_LC_Notes,
+                            Assignee = GetUserFullName(details.FER_LC_AssignId),
+                            Status = GetStatusName(details.FER_LC_StatusId)
+                        },
+                        new()
+                        {
+                            Mainstep = "Engineering & GEC",
+                            MainstepId = 3,
+                            SubstepId = 1,
+                            Substep = "Retrieve system maps (regulators, BO streets, elevations)",
+                            StatusId = details.EGEC_RSM_StatusId,
+                            AssigneeId = details.EGEC_RSM_AssignId,
+                            ImagesUrl = details.EGEC_RSM_ImageUrls,
+                            ClockIn = details.EGEC_RSM_StartTime?.ToString("HH:mm") ?? "-",
+                            ClockOut = details.EGEC_RSM_ComplateTime?.ToString("HH:mm") ?? "-",
+                            Notes = details.EGEC_RSM_Notes,
+                            Assignee = GetUserFullName(details.EGEC_RSM_AssignId),
+                            Status = GetStatusName(details.EGEC_RSM_StatusId)
+                        },
+                        new()
+                        {
+                            Mainstep = "Engineering & GEC",
+                            MainstepId = 3,
+                            SubstepId = 2,
+                            Substep = "Mark low points & squeeze points",
+                            StatusId = details.EGEC_MLP_StatusId,
+                            AssigneeId = details.EGEC_MLP_AssignId,
+                            ImagesUrl = details.EGEC_MLP_ImageUrls,
+                            ClockIn = details.EGEC_MLP_StartTime?.ToString("HH:mm") ?? "-",
+                            ClockOut = details.EGEC_MLP_ComplateTime?.ToString("HH:mm") ?? "-",
+                            Notes = details.EGEC_MLP_Notes,
+                            Assignee = GetUserFullName(details.EGEC_MLP_AssignId),
+                            Status = GetStatusName(details.EGEC_MLP_StatusId)
+                        },
+                        new()
+                        {
+                            Mainstep = "Engineering & GEC",
+                            MainstepId = 3,
+                            SubstepId = 3,
+                            Substep = "Initiate cost tracking (RBA) for vendors",
+                            StatusId = details.EGEC_ICT_StatusId,
+                            AssigneeId = details.EGEC_ICT_AssignId,
+                            ImagesUrl = details.EGEC_ICT_ImageUrls,
+                            ClockIn = details.EGEC_ICT_StartTime?.ToString("HH:mm") ?? "-",
+                            ClockOut = details.EGEC_ICT_ComplateTime?.ToString("HH:mm") ?? "-",
+                            Notes = details.EGEC_ICT_Notes,
+                            Assignee = GetUserFullName(details.EGEC_ICT_AssignId),
+                            Status = GetStatusName(details.EGEC_ICT_StatusId)
+                        }
+                    };
+
+                // Find the matching substep based on mainstepId and substepId
+                var substep = allSubsteps.FirstOrDefault(s => s.MainstepId == mainstepId && s.SubstepId == substepId);
+
+                if (substep != null)
+                {
+                    editViewModel = new IncidentAssessmentReadViewModel
+                    {
+                        StatusId = substep.StatusId,
+                        AssigneeId = substep.AssigneeId,
+                        MainStepId = substep.MainstepId,
+                        SubStepId = substep.SubstepId,
+
+                        MainStep = substep.Mainstep,
+                        SubStep = substep.Substep,
+                        Id = id,
+
+                        Description = substep.Notes,
+                        ImageUrl = substep.ImagesUrl,
+                        CompletedTime = substep.ClockOut,
+                        StartedTime = substep.ClockIn,
+                        Assignee = substep.Assignee,
+                        Status = substep.Status
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in ViewAssessmentDetails for Id: {Id}, MainstepId: {mainstepId}, SubstepId: {substepId}", id, mainstepId, substepId);
+                return new IncidentAssessmentReadViewModel();
+            }
+
+            return editViewModel;
+        }
         #endregion
 
         public async Task<long> SaveValidationNoteAsync(SaveValidationNoteRequest request)

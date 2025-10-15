@@ -81,6 +81,13 @@ namespace Web.Controllers
             return PartialView("_UpdateAssestmentPartial", model);
         }
 
+        [HttpGet]
+        public async Task<PartialViewResult> ViewAssessmentDetails(long id, long mainstepId, long substepId)
+        {
+            var model = await _iIncidentService.ViewAssessmentDetails(id, mainstepId, substepId);
+            return PartialView("_ViewAssestmentPartial", model);
+        }
+
         [HttpPost]
         public async Task<IActionResult> UpdateAssessment(IncidentAssessmentEditViewModel model, List<IFormFile> Files)
         {
@@ -119,7 +126,12 @@ namespace Web.Controllers
 
                 if (id > 0)
                 {
-                    return Json(new { success = true, files = fileUrls });
+                    AssestmentFilterRequest request = new()
+                    {
+                        IncidentId = (long)model.IncidentId
+                    };
+                    var details = await _iIncidentService.GetAssessmentDetails(request);
+                    return Json(new { success = true, files = fileUrls, asssetDetails = details });
                 }
                 else
                 {

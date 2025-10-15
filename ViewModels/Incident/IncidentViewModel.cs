@@ -431,12 +431,32 @@ namespace ViewModels.Incident
         public string Status { get; set; } = string.Empty;
         public long? AssigneeId { get; set; }
         public string Assignee { get; set; } = string.Empty;
-        public string Started { get; set; } = string.Empty;
-        public string Completed { get; set; } = string.Empty;
         public string Evidence { get; set; } = string.Empty;
         public bool IsOwner { get; set; }
         public string ClockIn { get; set; } = string.Empty;
         public string ClockOut { get; set; } = string.Empty;
+        public string ImagesUrl { get; set; } = string.Empty;
+        public string Notes { get; set; } = string.Empty;
+        public long? ImageCount { get; set; }
+    }
+
+    public class IncidentAssessmentReadViewModel
+    {
+        public long Id { get; set; }
+        public long? IncidentId { get; set; }
+        public long? IncidentValidationId { get; set; }
+        public long? StatusId { get; set; }
+        public long? AssigneeId { get; set; }
+        public long? MainStepId { get; set; }
+        public long? SubStepId { get; set; }
+        public string StartedTime { get; set; } = string.Empty;
+        public string CompletedTime { get; set; } = string.Empty;
+        public string MainStep { get; set; } = string.Empty;
+        public string SubStep { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public string Assignee { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
     }
 
     #region IncidentRepair

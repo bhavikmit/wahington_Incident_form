@@ -42,9 +42,9 @@ namespace ViewModels.Incident
         public IncidentValidationAssignedRolesViewModel incidentValidationAssignedRolesViewModel { get; set; } = new();
         public IncidentValidationGatesViewModel incidentValidationGatesViewModel { get; set; } = new();
         public List<IncidentValidationLocationViewModel> IncidentValidationLocations { get; set; } = new();
-
         public List<IncidentMapChat> listIncidentMapChats { get; set; } = new();
         public IncidentAssessmentDetailViewModel IncidentAssessmentDetails { get; set; } = new();
+        public IncidentViewAssessmentAttachmentViewModel incidentViewAssessmentAttachmentView { get; set; } = new();
 
         #region Personnel
         public long? CompanyId { get; set; }
@@ -439,7 +439,6 @@ namespace ViewModels.Incident
         public string Notes { get; set; } = string.Empty;
         public long? ImageCount { get; set; }
     }
-
     public class IncidentAssessmentReadViewModel
     {
         public long Id { get; set; }
@@ -457,6 +456,11 @@ namespace ViewModels.Incident
         public string Description { get; set; } = string.Empty;
         public string Assignee { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
+    }
+
+    public class IncidentViewAssessmentAttachmentViewModel
+    {
+        public List<string> Image { get; set; } = new();
     }
 
     #region IncidentRepair

@@ -28,6 +28,7 @@ namespace Web.Controllers
             model.ListIncidentLocationMapViewModel = await _iIncidentService.GetIncidentMapDetailsbyId(id);
             model.listIncidentMapChats = await _iIncidentService.GetIncidentMapChatChat(id);
             model.IncidentAssessmentDetails = await _iIncidentService.GetAssessmentDetails(request);
+            model.incidentViewAssessmentAttachmentView = await _iIncidentService.ViewAssessmentAttachment(id);
 
             #region Personnel
             var companies = await _iIncidentService.GetAllCompanies();
@@ -146,7 +147,6 @@ namespace Web.Controllers
             }
         }
         #endregion
-
 
         #region Personnel
         [HttpPost]

@@ -1550,7 +1550,6 @@ namespace Repositories.Common
             return assessmentDetailViewModel;
         }
 
-
         public async Task<IncidentAssessmentEditViewModel> EditAssessmentDetails(long id, long mainstepId, long substepId)
         {
             IncidentAssessmentEditViewModel editViewModel = new();
@@ -1934,6 +1933,54 @@ namespace Repositories.Common
             }
 
             return editViewModel;
+        }
+        public async Task<IncidentViewAssessmentAttachmentViewModel> ViewAssessmentAttachment(long id)
+        {
+            IncidentViewAssessmentAttachmentViewModel attachmentViewModel = new();
+
+            try
+            {
+                // Fetch the incident assessment
+                var details = await _db.IncidentValidationAssessments
+                                       .Where(p => !p.IsDeleted && p.IncidentId == id)
+                                       .FirstOrDefaultAsync();
+
+                if (details != null)
+                {
+                    // Sab ImageUrls ko combine kar ke list banaye
+                    var allImages = new List<string>();
+
+                    void AddIfNotNullOrEmpty(string? urls)
+                    {
+                        if (!string.IsNullOrWhiteSpace(urls))
+                        {
+                            var splitUrls = urls.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                .Select(u => Path.GetFileName(u.Trim())); // <-- sirf file name
+                            allImages.AddRange(splitUrls);
+                        }
+                    }
+
+                    // Har property call karo
+                    AddIfNotNullOrEmpty(details.IC_MCR_ImageUrls);
+                    AddIfNotNullOrEmpty(details.IC_Notify_ImageUrls);
+                    AddIfNotNullOrEmpty(details.IC_EstablishICP_ImageUrls);
+                    AddIfNotNullOrEmpty(details.FER_PCA_ImageUrls);
+                    AddIfNotNullOrEmpty(details.FER_LC_ImageUrls);
+                    AddIfNotNullOrEmpty(details.EGEC_RSM_ImageUrls);
+                    AddIfNotNullOrEmpty(details.EGEC_MLP_ImageUrls);
+                    AddIfNotNullOrEmpty(details.EGEC_ICT_ImageUrls);
+
+                    // Result assign karo viewmodel me
+                    attachmentViewModel.Image = allImages;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in ViewAssessmentAttachment for Id: {Id}", id);
+                return new IncidentViewAssessmentAttachmentViewModel();
+            }
+
+            return attachmentViewModel;
         }
         #endregion
 

@@ -755,10 +755,10 @@
                                 </div>
                             </div>
                             <div class="card">
-                                <div class="card-header bg-white fw-semibold">
+                                <div class="card-header bg-white fw-semibold" style="display:none">
                                     <i class="fa fa-map-location-dot text-warning me-2"></i>Mini Map
                                 </div>
-                                <div class="card-body text-center">
+                                <div class="card-body text-center" style="display:none">
                                     <p class="small text-muted mb-3">Shows ICP and newly marked low/squeeze points.</p>
                                     <div class="mini-map-icon mb-2">
                                         <i class="fa fa-location-dot"></i>
@@ -767,7 +767,10 @@
                                 </div>
                                 <div class="card-body attachments">
                                     <h6 class="fw-semibold small mb-2">Attachments</h6>
-                                    <p class="mb-0 small"><i class="fa fa-circle"></i> mcr_1005.pdf</p>
+
+                                    <div id="div_Attachments">
+                                        @await Html.PartialAsync("_ViewAttachmentAssestmentPartial", Model.incidentViewAssessmentAttachmentView)
+                                    </div>
                                 </div>
                             </div>
                         </div>

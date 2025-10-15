@@ -793,6 +793,9 @@ namespace Repositories.Common
                             join s in _db.IncidentShifts on ivp.ShiftId equals s.Id into shiftGroup
                             from s in shiftGroup.DefaultIfEmpty()
 
+                            join si in _db.IncidentUsers on ivp.SupervisorId equals si.Id into userGroup1
+                            from si in userGroup1.DefaultIfEmpty()
+
                             select new IncidentValidationPersonnelsViewModel
                             {
                                 IncidentValidationPersonnelsId = ivp.Id,
@@ -803,10 +806,12 @@ namespace Repositories.Common
                                 Role = r.Name,
                                 Type = u.EmployeeType,
                                 Shift = s.Name,
-                                TimeIn = ivp.TimeIn
+                                TimeIn = ivp.TimeIn,
+                                Supervisor = (si.FirstName + " " + si.LastName).Trim()
                             }
                         ).ToList() ?? new List<IncidentValidationPersonnelsViewModel>();
                 var now = DateTime.Now;
+                var IncidentId = id;
                 var OnsiteNow = await _db.IncidentValidationPersonnels.CountAsync(p => p.IncidentId == id);
                 var CheckedOutToday = _db.IncidentValidationPersonnels.Count(p => p.IncidentId == id && p.TimeIn != null && p.TimeIn.Value.Date == DateTime.UtcNow.Date);
                 var personnelstime = await _db.IncidentValidationPersonnels.Where(p => !p.IsDeleted && p.IncidentId == id && p.TimeIn.HasValue && p.TimeIn.Value.Date == now.Date)
@@ -833,6 +838,38 @@ namespace Repositories.Common
                 {
                     AvgHoursWorker = Math.Round(totalHoursToday / CheckedOutToday, 2);
                 }
+                var UserLisTTask = await _db.IncidentUsers
+                   .Where(it => !it.IsDeleted)
+                   .Select(it => new SelectListItem
+                   {
+                       Value = it.Id.ToString(),
+                       Text = it.FirstName + ' ' + it.LastName
+                   })
+                   .ToListAsync();
+                var companyList = await _db.Company
+                   .Where(it => !it.IsDeleted)
+                   .Select(it => new SelectListItem
+                   {
+                       Value = it.Id.ToString(),
+                       Text = it.Name
+                   })
+                   .ToListAsync();
+                var rolesList = await _db.IncidentRoles
+                   .Where(it => !it.IsDeleted)
+                   .Select(it => new SelectListItem
+                   {
+                       Value = it.Id.ToString(),
+                       Text = it.Name
+                   })
+                   .ToListAsync();
+                var shiftsList = await _db.IncidentShifts
+                   .Where(it => !it.IsDeleted)
+                   .Select(it => new SelectListItem
+                   {
+                       Value = it.Id.ToString(),
+                       Text = it.Name
+                   })
+                   .ToListAsync();
                 #endregion
 
                 #region IncidentValidationNotes
@@ -854,23 +891,30 @@ namespace Repositories.Common
                 .ToListAsync();
                 #endregion
 
-                List<IncidentViewPostViewModel> ListPostDetailVM = new List<IncidentViewPostViewModel>();
                 #region IncidentValidationRepair
+                List<IncidentViewPostViewModel> ListPostDetailVM = new List<IncidentViewPostViewModel>();
+
                 List<IncidentViewRepairListViewModel> ListvalidationRepairVM = await GetvalidationRepairVM(id);
-                ListPostDetailVM = await GetPostDetailVM(id);
+                ListPostDetailVM = await GetPostDetailVM(id, 1);
                 IncidentViewRepairViewModel validationRepairVM = new IncidentViewRepairViewModel();
 
                 validationRepairVM.listIncidentViewRepairViewModel = ListvalidationRepairVM;
                 validationRepairVM.listIncidentViewPostViewModel = ListPostDetailVM;
                 #endregion
+
                 #region IncidentValidationCloseout
                 List<IncidentViewCloseoutListViewModel> ListvalidationCloseoutVM = await GetvalidationCloseoutVM(id);
-                ListPostDetailVM = await GetPostDetailVM(id);
+                ListPostDetailVM = await GetPostDetailVM(id, 2);
                 IncidentViewCloseoutViewModel validationCloseoutVM = new IncidentViewCloseoutViewModel();
 
                 validationCloseoutVM.PersonnelInvolved = await _db.IncidentValidationPersonnels.CountAsync(p => p.IncidentId == id);
                 validationCloseoutVM.listIncidentViewCloseoutViewModel = ListvalidationCloseoutVM;
                 validationCloseoutVM.listIncidentViewPostViewModel = ListPostDetailVM;
+
+                IncidentViewRestorationListViewModel validationRestorationVM = new IncidentViewRestorationListViewModel();
+                ListPostDetailVM = await GetPostDetailVM(id, 4);
+                validationRestorationVM.listIncidentViewPostViewModel = ListPostDetailVM;
+
                 #endregion
 
                 if (incident == null)
@@ -996,7 +1040,12 @@ namespace Repositories.Common
                         TotalNightShift = TotalNightShift,
                         TotalEmployees = TotalEmployees,
                         TotalContractors = TotalContractors,
-                    }
+                        IncidentId = IncidentId,
+                    },
+                    UserList = UserLisTTask,
+                    CompanyList = companyList,
+                    RoleList = rolesList,
+                    ShiftsList = shiftsList
                     #endregion
                 };
 
@@ -1038,6 +1087,7 @@ namespace Repositories.Common
 
                 viewModel.IncidentViewRepairViewModel = validationRepairVM;
                 viewModel.IncidentViewCloseoutViewModel = validationCloseoutVM;
+                viewModel.IncidentViewRestorationViewModel = validationRestorationVM;
                 return viewModel;
             }
             catch (Exception ex)
@@ -1276,9 +1326,11 @@ namespace Repositories.Common
         public async Task<IncidentAssessmentDetailViewModel> GetAssessmentDetails(AssestmentFilterRequest request)
         {
             IncidentAssessmentDetailViewModel assessmentDetailViewModel = new();
+            List<IncidentViewPostViewModel> ListPostDetailVM = new List<IncidentViewPostViewModel>();
 
             try
             {
+                
                 var statusList = await _db.Progress
                     .Where(p => !p.IsDeleted)
                     .ToDictionaryAsync(p => p.Id, p => p.Name);
@@ -1299,8 +1351,12 @@ namespace Repositories.Common
                     .Where(p => !p.IsDeleted && p.IncidentId == request.IncidentId)
                     .FirstOrDefaultAsync();
 
+               
                 if (details == null)
                     return new IncidentAssessmentDetailViewModel();
+
+                ListPostDetailVM = await GetPostDetailVM(Convert.ToInt64(details?.IncidentId), 3);
+
 
                 string GetUserFullName(long? userId) =>
                     userId.HasValue && incidentUsers.TryGetValue(userId.Value, out var user)
@@ -1540,6 +1596,7 @@ namespace Repositories.Common
                 assessmentDetailViewModel.PrimaryLocationCount = additionalLocations.Count(p => p.IsPrimaryLocation);
                 assessmentDetailViewModel.AdditionalLocationCount = additionalLocations.Count(p => !p.IsPrimaryLocation);
                 assessmentDetailViewModel.ICPLocationCount = additionalLocations.Count;
+                assessmentDetailViewModel.listIncidentViewPostViewModel = ListPostDetailVM;
             }
             catch (Exception ex)
             {
@@ -2237,39 +2294,45 @@ namespace Repositories.Common
             try
             {
                 var filteredData = _db.IncidentValidationPersonnels
-                                    .Where(p => p.IncidentId == incidentId && p.RoleId == (roleId == 0 ? p.RoleId : roleId) && p.CompanyId == (companyid == 0 ? p.CompanyId : companyid) && !p.IsDeleted)
-                                    .GroupJoin(_db.IncidentUsers,
-                                               ivp => ivp.UserId,
-                                               u => u.Id,
-                                               (ivp, userGroup) => new { ivp, userGroup })
-                                    .SelectMany(x => x.userGroup.DefaultIfEmpty(), (x, u) => new { x.ivp, u })
-                                    .GroupJoin(_db.Company,
-                                               x => x.ivp.CompanyId,
-                                               c => c.Id,
-                                               (x, companyGroup) => new { x.ivp, x.u, companyGroup })
-                                    .SelectMany(x => x.companyGroup.DefaultIfEmpty(), (x, c) => new { x.ivp, x.u, c })
-                                    .GroupJoin(_db.IncidentRoles,
-                                               x => x.ivp.RoleId,
-                                               r => r.Id,
-                                               (x, roleGroup) => new { x.ivp, x.u, x.c, roleGroup })
-                                    .SelectMany(x => x.roleGroup.DefaultIfEmpty(), (x, r) => new { x.ivp, x.u, x.c, r })
-                                    .GroupJoin(_db.IncidentShifts,
-                                               x => x.ivp.ShiftId,
-                                               s => s.Id,
-                                               (x, shiftGroup) => new { x.ivp, x.u, x.c, x.r, shiftGroup })
-                                    .SelectMany(x => x.shiftGroup.DefaultIfEmpty(), (x, s) => new IncidentValidationPersonnelsViewModel
-                                    {
-                                        IncidentValidationPersonnelsId = x.ivp.Id,
-                                        UserId = x.ivp.UserId,
-                                        CompanyId = x.ivp.CompanyId,
-                                        Name = (x.u != null ? (x.u.FirstName + " " + x.u.LastName).Trim() : string.Empty),
-                                        Company = x.c != null ? x.c.Name : string.Empty,
-                                        Role = x.r != null ? x.r.Name : string.Empty,
-                                        Type = x.u != null ? x.u.EmployeeType : string.Empty,
-                                        Shift = s != null ? s.Name : string.Empty,
-                                        TimeIn = x.ivp.TimeIn
-                                    })
-                                    .ToList();
+                          .Where(p => p.IncidentId == incidentId && p.RoleId == (roleId == 0 ? p.RoleId : roleId) && p.CompanyId == (companyid == 0 ? p.CompanyId : companyid) && !p.IsDeleted)
+                          .GroupJoin(_db.IncidentUsers,
+                                     ivp => ivp.UserId,
+                                     u => u.Id,
+                                     (ivp, userGroup) => new { ivp, userGroup })
+                          .SelectMany(x => x.userGroup.DefaultIfEmpty(), (x, u) => new { x.ivp, u })
+                          .GroupJoin(_db.Company,
+                                     x => x.ivp.CompanyId,
+                                     c => c.Id,
+                                     (x, companyGroup) => new { x.ivp, x.u, companyGroup })
+                          .SelectMany(x => x.companyGroup.DefaultIfEmpty(), (x, c) => new { x.ivp, x.u, c })
+                          .GroupJoin(_db.IncidentRoles,
+                                     x => x.ivp.RoleId,
+                                     r => r.Id,
+                                     (x, roleGroup) => new { x.ivp, x.u, x.c, roleGroup })
+                          .SelectMany(x => x.roleGroup.DefaultIfEmpty(), (x, r) => new { x.ivp, x.u, x.c, r })
+                          .GroupJoin(_db.IncidentShifts,
+                                     x => x.ivp.ShiftId,
+                                     s => s.Id,
+                                     (x, shiftGroup) => new { x.ivp, x.u, x.c, x.r, shiftGroup })
+                          .SelectMany(x => x.shiftGroup.DefaultIfEmpty(), (x, s) => new { x.ivp, x.u, x.c, x.r, s })
+                          .GroupJoin(_db.IncidentUsers,                // 👇 Join for Supervisor (SupervisorId)
+                                     x => x.ivp.SupervisorId,
+                                     sup => sup.Id,
+                                     (x, supervisorGroup) => new { x.ivp, x.u, x.c, x.r, x.s, supervisorGroup })
+                          .SelectMany(x => x.supervisorGroup.DefaultIfEmpty(), (x, sup) => new IncidentValidationPersonnelsViewModel
+                          {
+                              IncidentValidationPersonnelsId = x.ivp.Id,
+                              UserId = x.ivp.UserId,
+                              CompanyId = x.ivp.CompanyId,
+                              Name = (x.u != null ? (x.u.FirstName + " " + x.u.LastName).Trim() : string.Empty),
+                              Company = x.c != null ? x.c.Name : string.Empty,
+                              Role = x.r != null ? x.r.Name : string.Empty,
+                              Type = x.u != null ? x.u.EmployeeType : string.Empty,
+                              Shift = x.s != null ? x.s.Name : string.Empty,
+                              Supervisor = sup != null ? (sup.FirstName + " " + sup.LastName).Trim() : string.Empty, // ✅ New field
+                              TimeIn = x.ivp.TimeIn
+                          })
+                          .ToList();
                 return filteredData;
             }
             catch (Exception ex)
@@ -2312,7 +2375,7 @@ namespace Repositories.Common
 
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
-                //UpdateSupervisor.SupervisorId = SupervisorId;
+                UpdateSupervisor.SupervisorId = supervisorId;
 
                 try
                 {
@@ -2330,6 +2393,36 @@ namespace Repositories.Common
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error Update Supervisor.");
+                return 0;
+            }
+        }
+        public async Task<long> AddPerson(long userId, long companyId, long roleId, long shiftId, long incidentId, long incidentValidationId)
+        {
+            try
+            {
+                await using var transaction = await _db.Database.BeginTransactionAsync();
+
+                var newPersonnel = new IncidentValidationPersonnel
+                {
+                    IncidentId = incidentId,
+                    UserId = userId,
+                    CompanyId = companyId,
+                    RoleId = roleId,
+                    ShiftId = shiftId,
+                    IncidentValidationId = incidentValidationId, // if this is a foreign key
+                    TimeIn = null, // set if needed
+                };
+
+                _db.IncidentValidationPersonnels.Add(newPersonnel);
+                await _db.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return newPersonnel.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error inserting IncidentValidationPersonnels record.");
                 return 0;
             }
         }
@@ -2483,8 +2576,11 @@ namespace Repositories.Common
             }).ToList();
         }
 
-        public async Task<List<IncidentViewPostViewModel>> GetPostDetailVM(long id)
+        public async Task<List<IncidentViewPostViewModel>> GetPostDetailVM(long id, long IncidentViewType)
         {
+            var PostDetails = await _db.IncidentPostDetails
+               .Where(p => !p.IsDeleted && p.IncidentId == id && p.IncidentViewType == IncidentViewType)
+               .ToListAsync();
             //List <IncidentViewPostViewModel> result = new List <IncidentViewPostViewModel>();
             //return result.Select(p => new IncidentViewPostViewModel
             //{
@@ -2496,49 +2592,75 @@ namespace Repositories.Common
 
             var result = new List<IncidentViewPostViewModel>
             {
-                new IncidentViewPostViewModel
-                {
-                    Id = 1,
-                    IncidentId = id,
-                    //IncidentValidationId = 1001,
-                    TimeforMessage = "11:42 IC",
-                    Message = "ICP-1 purge completed (2,800 gal extracted)."
-                },
-                new IncidentViewPostViewModel
-                {
-                    Id = 2,
-                    IncidentId = id,
-                    //IncidentValidationId = 1002,
-                    TimeforMessage = "12:45 FER",
-                    Message = "ICP-2 purge verified and logged."
-                },
-                new IncidentViewPostViewModel
-                {
-                    Id = 3,
-                    IncidentId = id,
-                    //IncidentValidationId = 1003,
-                    TimeforMessage = "13:10 ENG",
-                    Message = "Pressure gauge readings stable."
-                },
-                new IncidentViewPostViewModel
-                {
-                    Id = 4,
-                    IncidentId = id,
-                    //IncidentValidationId = 1004,
-                    TimeforMessage = "13:25 GEC",
-                    Message = "Disposal manifest issued for PRG-001."
-                },
-                new IncidentViewPostViewModel
-                {
-                    Id = 5,
-                    IncidentId = id,
-                    //IncidentValidationId = 1005,
-                    TimeforMessage = "13:35 FER",
-                    Message = "Containment labels verified for Baker tank."
-                }
+                //new IncidentViewPostViewModel
+                //{
+                //    Id = 1,
+                //    IncidentId = id,
+                //    //IncidentValidationId = 1001,
+                //    TimeforMessage = "11:42 IC",
+                //    Message = "ICP-1 purge completed (2,800 gal extracted)."
+                //},
+                //new IncidentViewPostViewModel
+                //{
+                //    Id = 2,
+                //    IncidentId = id,
+                //    //IncidentValidationId = 1002,
+                //    TimeforMessage = "12:45 FER",
+                //    Message = "ICP-2 purge verified and logged."
+                //},
+                //new IncidentViewPostViewModel
+                //{
+                //    Id = 3,
+                //    IncidentId = id,
+                //    //IncidentValidationId = 1003,
+                //    TimeforMessage = "13:10 ENG",
+                //    Message = "Pressure gauge readings stable."
+                //},
+                //new IncidentViewPostViewModel
+                //{
+                //    Id = 4,
+                //    IncidentId = id,
+                //    //IncidentValidationId = 1004,
+                //    TimeforMessage = "13:25 GEC",
+                //    Message = "Disposal manifest issued for PRG-001."
+                //},
+                //new IncidentViewPostViewModel
+                //{
+                //    Id = 5,
+                //    IncidentId = id,
+                //    //IncidentValidationId = 1005,
+                //    TimeforMessage = "13:35 FER",
+                //    Message = "Containment labels verified for Baker tank."
+                //}
             };
 
-            return await Task.FromResult(result);
+            return PostDetails.Select(p => new IncidentViewPostViewModel
+            {
+                Id = p.Id,
+                IncidentId = p.IncidentId,
+                Message = p.Message,
+                TimeforMessage = p.MessageTime,
+                IncidentViewType = p.IncidentViewType
+            }).ToList();
+        }
+
+        public async Task<List<IncidentViewPostViewModel>> SavePostDetails(IncidentViewPostViewModel incidentViewPostViewModel)
+        {
+
+            var IncidentPostDetail = new IncidentPostDetail
+            {
+                IncidentId = incidentViewPostViewModel.IncidentId,
+                Message = incidentViewPostViewModel.Message,
+                MessageTime = incidentViewPostViewModel.TimeforMessage,
+                IncidentViewType = incidentViewPostViewModel.IncidentViewType,
+                ActiveStatus = Enums.ActiveStatus.Active
+            };
+            // Save
+            await _db.IncidentPostDetails.AddAsync(IncidentPostDetail);
+            await _db.SaveChangesAsync();
+
+            List<IncidentViewPostViewModel> listIncidentViewPostViewModel = await GetPostDetailVM(incidentViewPostViewModel.IncidentId, incidentViewPostViewModel.IncidentViewType);
+            return listIncidentViewPostViewModel;
         }
         #endregion
 

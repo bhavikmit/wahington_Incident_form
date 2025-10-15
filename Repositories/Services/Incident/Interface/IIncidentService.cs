@@ -1,6 +1,9 @@
 ﻿using Centangle.Common.ResponseHelpers.Models;
+
 using DocumentFormat.OpenXml.Drawing.Spreadsheet;
+
 using Microsoft.AspNetCore.Mvc;
+
 using Models;
 using Models.Common.Interfaces;
 
@@ -47,5 +50,7 @@ namespace Repositories.Common
         Task<long> UpdateAssessment(IncidentAssessmentEditViewModel request);
         Task<IncidentAssessmentReadViewModel> ViewAssessmentDetails(long id, long mainstepId, long substepId);
         Task<IncidentViewAssessmentAttachmentViewModel> ViewAssessmentAttachment(long id);
+        Task<long> AddPerson(long userId, long companyId, long roleId, long shiftId, long incidentId, long incidentValidationId);
+        Task<List<IncidentViewPostViewModel>> SavePostDetails(IncidentViewPostViewModel incidentViewPostViewModel);
     }
 }

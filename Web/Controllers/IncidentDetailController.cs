@@ -218,6 +218,27 @@ namespace Web.Controllers
                     new { success = false, message = "An unexpected error occurred." });
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> AddPerson(long userId, long companyId, long roleId, long shiftId, long incidentId, long incidentValidationId)
+        {
+            try
+            {
+                var Id = await _iIncidentService.AddPerson(userId, companyId, roleId, shiftId, incidentId, incidentValidationId);
+
+                if (Id == 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                        new { success = false, message = "Failed to Add Person." });
+
+                var successMsg = "Add Person successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
         #endregion
 
         [HttpPost]
@@ -242,31 +263,14 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        //public async Task<IActionResult> SavePostDetails([FromForm] IncidentViewModel incidentViewModel)
         public async Task<IActionResult> SavePostDetails([FromForm] IncidentViewPostViewModel incidentViewPostViewModel)
         {
-            //if (incidentViewModel == null)
-            //    return BadRequest(new { success = false, message = "Invalid request data." });
-
             try
             {
-                //var incidentId = string.Empty;
-                //if (incidentViewModel.Id > 0)
-                //{
-                //    incidentId = await _iIncidentService.UpdateIncident(incidentViewModel);
-                //}
-                //else
-                //{
-                //    incidentId = await _iIncidentService.SaveIncident(incidentViewModel);
-                //}
-                //if (string.IsNullOrWhiteSpace(incidentId))
-                //    return StatusCode(StatusCodes.Status500InternalServerError,
-                //        new { success = false, message = "Failed to save incident." });
 
-                //var successMsg = $"Incident {incidentId} saved successfully!";
+                List<IncidentViewPostViewModel> listIncidentViewPostViewModel = await _iIncidentService.SavePostDetails(incidentViewPostViewModel);
 
-                //return Ok(new { success = true, data = successMsg });
-                return Ok(new { success = true, data = "stromg " });
+                return Ok(new { success = true, data = listIncidentViewPostViewModel });
             }
             catch (Exception ex)
             {
@@ -274,6 +278,7 @@ namespace Web.Controllers
                     new { success = false, message = "An unexpected error occurred." });
             }
         }
+
 
     }
 }

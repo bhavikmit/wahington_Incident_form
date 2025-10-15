@@ -45,7 +45,7 @@ namespace ViewModels.Incident
         public List<IncidentMapChat> listIncidentMapChats { get; set; } = new();
         public IncidentAssessmentDetailViewModel IncidentAssessmentDetails { get; set; } = new();
         public IncidentViewAssessmentAttachmentViewModel incidentViewAssessmentAttachmentView { get; set; } = new();
-
+        public IncidentViewRestorationListViewModel IncidentViewRestorationViewModel { get; set; } = new();
         #region Personnel
         public long? CompanyId { get; set; }
         public long? IncidentRoleId { get; set; }
@@ -72,6 +72,11 @@ namespace ViewModels.Incident
         public long IncidentViewPostType { get; set; }
         public IncidentViewRepairViewModel IncidentViewRepairViewModel { get; set; } = new();
         public IncidentViewCloseoutViewModel IncidentViewCloseoutViewModel { get; set; } = new();
+
+        public List<SelectListItem> UserList { get; set; } = new();
+        public List<SelectListItem> CompanyList { get; set; } = new();
+        public List<SelectListItem> RoleList { get; set; } = new();
+        public List<SelectListItem> ShiftsList { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel
@@ -208,7 +213,7 @@ namespace ViewModels.Incident
         public string SeverityLevelName { get; set; }
         public string SeverityLevelColor { get; set; }
         public List<IncidentValidationCommunicationHistoriesViewModel> IncidentValidationCommunicationHistoriesViewModelList { get; set; }
-         public List<IncidentValidationNoteViewModel> IncidentValidationNotesList { get; set; } = new();
+        public List<IncidentValidationNoteViewModel> IncidentValidationNotesList { get; set; } = new();
         //public List<IncidentValidationNoteViewModel> IncidentValidationNotesList { get; set; } = new List<IncidentValidationNoteViewModel>();
     }
 
@@ -269,7 +274,7 @@ namespace ViewModels.Incident
     {
 
         public long? Id { get; set; } = default!;
-        public long? IncidentId { get; set; } = default!; 
+        public long? IncidentId { get; set; } = default!;
         public string LocationAddress { get; set; } = default!;
         public double Latitude { get; set; }
         public double Longitude { get; set; }
@@ -378,6 +383,8 @@ namespace ViewModels.Incident
         public long TotalNightShift { get; set; }
         public long TotalEmployees { get; set; }
         public long TotalContractors { get; set; }
+        public long? IncidentId { get; set; }
+        public long? IncidentValidationId { get; set; }
     }
     public class IncidentValidationPersonnelsTopContributorsViewModel
     {
@@ -400,6 +407,7 @@ namespace ViewModels.Incident
         public List<SelectListItem> Status { get; set; } = new();
         public List<IncidentCommanderDetailViewModel> incidentCommanderDetailViewslist { get; set; } = new();
         public Dictionary<string, string> MainStepOwners { get; set; } = new();
+        public List<IncidentViewPostViewModel> listIncidentViewPostViewModel { get; set; } = new();
     }
     public class IncidentAssessmentEditViewModel
     {
@@ -490,6 +498,21 @@ namespace ViewModels.Incident
         //public DateTime? UpdatedOn { get; set; }
         //public long UpdatedBy { get; set; }
     }
+
+    public class IncidentViewPostViewModel
+    {
+        public long Id { get; set; }
+        public long IncidentId { get; set; }
+        public string? TimeforMessage { get; set; }
+        public string? Message { get; set; }
+        public long IncidentViewType { get; set; }
+
+    }
+
+    public class IncidentViewRestorationListViewModel
+    {
+        public List<IncidentViewPostViewModel> listIncidentViewPostViewModel { get; set; }
+    }
     #endregion
 
     #region IncidentCloseOut
@@ -509,14 +532,6 @@ namespace ViewModels.Incident
         public string? Status { get; set; }
         public string? Complted { get; set; }
         public List<IncidentViewPostViewModel> listIncidentViewPostViewModel { get; set; }
-    }
-    public class IncidentViewPostViewModel
-    {
-        public long Id { get; set; }
-        public long IncidentId { get; set; }
-        public string? TimeforMessage { get; set; }
-        public string? Message { get; set; }
-
     }
     #endregion
 }

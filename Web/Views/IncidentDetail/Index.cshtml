@@ -371,7 +371,7 @@
                         </div>
                     </div>
 
-                   @*  <!-- Validation Notes -->
+                    @*  <!-- Validation Notes -->
                     <div class="card-custom mt-4 validation-notes">
                         <div class="section-title">Validation Notes</div>
                         <div class="section-body">
@@ -419,7 +419,7 @@
                         <div class="d-flex align-items-center">
                             @* <div class="validatedBy"><strong>Validated By: </strong> <span>@Model.incidentValidationsDetailsViewModel.IncidentValidationCommunicationHistoriesViewModelList?.FirstOrDefault()?.UserName</span></div> *@
                             <div class="validatedBy"><strong>Validated By: </strong> <span>@User.Identity?.Name!</span></div>
-                           
+
                             <div><strong>Date: </strong><span id="validatedDate"></span></div>
                         </div>
                         <div>
@@ -442,16 +442,16 @@
                                 <label class="form-check-label">Show currently onsite only</label>
                             </div>
                             @Html.DropDownListFor(model => model.IncidentRoleId,
-                                     (SelectList)ViewBag.Roles,
-                                     "Select Role",
-                                     new { @class = "form-select w-auto roleFilter", id = "RoleFilter" })
+                            (SelectList)ViewBag.Roles,
+                                                        "Select Role",
+                                                        new { @class = "form-select w-auto roleFilter", id = "RoleFilter" })
                             @Html.DropDownListFor(model => model.CompanyId,
-                                     (SelectList)ViewBag.Companies,
-                                     "Select Company",
-                                     new { @class = "form-select w-auto roleFilter", id = "CompanyFilter" })
+                                                        (SelectList)ViewBag.Companies,
+                                                        "Select Company",
+                                                        new { @class = "form-select w-auto roleFilter", id = "CompanyFilter" })
                         </div>
                         <div class="d-flex gap-2 mt-3 mt-md-0">
-                            <button class="btn btnAdd text-white btn-common"><i class="fa-solid fa-user-plus me-2"></i>Add Person</button>
+                            <button class="btn btnAdd text-white btn-common" id="AddPerson"><i class="fa-solid fa-user-plus me-2"></i>Add Person</button>
                             <button class="btn btn-outline-secondary btn-common"><i class="fa-solid fa-download me-2"></i>Export (CSV)</button>
                             <button class="btn btn-outline-secondary btn-common"><i class="fa-solid fa-print me-2"></i>Print Roster</button>
                         </div>
@@ -718,41 +718,11 @@
                         <!-- Right Section -->
                         <div class="col-lg-4">
                             <div class="updates d-flex flex-column justify-content-between mb-3">
-                                <div>
-                                    <h6>Updates</h6>
+                                @{
+                                    Model.IncidentViewPostType = 3; // assessment
+                                }
+                                @await Html.PartialAsync("~/Views/IncidentDetail/_PostDetails.cshtml", Model)
 
-                                    <div class="update-item">
-                                        <span class="update-time">11:42 IC</span>
-                                        <div>ICP-1 purge completed (2,800 gal extracted).</div>
-                                    </div>
-
-                                    <div class="update-item">
-                                        <span class="update-time">12:45 FER</span>
-                                        <div>
-                                            ICP-2 purge verified and logged.
-                                        </div>
-                                    </div>
-
-                                    <div class="update-item">
-                                        <span class="update-time">13:10 ENG</span>
-                                        <div>Pressure gauge readings stable.</div>
-                                    </div>
-
-                                    <div class="update-item">
-                                        <span class="update-time">13:25 GEC</span>
-                                        <div>Disposal manifest issued for PRG-001.</div>
-                                    </div>
-
-                                    <div class="update-item">
-                                        <span class="update-time">13:35 FER</span>
-                                        <div>Containment labels verified for Baker tank. </div>
-                                    </div>
-                                </div>
-
-                                <div class="update-footer mt-3">
-                                    <textarea type="text" rows="5" class="form-control mb-2" id="post" placeholder="Post an update..."></textarea>
-                                    <button class="btn btn-update"><i class="fa-solid fa-paper-plane me-2"></i>Post Update</button>
-                                </div>
                             </div>
                             <div class="card">
                                 <div class="card-header bg-white fw-semibold" style="display:none">
@@ -826,6 +796,7 @@
                                                         <th>Responsible Party</th>
                                                         <th>Status</th>
                                                         <th>Attachments / Notes</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -835,7 +806,9 @@
                                                             <td>@repair.FieldType</td>
                                                             <td>@repair.FieldValue</td>
                                                             <td><span class="badge badge-status badge-pending">@repair.FieldStatus</span></td>
-                                                            <td><i class="fa-solid fa-file-pdf me-2"></i> leak_checklist.pdf</td>
+                                                            <td><i class="fa-solid fa-file-pdf me-2"></i> - </td>
+                                                            <td><button class="btn btn-update btn-sm" onclick="EditRepairDetails('@Model.Id','@repair.Id')">Update</button></td>
+
                                                         </tr>
                                                     }
                                                 </tbody>
@@ -1106,41 +1079,10 @@
                             <div class="RightSection">
                                 <!-- Updates -->
                                 <div class="updates d-flex flex-column justify-content-between h-100 mb-3">
-                                    <div>
-                                        <h6>Updates</h6>
-
-                                        <div class="update-item">
-                                            <span class="update-time">11:42 IC</span>
-                                            <div>ICP-1 purge completed (2,800 gal extracted).</div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">12:45 FER</span>
-                                            <div>
-                                                ICP-2 purge verified and logged.
-                                            </div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">13:10 ENG</span>
-                                            <div>Pressure gauge readings stable.</div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">13:25 GEC</span>
-                                            <div>Disposal manifest issued for PRG-001.</div>
-                                        </div>
-
-                                        <div class="update-item">
-                                            <span class="update-time">13:35 FER</span>
-                                            <div>Containment labels verified for Baker tank. </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="update-footer mt-3">
-                                        <textarea type="text" rows="5" class="form-control mb-2" id="post" placeholder="Post an update..."></textarea>
-                                        <button class="btn btn-update"><i class="fa-solid fa-paper-plane me-2"></i>Post Update</button>
-                                    </div>
+                                    @{
+                                        Model.IncidentViewPostType = 4; // restoration
+                                    }
+                                    @await Html.PartialAsync("~/Views/IncidentDetail/_PostDetails.cshtml", Model)
                                 </div>
                                 <div class="card-custom signoffs">
                                     <h6>Customer Notifications</h6>
@@ -1185,7 +1127,7 @@
                             <div class="col-md-3 col-sm-6">
                                 <div class="info-card text-center text-md-start">
                                     <div class="info-title">Personnel Involved:</div>
-                                    <div><span class="info-value">24</span></div>
+                                    <div><span class="info-value">@Model.IncidentViewCloseoutViewModel.PersonnelInvolved</span></div>
                                 </div>
                             </div>
 
@@ -1217,7 +1159,7 @@
                                                         <th>Status</th>
                                                         <th>Completed</th>
                                                         <th>Attachment</th>
-
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -1227,10 +1169,12 @@
                                                             <td>@closeout.Task</td>
                                                             <td>@closeout.FieldValue</td>
                                                             <td><span class="badge badge-status badge-complete">@closeout.Status</span></td>
-                                                            <td>5:00 PM</td>
-                                                            <td><i class="fa fa-file"></i> mcr_final.pdf</td>
+                                                            <td> - </td>
+                                                            <td><i class="fa fa-file"></i> - </td>
+                                                            <td><button class="btn btn-update btn-sm" onclick="EditRepairDetails('@Model.Id','@closeout.Id')">Update</button></td>
                                                         </tr>
                                                     }
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -1377,6 +1321,66 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="AddPersonModal" tabindex="-1" aria-labelledby="AddPersonModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3">
+            <div class="modal-header">
+                <h5 class="modal-title" id="AddPersonModalLabel">Add Person</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="AddPersonForm">
+                    <input type="hidden" id="incidentId" value="@Model.incidentValidationPersonnelsCountViewModel.IncidentId" />
+                    <input type="hidden" id="incidentValidationId" value="@Model.incidentValidationsDetailsViewModel.IncidentValidationId" />
+                    <div class="form-group" id="div_NameofUser">
+                        <label>Name of User <span style="color:red">*</span></label>
+                        <select class="form-select" required id="userId" onchange="getCompanyAndRole($(this))">
+                            <option value="" selected>Select User</option>
+                            @foreach (var item in Model.UserList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group" id="div_CompanyName">
+                        <label>Company Name <span style="color:red">*</span></label>
+                        <select class="form-select" required id="companyId" disabled>
+                            <option value="" selected>Select Company</option>
+                            @foreach (var item in Model.CompanyList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group" id="div_Role">
+                        <label>Select Role <span style="color:red">*</span></label>
+                        <select class="form-select" required id="roleId" disabled>
+                            <option value="" selected>Select Role</option>
+                            @foreach (var item in Model.RoleList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group" id="div_Shift">
+                        <label>Select Shift <span style="color:red">*</span></label>
+                        <select class="form-select" required id="shiftId">
+                            <option value="" selected>Select Shift</option>
+                            @foreach (var item in Model.ShiftsList)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" id="savePerson">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div id="div_assestment_modal">
 </div>
@@ -1446,7 +1450,29 @@
         });
     });
 
-    $('td.supervisor').on('click', function () {
+    $('#AddPerson').on('click', function () {
+        $('#AddPersonForm')[0].reset();
+        $('#AddPersonModal').modal('show');
+    });
+
+        function getCompanyAndRole($this) {
+
+        var userId = $this.val();
+
+        $.getJSON('/Settings/GetCompanyAndRole', { userId: userId }, function (data) {
+            if (data && data.userId > 0) {
+                $('#companyId').val(data.companyId > 0 ? data.companyId : '');
+                $('#roleId').val(data.roleId > 0 ? data.roleId : '');
+            } else {
+                $('#companyId').val('');
+                $('#roleId').val('');
+            }
+        }).fail(function () {
+            alert("Error fetching company and role details.");
+        });
+    }
+
+    $(document).on('click', 'td.supervisor', function () {
             var td = $(this);
             var row = td.closest('tr');
             personnelId = $(this).data("id");
@@ -1471,11 +1497,12 @@
 
                 // Handle selection
                 select.on('change', function () {
-                    var supervisorId = $(this).val();
+                        var supervisorId = $(this).val();
+                        var supervisorName = $(this).find("option:selected").text();
 
                     $.post('/IncidentDetail/UpdateSupervisor', { personnelId: personnelId, supervisorId: supervisorId }, function (response) {
                         if (response.success) {
-                            td.text(response.supervisorName); // Update cell text
+                            td.text(supervisorName); // Update cell text
                         } else {
                             alert('Failed to update supervisor.');
                             td.text("Select");
@@ -1490,6 +1517,79 @@
             });
         });
 
+
+    $('#savePerson').on('click', function () {
+        var userId = $('#userId').val();
+        var companyId = $('#companyId').val();
+        var roleId = $('#roleId').val();
+        var shiftId = $('#shiftId').val();
+        var incidentId = $('#incidentId').val();
+        var incidentValidationId = $('#incidentValidationId').val();
+
+        if (!userId || !companyId || !roleId || !shiftId) {
+            alert('Please fill all required fields.');
+            return;
+        }
+
+        $.post('/IncidentDetail/AddPerson', {
+            userId: userId,
+            companyId: companyId,
+            roleId: roleId,
+            shiftId: shiftId,
+            incidentId:incidentId,
+            incidentValidationId:incidentValidationId
+        }, function (response) {
+            if (response.success) {
+                $('#AddPersonModal').modal('hide');
+                var selectedRoleId = $('#RoleFilter').val();
+                var selectedCompanyId= $('#CompanyFilter').val();
+                var selectedOnsite= $('#onsite').val();
+                    $.ajax({
+                            url: '/IncidentDetail/FilterByRole',
+                            type: 'GET',
+                            data: { incidentId: incidentId,roleId: selectedRoleId,companyid: selectedCompanyId,onsite:selectedOnsite},
+                            success: function (response) {
+                                var tbody = $('#personnelTableBody');
+                                tbody.empty();
+                                var data = response.Result || response;
+                                if (data && data.length > 0) {
+                                    $.each(data, function (index, personnels) {
+                                        var timeIn = personnels.TimeIn
+                                            ? new Date(personnels.TimeIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                                            : "00.00";
+
+                                        var hoursSoFar = personnels.TimeIn
+                                            ? ((new Date() - new Date(personnels.TimeIn)) / (1000 * 60 * 60)).toFixed(2)
+                                            : "0.00";
+
+                                        var supervisor = personnels.Supervisor || "";
+
+                                        var row = `<tr>
+                                            <td>${personnels.Name}</td>
+                                            <td>${personnels.Role}</td>
+                                            <td>${personnels.Company}</td>
+                                            <td>${personnels.Type}</td>
+                                            <td>${personnels.Shift}</td>
+                                            <td class="timeIn" data-id="$personnels.IncidentValidationPersonnelsId">${timeIn}</td>
+                                            <td>${hoursSoFar}</td>
+                                                <td class="supervisor" data-userid="${personnels.UserId}" data-companyid="${personnels.CompanyId}" data-id="${personnels.IncidentValidationPersonnelsId}">${supervisor && supervisor.trim() !== "" ? supervisor : "Select"}</td>
+                                        </tr>`;
+
+                                        tbody.append(row);
+                                    });
+                                } else {
+                                    tbody.append('<tr><td colspan="8" class="text-center">No Data found.</td></tr>');
+                                }
+                            },
+                            error: function () {
+                                alert('Error loading data.');
+                            }
+                        });
+            } else {
+                alert('Failed to add person.');
+            }
+        });
+        });
 </script>
 <script>
         document.querySelectorAll('.photo-thumb').forEach(link => {
@@ -1970,7 +2070,7 @@
             };
 
             try {
-                const res = await fetch('@Url.Action("SaveValidationNote","IncidentDetail")', {
+                const res = await fetch('@Url.Action("SaveValidationNote", "IncidentDetail")', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -2014,6 +2114,33 @@
             }
         }
     })();
+</script>
+<script>
+    async function EditRepairDetails(id, mainstepId) {
+        //alert(id+ "-"+ mainstepId)
+        // try {
+        //     showLoader($("#div_assestment_details"));
+
+        //     // Send ID as query string
+        //     const response = await fetch(`/IncidentDetail/EditRepairDetails?id=${id}&mainstepId=${mainstepId}&substepId=${substepId}`, {
+        //         method: "GET",
+        //         headers: {
+        //             "Accept": "text/html"
+        //         }
+        //     });
+
+        //     if (!response.ok) throw new Error("Failed to load incident details");
+
+        //     const content = await response.text();
+        //     $("#div_assestment_modal").empty().html(content);
+        //     $("#updateIncidentAssestmentModal").modal("show");
+
+        // } catch (error) {
+        //     console.error("Error loading incident details:", error);
+        // } finally {
+        //     hideLoader($("#div_assestment_details"));
+        // }
+    }
 </script>
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/views/incident/incident-detail.js"></script>

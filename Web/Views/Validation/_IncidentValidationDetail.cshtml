@@ -30,32 +30,32 @@
                     </div>
                     <div class="step" data-step="3">
                         <div class="step-icon">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <i class="fa-regular fa-user"></i>
                         </div>
                         <div class="step-label">Personnel</div>
                     </div>
                     <div class="step" data-step="4">
                         <div class="step-icon">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <i class="fa-solid fa-clipboard-check"></i>
                         </div>
                         <div class="step-label">Assessment</div>
                     </div>
 
                     <div class="step" data-step="5">
                         <div class="step-icon">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
                         </div>
                         <div class="step-label">Repair</div>
                     </div>
                     <div class="step" data-step="6">
                         <div class="step-icon">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <i class="fa-solid fa-rotate"></i>
                         </div>
                         <div class="step-label">Restoration</div>
                     </div>
                     <div class="step" data-step="7">
                         <div class="step-icon">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <i class="fa-regular fa-circle-check"></i>
                         </div>
                         <div class="step-label">Closeout</div>
                     </div>
@@ -79,106 +79,114 @@
 
                 <!-- Step Content -->
                 <div class="step-content mt-3" id="step-1">
-                    <div class="details-sec incident-details-sec p-6">
-                        <div class="detailCard">
-                            <div class="Stepcard callerInfo ">
-                                <h3>Caller Information</h3>
-
-                                <div class="info-item">
-                                    <i class="fa-regular fa-user"></i>
-                                    <span class="info-title">Caller Name</span>
-                                    <span class="info-sub">@Model.IVDetails.CallerName</span>
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="validationCard callerInfo">
+                                <div class="section-header d-flex align-items-center justify-content-between">
+                                    <h6 class="mb-0">Caller Information</h6>
                                 </div>
-
-                                <div class="info-item">
-                                    <i class="fa-solid fa-phone"></i>
-                                    <span class="info-title">@Model.IVDetails.CallerContact</span>
-                                    <span class="info-sub">Primary contact</span>
-                                </div>
-
-                                <div class="info-item">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    <span class="info-title">Caller Address</span>
-                                    <span class="info-sub">@Model.IVDetails.CallerAddress</span>
-                                </div>
-
-                                <div class="info-item">
-                                    <i class="fa-regular fa-calendar"></i>
-                                    <span class="info-title">Call Time</span>
-                                    <span class="info-sub">@Model.IVDetails.CallerDateTime</span>
-                                </div>
-                            </div>
-
-                            <!-- Incident Location -->
-                            <div class="Stepcard incidentLoc ">
-                                <h3>Incident Location</h3>
-
-                                <div class="info-item">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                    <span class="info-title">Address</span>
-                                    <span class="info-sub">@Model.IVDetails.IncidentLocation</span>
-                                    <a href="#" class="map-link" onclick="OpenIncidentMap()"><i class="fa-solid fa-map"></i> View on Map</a>
-                                </div>
-
-                                <div class="info-item">
-                                    <i class="fa-solid fa-road"></i>
-                                    <span class="info-title">Nearest Intersection</span>
-                                    <span class="info-sub" @Model.IVDetails.NearestIntersection</span>
-                                </div>
-
-                                <div class="info-item">
-                                    <i class="fa-solid fa-cube"></i>
-                                    <span class="info-title">Affected Assets</span>
-                                    <span class="assets info-sub">
-                                        @foreach (var item in Model.IVDetails.AffectedAssets)
-                                        {
-                                            <span>@item</span>
-                                        }
-                                    </span>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="Stepcard incidentDetail mt-4">
-                            <h3>Incident Details</h3>
-
-                            <div class="row">
-                                <div class="col">
-                                    <div class="info-sec">
-
-                                        <span class="info-title">Event Type</span>
+                                <div class="section-body">
+                                    <div class="info-item">
+                                        <i class="fa-regular fa-user"></i>
+                                        <span class="info-title">Caller Name</span>
+                                        <span class="info-sub">@Model.IVDetails.CallerName</span>
                                     </div>
-                                    <div>@Model.IVDetails.EventType</div>
-                                </div>
 
-                                <div class="col">
-                                    <div class="info-sec">
-
-                                        <span class="info-title">Reported Severity</span>
+                                    <div class="info-item">
+                                        <i class="fa-solid fa-phone"></i>
+                                        <span class="info-title">@Model.IVDetails.CallerContact</span>
+                                        <span class="info-sub">Primary contact</span>
                                     </div>
-                                    <span class="badge orange" style="background-color: @Model.IVDetails.SeverityColor !important">@Model.IVDetails.Severity</span>
-                                </div>
 
-                                <div class="col">
-                                    <div class="info-sec">
-
-                                        <span class="info-title">Current Status</span>
+                                    <div class="info-item">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <span class="info-title">Caller Address</span>
+                                        <span class="info-sub">@Model.IVDetails.CallerAddress</span>
                                     </div>
-                                    <span class="badge red" style="background-color: @Model.IVDetails.IncidentStatusColor !important">@Model.IVDetails.IncidentStatus</span>
+
+                                    <div class="info-item">
+                                        <i class="fa-regular fa-calendar"></i>
+                                        <span class="info-title">Call Time</span>
+                                        <span class="info-sub">@Model.IVDetails.CallerDateTime</span>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="info-sec">
-
-                                <span class="info-title">Description</span>
-                            </div>
-                            <div class="desc-box">
-                                @Model.IVDetails.DescriptionIssue
                             </div>
                         </div>
-                        <div class="Stepcard mt-4 safty">
-                            <h3>Safety Assessment</h3>
+                        <div class="col-md-4">
+                            <div class="validationCard incidentLoc">
+                                <div class="section-header d-flex align-items-center justify-content-between">
+                                    <h6 class="mb-0">Incident Location</h6>
+                                </div>
+                                <div class="section-body">
+                                    <div class="info-item">
+                                        <i class="fa-solid fa-location-dot"></i>
+                                        <span class="info-title">Address</span>
+                                        <span class="info-sub">@Model.IVDetails.IncidentLocation</span>
+                                        <a href="#" class="map-link" onclick="OpenIncidentMap()"><i class="fa-solid fa-map"></i> View on Map</a>
+                                    </div>
 
+                                    <div class="info-item">
+                                        <i class="fa-solid fa-road"></i>
+                                        <span class="info-title">Nearest Intersection</span>
+                                        <span class="info-sub" @Model.IVDetails.NearestIntersection</span>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <i class="fa-solid fa-cube"></i>
+                                        <span class="info-title">Affected Assets</span>
+                                        <span class="assets info-sub">
+                                            @foreach (var item in Model.IVDetails.AffectedAssets)
+                                            {
+                                                <span>@item</span>
+                                            }
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="validationCard incidentDetail">
+                                <div class="section-header d-flex align-items-center justify-content-between">
+                                    <h6 class="mb-0">Incident Details</h6>
+                                </div>
+                                <div class="section-body">
+                                    <div class="detailInfoSec d-flex align-items-center gap-2 mb-2">
+                                        <div class="info-sec">
+                                            <span class="info-title">Event Type</span>
+                                        </div>
+                                        <div>@Model.IVDetails.EventType</div>
+                                    </div>
+                                    <div class="detailInfoSec d-flex align-items-center gap-2 mb-2">
+                                        <div class="info-sec">
+                                            <span class="info-title">Reported Severity</span>
+                                        </div>
+                                        <span class="badge orange" style="background-color: @Model.IVDetails.SeverityColor !important">@Model.IVDetails.Severity</span>
+                                    </div>
+                                    <div class="detailInfoSec d-flex align-items-center gap-2 mb-2">
+                                        <div class="info-sec">
+
+                                            <span class="info-title">Current Status</span>
+                                        </div>
+                                        <span class="badge red" style="background-color: @Model.IVDetails.IncidentStatusColor !important">@Model.IVDetails.IncidentStatus</span>
+                                    </div>
+                                    <div class="detailInfoSec">
+                                        <div class="info-sec">
+                                            <span class="info-title mb-2">Description</span>
+                                            <div class="desc-box">
+                                                @Model.IVDetails.DescriptionIssue
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="validationCard safty">
+                         <div class="section-header d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0">Safety Assessment</h6>
+                         </div>
+                        <div class="section-body">
                             <div class="grid">
                                 @RenderBox("Gas Odor Present", Model.IVDetails.GasPresent)
                                 @RenderBox("Hissing Sound", Model.IVDetails.HissingPresent)
@@ -188,7 +196,8 @@
                                 @RenderBox("Water Present", Model.IVDetails.WaterPresent)
                             </div>
                         </div>
-                    </div>
+                     </div>  
+
                 </div>
 
                 <div class="step-content mt-3 d-none" id="step-2">
@@ -428,7 +437,7 @@
                                         </div>
                                         <div class="section-body">
 
-                                            <div class="form-section indicators">
+                                            <div class="form-section d-flex align-items-center indicators">
                                                 <h6>Containment Acknowledgement</h6>
                                                 <div class="selectRadio">
                                                     <div class="form-check form-check-inline">
@@ -451,7 +460,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-section indicators">
+                                            <div class="form-section d-flex align-items-center indicators">
                                                 <h6>Exception Request</h6>
                                                 <div class="selectRadio">
                                                     <div class="form-check form-check-inline">
@@ -479,7 +488,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-section indicators">
+                                            <div class="form-section d-flex align-items-center indicators">
                                                 <h6>Independent Inspection Required</h6>
                                                 <div class="selectRadio">
                                                     <div class="form-check form-check-inline">
@@ -504,7 +513,7 @@
                                             </div>
                                             <div class="form-section indicators">
                                                 <h6>Regulatory Notifications</h6>
-                                                <div class="d-flex flex-column gap-2">
+                                                <div class="d-grid gap-2" style="grid-template-columns: repeat(3, 1fr);">
                                                     <div class="form-check form-check-inline eventCheck">
                                                         <input class="form-check-input" type="checkbox" id="CPOC" name="IVValidation.validationGates.Regulatory" value="1">
                                                         <label class="form-check-label" for="eventType_26">
@@ -554,425 +563,417 @@
                 </div>
 
                 <div class="step-content mt-3 d-none" id="step-3">
-                    <div class="details-sec incident-details-sec p-6">
-                        <div class="d-flex justify-content-between mt-3">
-                            <button class="btn btn-primary btnNext" id="addPersonal" type="button"><i class="fa-solid fa-plus"></i> Add Personnel</button>
-                        </div>
-                        <div class="clonePersonalDiv">
-                            <div class="Stepcard incidentDetail mt-4 Personnel">
-                                <h3>Personnel</h3>
-
-                                <div class="ms-1 dltPersonnelbtn" style="display:none; cursor:pointer">
-                                    <i class="far fa-trash-alt" id="dltPersonnel" style="float:right"></i>
-                                </div>
-
-                                <div class="form-group" id="div_NameofUser">
-                                    <label>Name of User <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="userId" onchange="getCompanyAndRole($(this))">
-                                        <option value="" selected>Select User</option>
-                                        @foreach (var item in Model.IVValidation.UserList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group" id="div_CompanyName">
-                                    <label>Company Name <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="companyId" disabled>
-                                        <option value="" selected>Select Company</option>
-                                        @foreach (var item in Model.IVValidation.CompanyList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group" id="div_Role">
-                                    <label>Select Role <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="roleId" disabled>
-                                        <option value="" selected>Select Role</option>
-                                        @foreach (var item in Model.IVValidation.RoleList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group" id="div_Shift">
-                                    <label>Select Shift <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="shiftId">
-                                        <option value="" selected>Select Shift</option>
-                                        @foreach (var item in Model.IVValidation.ShiftsList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @* <div class="validationCard personnelSec">
+                    <div class="validationCard personnelSec">
                         <div class="section-header d-flex align-items-center justify-content-between">
                             <h6 class="mb-0">Personnel</h6>
                             <button class="btn btn-primary btnNext" id="addPersonal" type="button"><i class="fa-solid fa-plus"></i> Add Personnel</button>
                         </div>
-                        <div class="section-body clonePersonalDiv">
-                            <div class="title-delete  d-flex align-items-center justify-content-between">
-                                <p class="AddTitle">Personnel</p>
-                                <div class="ms-1 dltPersonnelbtn" style="display:none; cursor:pointer">
-                                    <i class="far fa-trash-alt" id="dltPersonnel" style="float:right"></i>
-                                </div>
-                            </div>
-                            <div class="row ">
-                                <div class="col-md-6">
-                                    <div class="form-group" id="div_NameofUser">
-                                        <label>Name of User <span style="color:red">*</span></label>
-                                        <select class="form-select" required id="userId" onchange="getCompanyAndRole($(this))">
-                                            <option value="" selected>Select User</option>
-                                            @foreach (var item in Model.IVValidation.UserList)
-                                            {
-                                                <option value="@item.Value">@item.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-                                    <div class="form-group" id="div_CompanyName">
-                                        <label>Company Name <span style="color:red">*</span></label>
-                                        <select class="form-select" required id="companyId" disabled>
-                                            <option value="" selected>Select Company</option>
-                                            @foreach (var item in Model.IVValidation.CompanyList)
-                                            {
-                                                <option value="@item.Value">@item.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group" id="div_Role">
-                                        <label>Select Role <span style="color:red">*</span></label>
-                                        <select class="form-select" required id="roleId" disabled>
-                                            <option value="" selected>Select Role</option>
-                                            @foreach (var item in Model.IVValidation.RoleList)
-                                            {
-                                                <option value="@item.Value">@item.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-                                    <div class="form-group" id="div_Shift">
-                                        <label>Select Shift <span style="color:red">*</span></label>
-                                        <select class="form-select" required id="shiftId">
-                                            <option value="" selected>Select Shift</option>
-                                            @foreach (var item in Model.IVValidation.ShiftsList)
-                                            {
-                                                <option value="@item.Value">@item.Text</option>
-                                            }
-                                        </select>
-                                    </div>
+                        <div class="section-body">
+                            <div class="row clonePersonalDiv gap-2 justify-content-center">
+                                <div class="col-md-4 Personnel">
+                                        <div class="title-delete  d-flex align-items-center justify-content-between">
+                                            <p class="AddTitle">Personnel</p>
+
+                                            <div class="ms-1 dltPersonnelbtn" style="display:none; cursor:pointer">
+                                                <i class="far fa-trash-alt" id="dltPersonnel" style="float:right"></i>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" id="div_NameofUser">
+                                            <label>Name of User <span style="color:red">*</span></label>
+                                            <select class="form-select" required id="userId" onchange="getCompanyAndRole($(this))">
+                                                <option value="" selected>Select User</option>
+                                                @foreach (var item in Model.IVValidation.UserList)
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="form-group" id="div_CompanyName">
+                                            <label>Company Name <span style="color:red">*</span></label>
+                                            <select class="form-select" required id="companyId" disabled>
+                                                <option value="" selected>Select Company</option>
+                                                @foreach (var item in Model.IVValidation.CompanyList)
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="form-group" id="div_Role">
+                                            <label>Select Role <span style="color:red">*</span></label>
+                                            <select class="form-select" required id="roleId" disabled>
+                                                <option value="" selected>Select Role</option>
+                                                @foreach (var item in Model.IVValidation.RoleList)
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="form-group" id="div_Shift">
+                                            <label>Select Shift <span style="color:red">*</span></label>
+                                            <select class="form-select" required id="shiftId">
+                                                <option value="" selected>Select Shift</option>
+                                                @foreach (var item in Model.IVValidation.ShiftsList)
+                                                {
+                                                    <option value="@item.Value">@item.Text</option>
+                                                }
+                                            </select>
+                                        </div>
                                 </div>
                             </div>
 
                         </div>
-                    </div> *@
+                    </div>
+
                 </div>
 
                 <div class="step-content mt-3 d-none" id="step-4">
-                    <div class="details-sec incident-details-sec p-6">
-                        <div class="Stepcard incidentDetail mt-4 IncidentCommander">
-                            <h3>
-                                Incident Commander
-                            </h3>
-
-                            <div id="div_CreateMCR">
-                                <h4>
-                                    Create MCR
-                                </h4>
-                                <div class="form-group" id="div_Assignee">
-                                    <label>Assignee <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="assignId">
-                                        <option value="" selected>Select User</option>
-                                        @foreach (var item in Model.IVValidation.UserList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
+                     <div class="validationCard assessmentSec">
+                        <div class="section-header d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0">Assessment</h6>
+                        </div>
+                        <div class="section-body">
+                            <div class="row"> 
+                                <div class=" col-md-4">
+                                    <div class="borderCard">
+                                        <h6 class="assestitle">Incident Commander</h6>
+                                        <div class="borderCard mb-4" id="div_CreateMCR">
+                                            <h6 class="assesSubtitle">Create MCR</h6>
+                                            <div class="form-group" id="div_Assignee">
+                                                <label>Assignee <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="assignId">
+                                                    <option value="" selected>Select User</option>
+                                                    @foreach (var item in Model.IVValidation.UserList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group" id="div_Status">
+                                                <label>Status <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="status">
+                                                    <option value="" selected>Select Status</option>
+                                                    @foreach (var item in Model.IVValidation.StatusList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="borderCard mb-4" id="div_NotifyclaimAndEngineering">
+                                            <h6 class="assesSubtitle">Notify claim & Engineering</h6>
+                                            <div class="form-group" id="div_Assignee">
+                                                <label>Assignee <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="assignId">
+                                                    <option value="" selected>Select User</option>
+                                                    @foreach (var item in Model.IVValidation.UserList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group" id="div_Status">
+                                                <label>Status <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="status">
+                                                    <option value="" selected>Select Status</option>
+                                                    @foreach (var item in Model.IVValidation.StatusList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="borderCard mb-4" id="div_EstablishICP">
+                                            <h6 class="assesSubtitle">Establish ICP</h6>
+                                            <div class="form-group" id="div_Assignee">
+                                                <label>Assignee <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="assignId">
+                                                    <option value="" selected>Select User</option>
+                                                    @foreach (var item in Model.IVValidation.UserList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group" id="div_Status">
+                                                <label>Status <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="status">
+                                                    <option value="" selected>Select Status</option>
+                                                    @foreach (var item in Model.IVValidation.StatusList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="form-group" id="div_Status">
-                                    <label>Status <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="status">
-                                        <option value="" selected>Select Status</option>
-                                        @foreach (var item in Model.IVValidation.StatusList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
+                                <div class="col-md-4">
+                                    <div class="borderCard">
+                                        <h6 class="assestitle">Field Environmental Representative</h6>
+                                        <div class="borderCard mb-4" id="div_Preparecontainmentarea">
+                                            <h6 class="assesSubtitle"> Prepare containment area (drums/totes/Baker tank)</h6>
+                                            <div class="form-group" id="div_Assignee">
+                                                <label>Assignee <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="assignId">
+                                                    <option value="" selected>Select User</option>
+                                                    @foreach (var item in Model.IVValidation.UserList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group" id="div_Status">
+                                                <label>Status <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="status">
+                                                    <option value="" selected>Select Status</option>
+                                                    @foreach (var item in Model.IVValidation.StatusList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="borderCard mb-4" id="div_Labelcontainers">
+                                            <h6 class="assesSubtitle">Label containers; log IDs and capacity</h6>
+                                            <div class="form-group" id="div_Assignee">
+                                                <label>Assignee <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="assignId">
+                                                    <option value="" selected>Select User</option>
+                                                    @foreach (var item in Model.IVValidation.UserList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group" id="div_Status">
+                                                <label>Status <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="status">
+                                                    <option value="" selected>Select Status</option>
+                                                    @foreach (var item in Model.IVValidation.StatusList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div id="div_NotifyclaimAndEngineering">
-                                <h4>
-                                    Notify claim & Engineering
-                                </h4>
-                                <div class="form-group" id="div_Assignee">
-                                    <label>Assignee <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="assignId">
-                                        <option value="" selected>Select User</option>
-                                        @foreach (var item in Model.IVValidation.UserList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group" id="div_Status">
-                                    <label>Status <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="status">
-                                        <option value="" selected>Select Status</option>
-                                        @foreach (var item in Model.IVValidation.StatusList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div id="div_EstablishICP">
-                                <h4>
-                                    Establish ICP
-                                </h4>
-                                <div class="form-group" id="div_Assignee">
-                                    <label>Assignee <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="assignId">
-                                        <option value="" selected>Select User</option>
-                                        @foreach (var item in Model.IVValidation.UserList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group" id="div_Status">
-                                    <label>Status <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="status">
-                                        <option value="" selected>Select Status</option>
-                                        @foreach (var item in Model.IVValidation.StatusList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
+                                <div class="col-md-4">
+                                    <div class="borderCard">
+                                        <h6 class="assestitle"> Engineering & GEC</h6>
+                                        <div class="borderCard mb-4" id="div_Retrievesystemmaps">
+                                            <h6 class="assesSubtitle">Retrieve system maps (regulators, BO streets, elevations)</h6>
+                                            <div class="form-group" id="div_Assignee">
+                                                <label>Assignee <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="assignId">
+                                                    <option value="" selected>Select User</option>
+                                                    @foreach (var item in Model.IVValidation.UserList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group" id="div_Status">
+                                                <label>Status <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="status">
+                                                    <option value="" selected>Select Status</option>
+                                                    @foreach (var item in Model.IVValidation.StatusList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="borderCard mb-4" id="div_Marklowpoints">
+                                            <h6 class="assesSubtitle">Mark low points & squeeze points</h6>
+                                            <div class="form-group" id="div_Assignee">
+                                                <label>Assignee <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="assignId">
+                                                    <option value="" selected>Select User</option>
+                                                    @foreach (var item in Model.IVValidation.UserList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group" id="div_Status">
+                                                <label>Status <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="status">
+                                                    <option value="" selected>Select Status</option>
+                                                    @foreach (var item in Model.IVValidation.StatusList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="borderCard mb-4" id="div_Initiatecosttracking">
+                                            <h6 class="assesSubtitle">Initiate cost tracking (RBA) for vendors</h6>
+                                            <div class="form-group" id="div_Assignee">
+                                                <label>Assignee <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="assignId">
+                                                    <option value="" selected>Select User</option>
+                                                    @foreach (var item in Model.IVValidation.UserList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="form-group" id="div_Status">
+                                                <label>Status <span style="color:red">*</span></label>
+                                                <select class="form-select" required id="status">
+                                                    <option value="" selected>Select Status</option>
+                                                    @foreach (var item in Model.IVValidation.StatusList)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <div class="Stepcard incidentDetail mt-4 FieldEnvironmentalRepresentative">
-                            <h3>
-                                Field Environmental Representative
-                            </h3>
-
-                            <div id="div_Preparecontainmentarea">
-                                <h4>
-                                    Prepare containment area (drums/totes/Baker tank)
-                                </h4>
-                                <div class="form-group" id="div_Assignee">
-                                    <label>Assignee <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="assignId">
-                                        <option value="" selected>Select User</option>
-                                        @foreach (var item in Model.IVValidation.UserList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group" id="div_Status">
-                                    <label>Status <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="status">
-                                        <option value="" selected>Select Status</option>
-                                        @foreach (var item in Model.IVValidation.StatusList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div id="div_Labelcontainers">
-                                <h4>
-                                    Label containers; log IDs and capacity
-                                </h4>
-                                <div class="form-group" id="div_Assignee">
-                                    <label>Assignee <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="assignId">
-                                        <option value="" selected>Select User</option>
-                                        @foreach (var item in Model.IVValidation.UserList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group" id="div_Status">
-                                    <label>Status <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="status">
-                                        <option value="" selected>Select Status</option>
-                                        @foreach (var item in Model.IVValidation.StatusList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="Stepcard incidentDetail mt-4 EngineeringAndGEC">
-                            <h3>
-                                Engineering & GEC
-                            </h3>
-
-                            <div id="div_Retrievesystemmaps">
-                                <h4>
-                                    Retrieve system maps (regulators, BO streets, elevations)
-                                </h4>
-                                <div class="form-group" id="div_Assignee">
-                                    <label>Assignee <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="assignId">
-                                        <option value="" selected>Select User</option>
-                                        @foreach (var item in Model.IVValidation.UserList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group" id="div_Status">
-                                    <label>Status <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="status">
-                                        <option value="" selected>Select Status</option>
-                                        @foreach (var item in Model.IVValidation.StatusList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div id="div_Marklowpoints">
-                                <h4>
-                                    Mark low points & squeeze points
-                                </h4>
-                                <div class="form-group" id="div_Assignee">
-                                    <label>Assignee <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="assignId">
-                                        <option value="" selected>Select User</option>
-                                        @foreach (var item in Model.IVValidation.UserList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group" id="div_Status">
-                                    <label>Status <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="status">
-                                        <option value="" selected>Select Status</option>
-                                        @foreach (var item in Model.IVValidation.StatusList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div id="div_Initiatecosttracking">
-                                <h4>
-                                    Initiate cost tracking (RBA) for vendors
-                                </h4>
-                                <div class="form-group" id="div_Assignee">
-                                    <label>Assignee <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="assignId">
-                                        <option value="" selected>Select User</option>
-                                        @foreach (var item in Model.IVValidation.UserList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                                <div class="form-group" id="div_Status">
-                                    <label>Status <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="status">
-                                        <option value="" selected>Select Status</option>
-                                        @foreach (var item in Model.IVValidation.StatusList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+                
                     </div>
                 </div>
-
                 <div class="step-content mt-3 d-none" id="step-5">
-                    <div class="row g-3">
-                        <div class="col-md-12">
-                            <div class="right-panel">
-                                <h5>Per-Operation Setup</h5>
-                                <div class="Stepcard incidentDetail mt-4 SourceOfLeak">
-                                    <h3>
-                                        Use "Identifying Source of Leak" Checklist
-                                    </h3>
-                                    <div class="form-group mb-3" id="div_ResponsibleRole">
-                                        <input type="hidden" id="hdn_SOLResponsibleRole" asp-for="IVValidation.validationRepair.SourceOfLeak" name="IVValidation.validationRepair.SourceOfLeak" />
-                                        <label>Responsible Role (Multiple)</label>
-                                        <div class="multiselect-dropdown" id="chk_SOLResponsibleRole">
-                                            <div class="dropdown-btn">Choose roles</div>
-                                            <div class="dropdown-list">
-                                                @foreach (var item in Model.IVValidation.RoleList)
-                                                {
-                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
-                                                }
+                    <div class="validationCard repairSec">
+                        <div class="section-header d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0">Repair</h6>
+                        </div>
+                        <div class="section-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="borderCard">
+                                        <h6 class="assestitle">Per-Operation Setup</h6>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="borderCard SourceOfLeak">
+                                                    <h6 class="assesSubtitle">Use "Identifying Source of Leak" Checklist</h6>
+                                                    <div class="form-group mb-3" id="div_ResponsibleRole">
+                                                        <input type="hidden" id="hdn_SOLResponsibleRole" asp-for="IVValidation.validationRepair.SourceOfLeak" name="IVValidation.validationRepair.SourceOfLeak" />
+                                                        <label>Responsible Role (Multiple)</label>
+                                                        <div class="multiselect-dropdown" id="chk_SOLResponsibleRole">
+                                                            <div class="dropdown-btn">Choose roles</div>
+                                                            <div class="dropdown-list">
+                                                                @foreach (var item in Model.IVValidation.RoleList)
+                                                                {
+                                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" id="div_Status">
+                                                        <label>Status <span style="color:red">*</span></label>
+                                                        <select class="form-select" required id="chk_SOLStatus" asp-for="@Model.IVValidation.validationRepair.SourceOfLeakStatus">
+                                                            <option value="" selected>Select Status</option>
+                                                            @foreach (var item in Model.IVValidation.StatusList)
+                                                            {
+                                                                <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" id="div_Status">
-                                        <label>Status <span style="color:red">*</span></label>
-                                        <select class="form-select" required id="chk_SOLStatus" asp-for="@Model.IVValidation.validationRepair.SourceOfLeakStatus">
-                                            <option value="" selected>Select Status</option>
-                                            @foreach (var item in Model.IVValidation.StatusList)
-                                            {
-                                                <option value="@item.Value">@item.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="Stepcard incidentDetail mt-4 PreventFurtherOutage">
-                                    <h3>
-                                        Identify ideal purge locations to prevent further outage (use engineering data)
-                                    </h3>
-                                    <div class="form-group mb-3" id="div_ResponsibleRole">
-                                        <input type="hidden" id="hdn_PFOResponsibleRole" name="IVValidation.validationRepair.PreventFurtherOutage" asp-for="IVValidation.validationRepair.PreventFurtherOutage" />
-                                        <label>Responsible Role (Multiple)</label>
-                                        <div class="multiselect-dropdown" id="chk_PFOResponsibleRole">
-                                            <div class="dropdown-btn">Choose roles</div>
-                                            <div class="dropdown-list">
-                                                @foreach (var item in Model.IVValidation.RoleList)
-                                                {
-                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
-                                                }
+                                            <div class="col-md-4">
+                                                <div class="borderCard PreventFurtherOutage">
+                                                    <h6 class="assesSubtitle">Identify ideal purge locations to prevent further outage (use engineering data)</h6>
+                                                    <div class="form-group mb-3" id="div_ResponsibleRole">
+                                                        <input type="hidden" id="hdn_PFOResponsibleRole" name="IVValidation.validationRepair.PreventFurtherOutage" asp-for="IVValidation.validationRepair.PreventFurtherOutage" />
+                                                        <label>Responsible Role (Multiple)</label>
+                                                        <div class="multiselect-dropdown" id="chk_PFOResponsibleRole">
+                                                            <div class="dropdown-btn">Choose roles</div>
+                                                            <div class="dropdown-list">
+                                                                @foreach (var item in Model.IVValidation.RoleList)
+                                                                {
+                                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" id="div_Status">
+                                                        <label>Status <span style="color:red">*</span></label>
+                                                        <select class="form-select" required id="chk_PFOStatus" asp-for="@Model.IVValidation.validationRepair.PreventFurtherOutageStatus">
+                                                            <option value="" selected>Select Status</option>
+                                                            @foreach (var item in Model.IVValidation.StatusList)
+                                                            {
+                                                                <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" id="div_Status">
-                                        <label>Status <span style="color:red">*</span></label>
-                                        <select class="form-select" required id="chk_PFOStatus" asp-for="@Model.IVValidation.validationRepair.PreventFurtherOutageStatus">
-                                            <option value="" selected>Select Status</option>
-                                            @foreach (var item in Model.IVValidation.StatusList)
-                                            {
-                                                <option value="@item.Value">@item.Text</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="Stepcard incidentDetail mt-4 VacuumTruckFittings">
-                                    <h3>
-                                        Verify vacuum truck fittings (2" cam-lock and 2" → ¾" adaptors available)
-                                    </h3>
-                                    <div class="form-group" id="div_ResponsibleRole">
-                                        <input type="hidden" id="hdn_VTFResponsibleRole" name="IVValidation.validationRepair.VacuumTruckFitting" asp-for="IVValidation.validationRepair.VacuumTruckFitting" />
+                                            <div class="col-md-4">
+                                                <div class="borderCard VacuumTruckFittings">
+                                                    <h6 class="assesSubtitle">Verify vacuum truck fittings (2" cam-lock and 2" → ¾" adaptors available)</h6>
+                                                    <div class="form-group" id="div_ResponsibleRole">
+                                                        <input type="hidden" id="hdn_VTFResponsibleRole" name="IVValidation.validationRepair.VacuumTruckFitting" asp-for="IVValidation.validationRepair.VacuumTruckFitting" />
 
-                                        <div class="form-group mb-3" id="div_ResponsibleRole">
+                                                        <div class="form-group mb-3" id="div_ResponsibleRole">
+                                                            <label>Responsible Role (Multiple)</label>
+                                                            <div class="multiselect-dropdown" id="chk_VTFResponsibleRole">
+                                                                <div class="dropdown-btn">Choose roles</div>
+                                                                <div class="dropdown-list">
+                                                                    @foreach (var item in Model.IVValidation.RoleList)
+                                                                    {
+                                                                        <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group" id="div_Status">
+                                                        <label>Status <span style="color:red">*</span></label>
+                                                        <select class="form-select" required id="chk_VTFStatus" asp-for="@Model.IVValidation.validationRepair.VacuumTruckFittingStatus">
+                                                            <option value="" selected>Select Status</option>
+                                                            @foreach (var item in Model.IVValidation.StatusList)
+                                                            {
+                                                                <option value="@item.Value">@item.Text</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                   
+                </div>
+
+                <div class="step-content mt-3 d-none" id="step-6">
+
+                    <div class="validationCard restorationSec">
+                        <div class="section-header d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0">Restoration</h6>
+                            <button class="btn btn-primary btnNext" id="addTask" type="button"><i class="fa-solid fa-plus"></i> Add Task</button>
+                        </div>
+                        <div class="section-body">
+                            <div class="row  cloneTaskDiv gap-2 justify-content-center">
+                                <div class="col-md-4 Task ">
+                                    <div class="title-delete  d-flex align-items-center justify-content-between">
+                                        <p class="AddTitle">Task</p>
+
+                                        <div class="ms-1 dltTaskbtn" style="display:none; cursor:pointer">
+                                            <i class="far fa-trash-alt" id="dltTask" style="float:right"></i>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="div_TaskDescription">
+                                        <label>Task Description <span style="color:red">*</span></label>
+                                        <textarea class="form-control" id="taskDescription" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group" id="div_ResponsibleRole">
+
+                                        <input type="hidden" id="hdn_TaskResponsibleRole" value="" />
+
+                                        <div class="form-group mb-3" id="div_TaskResponsibleRole">
                                             <label>Responsible Role (Multiple)</label>
-                                            <div class="multiselect-dropdown" id="chk_VTFResponsibleRole">
+                                            <div class="multiselect-dropdown" id="chk_TaskResponsibleRole">
                                                 <div class="dropdown-btn">Choose roles</div>
                                                 <div class="dropdown-list">
                                                     @foreach (var item in Model.IVValidation.RoleList)
@@ -982,10 +983,11 @@
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                     <div class="form-group" id="div_Status">
                                         <label>Status <span style="color:red">*</span></label>
-                                        <select class="form-select" required id="chk_VTFStatus" asp-for="@Model.IVValidation.validationRepair.VacuumTruckFittingStatus">
+                                        <select class="form-select" required id="status">
                                             <option value="" selected>Select Status</option>
                                             @foreach (var item in Model.IVValidation.StatusList)
                                             {
@@ -995,109 +997,65 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                    </div>
-                </div>
-
-                <div class="step-content mt-3 d-none" id="step-6">
-                    <div class="details-sec incident-details-sec p-6">
-                        <div class="d-flex justify-content-between mt-3">
-                            <button class="btn btn-primary btnNext" id="addTask" type="button"><i class="fa-solid fa-plus"></i> Add Task</button>
-                        </div>
-                        <div class="cloneTaskDiv">
-                            <div class="Stepcard incidentDetail mt-4 Task">
-                                <h3>Task</h3>
-
-                                <div class="ms-1 dltTaskbtn" style="display:none; cursor:pointer">
-                                    <i class="far fa-trash-alt" id="dltTask" style="float:right"></i>
-                                </div>
-
-                                <div class="form-group" id="div_TaskDescription">
-                                    <label>Task Description <span style="color:red">*</span></label>
-                                    <textarea class="form-control" id="taskDescription" rows="3"></textarea>
-                                </div>
-                                <div class="form-group" id="div_ResponsibleRole">
-
-                                    <input type="hidden" id="hdn_TaskResponsibleRole" value="" />
-
-                                    <div class="form-group mb-3" id="div_TaskResponsibleRole">
-                                        <label>Responsible Role (Multiple)</label>
-                                        <div class="multiselect-dropdown" id="chk_TaskResponsibleRole">
-                                            <div class="dropdown-btn">Choose roles</div>
-                                            <div class="dropdown-list">
-                                                @foreach (var item in Model.IVValidation.RoleList)
-                                                {
-                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                <div class="form-group" id="div_Status">
-                                    <label>Status <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="status">
-                                        <option value="" selected>Select Status</option>
-                                        @foreach (var item in Model.IVValidation.StatusList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
-                                </div>
-                            </div>
                         </div>
                     </div>
+
                 </div>
 
                 <div class="shadow-sm step-content mt-3 d-none" id="step-7">
-                    <div class="details-sec incident-details-sec p-6">
-                        <div class="d-flex justify-content-between mt-3">
+                    <div class="validationCard closeoutSec">
+                        <div class="section-header d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0">Closeout</h6>
                             <button class="btn btn-primary btnNext" id="addCloseoutTask" type="button"><i class="fa-solid fa-plus"></i> Add Task</button>
                         </div>
-                        <div class="cloneCloseoutTaskDiv">
-                            <div class="Stepcard incidentDetail mt-4 CloseoutTask">
-                                <h3>Task</h3>
-
-                                <div class="ms-1 dltCloseoutTaskbtn" style="display:none; cursor:pointer">
-                                    <i class="far fa-trash-alt" id="dltCloseoutTask" style="float:right"></i>
-                                </div>
-
-                                <div class="form-group" id="div_CloseoutTaskDescription">
-                                    <label>Task Description <span style="color:red">*</span></label>
-                                    <textarea class="form-control" id="CloseouttaskDescription" rows="3"></textarea>
-                                </div>
-                                <div class="form-group" id="div_ResponsibleRole">
-
-                                    <input type="hidden" id="hdn_CloseoutTaskResponsibleRole" value="" />
-
-                                    <div class="form-group mb-3" id="div_CloseoutTaskResponsibleRole">
-                                        <label>Responsible Role (Multiple)</label>
-                                        <div class="multiselect-dropdown" id="chk_CloseoutTaskResponsibleRole">
-                                            <div class="dropdown-btn">Choose roles</div>
-                                            <div class="dropdown-list">
-                                                @foreach (var item in Model.IVValidation.RoleList)
-                                                {
-                                                    <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
-                                                }
-                                            </div>
+                        <div class="section-body">
+                            <div class="row  cloneCloseoutTaskDiv gap-2 justify-content-center">
+                                <div class="col-md-4 CloseoutTask ">
+                                    <div class="title-delete  d-flex align-items-center justify-content-between">
+                                        <p class="AddTitle">Task</p>
+                                        <div class="ms-1 dltCloseoutTaskbtn" style="display:none; cursor:pointer">
+                                            <i class="far fa-trash-alt" id="dltCloseoutTask" style="float:right"></i>
                                         </div>
                                     </div>
+                                    <div class="form-group" id="div_CloseoutTaskDescription">
+                                        <label>Task Description <span style="color:red">*</span></label>
+                                        <textarea class="form-control" id="CloseouttaskDescription" rows="3"></textarea>
+                                    </div>
+                                    <div class="form-group" id="div_ResponsibleRole">
 
-                                </div>
-                                <div class="form-group" id="div_Status">
-                                    <label>Status <span style="color:red">*</span></label>
-                                    <select class="form-select" required id="status">
-                                        <option value="" selected>Select Status</option>
-                                        @foreach (var item in Model.IVValidation.StatusList)
-                                        {
-                                            <option value="@item.Value">@item.Text</option>
-                                        }
-                                    </select>
+                                        <input type="hidden" id="hdn_CloseoutTaskResponsibleRole" value="" />
+
+                                        <div class="form-group mb-3" id="div_CloseoutTaskResponsibleRole">
+                                            <label>Responsible Role (Multiple)</label>
+                                            <div class="multiselect-dropdown" id="chk_CloseoutTaskResponsibleRole">
+                                                <div class="dropdown-btn">Choose roles</div>
+                                                <div class="dropdown-list">
+                                                    @foreach (var item in Model.IVValidation.RoleList)
+                                                    {
+                                                        <label><input class="form-check-input" type="checkbox" value="@item.Value" data-name="@item.Text"> @item.Text</label>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group" id="div_Status">
+                                        <label>Status <span style="color:red">*</span></label>
+                                        <select class="form-select" required id="status">
+                                            <option value="" selected>Select Status</option>
+                                            @foreach (var item in Model.IVValidation.StatusList)
+                                            {
+                                                <option value="@item.Value">@item.Text</option>
+                                            }
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+                   
                 </div>
             </div>
         </form>

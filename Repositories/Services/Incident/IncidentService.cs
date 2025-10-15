@@ -771,6 +771,25 @@ namespace Repositories.Common
                     SeverityName = severityLevels.Where(s => s.Id == p.ConfirmedSeverityLevelId).FirstOrDefault()?.Name
                 }).ToList();
                 #endregion
+                #region IncidentValidationNotes
+                
+                    
+                    var IncidentvalidationNotes = await _db.IncidentValidationNotes
+                .AsNoTracking()
+                .Where(n => !n.IsDeleted && n.IncidentId == id)
+                .OrderByDescending(n => n.CreatedOn)
+                 .Select(n => new IncidentValidationNoteViewModel
+                {
+                    Id = n.Id,
+                    IncidentId = n.IncidentId,
+                    IncidentValidationId = n.IncidentValidationId,
+                    Notes = n.Notes,
+                    CreatedBy = n.CreatedBy,
+                    CreatedOn = n.CreatedOn
+                    })
+                    .ToListAsync();
+                #endregion
+
 
                 if (incident == null)
                     return new IncidentViewModel();
@@ -857,7 +876,7 @@ namespace Repositories.Common
                             : new List<string>()
                     },
 
-                    //incidentValidation = incidentValidation ?? new IncidentValidationsDetailsViewModel()
+                    
 
                     incidentValidationsDetailsViewModel = new IncidentValidationsDetailsViewModel
                     {
@@ -871,7 +890,8 @@ namespace Repositories.Common
                         CreatedTimeInFormat = GetTime(Convert.ToString(incidentValidation.FirstOrDefault()?.CreatedOn)),
                         SeverityLevelName = incidentValidation.FirstOrDefault()?.SeverityLevelName,
                         SeverityLevelColor = incidentValidation.FirstOrDefault()?.SeverityLevelColor,
-                        IncidentValidationCommunicationHistoriesViewModelList = incidentValidation.FirstOrDefault()?.IncidentValidationCommunicationHistoriesViewModelList
+                        IncidentValidationCommunicationHistoriesViewModelList = incidentValidation.FirstOrDefault()?.IncidentValidationCommunicationHistoriesViewModelList,
+                        IncidentValidationNotesList = IncidentvalidationNotes
                     },
 
                     workSteps = workStepsData.SelectMany(x => x).ToList(),
@@ -1147,6 +1167,41 @@ namespace Repositories.Common
             {
                 _logger.LogError(ex, "Error GetIncidentMapChatChat.");
                 return new List<IncidentMapChat>();
+            }
+        }
+        public async Task<long> SaveValidationNoteAsync(SaveValidationNoteRequest request)
+        {
+            if (request == null || request.IncidentId <= 0 || string.IsNullOrWhiteSpace(request.Notes))
+                return 0;
+
+            try
+            {
+                var userId = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var userIdParsed = !string.IsNullOrEmpty(userId) ? long.Parse(userId) : 0;
+                var userName = _httpContextAccessor?.HttpContext?.User.Identity?.Name ?? "Unknown";
+
+                var note = new IncidentValidationNotes
+                {
+                    IncidentId = request.IncidentId,
+                    IncidentValidationId = request.IncidentValidationId,
+                    Notes = request.Notes,
+                    CreatedOn = DateTime.UtcNow,
+                    CreatedBy = userIdParsed,
+                    UpdatedOn = DateTime.UtcNow,
+                    UpdatedBy = userIdParsed,
+                    IsDeleted = false,
+                    ActiveStatus = Enums.ActiveStatus.Active
+                };
+
+                await _db.IncidentValidationNotes.AddAsync(note);
+                await _db.SaveChangesAsync();
+
+                return note.Id;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error SaveValidationNoteAsync.");
+                return 0;
             }
         }
 

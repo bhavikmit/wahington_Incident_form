@@ -29,5 +29,6 @@ namespace Repositories.Common
         Task<long> AddMapChat(IncidentMapChatRequest request);
 
         Task<List<IncidentMapChat>> GetIncidentMapChatChat(long incidentId);
+        Task<long> SaveValidationNoteAsync(SaveValidationNoteRequest request);
     }
 }

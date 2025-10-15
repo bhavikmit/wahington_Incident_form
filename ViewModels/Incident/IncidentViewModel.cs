@@ -44,6 +44,29 @@ namespace ViewModels.Incident
         public List<IncidentValidationLocationViewModel> IncidentValidationLocations { get; set; } = new();
 
         public List<IncidentMapChat> listIncidentMapChats { get; set; } = new();
+
+        #region Personnel
+        public long? CompanyId { get; set; }
+        public long? IncidentRoleId { get; set; }
+        public class CompanyViewModel
+        {
+            public long CompanyId { get; set; }
+            public string CompanyName { get; set; } = string.Empty;
+        }
+        public class IncidentRoleViewModel
+        {
+            public long IncidentRoleId { get; set; }
+            public string IncidentRoleName { get; set; } = string.Empty;
+        }
+        public class UsersViewModel
+        {
+            public long UsersId { get; set; }
+            public string UsersName { get; set; } = string.Empty;
+        }
+        public List<IncidentValidationPersonnelsViewModel> incidentValidationPersonnelsViewModel { get; set; } = new();
+        public IncidentValidationPersonnelsCountViewModel incidentValidationPersonnelsCountViewModel { get; set; } = new();
+        public List<IncidentValidationPersonnelsTopContributorsViewModel> incidentValidationPersonnelsTopContributorsViewModel { get; set; } = new();
+        #endregion
     }
 
     public class IncidentCellerInformationViewModel
@@ -323,4 +346,36 @@ namespace ViewModels.Incident
         public DateTime? UpdatedOn { get; set; }
         public long UpdatedBy { get; set; }
     }
+    #region
+    public class IncidentValidationPersonnelsViewModel
+    {
+        public long IncidentValidationPersonnelsId { get; set; }
+        public long? UserId { get; set; }
+        public long? CompanyId { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
+        public string Company { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public string Shift { get; set; } = string.Empty;
+        public DateTime? TimeIn { get; set; }
+        public DateTime? HoursSoFar { get; set; }
+        public string Supervisor { get; set; } = string.Empty;
+    }
+    public class IncidentValidationPersonnelsCountViewModel
+    {
+        public long OnsiteNowCount { get; set; }
+        public long CheckedOutTodayCount { get; set; }
+        public double? TotalHoursToday { get; set; }
+        public double? AvgHoursWorker { get; set; }
+        public long TotalDayShift { get; set; }
+        public long TotalNightShift { get; set; }
+        public long TotalEmployees { get; set; }
+        public long TotalContractors { get; set; }
+    }
+    public class IncidentValidationPersonnelsTopContributorsViewModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public double? TotalHoursToday { get; set; }
+    }
+    #endregion
 }

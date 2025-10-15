@@ -68,7 +68,6 @@
 
     $(document).off("click", "#nextToIncidentDetials");
     $(document).on("click", "#nextToIncidentDetials", function (e) {
-        debugger;
         e.preventDefault();
         var isValid = true;
         if ($("#locationForm").is(":visible")) {

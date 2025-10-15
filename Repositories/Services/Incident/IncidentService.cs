@@ -8,6 +8,7 @@ using Centangle.Common.ResponseHelpers.Models;
 using DataLibrary;
 
 using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 
@@ -42,6 +43,8 @@ using ViewModels;
 using ViewModels.Dashboard;
 using ViewModels.Incident;
 using ViewModels.Shared;
+
+using static ViewModels.Incident.IncidentViewModel;
 
 namespace Repositories.Common
 {
@@ -1106,6 +1109,7 @@ namespace Repositories.Common
             }
         }
 
+        #region Map
         public async Task<long> AddMapChat(IncidentMapChatRequest request)
         {
             await using var transaction = await _db.Database.BeginTransactionAsync();
@@ -1149,6 +1153,309 @@ namespace Repositories.Common
                 return new List<IncidentMapChat>();
             }
         }
+        #endregion
+
+        #region Assestment
+        public async Task<IncidentAssessmentDetailViewModel> GetAssessmentDetails(AssestmentFilterRequest request)
+        {
+            IncidentAssessmentDetailViewModel assessmentDetailViewModel = new();
+
+            try
+            {
+                var statusList = await _db.Progress
+                    .Where(p => !p.IsDeleted)
+                    .ToDictionaryAsync(p => p.Id, p => p.Name);
+
+                var ownerList = await _db.IncidentUsers
+                    .Where(p => !p.IsDeleted && p.EmployeeType == "Supervisor")
+                    .ToListAsync();
+
+                var additionalLocations = await _db.AdditionalLocations
+                  .Where(p => !p.IsDeleted && p.IncidentID == request.IncidentId)
+                  .ToListAsync();
+
+                var incidentUsers = await _db.IncidentUsers
+                    .Where(p => !p.IsDeleted)
+                    .ToDictionaryAsync(p => p.Id, p => new { p.FirstName, p.LastName });
+
+                var details = await _db.IncidentValidationAssessments
+                    .Where(p => !p.IsDeleted && p.IncidentId == request.IncidentId)
+                    .FirstOrDefaultAsync();
+
+                if (details == null)
+                    return new IncidentAssessmentDetailViewModel();
+
+                string GetUserFullName(long? userId) =>
+                    userId.HasValue && incidentUsers.TryGetValue(userId.Value, out var user)
+                        ? $"{user.LastName} {user.FirstName}"
+                        : string.Empty;
+
+                string GetStatusName(long? statusId) =>
+                    statusId.HasValue && statusList.TryGetValue(statusId.Value, out var name)
+                        ? name
+                        : string.Empty;
+
+                bool IsOwner(long? assignId) =>
+                    assignId.HasValue && ownerList.Any(p => p.Id == assignId.Value);
+
+                // Build all substep entries
+                var incidentCommanderDetails = new List<IncidentCommanderDetailViewModel>
+        {
+            new()
+            {
+                Mainstep = "Incident Commander",
+                MainstepId = 1,
+                Substep = "Create MCR",
+                SubstepId= 1,
+                StatusId = details.IC_MCR_StatusId,
+                Status = GetStatusName(details.IC_MCR_StatusId),
+                AssigneeId = details.IC_MCR_AssignId,
+                Assignee = GetUserFullName(details.IC_MCR_AssignId),
+                IsOwner = IsOwner(details.IC_MCR_AssignId)
+            },
+            new()
+            {
+                Mainstep = "Incident Commander",
+                MainstepId = 1,
+                SubstepId= 2,
+                Substep = "Notify Claims & Engineering",
+                StatusId = details.IC_Notify_StatusId,
+                Status = GetStatusName(details.IC_Notify_StatusId),
+                AssigneeId = details.IC_Notify_AssignId,
+                Assignee = GetUserFullName(details.IC_Notify_AssignId),
+                IsOwner = IsOwner(details.IC_Notify_AssignId)
+            },
+            new()
+            {
+                Mainstep = "Incident Commander",
+                MainstepId = 1,
+                SubstepId= 3,
+                Substep = "Establish ICP (site access verified)",
+                StatusId = details.IC_EstablishICP_StatusId,
+                Status = GetStatusName(details.IC_EstablishICP_StatusId),
+                AssigneeId = details.IC_EstablishICP_AssignId,
+                Assignee = GetUserFullName(details.IC_EstablishICP_AssignId),
+                IsOwner = IsOwner(details.IC_EstablishICP_AssignId)
+            },
+            new()
+            {
+                Mainstep = "Field Environmental Representative",
+                MainstepId = 2,
+                SubstepId= 1,
+                Substep = "Prepare containment area (drums/totes/Baker tank)",
+                StatusId = details.FER_PCA_StatusId,
+                Status = GetStatusName(details.FER_PCA_StatusId),
+                AssigneeId = details.FER_PCA_AssignId,
+                Assignee = GetUserFullName(details.FER_PCA_AssignId),
+                IsOwner = IsOwner(details.FER_PCA_AssignId)
+            },
+            new()
+            {
+                Mainstep = "Field Environmental Representative",
+                MainstepId = 2,
+                SubstepId= 2,
+                Substep = "Label containers; log IDs and capacity",
+                StatusId = details.FER_LC_StatusId,
+                Status = GetStatusName(details.FER_LC_StatusId),
+                AssigneeId = details.FER_LC_AssignId,
+                Assignee = GetUserFullName(details.FER_LC_AssignId),
+                IsOwner = IsOwner(details.FER_LC_AssignId)
+            },
+            new()
+            {
+                Mainstep = "Engineering & GEC",
+                MainstepId = 3,
+                SubstepId= 1,
+                Substep = "Retrieve system maps (regulators, BO streets, elevations)",
+                StatusId = details.EGEC_RSM_StatusId,
+                Status = GetStatusName(details.EGEC_RSM_StatusId),
+                AssigneeId = details.EGEC_RSM_AssignId,
+                Assignee = GetUserFullName(details.EGEC_RSM_AssignId),
+                IsOwner = IsOwner(details.EGEC_RSM_AssignId)
+            },
+            new()
+            {
+                Mainstep = "Engineering & GEC",
+                MainstepId = 3,
+                SubstepId= 2,
+                Substep = "Mark low points & squeeze points",
+                StatusId = details.EGEC_MLP_StatusId,
+                Status = GetStatusName(details.EGEC_MLP_StatusId),
+                AssigneeId = details.EGEC_MLP_AssignId,
+                Assignee = GetUserFullName(details.EGEC_MLP_AssignId),
+                IsOwner = IsOwner(details.EGEC_MLP_AssignId)
+            },
+            new()
+            {
+                Mainstep = "Engineering & GEC",
+                MainstepId = 3,
+                SubstepId= 3,
+                Substep = "Initiate cost tracking (RBA) for vendors",
+                StatusId = details.EGEC_ICT_StatusId,
+                Status = GetStatusName(details.EGEC_ICT_StatusId),
+                AssigneeId = details.EGEC_ICT_AssignId,
+                Assignee = GetUserFullName(details.EGEC_ICT_AssignId),
+                IsOwner = IsOwner(details.EGEC_ICT_AssignId)
+            }
+        };
+
+                // --- 🧮 Calculate Task Counts ---
+                var openTaskCount = incidentCommanderDetails.Count(x =>
+                    x.Status != null && x.Status.Equals("In Progress", StringComparison.OrdinalIgnoreCase));
+
+                var completedTaskCount = incidentCommanderDetails.Count(x =>
+                    x.Status != null && x.Status.Equals("Done", StringComparison.OrdinalIgnoreCase));
+
+                // --- 🔍 Apply Filters ---
+                if (!string.IsNullOrWhiteSpace(request.step))
+                {
+                    incidentCommanderDetails = incidentCommanderDetails
+                                             .Where(x => x.Substep != null &&
+                                                         x.Substep.Contains(request.step, StringComparison.OrdinalIgnoreCase))
+                                             .ToList();
+                }
+
+                if (request.ownerId > 0)
+                {
+                    incidentCommanderDetails = incidentCommanderDetails
+                        .Where(x => x.AssigneeId == request.ownerId)
+                        .ToList();
+                }
+
+                if (request.statusID > 0)
+                {
+                    incidentCommanderDetails = incidentCommanderDetails
+                        .Where(x => x.StatusId == request.statusID)
+                        .ToList();
+                }
+
+                // --- Build Owner Dictionary ---
+                var ownersByMainStep = incidentCommanderDetails
+                    .Where(x => x.IsOwner)
+                    .GroupBy(x => x.Mainstep)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(x => x.Assignee).FirstOrDefault() ?? string.Empty
+                    );
+
+                // --- Map to ViewModel ---
+                assessmentDetailViewModel.IncidentId = details.IncidentId;
+                assessmentDetailViewModel.Id = details.Id;
+                assessmentDetailViewModel.IncidentValidationId = details.IncidentValidationId;
+                assessmentDetailViewModel.incidentCommanderDetailViewslist = incidentCommanderDetails;
+                assessmentDetailViewModel.MainStepOwners = ownersByMainStep;
+
+                assessmentDetailViewModel.Status = statusList
+                    .Select(p => new SelectListItem
+                    {
+                        Text = p.Value,
+                        Value = p.Key.ToString()
+                    })
+                    .ToList();
+
+                assessmentDetailViewModel.OwenerTypes = ownerList
+                    .Select(user => new SelectListItem
+                    {
+                        Text = $"{user.LastName} {user.FirstName}",
+                        Value = user.Id.ToString()
+                    })
+                    .ToList();
+                assessmentDetailViewModel.OpenTaskCount = openTaskCount;
+                assessmentDetailViewModel.CompletedTaskCount = completedTaskCount;
+
+                assessmentDetailViewModel.PrimaryLocationCount = additionalLocations.Count(p => p.IsPrimaryLocation);
+                assessmentDetailViewModel.AdditionalLocationCount = additionalLocations.Count(p => !p.IsPrimaryLocation);
+                assessmentDetailViewModel.ICPLocationCount = additionalLocations.Count;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetAssessmentDetails for IncidentId: {IncidentId}", request.IncidentId);
+                return new IncidentAssessmentDetailViewModel();
+            }
+
+            return assessmentDetailViewModel;
+        }
+
+
+        public async Task<IncidentAssessmentEditViewModel> EditAssessmentDetails(long id, long mainstepId, long substepId)
+        {
+            IncidentAssessmentEditViewModel editViewModel = new();
+
+            try
+            {
+                // Fetch the incident assessment
+                var details = await _db.IncidentValidationAssessments
+                                       .Where(p => !p.IsDeleted && p.Id == id)
+                                       .FirstOrDefaultAsync();
+
+                var incidentUsers = await _db.IncidentUsers
+                   .Where(p => !p.IsDeleted)
+                   .ToDictionaryAsync(p => p.Id, p => new { p.FirstName, p.LastName });
+
+                var statusList = await _db.Progress
+                                .Where(p => !p.IsDeleted)
+                                .ToDictionaryAsync(p => p.Id, p => p.Name);
+
+
+                if (details == null)
+                    return new IncidentAssessmentEditViewModel();
+
+
+
+                // Build all substep entries
+                var allSubsteps = new List<IncidentCommanderDetailViewModel>
+                                {
+                                    new() { Mainstep = "Incident Commander", MainstepId = 1, SubstepId = 1, Substep = "Create MCR", StatusId = details.IC_MCR_StatusId, AssigneeId = details.IC_MCR_AssignId },
+                                    new() { Mainstep = "Incident Commander", MainstepId = 1, SubstepId = 2, Substep = "Notify Claims & Engineering", StatusId = details.IC_Notify_StatusId, AssigneeId = details.IC_Notify_AssignId },
+                                    new() { Mainstep = "Incident Commander", MainstepId = 1, SubstepId = 3, Substep = "Establish ICP (site access verified)", StatusId = details.IC_EstablishICP_StatusId, AssigneeId = details.IC_EstablishICP_AssignId },
+                                    new() { Mainstep = "Field Environmental Representative", MainstepId = 2, SubstepId = 1, Substep = "Prepare containment area (drums/totes/Baker tank)", StatusId = details.FER_PCA_StatusId, AssigneeId = details.FER_PCA_AssignId },
+                                    new() { Mainstep = "Field Environmental Representative", MainstepId = 2, SubstepId = 2, Substep = "Label containers; log IDs and capacity", StatusId = details.FER_LC_StatusId, AssigneeId = details.FER_LC_AssignId },
+                                    new() { Mainstep = "Engineering & GEC", MainstepId = 3, SubstepId = 1, Substep = "Retrieve system maps (regulators, BO streets, elevations)", StatusId = details.EGEC_RSM_StatusId, AssigneeId = details.EGEC_RSM_AssignId },
+                                    new() { Mainstep = "Engineering & GEC", MainstepId = 3, SubstepId = 2, Substep = "Mark low points & squeeze points", StatusId = details.EGEC_MLP_StatusId, AssigneeId = details.EGEC_MLP_AssignId },
+                                    new() { Mainstep = "Engineering & GEC", MainstepId = 3, SubstepId = 3, Substep = "Initiate cost tracking (RBA) for vendors", StatusId = details.EGEC_ICT_StatusId, AssigneeId = details.EGEC_ICT_AssignId }
+                                };
+
+                // Find the matching substep based on mainstepId and substepId
+                var substep = allSubsteps.FirstOrDefault(s => s.MainstepId == mainstepId && s.SubstepId == substepId);
+
+                if (substep != null)
+                {
+                    editViewModel = new IncidentAssessmentEditViewModel
+                    {
+                        StatusId = substep.StatusId,
+                        AssigneeId = substep.AssigneeId,
+
+                        Assignees = incidentUsers.Select(user => new SelectListItem
+                        {
+                            Text = $"{user.Value.LastName} {user.Value.FirstName}",
+                            Value = user.Key.ToString()
+                        }).ToList(),
+                       
+                        Status = statusList
+                            .Select(p => new SelectListItem
+                            {
+                                Text = p.Value,
+                                Value = p.Key.ToString()
+                            })
+                            .ToList(),
+
+                        MainStep = substep.Mainstep,
+                        SubStep = substep.Substep,
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in EditAssessmentDetails for Id: {Id}, MainstepId: {mainstepId}, SubstepId: {substepId}", id, mainstepId, substepId);
+                return new IncidentAssessmentEditViewModel();
+            }
+
+            return editViewModel;
+        }
+
+
+        #endregion
 
         #region private methods
         private bool TryParseCallTime(string callTime, out DateTime dateTime)

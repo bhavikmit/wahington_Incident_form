@@ -12,6 +12,8 @@ using ViewModels.Dashboard;
 using ViewModels.Incident;
 using ViewModels.Shared;
 
+using static ViewModels.Incident.IncidentViewModel;
+
 namespace Repositories.Common
 {
     public interface IIncidentService
@@ -29,5 +31,7 @@ namespace Repositories.Common
         Task<long> AddMapChat(IncidentMapChatRequest request);
 
         Task<List<IncidentMapChat>> GetIncidentMapChatChat(long incidentId);
+        Task<IncidentAssessmentDetailViewModel> GetAssessmentDetails(AssestmentFilterRequest request);
+        Task<IncidentAssessmentEditViewModel> EditAssessmentDetails(long id, long mainstepId, long substepId);
     }
 }

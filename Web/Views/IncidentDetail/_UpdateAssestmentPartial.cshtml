@@ -1,0 +1,157 @@
+﻿@model ViewModels.Incident.IncidentAssessmentEditViewModel
+
+<!-- Update Incident Assessment Modal -->
+<div class="modal fade" id="updateIncidentAssestmentModal" tabindex="-1" aria-labelledby="updateIncidentAssestmentModallabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateIncidentAssestmentModallabel">Update Incident Assessment</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form id="UpdateIncidentAssessmentForm">
+                    <input type="hidden" id="assessmentId" value="@Model.Id" />
+
+                    <div class="row">
+                        <!-- Step -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Main Step</label>
+                            <label asp-for="@Model.MainStep">: <b>@Model.MainStep</b></label>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Sub Step</label>
+                            <label asp-for="@Model.SubStep">: <b>@Model.SubStep</b></label>
+                        </div>
+                        <!-- Status -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-select" id="status" asp-for="@Model.StatusId">
+                                <option value="">Select status</option>
+                                @foreach (var item in Model.Status)
+                                {
+                                    @if (item.Value == Model.StatusId?.ToString())
+                                    {
+                                        <option value="@item.Value" selected>@item.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Value" >@item.Text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <!-- Assignee -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Assignee</label>
+                            <select class="form-select" id="assignee" asp-for="@Model.AssigneeId">
+                                <option value="">Select Assignee</option>
+                                @foreach (var item in Model.Assignees)
+                                {
+                                    @if (item.Value == Model.AssigneeId?.ToString())
+                                    {
+                                        <option value="@item.Value" selected>@item.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Started (Time only) -->
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Started</label>
+                            <input type="time" class="form-control" id="startedTime" asp-for="@Model.StartedTime">
+                        </div>
+
+                        <!-- Completed (Time only) -->
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Completed</label>
+                            <input type="time" class="form-control" id="completedTime" asp-for="@Model.CompletedTime">
+                        </div>
+
+                        <!-- Evidence -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Evidence</label>
+                            <input type="file" id="fileInputAssestment" multiple class="file-upload" asp-for="@Model.File">
+                            <div id="previewContainerAssestment" class="d-flex flex-wrap gap-2"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <!-- Description -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" id="description" rows="3" asp-for="@Model.Description" placeholder="Enter description or notes"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer d-flex justify-content-end">
+                <button type="submit" class="btn btn-success" id="btnUpdateAssessment">
+                    <i class="fas fa-check"></i> Update
+                </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        flatpickr("#startedTime", { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true });
+        flatpickr("#completedTime", { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true });
+    });
+</script>
+
+<script>
+    const fileInputAssestment = document.getElementById("fileInputAssestment");
+    const previewContainerAssestment = document.getElementById("previewContainerAssestment");
+
+    fileInputAssestment.addEventListener("change", function () {
+        previewContainerAssestment.innerHTML = ""; // Clear previous previews
+
+        const files = Array.from(this.files); // Convert FileList to array
+
+        files.forEach(file => {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const preview = document.createElement("div");
+                preview.classList.add("preview");
+                preview.style.width = "100px"; // optional styling
+                preview.style.height = "100px";
+                preview.style.overflow = "hidden";
+                preview.style.border = "1px solid #ddd";
+                preview.style.borderRadius = "5px";
+                preview.style.display = "flex";
+                preview.style.alignItems = "center";
+                preview.style.justifyContent = "center";
+
+                preview.innerHTML = `
+                    <img src="${e.target.result}" alt="Image Preview" style="max-width: 100%; max-height: 100%;">
+                `;
+                previewContainerAssestment.appendChild(preview);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    });
+</script>

@@ -21,4 +21,11 @@ namespace ViewModels.Incident
         public string ChatMessage { get; set; }
         public string SentBy { get; set; }
     }
+    public class AssestmentFilterRequest
+    {
+        public long IncidentId { get; set; }
+        public string step { get; set; } = string.Empty;
+        public long ownerId { get; set; }
+        public long statusID { get; set; }
+    }
 }

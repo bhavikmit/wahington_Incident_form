@@ -44,6 +44,7 @@ namespace ViewModels.Incident
         public List<IncidentValidationLocationViewModel> IncidentValidationLocations { get; set; } = new();
 
         public List<IncidentMapChat> listIncidentMapChats { get; set; } = new();
+        public IncidentAssessmentDetailViewModel IncidentAssessmentDetails { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel
@@ -315,12 +316,62 @@ namespace ViewModels.Incident
         public long Id { get; set; }
         public long? IncidentId { get; set; }
         public long? IncidentValidationId { get; set; }
-        public string Notes { get; set; }
+        public string Notes { get; set; } = string.Empty;
         public bool IsDeleted { get; set; }
         public int ActiveStatus { get; set; }
         public DateTime? CreatedOn { get; set; }
         public long CreatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public long UpdatedBy { get; set; }
+    }
+
+    public class IncidentAssessmentDetailViewModel
+    {
+        public long Id { get; set; }
+        public long? IncidentId { get; set; }
+        public long? OpenTaskCount { get; set; } = 0;
+        public long? ICPLocationCount { get; set; } = 0;
+        public long? PrimaryLocationCount { get; set; } = 0;
+        public long? AdditionalLocationCount { get; set; } = 0;
+        public long? CompletedTaskCount { get; set; } = 0;
+        public long? IncidentValidationId { get; set; }
+        public List<SelectListItem> OwenerTypes { get; set; } = new();
+        public List<SelectListItem> Status { get; set; } = new();
+        public List<IncidentCommanderDetailViewModel> incidentCommanderDetailViewslist { get; set; } = new();
+        public Dictionary<string, string> MainStepOwners { get; set; } = new();
+    }
+    public class IncidentAssessmentEditViewModel
+    {
+        public long Id { get; set; }
+        public long? IncidentId { get; set; }
+        public long? IncidentValidationId { get; set; }
+        public long? StatusId { get; set; }
+        public long? AssigneeId { get; set; }
+        public List<SelectListItem> Assignees { get; set; } = new();
+        public List<SelectListItem> Status { get; set; } = new();
+        public string StartedTime { get; set; } = string.Empty;
+        public string CompletedTime { get; set; } = string.Empty;
+        public string MainStep { get; set; } = string.Empty;
+        public string SubStep { get; set; } = string.Empty;
+        public List<IFormFile> File { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+    }
+    public class IncidentCommanderDetailViewModel
+    {
+        public long? MainstepId { get; set; }
+        public string Mainstep { get; set; } = string.Empty;
+        public string Substep { get; set; } = string.Empty;
+        public long? SubstepId { get; set; }
+        public long? StatusId { get; set; }
+        public string Status { get; set; } = string.Empty;
+        public long? AssigneeId { get; set; }
+        public string Assignee { get; set; } = string.Empty;
+        public string Started { get; set; } = string.Empty;
+        public string Completed { get; set; } = string.Empty;
+        public string Evidence { get; set; } = string.Empty;
+        public bool IsOwner { get; set; }
+        public string ClockIn { get; set; } = string.Empty;
+        public string ClockOut { get; set; } = string.Empty;
     }
 }

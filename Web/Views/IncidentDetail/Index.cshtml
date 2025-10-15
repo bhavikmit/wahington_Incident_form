@@ -5,6 +5,7 @@
 <script src="https://js.arcgis.com/4.27/"></script>
 <script type="module" src="https://js.arcgis.com/embeddable-components/4.33/arcgis-embeddable-components.esm.js"></script>
 <div id="incidentDetailsModal" tabindex="-1" aria-hidden="true">
+    <input type="hidden" id="hdnIncidentID" value="@Model.Id" />
     <div class="container-fuild">
         <div id="incidentDetailsContent">
             <div class="tabHeader">
@@ -624,14 +625,14 @@
                             <div class="col-md-3 col-sm-6">
                                 <div class="info-card text-center text-md-start">
                                     <div class="info-title">Open Tasks:</div>
-                                    <div><span class="info-value">4</span></div>
+                                    <div><span class="info-value">@Model.IncidentAssessmentDetails?.OpenTaskCount</span></div>
                                 </div>
                             </div>
 
                             <div class="col-md-3 col-sm-6">
                                 <div class="info-card text-center text-md-start">
                                     <div class="info-title">Completed:</div>
-                                    <div><span class="info-value">5</span></div>
+                                    <div><span class="info-value">@Model.IncidentAssessmentDetails?.CompletedTaskCount</span></div>
                                 </div>
                             </div>
 
@@ -646,7 +647,7 @@
                                 <div class="info-card text-center text-md-start">
                                     <div class="info-title">ICP Sites:</div>
 
-                                    <div><span class="info-value">3 (1 primary, 2 staging)</span></div>
+                                    <div><span class="info-value">@Model.IncidentAssessmentDetails?.ICPLocationCount (@Model.IncidentAssessmentDetails?.PrimaryLocationCount primary, @Model.IncidentAssessmentDetails?.AdditionalLocationCount staging)</span></div>
                                 </div>
                             </div>
 
@@ -664,124 +665,33 @@
                                     <!-- Filters -->
                                     <div class="d-flex align-items-center w-100 p-3">
                                         <div class="d-flex align-items-center justify-content-start  flex-wrap gap-2 w-100">
-                                            <input type="text" class="form-control" id="steps" placeholder="Search steps..." style="max-width:180px;">
-                                            <select class="form-select" style="max-width:150px;">
-                                                <option>All owners</option>
+                                            <input type="text" class="form-control" id="global_search_value" placeholder="Search steps..." style="max-width:180px;">
+                                            <select class="form-select" style="max-width:150px;" id="ddlOwner">
+                                                <option value="">All owners</option>
+                                                @if (Model.IncidentAssessmentDetails != null)
+                                                {
+                                                    @foreach (var item in Model.IncidentAssessmentDetails.OwenerTypes)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
                                             </select>
-                                            <select class="form-select" style="max-width:150px;">
-                                                <option>Status: All</option>
+                                            <select class="form-select" style="max-width:150px;" id="ddlStatus">
+                                                <option value="">Status: All</option>
+                                                @if (Model.IncidentAssessmentDetails != null)
+                                                {
+                                                    @foreach (var item in Model.IncidentAssessmentDetails.Status)
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
                                             </select>
                                             <button class="btn btn-light border">Bulk actions</button>
                                         </div>
                                         <div class="filter-link">Filter</div>
                                     </div>
-
-
-                                    <!-- Section 1 -->
-                                    <div class="d-flex align-items-center justify-content-between section-title">
-                                        <h6 class="fw-semibold  mb-0">
-                                            Incident Commander
-
-                                        </h6>
-                                        <div class="text-muted small ms-2">Owner: J. Martinez</div>
-                                    </div>
-                                    <div class="table-responsive table-rounded custom-scroll">
-                                        <table class="table align-middle text-left">
-                                            <thead class="table-light">
-
-                                                <tr>
-                                                    <th>Step</th>
-                                                    <th>Status</th>
-                                                    <th>Assignee</th>
-                                                    <th>Started</th>
-                                                    <th>Completed</th>
-                                                    <th>Evidence</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Create MCR</td>
-                                                    <td><span class="status-badge done">Done</span></td>
-                                                    <td>J. Martinez</td>
-                                                    <td>09:58</td>
-                                                    <td>10:05</td>
-                                                    <td><i class="fa fa-file-alt text-secondary me-1"></i> mcr_1005.pdf</td>
-                                                    <td><a href="#" class="text-primary text-decoration-none">View</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Notify Claims & Engineering</td>
-                                                    <td><span class="status-badge progressing">In Progress</span></td>
-                                                    <td>J. Martinez</td>
-                                                    <td>10:06</td>
-                                                    <td>—</td>
-                                                    <td>—</td>
-                                                    <td><button class="btn btn-update btn-sm">Update</button></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Establish ICP (site access verified)</td>
-                                                    <td><span class="status-badge done">Done</span></td>
-                                                    <td>J. Martinez</td>
-                                                    <td>10:12</td>
-                                                    <td>10:21</td>
-                                                    <td><i class="fa fa-image text-secondary me-1"></i> 2 photos</td>
-                                                    <td><a href="#" class="text-primary text-decoration-none">View</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <!-- Section 2 -->
-                                    <div class="d-flex align-items-center justify-content-between section-title">
-                                        <h6 class="fw-semibold mb-0">
-                                            Field Environmental Representative
-                                        </h6>
-                                        <div class="text-muted small ms-2">Owner: L. Chen</div>
-                                    </div>
-                                    <div class="table-responsive table-rounded custom-scroll">
-                                        <table class="table align-middle text-left">
-                                            <tbody>
-                                                <tr>
-                                                    <td>Prepare containment area (drums/totes/Baker tank)</td>
-                                                    <td><span class="status-badge done">Done</span></td>
-                                                    <td>L. Chen</td>
-                                                    <td>10:05</td>
-                                                    <td>10:35</td>
-                                                    <td><i class="fa fa-file-alt text-secondary me-1"></i> containment_plan.pdf</td>
-                                                    <td><a href="#" class="text-primary text-decoration-none">View</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Label containers; log IDs and capacity</td>
-                                                    <td><span class="status-badge progressing">In Progress</span></td>
-                                                    <td>L. Chen</td>
-                                                    <td>10:36</td>
-                                                    <td>—</td>
-                                                    <td>—</td>
-                                                    <td><button class="btn btn-update btn-sm">Update</button></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <!-- Section 3 -->
-                                    <div class="d-flex align-items-center justify-content-between section-title">
-                                        <h6 class="fw-semibold mb-0">
-                                            Engineering & GEC
-                                        </h6>
-                                        <div class="text-muted small ms-2">Owners: D. Tran / R. Alvarez</div>
-                                    </div>
-                                    <div class="table-responsive table-rounded custom-scroll">
-                                        <table class="table align-middle text-left">
-                                            <tbody>
-                                                <tr>
-                                                    <td>Retrieve system maps (regulators, BO streets, elevations)</td>
-                                                    <td><span class="status-badge done">Done</span></td>
-                                                    <td>D. Tran</td>
-                                                    <td>10:10</td>
-                                                    <td>10:18</td>
-                                                    <td><i class="fa fa-image text-secondary me-1"></i> topo_overlay.png</td>
-                                                    <td><a href="#" class="text-primary text-decoration-none">View</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div id="div_assestment_details">
+                                        @await Html.PartialAsync("_IncidentAssessmentDetailsPartial", Model.IncidentAssessmentDetails)
                                     </div>
                                 </div>
                             </div>
@@ -1513,6 +1423,9 @@
     <span class="close">&times;</span>
     <img class="modal-content" id="previewImg" src="~/img/banner.jpg">
 </div>
+
+<div id="div_assestment_modal">
+</div>
 <script>
     document.getElementById("closeModalBtn").addEventListener("click", function () {
         window.location.href = "/Incidents";
@@ -1601,6 +1514,8 @@
             alert('Please enter a message.');
             return;
         }
+
+
 
         const formData = new FormData();
         formData.append('IncidentId', @(Model.Id ?? 0));
@@ -1866,6 +1781,8 @@
 
       if (message === '') return; // ignore empty input
 
+      showLoader($("#chatMessages"));
+
       const payload = { IncidentId: id, ChatMessage: message, SentBy: role };
 
       try {
@@ -1891,9 +1808,12 @@
 
           // Clear input
           messageInput.value = '';
+
         }
+         hideLoader($("#chatMessages"));
       } catch (error) {
         console.error("Error sending chat message:", error);
+        hideLoader($("#chatMessages"));
       }
     });
 
@@ -1906,3 +1826,6 @@
     });
 
 </script>
+
+<script src="~/js/custom/loader/loader.js"></script>
+<script src="~/js/views/incident/incident-detail.js"></script>

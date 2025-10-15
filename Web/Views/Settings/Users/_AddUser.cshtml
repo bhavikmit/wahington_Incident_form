@@ -30,7 +30,7 @@
             <div>
                 <label>Employee Type *</label>
                 @{
-                    var depts = new[] { "Employee", "Contractor" };
+                    var depts = new[] { "Employee", "Contractor", "Supervisor" };
                 }
                 <select asp-for="EmployeeType" name="EmployeeType" id="employeetypeSelect" class="form-control" data-val-required="Required">
                     <option value="">Select Type</option>

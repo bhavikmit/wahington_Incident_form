@@ -43,5 +43,6 @@ namespace Repositories.Common
         #endregion
         Task<IncidentAssessmentDetailViewModel> GetAssessmentDetails(AssestmentFilterRequest request);
         Task<IncidentAssessmentEditViewModel> EditAssessmentDetails(long id, long mainstepId, long substepId);
+        Task<long> SaveValidationNoteAsync(SaveValidationNoteRequest request);
     }
 }

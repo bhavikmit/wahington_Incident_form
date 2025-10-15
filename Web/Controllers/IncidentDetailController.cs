@@ -153,6 +153,27 @@ namespace Web.Controllers
         }
         #endregion
 
+        [HttpPost]
+        public async Task<JsonResult> SaveValidationNote([FromBody] SaveValidationNoteRequest request)
+        {
+            if (request == null || request.IncidentId <= 0 || string.IsNullOrWhiteSpace(request.Notes))
+                return Json(new { success = false, message = "Invalid request." });
+
+            try
+            {
+                var id = await _iIncidentService.SaveValidationNoteAsync(request);
+                if (id > 0)
+                    return Json(new { success = true, id, message = "Saved" });
+
+                return Json(new { success = false, message = "Save failed." });
+            }
+            catch (Exception ex)
+            {
+                // log if you have logger
+                return Json(new { success = false, message = "Error saving note." });
+            }
+        }
+
         //[HttpPost]
         //public async Task<PartialViewResult> GetIncidentList([FromBody] AssestmentFilterRequest request)
         //{

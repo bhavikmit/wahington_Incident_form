@@ -1,4 +1,8 @@
 ﻿@model ViewModels.Incident.IncidentViewModel
+@using Microsoft.AspNetCore.Identity
+@using Models;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 <link href="~/css/custom/views/incident/detail.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
@@ -367,7 +371,7 @@
                         </div>
                     </div>
 
-                    <!-- Validation Notes -->
+                   @*  <!-- Validation Notes -->
                     <div class="card-custom mt-4 validation-notes">
                         <div class="section-title">Validation Notes</div>
                         <div class="section-body">
@@ -388,13 +392,35 @@
                             <textarea class="form-control mt-3" rows="3" id="addNote" placeholder="Add new note..."></textarea>
                         </div>
 
+                    </div> *@
+                    <!-- Validation Notes -->
+                    <div class="card-custom mt-4 validation-notes">
+                        <div class="section-title">Validation Notes</div>
+                        <div class="section-body" id="validationNotesBody">
+                            @if (Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList != null && Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList.Any())
+                            {
+                                foreach (var n in Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList)
+                                {
+                                    <div class="note" data-note-id="@n.Id">
+                                        <span class="note-badge">@(!string.IsNullOrEmpty(n.CreatedByName) ? n.CreatedByName.Split(' ').FirstOrDefault()?.ToUpper() : "IC")</span>
+                                        <span class="note-text">@n.Notes</span>
+                                        @* <div class="note-meta">@n.CreatedOn</div> *@
+                                    </div>
+                                }
+                            }
+
+                            <textarea class="form-control mt-3" rows="3" id="addNote" placeholder="Add new note..."></textarea>
+                        </div>
                     </div>
+
 
                     <!-- Footer -->
                     <div class="footer-section mt-4">
                         <div class="d-flex align-items-center">
-                            <div class="validatedBy"><strong>Validated By: </strong><span>J . Martinez (IC)</span></div>
-                            <div><strong>Date: </strong><span>J . Martinez (IC)</span></div>
+                            @* <div class="validatedBy"><strong>Validated By: </strong> <span>@Model.incidentValidationsDetailsViewModel.IncidentValidationCommunicationHistoriesViewModelList?.FirstOrDefault()?.UserName</span></div> *@
+                            <div class="validatedBy"><strong>Validated By: </strong> <span>@User.Identity?.Name!</span></div>
+                           
+                            <div><strong>Date: </strong><span id="validatedDate"></span></div>
                         </div>
                         <div>
                             <strong>Status:</strong>
@@ -1876,7 +1902,17 @@
       toggleLink.innerHTML = '<i class="fa-solid fa-angle-up me-1"></i>';
     });
 </script>
-
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit'
+        });
+        document.getElementById("validatedDate").textContent = formattedDate;
+    });
+</script>
 <script>
        const sendBtn = document.getElementById('sendBtn');
        const messageInput = document.getElementById('messageInput');
@@ -2001,6 +2037,75 @@
             });
         });
     });
+</script>
+<script>
+    (function () {
+        const textarea = document.getElementById('addNote');
+        const notesBody = document.getElementById('validationNotesBody');
+
+        // Press Enter (no shift) to submit
+        textarea.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                saveNote();
+            }
+        });
+
+        async function saveNote() {
+            const text = textarea.value.trim();
+            if (!text) return;
+
+            const payload = {
+                IncidentId: @Model.Id,
+                IncidentValidationId: @Model.incidentValidationsDetailsViewModel?.IncidentValidationId ?? 0,
+                Notes: text
+            };
+
+            try {
+                const res = await fetch('@Url.Action("SaveValidationNote","IncidentDetail")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const json = await res.json();
+                if (json && json.success) {
+                    // build note HTML (mirrors server rendered HTML)
+                    const noteEl = document.createElement('div');
+                    noteEl.className = 'note';
+                    noteEl.setAttribute('data-note-id', json.id || '');
+
+                    const badge = document.createElement('span');
+                    badge.className = 'note-badge';
+                    badge.textContent = 'IC'; // or compute from current user if you want
+
+                    const txt = document.createElement('span');
+                    txt.className = 'note-text';
+                    txt.textContent = text;
+
+                    const meta = document.createElement('div');
+                    meta.className = 'note-meta';
+                    const now = new Date();
+                    meta.textContent = now.toLocaleString('en-US', { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+                    noteEl.appendChild(badge);
+                    noteEl.appendChild(txt);
+                    noteEl.appendChild(meta);
+
+                    // insert at top
+                    notesBody.insertBefore(noteEl, notesBody.firstChild);
+
+                    textarea.value = '';
+                } else {
+                    alert(json.message || 'Failed to save note.');
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error saving note.');
+            }
+        }
+    })();
 </script>
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/views/incident/incident-detail.js"></script>

@@ -78,7 +78,6 @@
                     var ownerId = $("#ddlOwner").val() != "" ? $("#ddlOwner").val() : 0;
                     var step = $("#global_search_value").val() != "" ? $("#global_search_value").val() : "";
 
-                    debugger;
 
                     GetAssessmentDetails(statusID, ownerId, step);
 
@@ -246,5 +245,83 @@ async function OpenIncidentMap(id) {
         console.error("Error loading incident map:", error);
     } finally {
         hideLoader($(".main-content"));
+    }
+}
+
+async function AddAssessmentDetails() {
+    try {
+        showLoader($("#div_assestment_details"));
+
+        // Send ID as query string
+        const response = await fetch(`/IncidentDetail/AddAssessmentDetails`, {
+            method: "GET",
+            headers: {
+                "Accept": "text/html"
+            }
+        });
+
+        if (!response.ok) throw new Error("Failed to load incident details");
+
+        const content = await response.text();
+        $("#div_Add_assestment_modal").empty().html(content);
+        $("#addIncidentAssestmentModal").modal("show");
+
+    } catch (error) {
+        console.error("Error loading incident details:", error);
+    } finally {
+        hideLoader($("#div_assestment_details"));
+    }
+}
+
+async function SubmitAssestment() {
+    try {
+        showLoader($("#div_assestment_details"));
+
+        const formData = new FormData();
+        const Assessment = {};
+
+        const mappings = {
+            IC_MCR: [".IncidentCommander", "div_CreateMCR"],
+            IC_Notify: [".IncidentCommander", "div_NotifyclaimAndEngineering"],
+            IC_EstablishICP: [".IncidentCommander", "div_EstablishICP"],
+            FER_PCA: [".FieldEnvironmentalRepresentative", "div_Preparecontainmentarea"],
+            FER_LC: [".FieldEnvironmentalRepresentative", "div_Labelcontainers"],
+            EGEC_RSM: [".EngineeringAndGEC", "div_Retrievesystemmaps"],
+            EGEC_MLP: [".EngineeringAndGEC", "div_Marklowpoints"],
+            EGEC_ICT: [".EngineeringAndGEC", "div_Initiatecosttracking"]
+        };
+
+        $.each(mappings, function (key, [role, div]) {
+            const { assignId, statusId } = getAssignAndStatus(role, div) || {};
+            Assessment[`${key}_AssignId`] = assignId ?? 0;
+            Assessment[`${key}_StatusId`] = statusId ?? 0;
+        });
+
+        formData.append("incidentValidationAssessment", JSON.stringify(Assessment));
+        formData.append("IncidentId", $("#hdnIncidentID").val() || 0);
+
+        const response = await fetch("/IncidentDetail/SubmitAssestment", {
+            method: "POST",
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            SwalSuccessAlert(result.data);
+
+            const statusID = $("#ddlStatus").val() || 0;
+            const ownerId = $("#ddlOwner").val() || 0;
+            const step = $("#global_search_value").val() || "";
+
+            GetAssessmentDetails(statusID, ownerId, step);
+        } else {
+            SwalErrorAlert(result.message || "Failed to save Incident Validation.");
+        }
+    } catch (error) {
+        console.error("Error submitting assessment:", error);
+        SwalErrorAlert("An unexpected error occurred while submitting assessment.");
+    } finally {
+        hideLoader($("#div_assestment_details"));
     }
 }

@@ -52,5 +52,6 @@ namespace Repositories.Common
         Task<IncidentViewAssessmentAttachmentViewModel> ViewAssessmentAttachment(long id);
         Task<long> AddPerson(long userId, long companyId, long roleId, long shiftId, long incidentId, long incidentValidationId);
         Task<List<IncidentViewPostViewModel>> SavePostDetails(IncidentViewPostViewModel incidentViewPostViewModel);
+        Task<IncidentAssessmentAddViewModel> AddAssessmentDetails();
     }
 }

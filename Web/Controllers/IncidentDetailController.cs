@@ -1,9 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Repositories.Common;
-using ViewModels.Incident;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualBasic;
-using DocumentFormat.OpenXml.Office2010.Excel;
+
+using Models;
+
+using Newtonsoft.Json;
+
+using Repositories.Common;
+
+using ViewModels.Incident;
+
 using Web.Extensions;
 
 namespace Web.Controllers
@@ -80,6 +88,14 @@ namespace Web.Controllers
         {
             var model = await _iIncidentService.GetAssessmentDetails(request);
             return PartialView("_IncidentAssessmentDetailsPartial", model);
+        }
+
+        [HttpGet]
+        public async Task<PartialViewResult> AddAssessmentDetails()
+        {
+            
+            var model = await _iIncidentService.AddAssessmentDetails();
+            return PartialView("_AddAssestmentPartial", model);
         }
 
         [HttpGet]
@@ -170,6 +186,37 @@ namespace Web.Controllers
                 return Json(new { success = false, message = "Save failed. " + ex.Message });
             }
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitAssestment([FromForm] IncidentAssessmentSubmitRequest request)
+        {
+            if (request == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+                var assessment = !string.IsNullOrWhiteSpace(request.incidentValidationAssessment)
+                    ? JsonConvert.DeserializeObject<IncidentValidationAssessment>(request.incidentValidationAssessment)
+                    : new IncidentValidationAssessment();
+
+                // TODO: Call your save service when ready
+                // var resultId = await _iIncidentValidationService.SaveIncidentValidation(request);
+
+                var successMsg = "Incident validation saved successfully!";
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                // Optionally log ex here
+                return StatusCode(StatusCodes.Status500InternalServerError, new
+                {
+                    success = false,
+                    message = "An unexpected error occurred while saving the incident validation."
+                });
+            }
+        }
+
         #endregion
 
         #region Personnel

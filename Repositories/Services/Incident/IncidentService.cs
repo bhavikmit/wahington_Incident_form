@@ -1330,7 +1330,7 @@ namespace Repositories.Common
 
             try
             {
-                
+
                 var statusList = await _db.Progress
                     .Where(p => !p.IsDeleted)
                     .ToDictionaryAsync(p => p.Id, p => p.Name);
@@ -1351,7 +1351,7 @@ namespace Repositories.Common
                     .Where(p => !p.IsDeleted && p.IncidentId == request.IncidentId)
                     .FirstOrDefaultAsync();
 
-               
+
                 if (details == null)
                     return new IncidentAssessmentDetailViewModel();
 
@@ -2039,6 +2039,74 @@ namespace Repositories.Common
 
             return attachmentViewModel;
         }
+
+        public async Task<IncidentAssessmentAddViewModel> AddAssessmentDetails()
+        {
+            IncidentAssessmentAddViewModel incidentAssessmentAddView = new();
+
+            try
+            {
+
+                incidentAssessmentAddView.UserList = await _db.IncidentUsers
+                                       .Where(it => !it.IsDeleted)
+                                       .Select(it => new SelectListItem
+                                       {
+                                           Value = it.Id.ToString(),
+                                           Text = it.FirstName + ' ' + it.LastName
+                                       })
+                                       .ToListAsync();
+
+                incidentAssessmentAddView.StatusList = await _db.Progress
+                                     .Where(it => !it.IsDeleted)
+                                     .Select(it => new SelectListItem
+                                     {
+                                         Value = it.Id.ToString(),
+                                         Text = it.Name
+                                     })
+                                     .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in AddAssessmentDetails for Id");
+                return new IncidentAssessmentAddViewModel();
+            }
+
+            return incidentAssessmentAddView;
+
+        }
+
+        public async Task<long> SubmitAssestment(IncidentValidationAssessment request)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+
+
+                #region Incident Validation Assestment
+                if (request != null)
+                {
+                    request.IncidentId = request.Id;
+                    //request.IncidentValidationId = incidentValidation.Id;
+                    await _db.IncidentValidationAssessments.AddAsync(request);
+                }
+                #endregion
+
+                #region  Save everything in one go
+                // 6. Save everything in one go
+                await _db.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return request.Id;
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error SaveIncidentValidation.");
+                return 0;
+            }
+        }
+
         #endregion
 
         public async Task<long> SaveValidationNoteAsync(SaveValidationNoteRequest request)

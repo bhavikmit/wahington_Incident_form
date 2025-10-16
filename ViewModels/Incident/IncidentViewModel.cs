@@ -537,4 +537,19 @@ namespace ViewModels.Incident
         public List<IncidentViewPostViewModel> listIncidentViewPostViewModel { get; set; }
     }
     #endregion
+
+    public class IncidentAssessmentAddViewModel
+    {
+        public long Id { get; set; }
+        public long? IncidentId { get; set; }
+        public long? IncidentValidationId { get; set; }
+        public List<SelectListItem> StatusList { get; set; } = new();
+
+        public List<SelectListItem> UserList { get; set; } = new();
+    }
+    public class IncidentAssessmentSubmitRequest
+    {
+        public string incidentValidationAssessment { get; set; }
+        public long IncidentId { get; set; }
+    }
 }

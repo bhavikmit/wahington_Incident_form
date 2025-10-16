@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 using Models;
+using Models.Models.Shared;
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -245,4 +247,37 @@ namespace ViewModels.Incident
         public string Status { get; set; }
         public string Description { get; set; } = string.Empty;
     }
+    //public class AddIncidentValidationAssessment
+    //{
+    //    public long? IncidentId { get; set; }
+    //    public long? IncidentValidationId { get; set; }
+
+    //    public long? IC_MCR_AssignId { get; set; }
+    //    public long? IC_MCR_StatusId { get; set; }
+
+    //    public long? IC_Notify_AssignId { get; set; }
+    //    public long? IC_Notify_StatusId { get; set; }
+
+    //    public long? IC_EstablishICP_AssignId { get; set; }
+    //    public long? IC_EstablishICP_StatusId { get; set; }
+
+    //    public long? FER_PCA_AssignId { get; set; }
+    //    public long? FER_PCA_StatusId { get; set; }
+
+    //    public long? FER_LC_AssignId { get; set; }
+    //    public long? FER_LC_StatusId { get; set; }
+       
+
+    //    public long? EGEC_RSM_AssignId { get; set; }
+    //    public long? EGEC_RSM_StatusId { get; set; }
+        
+    //    public long? EGEC_MLP_AssignId { get; set; }
+    //    public long? EGEC_MLP_StatusId { get; set; }
+       
+
+    //    public long? EGEC_ICT_AssignId { get; set; }
+    //    public long? EGEC_ICT_StatusId { get; set; }
+
+       
+    //}
 }

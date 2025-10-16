@@ -950,6 +950,16 @@ namespace Repositories.Common
                 validationRestorationVM.listIncidentViewPostViewModel = ListPostDetailVM;
 
                 #endregion
+                #region IncidentValidationRestoration
+                List<IncidentViewTaskListViewModel> ListvalidationTaskVM = await GetvalidationTaskVM(id);
+                //List<IncidentViewPostViewModel> ListPostDetailVMTask = await GetPostDetailVM(id);
+
+                IncidentViewTaskViewModel validationTaskVM = new IncidentViewTaskViewModel
+                {
+                    listIncidentViewTaskViewModel = ListvalidationTaskVM,
+                  //  listIncidentViewPostViewModel = ListPostDetailVMTask
+                };
+                #endregion
 
                 if (incident == null)
                     return new IncidentViewModel();
@@ -1126,6 +1136,7 @@ namespace Repositories.Common
                 viewModel.IncidentViewRepairViewModel = validationRepairVM;
                 viewModel.IncidentViewCloseoutViewModel = validationCloseoutVM;
                 viewModel.IncidentViewRestorationViewModel = validationRestorationVM;
+                viewModel.IncidentViewTaskViewModel = validationTaskVM;
                 return viewModel;
             }
             catch (Exception ex)
@@ -2376,6 +2387,27 @@ namespace Repositories.Common
                 return new List<IncidentViewModel.IncidentRoleViewModel>();
             }
         }
+        public async Task<List<IncidentViewModel.ProgressStatusViewModel>> GetAllProgressStatus()
+        {
+            try
+            {
+                var statuses = await _db.Progress
+                    .Where(s => !s.IsDeleted)
+                    .Select(s => new IncidentViewModel.ProgressStatusViewModel
+                    {
+                        StatusId = s.Id,
+                        StatusName = s.Name
+                    })
+                    .ToListAsync();
+
+                return statuses;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting all Progress Statuses.");
+                return new List<IncidentViewModel.ProgressStatusViewModel>();
+            }
+        }
         public async Task<long> UpdateTimeIn(long Id, DateTime timeIn)
         {
             try
@@ -2785,6 +2817,105 @@ namespace Repositories.Common
             return listIncidentViewPostViewModel;
         }
         #endregion
+        public async Task<List<IncidentViewTaskListViewModel>> GetvalidationTaskVM(long incidentId)
+        {
+            // lookup tables
+            var roles = await _db.IncidentRoles.AsNoTracking().ToListAsync();
+            var statuses = await _db.Progress.AsNoTracking().ToListAsync(); // status table
+
+            // tasks table (columns shown in your screenshot)
+            var tasks = await _db.IncidentValidationTasks
+                .AsNoTracking()
+                .Where(t => !t.IsDeleted && t.IncidentId == incidentId)
+                .OrderBy(t => t.Id)
+                .ToListAsync();
+
+            var result = tasks
+                .Select(x => new
+                {
+                    x.Id,
+                    x.IncidentId,
+                    x.IncidentValidationId,
+                    TaskDescription = x.TaskDescription,
+                    RoleIds = x.RoleIds,
+                    StatusId = x.StatusId,
+                    CreatedOn = x.CreatedOn
+                })
+                .ToList();
+
+            return result.Select(p =>
+            {
+                // Resolve RoleIds -> Names (tolerant to nulls/non-numeric tokens)
+                var responsible = string.Join(" / ",
+                    (p.RoleIds ?? string.Empty)
+                        .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        .Select(s => s.Trim())
+                        .Select(s => long.TryParse(s, out var rid)
+                            ? roles.FirstOrDefault(r => r.Id == rid)?.Name
+                            : null)
+                        .Where(n => !string.IsNullOrEmpty(n))
+                );
+
+                var statusName = p.StatusId.HasValue
+                    ? statuses.FirstOrDefault(s => s.Id == p.StatusId.Value)?.Name ?? string.Empty
+                    : string.Empty;
+
+                return new IncidentViewTaskListViewModel
+                {
+                    Id = p.Id,
+                    IncidentId = p.IncidentId ?? 0,
+                    IncidentValidationId = p.IncidentValidationId ?? 0,
+                    Task = p.TaskDescription ?? string.Empty,
+                    FieldValue = string.IsNullOrWhiteSpace(responsible) ? "—" : responsible,
+                    Status = string.IsNullOrWhiteSpace(statusName) ? "Pending" : statusName,
+                    // placeholders — replace with real DB fields if you add them
+                    Started = null,
+                    Completed = null,
+                    Attachment = null
+                };
+            }).ToList();
+        }
+        public async Task<IncidentViewTaskListViewModel> AddIncidentTaskAsync(AddIncidentTaskRequest request)
+        {
+            var entity = new IncidentValidationTask
+            {
+                IncidentId = request.IncidentId,
+                IncidentValidationId = request.IncidentValidationId,
+                TaskDescription = request.TaskDescription,
+                RoleIds = request.RoleIds, // comma-separated "1,2"
+                StatusId = request.StatusId,
+                CreatedOn = DateTime.UtcNow,
+                IsDeleted = false
+            };
+
+            _db.IncidentValidationTasks.Add(entity);
+            await _db.SaveChangesAsync();
+
+            // load role names and status name (similar to GetvalidationTaskVM logic)
+            var roles = await _db.IncidentRoles.ToListAsync();
+            var statuses = await _db.Progress.ToListAsync();
+
+            var roleNames = (entity.RoleIds ?? "")
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => long.TryParse(s, out var id) ? roles.FirstOrDefault(r => r.Id == id)?.Name : null)
+                .Where(n => !string.IsNullOrEmpty(n));
+
+            var statusName = entity.StatusId.HasValue ? statuses.FirstOrDefault(s => s.Id == entity.StatusId.Value)?.Name : null;
+
+            return new IncidentViewTaskListViewModel
+            {
+                Id = entity.Id,
+                IncidentId = entity.IncidentId,
+                IncidentValidationId = entity.IncidentValidationId,
+                Task = entity.TaskDescription,
+                FieldValue = roleNames.Any() ? string.Join(" / ", roleNames) : "—",
+                Status = string.IsNullOrWhiteSpace(statusName) ? "Pending" : statusName,
+                Started = null,
+                Completed = null,
+                Attachment = null
+            };
+        }
+
 
     }
 }

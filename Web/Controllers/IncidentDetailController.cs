@@ -45,11 +45,18 @@ namespace Web.Controllers
             model.IncidentAssessmentDetails = await _iIncidentService.GetAssessmentDetails(request);
             model.incidentViewAssessmentAttachmentView = await _iIncidentService.ViewAssessmentAttachment(id);
 
+
             #region Personnel
             var companies = await _iIncidentService.GetAllCompanies();
             ViewBag.Companies = new SelectList(companies, "CompanyId", "CompanyName");
             var roles = await _iIncidentService.GetAllIncidentRoles();
             ViewBag.Roles = new SelectList(roles, "IncidentRoleId", "IncidentRoleName");
+            var statuses = await _iIncidentService.GetAllProgressStatus();
+            ViewBag.Statuses = statuses.Select(s => new SelectListItem
+            {
+                Value = s.StatusId.ToString(),
+                Text = s.StatusName
+            }).ToList();
             #endregion
 
             return View(model);
@@ -358,7 +365,35 @@ namespace Web.Controllers
                     new { success = false, message = "An unexpected error occurred." });
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> SaveTask([FromForm] IncidentViewTaskListViewModel model)
+        {
+            if (model == null || model.IncidentId == 0)
+                return BadRequest(new { success = false, message = "Invalid request." });
 
+            try
+            {
+                // call service to add task and return the saved entity/viewmodel
+                var created = await _iIncidentService.AddIncidentTaskAsync(new AddIncidentTaskRequest
+                {
+                    IncidentId = model.IncidentId,
+                    IncidentValidationId = model.IncidentValidationId,
+                    TaskDescription = model.Task,
+                    RoleIds = model.RoleIds,    // we'll pass RoleIds string in FieldValue or change model
+                    StatusId = model.StatusId
+                });
+
+                // created should return a IncidentViewTaskListViewModel (or similar)
+                return Ok(new { success = true, data = created });
+            }
+            catch (Exception ex)
+            {
+                // log...
+                return StatusCode(500, new { success = false, message = "Save failed." });
+            }
+        }
 
     }
 }
+
+    

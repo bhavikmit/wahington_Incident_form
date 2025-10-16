@@ -1,0 +1,59 @@
+﻿@model ViewModels.Incident.IncidentViewTaskListViewModel
+
+<div id="addTaskModal" class="modal" tabindex="-1" role="dialog" style="display:none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <form id="formAddTask">
+                <div class="modal-header">
+                    <h5 class="modal-title">Task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="btnCloseAddTask"></button>
+                </div>
+
+                <div class="modal-body">
+                    <input type="hidden" name="IncidentId" value="@ViewBag.CurrentIncidentId" />
+                    <input type="hidden" name="IncidentValidationId" value="@ViewBag.CurrentIncidentValidationId" />
+
+                    <div class="mb-3">
+                        <label class="form-label">Task Description <span class="text-danger">*</span></label>
+                        <textarea name="Task" class="form-control" rows="3" required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Responsible Role (multiple)</label>
+                        <select name="RoleIds" class="form-select" multiple>
+                            @* Use roles from ViewBag.Roles (IncidentRoleId / IncidentRoleName) *@
+                            @foreach (var r in (IEnumerable<SelectListItem>)ViewBag.Roles)
+                            {
+                                <option value="@r.Value">@r.Text</option>
+                            }
+                        </select>
+                        <small class="form-text text-muted">Hold Ctrl/Cmd to select multiple</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <select name="StatusId" class="form-select">
+                            <option value="">Select Status</option>
+                            @foreach (var s in (IEnumerable<SelectListItem>)ViewBag.Statuses ?? new List<SelectListItem>())
+                            {
+                                <option value="@s.Value">@s.Text</option>
+                            }
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btnCancelAddTask">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btnSaveAddTask">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // show/hide handled from index.js (global)
+    </script>
+}

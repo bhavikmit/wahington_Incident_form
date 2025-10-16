@@ -39,6 +39,7 @@ namespace Repositories.Common
         #region Personnel
         Task<List<IncidentViewModel.CompanyViewModel>> GetAllCompanies();
         Task<List<IncidentViewModel.IncidentRoleViewModel>> GetAllIncidentRoles();
+        Task<List<IncidentViewModel.ProgressStatusViewModel>> GetAllProgressStatus();
         Task<long> UpdateTimeIn(long id, DateTime timeIn);
         Task<List<IncidentValidationPersonnelsViewModel>> GetFilterByRole(long incidentId, long roleId, long companyid, string onsite);
         Task<List<IncidentViewModel.UsersViewModel>> GetSupervisors(long companyId, long userId);
@@ -54,5 +55,8 @@ namespace Repositories.Common
         Task<List<IncidentViewPostViewModel>> SavePostDetails(IncidentViewPostViewModel incidentViewPostViewModel);
         Task<IncidentAssessmentAddViewModel> AddAssessmentDetails();
         Task<long> SubmitAssestment(IncidentValidationAssessment request);
+        Task<IncidentViewTaskListViewModel> AddIncidentTaskAsync(AddIncidentTaskRequest request);
+
+
     }
 }

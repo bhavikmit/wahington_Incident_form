@@ -265,49 +265,58 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="validationCard safty">
-                            <div class="section-header d-flex align-items-center justify-content-between">
-                                <h6 class="mb-0">Safety Assessment</h6>
-                            </div>
-                            <div class="section-body">
-                                <div class="grid">
-                                    @RenderBox("Gas Odor Present", Model.IVDetails.GasPresent)
-                                    @RenderBox("Hissing Sound", Model.IVDetails.HissingPresent)
-                                    @RenderBox("Visible Damage/Fire", Model.IVDetails.VisibleDamagePresent)
-                                    @RenderBox("People Injured", Model.IVDetails.PeopleInjured)
-                                    @RenderBox("Evacuation Required", Model.IVDetails.EvacuationRequired)
-                                    @RenderBox("Water Present", Model.IVDetails.WaterPresent)
+                        <div class="row safety-supporting-info">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="validationCard safty">
+                                    <div class="section-header d-flex align-items-center justify-content-between">
+                                        <h6 class="mb-0">Safety Assessment</h6>
+                                    </div>
+                                    <div class="section-body">
+                                        <div class="grid">
+                                            @RenderBox("Gas Odor Present", Model.IVDetails.GasPresent)
+                                            @RenderBox("Hissing Sound", Model.IVDetails.HissingPresent)
+                                            @RenderBox("Visible Damage/Fire", Model.IVDetails.VisibleDamagePresent)
+                                            @RenderBox("People Injured", Model.IVDetails.PeopleInjured)
+                                            @RenderBox("Evacuation Required", Model.IVDetails.EvacuationRequired)
+                                            @RenderBox("Water Present", Model.IVDetails.WaterPresent)
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="supporting-information-sec">
-                            <div class="section-card">
-                                <div class="section-header d-flex align-items-center justify-content-between">
-                                    <h6 class="mb-0">Supporting Information</h6>
-                                </div>
-                                <div class="section-body">
-                                    <!-- Service Notes -->
-                                    <div class="note-title">
-                                        <i class="fa-regular fa-file-lines"></i> Service Representative Notes
-                                    </div>
-                                    <div class="note-box">@Model.incidentSupportingInfoViewModel.Notes</div>
-
-                                    <!-- Photos -->
-                                    <div class="photos-title">
-                                        <i class="fa-regular fa-image"></i> Photos (@Model.incidentSupportingInfoViewModel?.ImageUrls.Count())
-                                    </div>
-                                    <div class="photos-grid">
-                                        @foreach (var imageUrl in Model.incidentSupportingInfoViewModel?.ImageUrls)
-                                        {
-                                            <div class="photo-item">
-                                                <img src="@imageUrl" alt="incidentPhoto" />
+                            <div class="col-md-6 col-lg-6">
+                                <div class="supporting-information-sec">
+                                    <div class="section-card">
+                                        <div class="section-header d-flex align-items-center justify-content-between">
+                                            <h6 class="mb-0">Supporting Information</h6>
+                                        </div>
+                                        <div class="section-body">
+                                            <!-- Service Notes -->
+                                            <div class="note-title">
+                                                <i class="fa-regular fa-file-lines"></i> Service Representative Notes
                                             </div>
-                                        }
+                                            <div class="note-box">@Model.incidentSupportingInfoViewModel.Notes</div>
+
+                                            <!-- Photos -->
+                                            <div class="photos-title">
+                                                <i class="fa-regular fa-image"></i> Photos (@Model.incidentSupportingInfoViewModel?.ImageUrls.Count())
+                                            </div>
+                                            <div class="photos-grid">
+                                                @foreach (var imageUrl in Model.incidentSupportingInfoViewModel?.ImageUrls)
+                                                {
+                                                    <div class="photo-item">
+                                                        <img src="@imageUrl" alt="incidentPhoto" />
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                   
+                       
+
+                        
                     </div>
 
                     @*   <!-----------------location and incident information--------------------------->

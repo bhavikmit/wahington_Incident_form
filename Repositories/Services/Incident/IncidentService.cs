@@ -761,20 +761,40 @@ namespace Repositories.Common
                 #endregion
 
                 #region IncidentAdditionalLocation
-                var validationAdditionalLocation = await _db.IncidentValidationLocations
-                                         .AsNoTracking()
-                                         .Where(p => !p.IsDeleted && p.IncidentId == id)
-                                         .ToListAsync();
+                //var validationAdditionalLocation = await _db.IncidentValidationLocations
+                //                         .AsNoTracking()
+                //                         .Where(p => !p.IsDeleted && p.IncidentId == id)
+                //                         .FirstOrDefaultAsync();
 
-                var validationAdditionalLocationVM = validationAdditionalLocation.Select(p => new IncidentValidationLocationViewModel
+                //var validationAdditionalLocationVM = validationAdditionalLocation.Select(p => new IncidentValidationLocationViewModel
+                //{
+                //    DiscoveryPerimeter = p.DiscoveryPerimeterId,
+                //    ICPLocation = p.ICPLocation ?? string.Empty,
+                //    LocationId = p.AdditionalLocationId,
+                //    SeverityID = p.ConfirmedSeverityLevelId,
+                //    Source = p.Source ?? string.Empty,
+                //    SeverityName = severityLevels.Where(s => s.Id == p.ConfirmedSeverityLevelId).FirstOrDefault()?.Name
+                //}).ToList();
+                var validationAdditionalLocation = await _db.IncidentValidationLocations
+                    .AsNoTracking()
+                    .Where(p => !p.IsDeleted && p.IncidentId == id)
+                    .FirstOrDefaultAsync();
+
+                IncidentValidationLocationViewModel validationAdditionalLocationVM = null;
+
+                if (validationAdditionalLocation != null)
                 {
-                    DiscoveryPerimeter = p.DiscoveryPerimeterId,
-                    ICPLocation = p.ICPLocation ?? string.Empty,
-                    LocationId = p.AdditionalLocationId,
-                    SeverityID = p.ConfirmedSeverityLevelId,
-                    Source = p.Source ?? string.Empty,
-                    SeverityName = severityLevels.Where(s => s.Id == p.ConfirmedSeverityLevelId).FirstOrDefault()?.Name
-                }).ToList();
+                    validationAdditionalLocationVM = new IncidentValidationLocationViewModel
+                    {
+                        DiscoveryPerimeter = validationAdditionalLocation.DiscoveryPerimeterId,
+                        ICPLocation = validationAdditionalLocation.ICPLocation ?? string.Empty,
+                        LocationId = validationAdditionalLocation.AdditionalLocationId,
+                        SeverityID = validationAdditionalLocation.ConfirmedSeverityLevelId,
+                        Source = validationAdditionalLocation.Source ?? string.Empty,
+                        SeverityName = severityLevels
+                            .FirstOrDefault(s => s.Id == validationAdditionalLocation.ConfirmedSeverityLevelId)?.Name
+                    };
+                }
                 #endregion
 
                 #region Personnel
@@ -870,6 +890,20 @@ namespace Repositories.Common
                        Text = it.Name
                    })
                    .ToListAsync();
+
+                var severityLevelsTask = await _db.SeverityLevels
+                                   .Where(it => !it.IsDeleted)
+                                   .OrderBy(it => it.Name == "High" ? 1 :
+                                                  it.Name == "Moderate" ? 2 :
+                                                  it.Name == "Low" ? 3 : 4)
+                                   .Select(it => new SelectListItem
+                                   {
+                                       Value = it.Id.ToString(),
+                                       Text = !string.IsNullOrWhiteSpace(it.Description)
+                                              ? it.Name + " (" + it.Description + ")"
+                                              : it.Name
+                                   })
+                                   .ToListAsync();
                 #endregion
 
                 #region IncidentValidationNotes
@@ -925,6 +959,7 @@ namespace Repositories.Common
                     Id = incident.Id,
                     DescriptionIssue = incident.DescriptionIssue ?? string.Empty,
                     severityLevelId = incident.SeverityLevelId,
+                    //severityLevelId = incident.StatusLegendId,
 
 
                     incidentDetails = new IncidentDetailsViewModel
@@ -937,6 +972,7 @@ namespace Repositories.Common
 
                     incidentDetailByIdViewModel = new IncidentDetailByIdViewModel()
                     {
+                        StatusLegendId = incident.StatusLegend.Id,
                         SeverityName = incident.SeverityLevel?.Name ?? string.Empty,
                         SeverityColor = incident.SeverityLevel?.Color ?? string.Empty,
                         StatusLegendName = incident.StatusLegend?.Name ?? string.Empty,
@@ -1025,7 +1061,8 @@ namespace Repositories.Common
                     incidentValidationAssignedRolesViewModel = IncidentValidationAssignedRoles.FirstOrDefault() ?? new IncidentValidationAssignedRolesViewModel(),
                     incidentValidationGatesViewModel = validationGatesVM.FirstOrDefault() ?? new IncidentValidationGatesViewModel(),
 
-                    IncidentValidationLocations = validationAdditionalLocationVM ?? new List<IncidentValidationLocationViewModel>(),
+                    //IncidentValidationLocations = validationAdditionalLocationVM ?? new List<IncidentValidationLocationViewModel>(),
+                    IncidentValidationLocations = validationAdditionalLocationVM ?? new IncidentValidationLocationViewModel(),
 
                     #region Personnel
                     incidentValidationPersonnelsViewModel = IncidentValidationPersonnels,
@@ -1045,7 +1082,8 @@ namespace Repositories.Common
                     UserList = UserLisTTask,
                     CompanyList = companyList,
                     RoleList = rolesList,
-                    ShiftsList = shiftsList
+                    ShiftsList = shiftsList,
+                    severityLevels = severityLevelsTask
                     #endregion
                 };
 

@@ -12,6 +12,15 @@
 <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
 <script src="https://js.arcgis.com/4.27/"></script>
 <script type="module" src="https://js.arcgis.com/embeddable-components/4.33/arcgis-embeddable-components.esm.js"></script>
+<link href="~/css/custom/views/incident/validation.css" rel="stylesheet" />
+
+<style>
+    .tab-item.disabled {
+    pointer-events: none;  /* disables clicking */
+    opacity: 0.5;          /* visually indicate disabled */
+    cursor: not-allowed;   /* show disabled cursor */
+    }
+</style>
 <div id="incidentDetailsModal" tabindex="-1" aria-hidden="true">
     <input type="hidden" id="hdnIncidentID" value="@Model.Id" />
     <div class="container-fuild">
@@ -23,31 +32,31 @@
                 </div>
 
                 <div class="tabs">
-                    <div class="tab-item active" data-tab="dashboard">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "" : "active")" data-tab="dashboard">
                         <i class="fa fa-map-marker-alt"></i>Map
                     </div>
-                    <div class="tab-item " data-tab="overview">
+                    <div class="tab-item" data-tab="overview">
                         <i class="far fa-file-alt"></i> Overview
                     </div>
-                    <div class="tab-item" data-tab="validation">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "active" : "")" data-tab="validation">
                         <i class="fas fa-shield-alt"></i> Validation
                     </div>
-                    <div class="tab-item" data-tab="personnel">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="personnel">
                         <i class="fa-regular fa-user"></i> Personnel
                     </div>
-                    <div class="tab-item " data-tab="assessment">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="assessment">
                         <i class="fa-solid fa-clipboard-check"></i>Assessment
                     </div>
-                    <div class="tab-item" data-tab="repair">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="repair">
                         <i class="fa-solid fa-screwdriver-wrench"></i> Repair
                     </div>
-                    <div class="tab-item " data-tab="restoration">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="restoration">
                         <i class="fa-solid fa-rotate"></i> Restoration
                     </div>
-                    <div class="tab-item" data-tab="closeout">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="closeout">
                         <i class="fa-regular fa-circle-check"></i> Closeout
                     </div>
-
+                    
                     @* <div class="tab-item" data-tab="worksteps">
                         <i class="fas fa-tasks"></i> Policies
                     </div>
@@ -58,8 +67,9 @@
                 </div>
             </div>
             <div class="tabBody">
-                <div id="dashboard" class="tab-content active">
-                    <div class="row mb-4">
+                <div id="dashboard" class="tab-content @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "" : "active")">
+                    <div class="row g-4">
+
                         <!-- Chat & Handoffs -->
                         <div class="col-lg-3">
                             <!-- Chat & Handoffs -->
@@ -411,183 +421,500 @@
                     </div> *@
                 </div>
 
-                <div id="validation" class="tab-content">
-                    <div class="phase-header">
-                        <div>
-                            <div class="phaseTitle">Phase: <span class="fw-bold">Validation</span></div>
-                            <div class="phaseTitle">Progress: <span class="phaseTitle fw-bold">80% Complete</span></div>
+                @if (Model.incidentDetailByIdViewModel.StatusLegendId == 1)
+                {
+                    <form id="incident_validation_form">
+                        <div id="validation" class="tab-content active">
+                            <div class="phase-header">
+                                <div>
+                                    <div class="phaseTitle">Phase: <span class="fw-bold">Validation</span></div>
+                                    <div class="phaseTitle">Progress: <span class="phaseTitle fw-bold">80% Complete</span></div>
+                                </div>
+
+                            </div>
+
+                            <!-- Top Cards -->
+                            <div class="row g-3">
+                                <!-- Incident Details -->
+                                <div class="col-md-4">
+                                    <div class="card-custom">
+                                        <div class="section-title">Incident Details</div>
+                                        <div class="section-body">
+                                            @* @foreach (var item in Model.IncidentValidationLocations)
+                                        { *@
+
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">Severity Level:</span>
+                                                    <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.severityLevelId">
+                                                        <option value="" selected>Select confirmed severity</option>
+                                                        @foreach (var item in Model.severityLevels)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">Discovery Perimeter:</span>
+                                                    <select class="form-select" required id="RadiusId" asp-for="@Model.IVValidation.RadiusId">
+                                                        <option value="" selected>Select radius</option>
+                                                        <option value="1">1 Mile</option>
+                                                        <option value="2">3 Miles</option>
+                                                        <option value="3">5 Miles</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">ICP Location:</span>
+                                                    <input type="hidden" id="hdnLat" asp-for="@Model.IVValidation.Lat" value="0" />
+                                                    <input type="hidden" id="hdnLon" asp-for="@Model.IVValidation.Long" value="0" />
+                                                    <input type="text" id="ICPLocation" class="form-control mb-2" asp-for="@Model.IVValidation.IncidentLocation" placeholder="123 Main St, City, ST 12345">
+                                                    <ul id="suggestionsICPLocation" class="suggestions-list"></ul>
+                                                </div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">Source:</span>
+                                                    <input type="text" id="Source" asp-for="@Model.IVValidation.Source" class=" form-control mb-2">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div id="map" style="height:250px; width:100%; display:none" class="mapDivClass"></div>
+                                                </div>
+                                            </div>
+                                            <script>
+                                                $(document).ready(function () {
+                                                    initICPLocationAutocomplete();
+                                                });
+                                            </script>
+
+                                            @* } *@
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Assigned Roles -->
+                                <div class="col-md-4">
+                                    <div class="card-custom">
+                                        <div class="section-title">Assigned Roles</div>
+                                        <div class="section-body">
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">Incident Commander:</span>
+                                                    <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.IncidentCommanderId">
+                                                        <option value="" selected>Select Incident Commander</option>
+                                                        @foreach (var item in Model.UserList)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">Field Env. Rep (FER):</span>
+                                                    <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.FieldEnvRepId">
+                                                        <option value="" selected>Select Field Env. Rep</option>
+                                                        @foreach (var item in Model.UserList)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">GEC Coordinator:</span>
+                                                    <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.GECCoordinatorId">
+                                                        <option value="" selected>Select GEC Coordinator</option>
+                                                        @foreach (var item in Model.UserList)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">Engineering Lead:</span>
+                                                    <select class="form-select" required id="severityLevelId" asp-for="@Model.IVValidation.assignedRole.EngineeringLeadId">
+                                                        <option value="" selected>Select Engineering Lead</option>
+                                                        @foreach (var item in Model.UserList)
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!-- Validation Gates -->
+                                <div class="col-md-4">
+                                    <div class="card-custom">
+                                        <div class="section-title">Validation Gates</div>
+                                        <div class="section-body">
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title"><i class="fa fa-circle-check text-success me-2"></i>Containment Acknowledgment:</span>
+                                                    <div class="selectRadio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.ContainmentAcknowledgement"
+                                                                   id="WaterPresentYes" value="1">
+                                                            <label class="form-check-label" for="WaterPresentYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @if (Model.Id > 0)
+                                                            {
+                                                                <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.ContainmentAcknowledgement"
+                                                                       id="WaterPresentNo" value="0">
+                                                            }
+                                                            else
+                                                            {
+                                                                <input class="form-check-input" type="radio" checked asp-for="@Model.IVValidation.validationGates.ContainmentAcknowledgement"
+                                                                       id="WaterPresentNo" value="0">
+                                                            }
+                                                            <label class="form-check-label" for="WaterPresentNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">Exception Request:</span>
+                                                    <div class="selectRadio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.Exception"
+                                                                   id="WaterPresentYes" value="1">
+                                                            <label class="form-check-label" for="WaterPresentYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @if (Model.Id > 0)
+                                                            {
+                                                                <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.Exception"
+                                                                       id="WaterPresentNo" value="0">
+                                                            }
+                                                            else
+                                                            {
+                                                                <input class="form-check-input" type="radio" checked asp-for="@Model.IVValidation.validationGates.Exception"
+                                                                       id="WaterPresentNo" value="0">
+                                                            }
+                                                            <label class="form-check-label" for="WaterPresentNo">No</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.Exception"
+                                                                   id="WaterPresentUnknown" value="2">
+                                                            <label class="form-check-label" for="WaterPresentUnknown">N/A</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">Independent Inspection Required:</span>
+                                                    <div class="selectRadio">
+                                                        <div class="form-check form-check-inline">
+                                                            <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.IndependentInspection"
+                                                                   id="WaterPresentYes" value="1">
+                                                            <label class="form-check-label" for="WaterPresentYes">Yes</label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline">
+                                                            @if (Model.Id > 0)
+                                                            {
+                                                                <input class="form-check-input" type="radio" asp-for="@Model.IVValidation.validationGates.IndependentInspection"
+                                                                       id="WaterPresentNo" value="0">
+                                                            }
+                                                            else
+                                                            {
+                                                                <input class="form-check-input" type="radio" checked asp-for="@Model.IVValidation.validationGates.IndependentInspection"
+                                                                       id="WaterPresentNo" value="0">
+                                                            }
+                                                            <label class="form-check-label" for="WaterPresentNo">No</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="info-item">
+                                                <div>
+                                                    <span class="info-title">Regulatory Notifications:</span>
+                                                    <div class="d-grid gap-2" style="grid-template-columns: repeat(3, 1fr);">
+                                                        <div class="form-check form-check-inline eventCheck">
+                                                            <input class="form-check-input" type="checkbox" id="CPOC" name="IVValidation.validationGates.Regulatory" value="1">
+                                                            <label class="form-check-label" for="eventType_26">
+                                                                CPOC
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline eventCheck">
+                                                            <input class="form-check-input" type="checkbox" id="PHMSA" name="IVValidation.validationGates.Regulatory" value="2">
+                                                            <label class="form-check-label" for="eventType_6">
+                                                                PHMSA
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline eventCheck">
+                                                            <input class="form-check-input" type="checkbox" id="NTSB" name="IVValidation.validationGates.Regulatory" value="3">
+                                                            <label class="form-check-label" for="eventType_7">
+                                                                NTSB
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline eventCheck">
+                                                            <input class="form-check-input" type="checkbox" id="EPA" name="IVValidation.validationGates.Regulatory" value="4">
+                                                            <label class="form-check-label" for="eventType_4">
+                                                                EPA
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline eventCheck">
+                                                            <input class="form-check-input" type="checkbox" id="LFD" name="IVValidation.validationGates.Regulatory" value="5">
+                                                            <label class="form-check-label" for="eventType_11">
+                                                                Local Fire Dept
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-check form-check-inline eventCheck">
+                                                            @* <input type="radio" id="IsOtherEvent" class="form-check-input" name="incidentDetails.IsOtherEvent"> *@
+                                                            <input class="form-check-input" type="checkbox" id="IsOtherEventID" asp-for="IVValidation.validationGates.IsOtherEvent">
+                                                            <label class="form-check-label" asp-for="IVValidation.validationGates.IsOtherEvent">Other</label>
+                                                        </div>
+                                                        <div class="mb-3 OtherEventDetail" style="display:none">
+                                                            <input type="text" id="OtherEventDetail" class="form-control" asp-for="IVValidation.validationGates.OtherEventDetail" value="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Validation Notes -->
+                            <div class="card-custom mt-4 validation-notes">
+                                <div class="section-title">Validation Notes</div>
+                                <div class="section-body" id="validationNotesBody">
+                                    @if (Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList != null && Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList.Any())
+                                    {
+                                        foreach (var n in Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList)
+                                        {
+                                            <div class="note" data-note-id="@n.Id">
+                                                <span class="note-badge">@(!string.IsNullOrEmpty(n.CreatedByName) ? n.CreatedByName.Split(' ').FirstOrDefault()?.ToUpper() : "IC")</span>
+                                                <span class="note-text">@n.Notes</span>
+                                                <div class="note-meta">@n.CreatedOn</div>
+                                            </div>
+                                        }
+                                    }
+
+                                    <textarea class="form-control mt-3" rows="3" id="addNote" placeholder="Add new note..."></textarea>
+                                </div>
+                            </div>
+                            <div style="padding-top: 10px;text-align: center;:butt;">
+                                <button type="button" class="btn btn-primary btn-sm" style="height: 48px; width: 100px;" id="saveValidationBtn">
+                                    Validate
+                                </button>
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="footer-section mt-4">
+                                <div class="d-flex align-items-center">
+                                    @* <div class="validatedBy"><strong>Validated By: </strong> <span>@Model.incidentValidationsDetailsViewModel.IncidentValidationCommunicationHistoriesViewModelList?.FirstOrDefault()?.UserName</span></div> *@
+                                    <div class="validatedBy"><strong>Validated By: </strong> <span>@User.Identity?.Name!</span></div>
+
+                                    <div><strong>Date: </strong><span id="validatedDate"></span></div>
+                                </div>
+                                <div>
+                                    <strong>Status:</strong>
+                                    <span class="status-btn">Ready to Launch Assessment</span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                }
+                else 
+                {
+                    <div id="validation" class="tab-content">
+                        <div class="phase-header">
+                            <div>
+                                <div class="phaseTitle">Phase: <span class="fw-bold">Validation</span></div>
+                                <div class="phaseTitle">Progress: <span class="phaseTitle fw-bold">80% Complete</span></div>
+                            </div>
+
                         </div>
 
-                    </div>
-
-                    <!-- Top Cards -->
-                    <div class="row g-3">
-                        <!-- Incident Details -->
-                        <div class="col-md-4">
-                            <div class="card-custom">
-                                <div class="section-title">Incident Details</div>
-
-                                @foreach (var item in Model.IncidentValidationLocations)
-                                {
+                        <!-- Top Cards -->
+                        <div class="row g-3">
+                            <!-- Incident Details -->
+                            <div class="col-md-4">
+                                <div class="card-custom">
+                                    <div class="section-title">Incident Details</div>
                                     <div class="section-body">
+                                        @* @foreach (var item in Model.IncidentValidationLocations)
+                                    { *@
+
                                         <div class="info-item">
                                             <div>
                                                 <span class="info-title">Severity Level:</span>
-                                                <div class="subtext">@item.SeverityName</div>
+                                                <div class="subtext">@Model.IncidentValidationLocations.SeverityName</div>
                                             </div>
                                         </div>
                                         <div class="info-item">
                                             <div>
                                                 <span class="info-title">Discovery Perimeter:</span>
-                                                <div class="subtext">@item.DiscoveryPerimeter</div>
+                                                <div class="subtext">@Model.IncidentValidationLocations.DiscoveryPerimeter</div>
                                             </div>
                                         </div>
                                         <div class="info-item">
                                             <div>
                                                 <span class="info-title">ICP Location:</span>
-                                                <div class="subtext">@item.ICPLocation</div>
+                                                <div class="subtext">@Model.IncidentValidationLocations.ICPLocation</div>
                                             </div>
                                         </div>
                                         <div class="info-item">
                                             <div>
                                                 <span class="info-title">Source:</span>
-                                                <div class="subtext">@item.Source</div>
+                                                <div class="subtext">@Model.IncidentValidationLocations.Source</div>
+                                            </div>
+                                        </div>
+
+
+                                        @* } *@
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Assigned Roles -->
+                            <div class="col-md-4">
+                                <div class="card-custom">
+                                    <div class="section-title">Assigned Roles</div>
+                                    <div class="section-body">
+                                        <div class="info-item">
+                                            <div>
+                                                <span class="info-title">Incident Commander:</span>
+                                                <div class="subtext">@Model.incidentValidationAssignedRolesViewModel.IncidentCommanderName</div>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div>
+                                                <span class="info-title">Field Env. Rep (FER):</span>
+                                                <div class="subtext">@Model.incidentValidationAssignedRolesViewModel.FieldEnvRepName</div>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div>
+                                                <span class="info-title">GEC Coordinator:</span>
+                                                <div class="subtext">@Model.incidentValidationAssignedRolesViewModel.GEC_CoordinatorName</div>
+                                            </div>
+                                        </div>
+                                        <div class="info-item">
+                                            <div>
+                                                <span class="info-title">Engineering Lead:</span>
+                                                <div class="subtext">@Model.incidentValidationAssignedRolesViewModel.EngineeringLeadName</div>
                                             </div>
                                         </div>
 
                                     </div>
-                                }
-                            </div>
-                        </div>
 
-                        <!-- Assigned Roles -->
-                        <div class="col-md-4">
-                            <div class="card-custom">
-                                <div class="section-title">Assigned Roles</div>
-                                <div class="section-body">
-                                    <div class="info-item">
-                                        <div>
-                                            <span class="info-title">Incident Commander:</span>
-                                            <div class="subtext">@Model.incidentValidationAssignedRolesViewModel.IncidentCommanderName</div>
+                                </div>
+                            </div>
+
+                            <!-- Validation Gates -->
+                            <div class="col-md-4">
+                                <div class="card-custom">
+                                    <div class="section-title">Validation Gates</div>
+                                    <div class="section-body">
+                                        <div class="info-item">
+                                            <div>
+                                                <span class="info-title"><i class="fa fa-circle-check text-success me-2"></i>Containment Acknowledgment:</span>
+                                                <div class="subtext">@Model.incidentValidationGatesViewModel.ContainmentAcknowledgement</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div>
-                                            <span class="info-title">Field Env. Rep (FER):</span>
-                                            <div class="subtext">@Model.incidentValidationAssignedRolesViewModel.FieldEnvRepName</div>
+                                        <div class="info-item">
+                                            <div>
+                                                <span class="info-title">Exception Request:</span>
+                                                <div class="subtext">@Model.incidentValidationGatesViewModel.Exception</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div>
-                                            <span class="info-title">GEC Coordinator:</span>
-                                            <div class="subtext">@Model.incidentValidationAssignedRolesViewModel.GEC_CoordinatorName</div>
+                                        <div class="info-item">
+                                            <div>
+                                                <span class="info-title">Independent Inspection Required:</span>
+                                                <div class="subtext">@Model.incidentValidationGatesViewModel.IndependentInspection</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div>
-                                            <span class="info-title">Engineering Lead:</span>
-                                            <div class="subtext">@Model.incidentValidationAssignedRolesViewModel.EngineeringLeadName</div>
+                                        <div class="info-item">
+                                            <div>
+                                                <span class="info-title">Regulatory Notifications:</span>
+                                                <div class="subtext">@Model.incidentValidationGatesViewModel.Regulatory</div>
+                                            </div>
                                         </div>
+
                                     </div>
 
                                 </div>
-
                             </div>
                         </div>
 
-                        <!-- Validation Gates -->
-                        <div class="col-md-4">
-                            <div class="card-custom">
-                                <div class="section-title">Validation Gates</div>
-                                <div class="section-body">
-                                    <div class="info-item">
-                                        <div>
-                                            <span class="info-title"><i class="fa fa-circle-check text-success me-2"></i>Containment Acknowledgment:</span>
-                                            <div class="subtext">@Model.incidentValidationGatesViewModel.ContainmentAcknowledgement</div>
-                                        </div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div>
-                                            <span class="info-title">Exception Request:</span>
-                                            <div class="subtext">@Model.incidentValidationGatesViewModel.Exception</div>
-                                        </div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div>
-                                            <span class="info-title">Independent Inspection Required:</span>
-                                            <div class="subtext">@Model.incidentValidationGatesViewModel.IndependentInspection</div>
-                                        </div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div>
-                                            <span class="info-title">Regulatory Notifications:</span>
-                                            <div class="subtext">@Model.incidentValidationGatesViewModel.Regulatory</div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
+                        @*  <!-- Validation Notes -->
+                    <div class="card-custom mt-4 validation-notes">
+                    <div class="section-title">Validation Notes</div>
+                    <div class="section-body">
+                    <div class="note">
+                    <span class="note-badge">IC</span>
+                    Confirmed incident details imported from CSR at 10:12 AM.
                     </div>
 
-                    @*  <!-- Validation Notes -->
-                    <div class="card-custom mt-4 validation-notes">
-                        <div class="section-title">Validation Notes</div>
-                        <div class="section-body">
-                            <div class="note">
-                                <span class="note-badge">IC</span>
-                                Confirmed incident details imported from CSR at 10:12 AM.
-                            </div>
+                    <div class="note">
+                    <span class="note-badge">FER</span>
+                    Verified containment plan; no release risk identified.
+                    </div>
 
-                            <div class="note">
-                                <span class="note-badge">FER</span>
-                                Verified containment plan; no release risk identified.
-                            </div>
-
-                            <div class="note">
-                                <span class="note-badge">Engineering</span>
-                                Provided topographic overlay for perimeter confirmation.
-                            </div>
-                            <textarea class="form-control mt-3" rows="3" id="addNote" placeholder="Add new note..."></textarea>
-                        </div>
+                    <div class="note">
+                    <span class="note-badge">Engineering</span>
+                    Provided topographic overlay for perimeter confirmation.
+                    </div>
+                    <textarea class="form-control mt-3" rows="3" id="addNote" placeholder="Add new note..."></textarea>
+                    </div>
 
                     </div> *@
-                    <!-- Validation Notes -->
-                    <div class="card-custom mt-4 validation-notes">
-                        <div class="section-title">Validation Notes</div>
-                        <div class="section-body" id="validationNotesBody">
-                            @if (Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList != null && Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList.Any())
-                            {
-                                foreach (var n in Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList)
+                        <!-- Validation Notes -->
+                        <div class="card-custom mt-4 validation-notes">
+                            <div class="section-title">Validation Notes</div>
+                            <div class="section-body" id="validationNotesBody">
+                                @if (Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList != null && Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList.Any())
                                 {
-                                    <div class="note" data-note-id="@n.Id">
-                                        <span class="note-badge">@(!string.IsNullOrEmpty(n.CreatedByName) ? n.CreatedByName.Split(' ').FirstOrDefault()?.ToUpper() : "IC")</span>
-                                        <span class="note-text">@n.Notes</span>
-                                        @* <div class="note-meta">@n.CreatedOn</div> *@
-                                    </div>
+                                    foreach (var n in Model.incidentValidationsDetailsViewModel.IncidentValidationNotesList)
+                                    {
+                                        <div class="note" data-note-id="@n.Id">
+                                            <span class="note-badge">@(!string.IsNullOrEmpty(n.CreatedByName) ? n.CreatedByName.Split(' ').FirstOrDefault()?.ToUpper() : "IC")</span>
+                                            <span class="note-text">@n.Notes</span>
+                                            @* <div class="note-meta">@n.CreatedOn</div> *@
+                                        </div>
+                                    }
                                 }
-                            }
 
-                            <textarea class="form-control mt-3" rows="3" id="addNote" placeholder="Add new note..."></textarea>
+                                <textarea class="form-control mt-3" rows="3" id="addNote" placeholder="Add new note..."></textarea>
+                            </div>
+                        </div>
+
+
+                        <!-- Footer -->
+                        <div class="footer-section mt-4">
+                            <div class="d-flex align-items-center">
+                                @* <div class="validatedBy"><strong>Validated By: </strong> <span>@Model.incidentValidationsDetailsViewModel.IncidentValidationCommunicationHistoriesViewModelList?.FirstOrDefault()?.UserName</span></div> *@
+                                <div class="validatedBy"><strong>Validated By: </strong> <span>@User.Identity?.Name!</span></div>
+
+                                <div><strong>Date: </strong><span id="validatedDate"></span></div>
+                            </div>
+                            <div>
+                                <strong>Status:</strong>
+                                <span class="status-btn">Ready to Launch Assessment</span>
+                            </div>
                         </div>
                     </div>
-
-
-                    <!-- Footer -->
-                    <div class="footer-section mt-4">
-                        <div class="d-flex align-items-center">
-                            @* <div class="validatedBy"><strong>Validated By: </strong> <span>@Model.incidentValidationsDetailsViewModel.IncidentValidationCommunicationHistoriesViewModelList?.FirstOrDefault()?.UserName</span></div> *@
-                            <div class="validatedBy"><strong>Validated By: </strong> <span>@User.Identity?.Name!</span></div>
-
-                            <div><strong>Date: </strong><span id="validatedDate"></span></div>
-                        </div>
-                        <div>
-                            <strong>Status:</strong>
-                            <span class="status-btn">Ready to Launch Assessment</span>
-                        </div>
-                    </div>
-                </div>
+                }
+                
 
                 <div id="personnel" class="tab-content">
                     <!-- Top Filters -->
@@ -2313,6 +2640,154 @@
     })();
 </script>
 <script>
+
+    function initICPLocationAutocomplete() {
+        debugger;
+        var $input = $(`#ICPLocation`);
+        var $suggestionList = $(`#suggestionsICPLocation`);
+
+        if ($input.length === 0 || $suggestionList.length === 0) return;
+
+        $input.on('input', function () {
+            var query = $(this).val().trim();
+
+            if (query.length > 2) {
+                $.getJSON('/Incidents/Suggest', { text: query }, function (data) {
+                    $suggestionList.empty().show();
+
+                    $.each(data, function (i, item) {
+                        // Escape single quotes in text
+                        var safeText = item.text.replace(/'/g, "\\'");
+                        var $li = $(`<li>${safeText}</li>`);
+                        $li.on('click', function () {
+                            selectICPLocation(item.text, item.magicKey);
+                        });
+                        $suggestionList.append($li);
+                    });
+                });
+            }
+            else {
+                $suggestionList.hide();
+                $(`#map`).hide();
+                $(`#hdnLat`).val(0);
+                $(`#hdnLon`).val(0);
+            }
+        });
+    }
+
+    function selectICPLocation(address, magicKey) {
+        $(`#map`).show();
+        showLoader($(`#map`));
+
+        var $input = $(`#ICPLocation`);
+        var $suggestionList = $(`#suggestionsICPLocation`);
+
+        $input.val(address);
+        $suggestionList.empty().hide();
+
+        $(`#hdnLat`).val(0);
+        $(`#hdnLon`).val(0);
+
+
+        $.getJSON('/Incidents/Resolve', { magicKey: magicKey }, function (data) {
+            if (!data || !data.lat || !data.lon) {
+                console.error("No coordinates found.");
+                hideLoader($(`#map`));
+                return;
+            }
+
+            $(`#hdnLat`).val(data.lat);
+            $(`#hdnLon`).val(data.lon);
+
+            require([
+                "esri/Map",
+                "esri/views/MapView",
+                "esri/Graphic",
+                "esri/layers/GraphicsLayer"
+            ], function (Map, MapView, Graphic, GraphicsLayer) {
+                hideLoader($(`#map`));
+                console.log("ArcGIS map loaded ✔");
+
+                const map = new Map({
+                    basemap: "streets-navigation-vector"
+                });
+
+                const view = new MapView({
+                    container: `map`,
+                    map: map,
+                    center: [data.lon, data.lat],
+                    zoom: 15
+                });
+
+                const graphicsLayer = new GraphicsLayer();
+                map.add(graphicsLayer);
+
+                // ✅ Single marker
+                const point = {
+                    type: "point",
+                    longitude: data.lon,
+                    latitude: data.lat
+                };
+
+                const markerSymbol = {
+                    type: "simple-marker",
+                    style: "circle",
+                    color: "red",
+                    outline: { color: "white", width: 2 },
+                    size: "18px"
+                };
+
+                const popupTemplate = {
+                    title: "Selected Location",
+                    content: `
+                                <b>Address:</b> ${data.text}<br>
+                                <b>Latitude:</b> ${data.lat}<br>
+                                <b>Longitude:</b> ${data.lon}
+                            `
+                };
+
+                const pointGraphic = new Graphic({
+                    geometry: point,
+                    symbol: markerSymbol,
+                    popupTemplate: popupTemplate
+                });
+
+                graphicsLayer.add(pointGraphic);
+
+                // ✅ Center and zoom to marker
+                view.when(() => {
+                    view.goTo(pointGraphic);
+                });
+
+                // ✅ Show popup only on marker click
+                view.on("click", function (event) {
+                    view.hitTest(event).then(function (response) {
+                        const result = response.results[0];
+                        if (result && result.graphic === pointGraphic) {
+                            view.popup.open({
+                                features: [pointGraphic],
+                                location: point
+                            });
+                        }
+                    });
+                });
+            });
+        }).fail(function (xhr) {
+            console.error("Error fetching coordinates:", xhr.responseText);
+            hideLoader($(`#map`));
+            $(`#map`).hide();
+            $(`#hdnLat`).val(0);
+            $(`#hdnLon`).val(0);
+        });
+    }
+    $("#IsOtherEventID").change(function () {
+        if ($("#IsOtherEventID").is(":checked")) {
+            $(".OtherEventDetail").show();
+        } else {
+            $(".OtherEventDetail").hide();
+            $("#OtherEventDetail").val(""); // optional: clear value
+        }
+    });
     async function EditRepairDetails(id, mainstepId) {
         //alert(id+ "-"+ mainstepId)
         // try {
@@ -2337,7 +2812,137 @@
         // } finally {
         //     hideLoader($("#div_assestment_details"));
         // }
+
     }
+
+    async function SaveIncidentValidation() {
+        try {
+            debugger;
+            let form = [];
+            let formData = new FormData();
+            let obj = $("#incident_validation_form")[0];
+
+            // Serialize other fields
+            let params = $(obj).serializeArray();
+            var ValidationLocationData = [];
+            var Regulatory = [];
+
+            @* $("#step-2 .right-panel").each(function () {
+
+                var loc = $(this).attr("data-add-loc");
+                var severityID = $(`#divaddloc_Severity_${loc}`).find('#severityLevelId').val();
+                var discoveryPerimeter = $(`#divaddloc_DiscoveryPerimeter_${loc}`).find("#RadiusId").val();
+                var icpLocation = $(`#divaddloc_ICP_${loc}`).find(`#ICPLocation_${loc}`).val();
+                var source = $(`#divaddloc_Source_${loc}`).find("#Source").val();
+                var lat = $(`#hdnLat_${loc}`).val();
+                var lon = $(`#hdnLon_${loc}`).val();
+
+                // push object
+                ValidationLocationData.push({
+                    LocationId: loc,
+                    SeverityID: severityID,
+                    DiscoveryPerimeter: discoveryPerimeter,
+                    ICPLocation: icpLocation,
+                    Source: source,
+                    Lat: lat,
+                    Lon: lon
+                });
+            }); *@
+
+                formData.append("Id", $("#hdnIncidentID").val());
+            $.each(params, function (i, val) {
+                if (val.name === "IVValidation.severityLevelId") {
+                    formData.append("ConfirmedSeverityLevelId", val.value);
+                    form.push({ name: val.name, value: val.value });
+                }
+                else if (val.name === "IVValidation.RadiusId") {
+                    formData.append("DiscoveryPerimeterId", val.value);
+                    form.push({ name: val.name, value: val.value });
+                }
+                else if (val.name === "IVValidation.ValidationNotes") {
+                    formData.append("ValidationNotes", val.value);
+                    form.push({ name: val.name, value: val.value });
+                }
+                else if (val.name === "IVValidation.IncidentLocation") {
+                    formData.append("IncidentLocation", val.value);
+                    form.push({ name: val.name, value: val.value });
+                }
+                else if (val.name === "IVValidation.Source") {
+                    formData.append("Source", val.value);
+                    form.push({ name: val.name, value: val.value });
+                }
+                else if (val.name.startsWith("IVValidation.assignedRole.")) {
+                    const roleName = val.name.replace("IVValidation.assignedRole.", "");
+
+                    formData.append("assignedRole." + roleName, val.value);
+                    form.push({ name: val.name, value: val.value });
+                }
+                else if (val.name.startsWith("IVValidation.validationGates.")) {
+                    const fieldName = val.name.replace("IVValidation.validationGates.", "");
+
+                    // Convert value to true/false if it's 0 or 1
+                    let fieldValue = val.value;
+                    if (fieldValue === "1" || fieldValue === 1) fieldValue = true;
+                    else if (fieldValue === "0" || fieldValue === 0) fieldValue = false;
+
+                    if (val.name === "IVValidation.validationGates.Regulatory") {
+                        Regulatory.push(val.value);
+                        form.push({ name: val.name, value: val.value });
+                    }
+                    else {
+                        formData.append("validationGates." + fieldName, fieldValue);
+                        form.push({ name: "validationGates." + fieldName, value: fieldValue });
+                    }
+                }
+            });
+            const textarea = document.getElementById('addNote');
+            const text = textarea.value.trim();
+            formData.append("ValidationNotes", text);
+
+            if (Regulatory.length > 0) {
+                formData.append("validationGates.Regulatory", Regulatory.join(","));
+            }
+            formData.append("Id", $("#hdn_Id").val());
+
+            if (ValidationLocationData.length > 0) {
+                formData.append("listValidationLocationVM", JSON.stringify(ValidationLocationData));
+            }
+
+
+            showLoader($(".main-content"));
+
+            //console.log(formData);
+            console.log(form);
+
+            // Send request
+            let response = await fetch("/Validation/SaveIncidentValidation", {
+                method: "POST",
+                body: formData
+            });
+
+            let result = await response.json();
+
+            if (result.success) {
+                SwalSuccessAlert(result.data);
+
+                setTimeout(function () {
+                    window.location = '/Incidents';
+                }, 1000);
+
+            } else {
+                SwalErrorAlert(result.message || "Failed to Save Incident Validation.");
+            }
+        } catch (error) {
+            SwalErrorAlert("Error while Save Incident Validation!");
+            console.error(error);
+        } finally {
+            hideLoader($(".main-content"));
+        }
+    }
+
+    $("#saveValidationBtn").on("click", function () {
+        SaveIncidentValidation();
+    });
 </script>
 
 <script src="~/js/custom/loader/loader.js"></script>

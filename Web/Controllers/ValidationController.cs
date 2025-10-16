@@ -168,6 +168,40 @@ namespace Web.Controllers
             try
             {
 
+                var validationLocations = !string.IsNullOrWhiteSpace(request.listValidationLocationVM) ? JsonConvert
+                    .DeserializeObject<List<IncidentValidationLocationViewModel>>(request.listValidationLocationVM) : new List<IncidentValidationLocationViewModel>();
+
+                IncidentValidationLocationViewModel incidentValidationLocationViewModel = new IncidentValidationLocationViewModel();
+
+                incidentValidationLocationViewModel.ICPLocation = request.IncidentLocation;
+                incidentValidationLocationViewModel.Source = request.Source;
+                incidentValidationLocationViewModel.DiscoveryPerimeter = request.DiscoveryPerimeterId;
+                incidentValidationLocationViewModel.SeverityID = request.ConfirmedSeverityLevelId;
+                //incidentValidationLocationViewModel.SeverityID = request.ValidationNotes;
+
+                request.listSubmitValidationLocationVM.Add(incidentValidationLocationViewModel);
+                var resultId = await _iIncidentValidationService.SaveIncidentValidation(request);
+
+                var successMsg = $"Incident validation saved successfully!";
+
+                return Ok(new { success = true, data = successMsg });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    new { success = false, message = "An unexpected error occurred." });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveIncidentValidation1([FromForm] IncidentSubmitViewModel request)
+        {
+            if (request == null)
+                return BadRequest(new { success = false, message = "Invalid request data." });
+
+            try
+            {
+
                 var policies = request.listPolicyVM != null ? JsonConvert
                     .DeserializeObject<List<IncidentSubmitPolicyViewModel>>(request.listPolicyVM) : new List<IncidentSubmitPolicyViewModel>();
 

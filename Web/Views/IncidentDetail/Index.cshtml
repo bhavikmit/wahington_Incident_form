@@ -976,56 +976,10 @@
                         <div class="col-md-8">
                             <div class="LeftSection">
 
-                                <div class="card mb-4">
-                                    <div class="card-body p-0">
-                                        <div class="d-flex justify-content-between align-items-center mb-0 p-3">
-                                            <h6 class="fw-bold mb-0">Restoration Checklist</h6>
-                                            <button class="btn btn-add"><i class="fa-solid fa-plus me-2"></i>Add Task</button>
-                                        </div>
-                                        <div class="table-responsive table-rounded custom-scroll">
-                                            <table class="table align-middle text-left">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th>Task</th>
-                                                        <th>Responsible Party</th>
-                                                        <th>Status</th>
-                                                        <th>Started</th>
-                                                        <th>Completed</th>
-                                                        <th>Evidence</th>
-
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>Pressure test completed for Segment A</td>
-                                                        <td>Engineering</td>
-                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
-                                                        <td>14:00</td>
-                                                        <td>14:30</td>
-                                                        <td><i class="fa fa-file"></i> <span>pressure_test_A.pdf</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Pressure test completed for Segment A</td>
-                                                        <td>Engineering</td>
-                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
-                                                        <td>14:00</td>
-                                                        <td>14:30</td>
-                                                        <td><i class="fa fa-file"></i> <span>pressure_test_A.pdf</span></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Pressure test completed for Segment A</td>
-                                                        <td>Engineering</td>
-                                                        <td><span class="badge badge-status badge-complete">Complete</span></td>
-                                                        <td>14:00</td>
-                                                        <td>14:30</td>
-                                                        <td><i class="fa fa-file"></i> <span>pressure_test_A.pdf</span></td>
-                                                    </tr>
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+                                <div id="div_restoration_checklist">
+                                    @await Html.PartialAsync("_RestorationChecklistPartial", Model.IncidentViewTaskViewModel)
                                 </div>
+
 
                                 <div class="row g-3  mb-3 bottomCard">
 
@@ -2141,6 +2095,76 @@
         //     hideLoader($("#div_assestment_details"));
         // }
     }
+</script>
+@{
+    ViewBag.CurrentIncidentId = Model.Id;
+    ViewBag.CurrentIncidentValidationId = Model.incidentValidationsDetailsViewModel?.IncidentValidationId ?? 0;
+    // ensure ViewBag.Roles and ViewBag.Statuses set in Index action
+}
+@Html.Partial("_AddTaskPartial", new ViewModels.Incident.IncidentViewTaskListViewModel())
+
+<script>
+    $(function(){
+      // open modal when Add Task clicked
+      $(".btn-add").on("click", function(){
+          // show modal - using bootstrap 5
+          var $modal = $("#addTaskModal");
+          $modal.show(); // simpler; if using Bootstrap modal: $('#addTaskModal').modal('show');
+          $("body").append('<div class="modal-backdrop fade show"></div>');
+      });
+
+      // close modal
+      $("#btnCancelAddTask, #btnCloseAddTask").on("click", function(){
+          $("#addTaskModal").hide();
+          $(".modal-backdrop").remove();
+      });
+
+      // submit via AJAX
+      $("#formAddTask").on("submit", function(e){
+          e.preventDefault();
+          var $form = $(this);
+          var formData = $form.serialize();
+
+          $("#btnSaveAddTask").prop("disabled", true);
+
+          $.ajax({
+              url: '@Url.Action("SaveTask", "IncidentDetail")',
+              method: 'POST',
+              data: formData,
+              success: function(res){
+                  $("#btnSaveAddTask").prop("disabled", false);
+                  if(res && res.success){
+                      var t = res.data; // should be IncidentViewTaskListViewModel
+
+                      // build a row HTML - make sure markup matches your table
+                      var row = '<tr>'
+                          + '<td>' + (t.task || '') + '</td>'
+                          + '<td>' + (t.fieldValue || '—') + '</td>'
+                          + '<td><span class="badge badge-status ' + ((t.status || '').toLowerCase() === "complete" ? "badge-complete" : "badge-pending") + '">' + (t.status || '') + '</span></td>'
+                          + '<td>' + (t.started || '—') + '</td>'
+                          + '<td>' + (t.completed || '—') + '</td>'
+                          + '<td>' + (t.attachment ? ('<i class="fa fa-file"></i> ' + t.attachment) : '—') + '</td>'
+                          + '</tr>';
+
+                      // append to table body
+                      $(".table tbody").find("tr.no-tasks").remove(); // if you used placeholder row class
+                      $(".table tbody").append(row);
+
+                      // close and reset form
+                      $("#formAddTask")[0].reset();
+                      $("#addTaskModal").hide();
+                      $(".modal-backdrop").remove();
+                  } else {
+                      alert(res?.message || "Save failed");
+                  }
+              },
+              error: function(xhr){
+                  $("#btnSaveAddTask").prop("disabled", false);
+                  alert("Error saving task");
+              }
+          });
+      });
+    });
 </script>
 <script src="~/js/custom/loader/loader.js"></script>
 <script src="~/js/views/incident/incident-detail.js"></script>

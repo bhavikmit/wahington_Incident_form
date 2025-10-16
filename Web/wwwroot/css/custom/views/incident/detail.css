@@ -1814,3 +1814,11 @@
     border-bottom-right-radius: 0 !important;
     padding:16px;
 }
+.btnAddAssessment{
+    background:#f54e00 !important;
+    border:1px solid #f54e00 !important;
+}
+.btnAddAssessment:hover {
+    background:#ffffff !important;
+            
+}

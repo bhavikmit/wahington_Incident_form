@@ -571,3 +571,6 @@
 #step-1 .section-body .info-title {
     min-width: 135px;
 }
+.assessmentSec .section-body{
+    padding:0;
+}

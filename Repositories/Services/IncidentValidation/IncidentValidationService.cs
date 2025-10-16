@@ -429,6 +429,124 @@ namespace Repositories.Common
                 //var insertedValidationId = incidentValidation.Id;
                 #endregion
 
+                
+                  // 4. Add Incident Validation Locations
+                if (request.listSubmitValidationLocationVM.Any())
+                {
+                    var validationLocation = request.listSubmitValidationLocationVM.Select(item =>
+                    {
+                        return new IncidentValidationLocation
+                        {
+                            IncidentId = request.Id,
+                            IncidentValidationId = incidentValidation.Id,
+                            ICPLocation = item.ICPLocation ?? string.Empty,
+                            DiscoveryPerimeterId = item.DiscoveryPerimeter ?? 0,
+                            Lat = item.Lat,
+                            Lng = item.Lon,
+                            Source = item.Source,
+                            ConfirmedSeverityLevelId = item.SeverityID ?? 0,
+                            AdditionalLocationId = item.LocationId
+                        };
+                    }).ToList();
+                    await _db.IncidentValidationLocations.AddRangeAsync(validationLocation);
+                }
+
+                // 6. Save main IncidentValidationAssignedRole
+                var IncidentValidationAssignedRole = new IncidentValidationAssignedRole
+                {
+                    IncidentValidationId = incidentValidation.Id,
+                    IncidentId = request.Id,
+                    IncidentCommander = request.assignedRole.IncidentCommanderId,
+                    FieldEnvRep = request.assignedRole.FieldEnvRepId,
+                    GEC_Coordinator = request.assignedRole.GECCoordinatorId,
+                    EngineeringLead = request.assignedRole.EngineeringLeadId,
+                    ActiveStatus = ActiveStatus.Active
+                };
+                await _db.IncidentValidationAssignedRoles.AddAsync(IncidentValidationAssignedRole);
+
+                // 7. Save main IncidentValidationAssignedRole
+                var IncidentValidationGate = new IncidentValidationGate
+                {
+                    IncidentValidationId = incidentValidation.Id,
+                    IncidentId = request.Id,
+                    ContainmentAcknowledgement = request.validationGates.ContainmentAcknowledgement,
+                    Exception = request.validationGates.Exception,
+                    IndependentInspection = request.validationGates.IndependentInspection,
+                    Regulatory = request.validationGates.Regulatory,
+                    IsOtherEvent = request.validationGates.IsOtherEvent,
+                    OtherEventDetail = request.validationGates.OtherEventDetail,
+                    ActiveStatus = ActiveStatus.Active
+                };
+                await _db.IncidentValidationGates.AddAsync(IncidentValidationGate);
+
+                #region Update Incident record
+                // 5. Update Incident record
+                var incident = await _db.Incidents.FirstOrDefaultAsync(p => p.Id == request.Id);
+                if (incident != null)
+                {
+                    var userId = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    var userIdParsed = !string.IsNullOrEmpty(userId) ? long.Parse(userId) : 0;
+
+                    // ⚠️ Replace with real logged-in user
+                    var statusLegend = await _db.StatusLegends.FirstOrDefaultAsync(x => x.Name == StatusLegendEnum.Validated.ToString());
+
+                    incident.StatusLegendId = statusLegend?.Id ?? (int)StatusLegendEnum.Validated;
+                    //incident.SeverityLevelId = (int)SeverityEnum.Low;
+                    incident.UpdatedOn = DateTime.Now;
+                    incident.UpdatedBy = userIdParsed;
+                }
+
+                #endregion
+                var NuserId = _httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var NuserIdParsed = !string.IsNullOrEmpty(NuserId) ? long.Parse(NuserId) : 0;
+                var userName = _httpContextAccessor?.HttpContext?.User.Identity?.Name ?? "Unknown";
+
+                var note = new IncidentValidationNotes
+                {
+                    IncidentId = incident.Id,
+                    IncidentValidationId = incidentValidation.Id,
+                    Notes = request.ValidationNotes,
+                };
+
+                await _db.IncidentValidationNotes.AddAsync(note);
+                #region  Save everything in one go
+                // 6. Save everything in one go
+                await _db.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+                return incidentValidation.Id;
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Error SaveIncidentValidation.");
+                return 0;
+            }
+        }
+        public async Task<long> SaveIncidentValidation1(IncidentSubmitViewModel request)
+        {
+            await using var transaction = await _db.Database.BeginTransactionAsync();
+            try
+            {
+                #region IncidentValidation
+                // 1. Save main IncidentValidation
+                var incidentValidation = new IncidentValidation
+                {
+                    IncidentId = request.Id,
+                    IsMarkFalseAlarm = false,
+                    ValidationNotes = request.ValidationNotes ?? "test",
+                    AssignResponseTeams = "1",//request.AssignResponseTeams,
+                    ConfirmedSeverityLevelId = request.ConfirmedSeverityLevelId,
+                    DiscoveryPerimeterId = request.DiscoveryPerimeterId,
+                };
+
+                await _db.IncidentValidations.AddAsync(incidentValidation);
+                await _db.SaveChangesAsync();
+
+                //var insertedValidationId = incidentValidation.Id;
+                #endregion
+
                 #region Policies
                 // 2. Policies
                 var policies = request.listSubmitPolicyVM.Select(item => new IncidentValidationPolicy

@@ -107,6 +107,7 @@ namespace ViewModels.Incident
         public IncidentValidationRepairViewModel validationRepair { get; set; } = new();
 
         public string IncidentLocation { get; set; } = default!;
+        public string Source { get; set; } = default!;
     }
 
     public class IncidentResponseTeamViewModel
@@ -148,6 +149,9 @@ namespace ViewModels.Incident
         public string listCloseoutTaskDataVM { get; set; } = default!;
         public bool IsMarkFalseAlarm { get; set; } = false;
         public string incidentValidationAssessment { get; set; } = default!;
+        public string Source { get; set; } = default!;
+        public string IncidentLocation { get; set; } = default!;
+        
 
         //public string listCommunicationVM { get; set; } = default!;
         public List<IncidentSubmitPolicyViewModel> listSubmitPolicyVM { get; set; } = new();

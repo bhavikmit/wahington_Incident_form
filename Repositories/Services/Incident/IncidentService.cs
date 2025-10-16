@@ -890,6 +890,20 @@ namespace Repositories.Common
                        Text = it.Name
                    })
                    .ToListAsync();
+
+                var severityLevelsTask = await _db.SeverityLevels
+                                   .Where(it => !it.IsDeleted)
+                                   .OrderBy(it => it.Name == "High" ? 1 :
+                                                  it.Name == "Moderate" ? 2 :
+                                                  it.Name == "Low" ? 3 : 4)
+                                   .Select(it => new SelectListItem
+                                   {
+                                       Value = it.Id.ToString(),
+                                       Text = !string.IsNullOrWhiteSpace(it.Description)
+                                              ? it.Name + " (" + it.Description + ")"
+                                              : it.Name
+                                   })
+                                   .ToListAsync();
                 #endregion
 
                 #region IncidentValidationNotes
@@ -1068,7 +1082,8 @@ namespace Repositories.Common
                     UserList = UserLisTTask,
                     CompanyList = companyList,
                     RoleList = rolesList,
-                    ShiftsList = shiftsList
+                    ShiftsList = shiftsList,
+                    severityLevels = severityLevelsTask
                     #endregion
                 };
 

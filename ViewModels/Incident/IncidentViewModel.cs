@@ -77,6 +77,8 @@ namespace ViewModels.Incident
         public List<SelectListItem> CompanyList { get; set; } = new();
         public List<SelectListItem> RoleList { get; set; } = new();
         public List<SelectListItem> ShiftsList { get; set; } = new();
+
+        public IncidentValidationViewModel IVValidation { get; set; } = new();
     }
 
     public class IncidentCellerInformationViewModel

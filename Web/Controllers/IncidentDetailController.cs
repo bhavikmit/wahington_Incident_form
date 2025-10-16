@@ -200,10 +200,12 @@ namespace Web.Controllers
                     ? JsonConvert.DeserializeObject<IncidentValidationAssessment>(request.incidentValidationAssessment)
                     : new IncidentValidationAssessment();
 
-                // TODO: Call your save service when ready
-                // var resultId = await _iIncidentValidationService.SaveIncidentValidation(request);
+                assessment.IncidentId = request.IncidentId;
 
-                var successMsg = "Incident validation saved successfully!";
+                // TODO: Call your save service when ready
+                 var resultId = await _iIncidentService.SubmitAssestment(assessment);
+
+                var successMsg = "Assestment saved successfully!";
                 return Ok(new { success = true, data = successMsg });
             }
             catch (Exception ex)

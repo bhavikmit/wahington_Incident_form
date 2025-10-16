@@ -135,6 +135,12 @@
         });
     });
 
+    $(document).off("click", "#btnAddAssessment");
+    $(document).on("click", "#btnAddAssessment", async function (e) {
+        e.preventDefault();
+        await SubmitAssestment();
+    });
+
 });
 
 async function GetAssessmentDetails(statusID, ownerId, step) {
@@ -275,10 +281,18 @@ async function AddAssessmentDetails() {
 
 async function SubmitAssestment() {
     try {
-        showLoader($("#div_assestment_details"));
+        showLoader($("#addIncidentAssestmentModal"))
 
         const formData = new FormData();
         const Assessment = {};
+
+        function getAssignAndStatus(roleSelector, divId) {
+            const section = $("#div_AddIncidentAssessmentForm").find(`${roleSelector} > #${divId}`);
+            return {
+                assignId: section.find("#div_Assignee #assignId").val(),
+                statusId: section.find("#div_Status #status").val()
+            };
+        }
 
         const mappings = {
             IC_MCR: [".IncidentCommander", "div_CreateMCR"],
@@ -309,7 +323,7 @@ async function SubmitAssestment() {
 
         if (result.success) {
             SwalSuccessAlert(result.data);
-
+            $("#addIncidentAssestmentModal").modal("hide");
             const statusID = $("#ddlStatus").val() || 0;
             const ownerId = $("#ddlOwner").val() || 0;
             const step = $("#global_search_value").val() || "";
@@ -322,6 +336,6 @@ async function SubmitAssestment() {
         console.error("Error submitting assessment:", error);
         SwalErrorAlert("An unexpected error occurred while submitting assessment.");
     } finally {
-        hideLoader($("#div_assestment_details"));
+        hideLoader($("#addIncidentAssestmentModal"))
     }
 }

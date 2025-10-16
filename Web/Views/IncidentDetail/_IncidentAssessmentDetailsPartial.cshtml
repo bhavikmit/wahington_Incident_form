@@ -40,8 +40,24 @@
                     {
                         <tr>
                             <td>@item.Substep</td>
-                            <td><span class="status-badge done">@item.Status</span></td>
-                            <td>@item.Assignee</td>
+                            @if (!string.IsNullOrWhiteSpace(item.Status))
+                            {
+                                <td><span class="status-badge done">@item.Status</span></td>
+                            }
+                            else
+                            {
+                                <td>-</td>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(item.Assignee))
+                            {
+                                <td>@item.Assignee</td>
+                            }
+                            else
+                            {
+                                <td>-</td>
+                            }
+                           
                             <td>@item.ClockIn</td>
                             <td>@item.ClockOut</td>
                             @if (item.ImageCount > 0)

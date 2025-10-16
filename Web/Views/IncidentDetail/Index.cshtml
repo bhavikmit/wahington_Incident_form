@@ -313,10 +313,10 @@
                                 </div>
                             </div>
                         </div>
-                   
-                       
 
-                        
+
+
+
                     </div>
 
                     @*   <!-----------------location and incident information--------------------------->
@@ -838,8 +838,11 @@
                             <div class="section-card">
 
                                 <h6 class="mb-0 fw-semibold section-title">All Steps (Assessment Checklist)</h6>
-                                <button class="btn btn-add" onclick="AddAssessmentDetails();"><i class="fa-solid fa-plus me-2"></i>Add Assestment</button>
 
+                                @if (Model.IncidentAssessmentDetails?.incidentCommanderDetailViewslist.Count == 0)
+                                {
+                                    <button class="btn btn-add" onclick="AddAssessmentDetails();"><i class="fa-solid fa-plus me-2"></i>Add Assestment</button>
+                                }
                                 <div class="card-body">
                                     <!-- Filters -->
                                     <div class="d-flex align-items-center w-100 p-3">

@@ -2080,13 +2080,12 @@ namespace Repositories.Common
             await using var transaction = await _db.Database.BeginTransactionAsync();
             try
             {
-
-
                 #region Incident Validation Assestment
                 if (request != null)
                 {
-                    request.IncidentId = request.Id;
-                    //request.IncidentValidationId = incidentValidation.Id;
+                    var incidentValidation = await _db.IncidentValidations.Where(p => p.IncidentId == request.IncidentId && !p.IsDeleted).FirstOrDefaultAsync();
+
+                    request.IncidentValidationId = incidentValidation?.Id;
                     await _db.IncidentValidationAssessments.AddAsync(request);
                 }
                 #endregion
@@ -2102,7 +2101,7 @@ namespace Repositories.Common
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "Error SaveIncidentValidation.");
+                _logger.LogError(ex, "Error SubmitAssestment.");
                 return 0;
             }
         }

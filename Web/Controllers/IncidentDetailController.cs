@@ -30,7 +30,7 @@ namespace Web.Controllers
 
             var incidentValidationDtl = await _iIIncidentValidationService.GetIncidentValidationDetail(id);
             model.IVDetails = incidentValidationDtl;
-
+            model.Id = id;
             model.ListIncidentLocationMapViewModel = await _iIncidentService.GetIncidentMapDetailsbyId(id);
             model.listIncidentMapChats = await _iIncidentService.GetIncidentMapChatChat(id);
             model.IncidentAssessmentDetails = await _iIncidentService.GetAssessmentDetails(request);
@@ -41,6 +41,15 @@ namespace Web.Controllers
             ViewBag.Companies = new SelectList(companies, "CompanyId", "CompanyName");
             var roles = await _iIncidentService.GetAllIncidentRoles();
             ViewBag.Roles = new SelectList(roles, "IncidentRoleId", "IncidentRoleName");
+
+            var userdrop = await _iIncidentService.GetAllUsersDrop();
+            ViewBag.UsersDrop = userdrop;
+            var companiesdrop = await _iIncidentService.GetAllCompaniesDrop();
+            ViewBag.CompaniesDrop = companiesdrop;
+            var rolesdrop = await _iIncidentService.GetAllIncidentRolesDrop();
+            ViewBag.RolesDrop = rolesdrop;
+            var shifts = await _iIncidentService.GetAllShiftsDrop();
+            ViewBag.ShiftsDrop = shifts;
             #endregion
 
             return View(model);
@@ -160,14 +169,13 @@ namespace Web.Controllers
         {
             try
             {
-                var Id = await _iIncidentService.UpdateTimeIn(id, timeIn);
+                var resultModel = await _iIncidentService.UpdateTimeIn(id, timeIn);
 
-                if (Id == 0)
+                if (resultModel == null)
                     return StatusCode(StatusCodes.Status500InternalServerError,
                         new { success = false, message = "Failed to Update TimeIn." });
-
-                var successMsg = "Update TimeIn successfully!";
-                return Ok(new { success = true, data = successMsg });
+                
+                return Ok(new { success = true, data = resultModel });
             }
             catch (Exception)
             {

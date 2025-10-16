@@ -15,8 +15,8 @@ namespace Web.Controllers
 {
     public class ValidationController : Controller
     {
-        private readonly IncidentValidationService _iIncidentValidationService;
-        public ValidationController(IncidentValidationService iIncidentValidationService)
+        private readonly IIncidentValidationService _iIncidentValidationService;
+        public ValidationController(IIncidentValidationService iIncidentValidationService)
         {
             _iIncidentValidationService = iIncidentValidationService;
         }

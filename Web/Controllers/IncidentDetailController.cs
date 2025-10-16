@@ -10,12 +10,14 @@ namespace Web.Controllers
     public class IncidentDetailController : Controller
     {
         private readonly IIncidentService _iIncidentService;
+        private readonly IIncidentValidationService _iIIncidentValidationService;
 
         public object JsonRequestBehavior { get; private set; }
 
-        public IncidentDetailController(IIncidentService incidentService)
+        public IncidentDetailController(IIncidentService incidentService, IIncidentValidationService iIIncidentValidationService)
         {
             _iIncidentService = incidentService;
+            _iIIncidentValidationService = iIIncidentValidationService;
         }
         public async Task<IActionResult> Index(long id)
         {
@@ -25,6 +27,10 @@ namespace Web.Controllers
             };
 
             var model = await _iIncidentService.GetIncidentDetailsById(id);
+
+            var incidentValidationDtl = await _iIIncidentValidationService.GetIncidentValidationDetail(id);
+            model.IVDetails = incidentValidationDtl;
+
             model.ListIncidentLocationMapViewModel = await _iIncidentService.GetIncidentMapDetailsbyId(id);
             model.listIncidentMapChats = await _iIncidentService.GetIncidentMapChatChat(id);
             model.IncidentAssessmentDetails = await _iIncidentService.GetAssessmentDetails(request);

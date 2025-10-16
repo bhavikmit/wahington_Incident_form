@@ -213,3 +213,30 @@ async function ViewAssessmentDetails(id, mainstepId, substepId) {
         hideLoader($("#div_assestment_details"));
     }
 }
+async function OpenIncidentMap(id) {
+    try {
+        let payload = { id: id };
+
+        showLoader($(".main-content"));
+
+        const url = `/Incidents/GetIncidentMapDetailsbyId?id=${id}`;
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Accept": "text/html"
+            }
+        });
+
+        if (!response.ok) throw new Error("Failed to load incident map");
+
+        const content = await response.text();
+        $("#incidentMapContainer").empty().html(content); // 👈 replace with your target div
+        $("#MapIncidentModal").modal("show");
+
+    } catch (error) {
+        console.error("Error loading incident map:", error);
+    } finally {
+        hideLoader($(".main-content"));
+    }
+}

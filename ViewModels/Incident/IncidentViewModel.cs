@@ -46,6 +46,9 @@ namespace ViewModels.Incident
         public IncidentAssessmentDetailViewModel IncidentAssessmentDetails { get; set; } = new();
         public IncidentViewAssessmentAttachmentViewModel incidentViewAssessmentAttachmentView { get; set; } = new();
         public IncidentViewRestorationListViewModel IncidentViewRestorationViewModel { get; set; } = new();
+
+        public IncidentValidationDetailViewModel IVDetails { get; set; } = new();
+
         #region Personnel
         public long? CompanyId { get; set; }
         public long? IncidentRoleId { get; set; }

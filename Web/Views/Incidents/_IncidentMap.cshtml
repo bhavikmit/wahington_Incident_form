@@ -16,7 +16,7 @@
             </div>
             <div class="modal-body">
                 <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
-                    <div id="map" style="height:500px; width:100%;"></div>
+                    <div id="mapView" style="height:500px; width:100%;"></div>
                 </div>
             </div>
         </div>
@@ -47,7 +47,7 @@
         var firstObj = incidents[0];
 
         window.view = new MapView({
-            container: "map",
+            container: "mapView",
             map: map,
             center: [firstObj.lon, firstObj.lat],
             zoom: 6

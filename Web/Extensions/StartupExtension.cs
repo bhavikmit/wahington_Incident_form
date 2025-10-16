@@ -232,7 +232,7 @@ namespace Web.Extensions
             services.AddScoped<IIncidentNoteService, IncidentNoteService>();
             services.AddScoped<IIncidentHistoryService, IncidentHistoryService>();
             services.AddScoped<IIncidentDashboardService, IncidentDashboardService>();
-            services.AddScoped<IncidentValidationService, IncidentValidationService>();
+            services.AddScoped<IIncidentValidationService, IncidentValidationService>();
             services.AddScoped(typeof(IPolicyService<,,>), typeof(PolicyService<,,>));
             services.AddScoped<IArcGisGeocodingService, ArcGisGeocodingService>();
             services.AddHttpClient<ArcGisGeocodingService>();

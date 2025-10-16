@@ -59,11 +59,9 @@
             </div>
             <div class="tabBody">
                 <div id="dashboard" class="tab-content active">
-                    <div class="row g-4">
-
+                    <div class="row mb-4">
                         <!-- Chat & Handoffs -->
                         <div class="col-lg-3">
-                            <div class="row">
                                 <!-- Chat & Handoffs -->
                                 <div class="card shadow-sm border-0 h-100 rounded-4">
                                     <div class="card-header bg-white fw-semibold border-bottom">
@@ -83,8 +81,8 @@
 
                                     <!-- Input Area -->
                                     <div class="card-body chat-input-area">
-                                        <div class="row g-2">
-                                            <div class="col-3">
+                                    <div class="d-flex align-items-center gap-2">
+                                            <div class="SelectRole">
                                                 <select class="form-select" id="roleSelect">
                                                     <option value="IC" data-role-type="1">IC</option>
                                                     <option value="FER" data-role-type="2">FER</option>
@@ -92,10 +90,10 @@
                                                     <option value="EL" data-role-type="4">EL</option>
                                                 </select>
                                             </div>
-                                            <div class="col-7">
+                                            <div class="mesgsend">
                                                 <input type="text" id="messageInput" class="form-control" placeholder="Type a message..." />
                                             </div>
-                                            <div class="col-2 ">
+                                            <div class="sendBtn">
                                                 <button class="btn btn-send" id="sendBtn">
                                                     <i class="fa-solid fa-paper-plane"></i>
                                                 </button>
@@ -103,12 +101,10 @@
                                         </div>
                                     </div>
                                 </div>
-
-                            </div>
                         </div>
 
                         <!-- Map View -->
-                        <div class="col-lg-6">
+                        <div class="col-lg-9">
                             <div class="card shadow-sm border-0 h-100 rounded-4 text-center">
                                 <div class="card-header bg-white fw-semibold border-bottom text-left">
                                     <i class="fa-solid fa-location-dot me-2 text-warning"></i>Map View
@@ -119,42 +115,44 @@
                             </div>
                         </div>
 
-                        <!-- Timeline -->
-                        <div class="col-lg-3">
+                       
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- Timeline -->
                             <div class="card shadow-sm border-0 h-100 rounded-4">
-                                <div class="card-header bg-white fw-semibold border-bottom d-flex justify-content-between align-items-center">
-                                    <div><i class="fa-regular fa-clock me-2 text-warning"></i>Timeline</div>
-                                    <a class="text-decoration-none text-warning small fw-semibold"
-                                       data-bs-toggle="collapse" href="#timelineCollapse" role="button"
-                                       aria-expanded="true" aria-controls="timelineCollapse" id="collapseToggle">
-                                        <i class="fa-solid fa-angle-up me-1"></i>
-                                    </a>
-                                </div>
-                                <div class="collapse show" id="timelineCollapse">
-                                    <div class="card-body">
-                                        <div class="alert alert-warning py-1 px-2 small fw-semibold mb-3 border-0 rounded-3">
-                                            Auto-Log Active
-                                        </div>
-                                        <div class="timeline-item mb-2">
-                                            <span class="badge time-badge">10:15</span> Validation completed by IC
-                                        </div>
-                                        <div class="timeline-item mb-2">
-                                            <span class="badge time-badge">10:21</span> ICP established at Main Gate
-                                        </div>
-                                        <div class="timeline-item mb-2">
-                                            <span class="badge time-badge">10:35</span> FER verified containment setup
-                                        </div>
-                                        <div class="timeline-item mb-2">
-                                            <span class="badge time-badge">10:45</span> Vacuum Truck ETA logged (Vendor A)
-                                        </div>
-                                        <div class="timeline-item mb-0">
-                                            <span class="badge time-badge">10:50</span> Personnel check-in started
+                                    <div class="card-header bg-white fw-semibold border-bottom d-flex justify-content-between align-items-center">
+                                        <div><i class="fa-regular fa-clock me-2 text-warning"></i>Timeline</div>
+                                        <a class="text-decoration-none text-warning small fw-semibold"
+                                           data-bs-toggle="collapse" href="#timelineCollapse" role="button"
+                                           aria-expanded="true" aria-controls="timelineCollapse" id="collapseToggle">
+                                            <i class="fa-solid fa-angle-up me-1"></i>
+                                        </a>
+                                    </div>
+                                    <div class="collapse show" id="timelineCollapse">
+                                        <div class="card-body">
+                                            <div class="alert alert-warning py-1 px-2 small fw-semibold mb-3 border-0 rounded-3">
+                                                Auto-Log Active
+                                            </div>
+                                            <div class="timeline-item mb-2">
+                                                <span class="badge time-badge">10:15</span> Validation completed by IC
+                                            </div>
+                                            <div class="timeline-item mb-2">
+                                                <span class="badge time-badge">10:21</span> ICP established at Main Gate
+                                            </div>
+                                            <div class="timeline-item mb-2">
+                                                <span class="badge time-badge">10:35</span> FER verified containment setup
+                                            </div>
+                                            <div class="timeline-item mb-2">
+                                                <span class="badge time-badge">10:45</span> Vacuum Truck ETA logged (Vendor A)
+                                            </div>
+                                            <div class="timeline-item mb-0">
+                                                <span class="badge time-badge">10:50</span> Personnel check-in started
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                         </div>
-
                     </div>
                     @* <div class="bg-white rounded p-4 shadow-sm border border-gray-200 mb-4">
                         <div id="map" style="height:800px; width:100%;"></div>

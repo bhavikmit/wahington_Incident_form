@@ -479,7 +479,7 @@
     }
 
 .info-title {
-    font-weight: bold;
+    font-weight: 600;
     margin-top: 4px;
 }
 
@@ -1724,7 +1724,7 @@
 /* Input Section */
 #dashboard .chat-input-area {
     border-top: 1px solid #eee;
-    padding: 10px 0;
+    padding: 10px 12px;
 }
 
     #dashboard .chat-input-area select,
@@ -1749,8 +1749,8 @@
 
 /* Scrollable messages area */
 #dashboard .chat-body {
-    max-height: 400px;
-    height: 400px;
+    max-height: 520px;
+    height: 520px;
     overflow-y: auto;
     padding: 0;
 }
@@ -1807,3 +1807,10 @@
     color: #f54e00 !important;
 }
 
+
+#dashboard .card-header {
+    border-radius: 16px;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    padding:16px;
+}

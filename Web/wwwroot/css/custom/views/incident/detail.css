@@ -646,9 +646,7 @@
     margin-top: 10px;
 }
 /**************Supporting information************************/
-.supporting-information-sec {
-    margin: 16px 0;
-}
+
 /* Notes section */
 .note-title {
     display: flex;
@@ -1318,6 +1316,8 @@
     font-size: 1rem;
     color: #343a40;
     font-weight: 500;
+    display: inline;
+    margin-left: 0;
 }
 
 #repair .text-green,
@@ -1752,7 +1752,7 @@
     max-height: 520px;
     height: 520px;
     overflow-y: auto;
-    padding: 0;
+    padding: 16px;
 }
 
     /* Scrollbar styling */

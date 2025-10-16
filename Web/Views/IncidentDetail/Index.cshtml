@@ -16,9 +16,9 @@
 
 <style>
     .tab-item.disabled {
-    pointer-events: none;  /* disables clicking */
-    opacity: 0.5;          /* visually indicate disabled */
-    cursor: not-allowed;   /* show disabled cursor */
+        pointer-events: none; /* disables clicking */
+        opacity: 0.5; /* visually indicate disabled */
+        cursor: not-allowed; /* show disabled cursor */
     }
 </style>
 <div id="incidentDetailsModal" tabindex="-1" aria-hidden="true">
@@ -56,7 +56,7 @@
                     <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="closeout">
                         <i class="fa-regular fa-circle-check"></i> Closeout
                     </div>
-                    
+
                     @* <div class="tab-item" data-tab="worksteps">
                         <i class="fas fa-tasks"></i> Policies
                     </div>
@@ -733,7 +733,7 @@
                         </div>
                     </form>
                 }
-                else 
+                else
                 {
                     <div id="validation" class="tab-content">
                         <div class="phase-header">
@@ -889,7 +889,7 @@
                                         <div class="note" data-note-id="@n.Id">
                                             <span class="note-badge">@(!string.IsNullOrEmpty(n.CreatedByName) ? n.CreatedByName.Split(' ').FirstOrDefault()?.ToUpper() : "IC")</span>
                                             <span class="note-text">@n.Notes</span>
-                                            @* <div class="note-meta">@n.CreatedOn</div> *@
+                                            <div class="note-meta">@n.CreatedOn</div>
                                         </div>
                                     }
                                 }
@@ -914,7 +914,7 @@
                         </div>
                     </div>
                 }
-                
+
 
                 <div id="personnel" class="tab-content">
                     <!-- Top Filters -->
@@ -925,7 +925,7 @@
                                 <input type="date" id="reportDate" class="form-control dateFilter" value="@DateTime.Now.ToString("yyyy-MM-dd")">
                             </div>
                             <div class="form-check ms-2">
-                                <input class="form-check-input roleFilter" type="checkbox" id="onsite">
+                                <input class="form-check-input" type="checkbox" id="onsite">
                                 <label class="form-check-label">Show currently onsite only</label>
                             </div>
                             @Html.DropDownListFor(model => model.IncidentRoleId,
@@ -938,7 +938,7 @@
                                                         new { @class = "form-select w-auto roleFilter", id = "CompanyFilter" })
                         </div>
                         <div class="d-flex gap-2 mt-3 mt-md-0">
-                            <button class="btn btnAdd text-white btn-common" id="AddPerson"><i class="fa-solid fa-user-plus me-2"></i>Add Person</button>
+                            <button class="btn btnAdd text-white btn-common" id="addPerson"><i class="fa-solid fa-user-plus me-2"></i>Add Person</button>
                             <button class="btn btn-outline-secondary btn-common"><i class="fa-solid fa-download me-2"></i>Export (CSV)</button>
                             <button class="btn btn-outline-secondary btn-common"><i class="fa-solid fa-print me-2"></i>Print Roster</button>
                         </div>
@@ -979,7 +979,8 @@
                                 <div class="card-body p-0 onSiteTable">
                                     <div class="d-flex justify-content-between align-items-center mb-0 p-3">
                                         <h6 class="fw-bold mb-0">Currently Onsite (Live)</h6>
-                                        <span class="small text-muted">Auto-refresh: 60s</span>
+                                        @* <span class="small text-muted">Auto-refresh: 60s</span> *@
+                                        <button id="savePerson" class="btn btn-success mb-2" style="display:none;">Save Person</button>
                                     </div>
                                     <div class="table-responsive table-rounded custom-scroll">
                                         <table class="table align-middle text-left">
@@ -998,7 +999,7 @@
                                             <tbody id="personnelTableBody">
                                                 @if (Model.incidentValidationPersonnelsViewModel != null && Model.incidentValidationPersonnelsViewModel.Count > 0)
                                                 {
-                                                    @foreach (var personnels in Model.incidentValidationPersonnelsViewModel)
+                                                    foreach (var personnels in Model.incidentValidationPersonnelsViewModel)
                                                     {
                                                         var hoursSoFar = personnels.TimeIn.HasValue
                                                         ? (DateTime.Now - personnels.TimeIn.Value).TotalHours
@@ -1010,9 +1011,14 @@
                                                             <td>@personnels.Company</td>
                                                             <td>@personnels.Type</td>
                                                             <td>@personnels.Shift</td>
-                                                            <td class="timeIn" data-id="@personnels.IncidentValidationPersonnelsId">@(personnels.TimeIn?.ToString("HH.mm") ?? "00.00")</td>
+                                                            <td class="timeIn" data-id="@personnels.IncidentValidationPersonnelsId">
+                                                                @(personnels.TimeIn?.ToString("HH.mm") ?? "00.00")
+                                                            </td>
                                                             <td>@hoursSoFar.ToString("0.00")</td>
-                                                            <td class="supervisor" data-UserId="@personnels.UserId" data-CompanyId="@personnels.CompanyId" data-id="@personnels.IncidentValidationPersonnelsId">
+                                                            <td class="supervisor"
+                                                                data-UserId="@personnels.UserId"
+                                                                data-CompanyId="@personnels.CompanyId"
+                                                                data-id="@personnels.IncidentValidationPersonnelsId">
                                                                 @(string.IsNullOrEmpty(personnels.Supervisor) ? "Select" : personnels.Supervisor)
                                                             </td>
                                                         </tr>
@@ -1020,7 +1026,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <tr><td colspan="8" class="text-center">No Data found.</td></tr>
+                                                    <tr class="no-records"><td colspan="8" class="text-center">No Data found.</td></tr>
                                                 }
                                             </tbody>
                                         </table>
@@ -1928,15 +1934,10 @@
         });
     });
 
-    $('#AddPerson').on('click', function () {
-        $('#AddPersonForm')[0].reset();
-        $('#AddPersonModal').modal('show');
-    });
 
         function getCompanyAndRole($this) {
-
         var userId = $this.val();
-
+        $('#savePerson').show();
         $.getJSON('/Settings/GetCompanyAndRole', { userId: userId }, function (data) {
             if (data && data.userId > 0) {
                 $('#companyId').val(data.companyId > 0 ? data.companyId : '');
@@ -1950,124 +1951,152 @@
         });
     }
 
-    $(document).on('click', 'td.supervisor', function () {
-            var td = $(this);
-            var row = td.closest('tr');
-            personnelId = $(this).data("id");
-            var companyId = $(this).data("companyid");
-            var userId = $(this).data("userid");
-            // Prevent multiple dropdowns
-            if (td.find('select').length > 0) return;
+        $(document).on('click', 'td.supervisor', function () {
+        var td = $(this);
+        var row = td.closest('tr');
+        var personnelId = td.data("id");
+        var companyId = td.data("companyid");
+        var userId = td.data("userid");
 
-            // Fetch users for dropdown via AJAX
-            $.get('/IncidentDetail/GetSupervisors',{ companyId: companyId, userId: userId }, function (data) {
-                debugger;
+        // Prevent multiple dropdowns
+        if (td.find('select').length > 0) return;
+
+        // 🔹 Show loader while fetching supervisors
+        showLoader($(".main-content"));
+
+        // Fetch supervisors list
+        $.get('/IncidentDetail/GetSupervisors', { companyId: companyId, userId: userId })
+            .done(function (data) {
+                hideLoader($(".main-content")); // 🔹 Hide loader once dropdown data loaded
+
                 var select = $('<select class="form-select form-select-sm"></select>');
                 select.append('<option value="">Select</option>');
+
                 $.each(data.Result, function (i, user) {
                     select.append('<option value="' + user.UsersId + '">' + user.UsersName + '</option>');
                 });
 
                 td.html(select);
-
-                // Auto-focus
                 select.focus();
 
-                // Handle selection
+                // 🔹 When user selects supervisor
                 select.on('change', function () {
-                        var supervisorId = $(this).val();
-                        var supervisorName = $(this).find("option:selected").text();
+                    var supervisorId = $(this).val();
+                    var supervisorName = $(this).find("option:selected").text();
 
-                    $.post('/IncidentDetail/UpdateSupervisor', { personnelId: personnelId, supervisorId: supervisorId }, function (response) {
-                        if (response.success) {
-                            td.text(supervisorName); // Update cell text
-                        } else {
-                            alert('Failed to update supervisor.');
-                            td.text("Select");
-                        }
-                    });
-                });
+                    if (!supervisorId) {
+                        td.text("Select");
+                        return;
+                    }
 
-                // Optional: restore text if click outside
-                select.on('blur', function () {
-                    td.text(td.text() || "Select");
-                });
-            });
-        });
+                    // Show loader before saving
+                    showLoader($(".main-content"));
 
-
-    $('#savePerson').on('click', function () {
-        var userId = $('#userId').val();
-        var companyId = $('#companyId').val();
-        var roleId = $('#roleId').val();
-        var shiftId = $('#shiftId').val();
-        var incidentId = $('#incidentId').val();
-        var incidentValidationId = $('#incidentValidationId').val();
-
-        if (!userId || !companyId || !roleId || !shiftId) {
-            alert('Please fill all required fields.');
-            return;
-        }
-
-        $.post('/IncidentDetail/AddPerson', {
-            userId: userId,
-            companyId: companyId,
-            roleId: roleId,
-            shiftId: shiftId,
-            incidentId:incidentId,
-            incidentValidationId:incidentValidationId
-        }, function (response) {
-            if (response.success) {
-                $('#AddPersonModal').modal('hide');
-                var selectedRoleId = $('#RoleFilter').val();
-                var selectedCompanyId= $('#CompanyFilter').val();
-                var selectedOnsite= $('#onsite').val();
-                    $.ajax({
-                            url: '/IncidentDetail/FilterByRole',
-                            type: 'GET',
-                            data: { incidentId: incidentId,roleId: selectedRoleId,companyid: selectedCompanyId,onsite:selectedOnsite},
-                            success: function (response) {
-                                var tbody = $('#personnelTableBody');
-                                tbody.empty();
-                                var data = response.Result || response;
-                                if (data && data.length > 0) {
-                                    $.each(data, function (index, personnels) {
-                                        var timeIn = personnels.TimeIn
-                                            ? new Date(personnels.TimeIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                                            : "00.00";
-
-                                        var hoursSoFar = personnels.TimeIn
-                                            ? ((new Date() - new Date(personnels.TimeIn)) / (1000 * 60 * 60)).toFixed(2)
-                                            : "0.00";
-
-                                        var supervisor = personnels.Supervisor || "";
-
-                                        var row = `<tr>
-                                            <td>${personnels.Name}</td>
-                                            <td>${personnels.Role}</td>
-                                            <td>${personnels.Company}</td>
-                                            <td>${personnels.Type}</td>
-                                            <td>${personnels.Shift}</td>
-                                            <td class="timeIn" data-id="$personnels.IncidentValidationPersonnelsId">${timeIn}</td>
-                                            <td>${hoursSoFar}</td>
-                                                <td class="supervisor" data-userid="${personnels.UserId}" data-companyid="${personnels.CompanyId}" data-id="${personnels.IncidentValidationPersonnelsId}">${supervisor && supervisor.trim() !== "" ? supervisor : "Select"}</td>
-                                        </tr>`;
-
-                                        tbody.append(row);
-                                    });
-                                } else {
-                                    tbody.append('<tr><td colspan="8" class="text-center">No Data found.</td></tr>');
-                                }
-                            },
-                            error: function () {
-                                alert('Error loading data.');
+                    $.post('/IncidentDetail/UpdateSupervisor',
+                        { personnelId: personnelId, supervisorId: supervisorId },
+                        function (response) {
+                            hideLoader($(".main-content")); // 🔹 Hide loader after update
+                            if (response.success) {
+                                td.text(supervisorName);
+                            } else {
+                                alert('Failed to update supervisor.');
+                                td.text("Select");
                             }
+                        })
+                        .fail(function () {
+                            hideLoader($(".main-content")); // 🔹 Ensure loader hides even on failure
+                            alert("Error updating supervisor.");
+                            td.text("Select");
                         });
-            } else {
-                alert('Failed to add person.');
-            }
-        });
-        });
+                });
+
+                // Optional: revert text if focus lost without selection
+                // select.on('blur', function () {
+                //     if (!td.text().trim()) {
+                //         td.text("Select");
+                //     }
+                // });
+            })
+            .fail(function () {
+                hideLoader($(".main-content")); // 🔹 Hide loader on failure
+                alert("Error loading supervisors list.");
+            });
+    });
+
+
+
+    // $('#savePerson').on('click', function () {
+    //     var userId = $('#userId').val();
+    //     var companyId = $('#companyId').val();
+    //     var roleId = $('#roleId').val();
+    //     var shiftId = $('#shiftId').val();
+    //     var incidentId = $('#incidentId').val();
+    //     var incidentValidationId = $('#incidentValidationId').val();
+
+    //     // if (!userId || !companyId || !roleId || !shiftId) {
+    //     //     alert('Please fill all required fields.');
+    //     //     return;
+    //     // }
+
+    //     $.post('/IncidentDetail/AddPerson', {
+    //         userId: userId,
+    //         companyId: companyId,
+    //         roleId: roleId,
+    //         shiftId: shiftId,
+    //         incidentId:incidentId,
+    //         incidentValidationId:incidentValidationId
+    //     }, function (response) {
+    //         if (response.success) {
+    //             $('#AddPersonModal').modal('hide');
+    //             var selectedRoleId = $('#RoleFilter').val();
+    //             var selectedCompanyId= $('#CompanyFilter').val();
+    //             var selectedOnsite= $('#onsite').val();
+    //                 $.ajax({
+    //                         url: '/IncidentDetail/FilterByRole',
+    //                         type: 'GET',
+    //                         data: { incidentId: incidentId,roleId: selectedRoleId,companyid: selectedCompanyId,onsite:selectedOnsite},
+    //                         success: function (response) {
+    //                             var tbody = $('#personnelTableBody');
+    //                             tbody.empty();
+    //                             var data = response.Result || response;
+    //                             if (data && data.length > 0) {
+    //                                 $.each(data, function (index, personnels) {
+    //                                     var timeIn = personnels.TimeIn
+    //                                         ? new Date(personnels.TimeIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    //                                         : "00.00";
+
+    //                                     var hoursSoFar = personnels.TimeIn
+    //                                         ? ((new Date() - new Date(personnels.TimeIn)) / (1000 * 60 * 60)).toFixed(2)
+    //                                         : "0.00";
+
+    //                                     var supervisor = personnels.Supervisor || "";
+
+    //                                     var row = `<tr>
+    //                                         <td>${personnels.Name}</td>
+    //                                         <td>${personnels.Role}</td>
+    //                                         <td>${personnels.Company}</td>
+    //                                         <td>${personnels.Type}</td>
+    //                                         <td>${personnels.Shift}</td>
+    //                                         <td class="timeIn" data-id="$personnels.IncidentValidationPersonnelsId">${timeIn}</td>
+    //                                         <td>${hoursSoFar}</td>
+    //                                             <td class="supervisor" data-userid="${personnels.UserId}" data-companyid="${personnels.CompanyId}" data-id="${personnels.IncidentValidationPersonnelsId}">${supervisor && supervisor.trim() !== "" ? supervisor : "Select"}</td>
+    //                                     </tr>`;
+
+    //                                     tbody.append(row);
+    //                                 });
+    //                             } else {
+    //                                 tbody.append('<tr><td colspan="8" class="text-center">No Data found.</td></tr>');
+    //                             }
+    //                         },
+    //                         error: function () {
+    //                             alert('Error loading data.');
+    //                         }
+    //                     });
+    //         } else {
+    //             alert('Failed to add person.');
+    //         }
+    //     });
+    //     });
 </script>
 <script>
         document.querySelectorAll('.photo-thumb').forEach(link => {
@@ -2474,10 +2503,11 @@
 </script>
 <script>
     $(document).ready(function () {
-        $('.roleFilter').on('change', function () {
+        // $('.roleFilter').on('change', function () {
+        $(document).on('change', '#RoleFilter, #CompanyFilter, #onsite', function () {
             var selectedRoleId = $('#RoleFilter').val();
             var selectedCompanyId= $('#CompanyFilter').val();
-            var selectedOnsite= $('#onsite').val();
+            var selectedOnsite = $('#onsite').is(':checked');
             var incidentId = '@Model.Id';
 
             $.ajax({
@@ -2903,81 +2933,243 @@
 
 <script>
 
-        function OpenAddTaskModal(){
-          // show modal - using bootstrap 5
-             var $modal = $("#addTaskModal");
-             $modal.show(); // simpler; if using Bootstrap modal: $('#addTaskModal').modal('show');
-             $("body").append('<div class="modal-backdrop fade show"></div>');
-         }
+           function OpenAddTaskModal(){
+             // show modal - using bootstrap 5
+                var $modal = $("#addTaskModal");
+                $modal.show(); // simpler; if using Bootstrap modal: $('#addTaskModal').modal('show');
+                $("body").append('<div class="modal-backdrop fade show"></div>');
+            }
 
-    $(function(){
-      // open modal when Add Task clicked
-    @*   $(".btn-add").on("click", function(){
+       $(function(){
+         // open modal when Add Task clicked
+       @*   $(".btn-add").on("click", function(){
           // show modal - using bootstrap 5
           var $modal = $("#addTaskModal");
           $modal.show(); // simpler; if using Bootstrap modal: $('#addTaskModal').modal('show');
           $("body").append('<div class="modal-backdrop fade show"></div>');
       });
  *@
-     
 
-      // close modal
-      $("#btnCancelAddTask, #btnCloseAddTask").on("click", function(){
-          $("#addTaskModal").hide();
-          $(".modal-backdrop").remove();
-      });
 
-      // submit via AJAX
-      $("#formAddTask").on("submit", function(e){
-          e.preventDefault();
-          var $form = $(this);
-          var formData = $form.serialize();
+         // close modal
+         $("#btnCancelAddTask, #btnCloseAddTask").on("click", function(){
+             $("#addTaskModal").hide();
+             $(".modal-backdrop").remove();
+         });
 
-          $("#btnSaveAddTask").prop("disabled", true);
+         // submit via AJAX
+         $("#formAddTask").on("submit", function(e){
+             e.preventDefault();
+             var $form = $(this);
+             var formData = $form.serialize();
 
-          $.ajax({
-              url: '@Url.Action("SaveTask", "IncidentDetail")',
-              method: 'POST',
-              data: formData,
-              success: function(res){
-                  $("#btnSaveAddTask").prop("disabled", false);
-                  if(res && res.success){
-                      var t = res.data; // should be IncidentViewTaskListViewModel
+             $("#btnSaveAddTask").prop("disabled", true);
 
-                      // build a row HTML - make sure markup matches your table
-                      var row = '<tr>'
-                          + '<td>' + (t.task || '') + '</td>'
-                          + '<td>' + (t.fieldValue || '—') + '</td>'
-                          + '<td><span class="badge badge-status ' + ((t.status || '').toLowerCase() === "complete" ? "badge-complete" : "badge-pending") + '">' + (t.status || '') + '</span></td>'
-                          + '<td>' + (t.started || '—') + '</td>'
-                          + '<td>' + (t.completed || '—') + '</td>'
-                          + '<td>' + (t.attachment ? ('<i class="fa fa-file"></i> ' + t.attachment) : '—') + '</td>'
-                          + '</tr>';
+             $.ajax({
+                 url: '@Url.Action("SaveTask", "IncidentDetail")',
+                 method: 'POST',
+                 data: formData,
+                 success: function(res){
+                     $("#btnSaveAddTask").prop("disabled", false);
+                     if(res && res.success){
+                         var t = res.data; // should be IncidentViewTaskListViewModel
 
-                      // append to table body
-                      $(".table tbody").find("tr.no-tasks").remove(); // if you used placeholder row class
-                      $(".table tbody").append(row);
+                         // build a row HTML - make sure markup matches your table
+                         var row = '<tr>'
+                             + '<td>' + (t.task || '') + '</td>'
+                             + '<td>' + (t.fieldValue || '—') + '</td>'
+                             + '<td><span class="badge badge-status ' + ((t.status || '').toLowerCase() === "complete" ? "badge-complete" : "badge-pending") + '">' + (t.status || '') + '</span></td>'
+                             + '<td>' + (t.started || '—') + '</td>'
+                             + '<td>' + (t.completed || '—') + '</td>'
+                             + '<td>' + (t.attachment ? ('<i class="fa fa-file"></i> ' + t.attachment) : '—') + '</td>'
+                             + '</tr>';
 
-                      // close and reset form
-                      $("#formAddTask")[0].reset();
-                      $("#addTaskModal").hide();
-                      $(".modal-backdrop").remove();
-                  } else {
-                      alert(res?.message || "Save failed");
-                  }
-              },
-              error: function(xhr){
-                  $("#btnSaveAddTask").prop("disabled", false);
-                  alert("Error saving task");
-              }
-          });
-      });
+                         // append to table body
+                         $(".table tbody").find("tr.no-tasks").remove(); // if you used placeholder row class
+                         $(".table tbody").append(row);
+
+                         // close and reset form
+                         $("#formAddTask")[0].reset();
+                         $("#addTaskModal").hide();
+                         $(".modal-backdrop").remove();
+                     } else {
+                         alert(res?.message || "Save failed");
+                     }
+                 },
+                 error: function(xhr){
+                     $("#btnSaveAddTask").prop("disabled", false);
+                     alert("Error saving task");
+                 }
+             });
+         });
+       });
+
+       $("#saveValidationBtn").on("click", function () {
+           SaveIncidentValidation();
+       });
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        //var incidentId = '@Html.Raw(Model.Id)';
+
+          var incidentId = @Model.Id ?? 0;
+          var incidentValidationId = @Model.incidentValidationsDetailsViewModel?.IncidentValidationId ?? 0;
+          // var incidentId = @Model.incidentValidationPersonnelsCountViewModel.IncidentId;
+          // var incidentValidationId= @Model.incidentValidationsDetailsViewModel.IncidentValidationId ?? 0;
+
+        // ➕ Add new row
+        $('#addPerson').on('click', function () {
+            var tableBody = $('#personnelTableBody');
+
+            // ✅ Remove "No Data found" row if it exists
+            if (tableBody.find('.no-records').length > 0) {
+                tableBody.find('.no-records').remove();
+            }
+
+            // ✅ Add new editable row
+            var newRow = `
+                <tr class="new-person">
+                    <td>
+                        <select class="form-select userId" required onchange="getCompanyAndRole1($(this))">
+                            <option value="" selected>Select User</option>
+                            @foreach (var item in (List<SelectListItem>)ViewBag.UsersDrop)
+    {
+                                                                        <option value="@item.Value">@item.Text</option>
+    }
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-select companyId" required disabled>
+                            <option value="" selected>Select Company</option>
+    @foreach (var item in (List<SelectListItem>)ViewBag.CompaniesDrop)
+    {
+                                                                        <option value="@item.Value">@item.Text</option>
+    }
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-select roleId" required disabled>
+                            <option value="" selected>Select Role</option>
+    @foreach (var item in (List<SelectListItem>)ViewBag.RolesDrop)
+    {
+                                                                        <option value="@item.Value">@item.Text</option>
+    }
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-select shiftId" required>
+                            <option value="" selected>Select Shift</option>
+    @foreach (var item in (List<SelectListItem>)ViewBag.ShiftsDrop)
+    {
+                                                                        <option value="@item.Value">@item.Text</option>
+    }
+                        </select>
+                    </td>
+                    <td colspan="4"></td>
+                </tr>`;
+
+            tableBody.prepend(newRow);
+            $('#savePerson').show();
+        });
+
+        // 💾 Save all new persons
+        $('#savePerson').on('click', function () {
+        var userId = $('.userId').val();
+        var companyId = $('.companyId').val();
+        var roleId = $('.roleId').val();
+        var shiftId = $('.shiftId').val();
+        var incidentId = $('#hdnIncidentID').val();
+        var incidentValidationId = @Model.incidentValidationsDetailsViewModel?.IncidentValidationId;
+
+    // if (!userId || !companyId || !roleId || !shiftId) {
+    //     alert('Please fill all required fields.');
+    //     return;
+    // }
+
+    $.post('/IncidentDetail/AddPerson', {
+        userId: userId,
+        companyId: companyId,
+        roleId: roleId,
+        shiftId: shiftId,
+        incidentId:incidentId,
+        incidentValidationId:incidentValidationId
+    }, function (response) {
+        if (response.success) {
+            $('#savePerson').hide();
+            var selectedRoleId = $('#RoleFilter').val();
+            var selectedCompanyId= $('#CompanyFilter').val();
+            var selectedOnsite= $('#onsite').val();
+                $.ajax({
+                        url: '/IncidentDetail/FilterByRole',
+                        type: 'GET',
+                        data: { incidentId: incidentId,roleId: selectedRoleId,companyid: selectedCompanyId,onsite:selectedOnsite},
+                        success: function (response) {
+                            var tbody = $('#personnelTableBody');
+                            tbody.empty();
+                            var data = response.Result || response;
+                            if (data && data.length > 0) {
+                                $.each(data, function (index, personnels) {
+                                    var timeIn = personnels.TimeIn
+                                        ? new Date(personnels.TimeIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                                        : "00.00";
+
+                                    var hoursSoFar = personnels.TimeIn
+                                        ? ((new Date() - new Date(personnels.TimeIn)) / (1000 * 60 * 60)).toFixed(2)
+                                        : "0.00";
+
+                                    var supervisor = personnels.Supervisor || "";
+
+                                    var row = `<tr>
+                                        <td>${personnels.Name}</td>
+                                        <td>${personnels.Role}</td>
+                                        <td>${personnels.Company}</td>
+                                        <td>${personnels.Type}</td>
+                                        <td>${personnels.Shift}</td>
+                                        <td class="timeIn" data-id="$personnels.IncidentValidationPersonnelsId">${timeIn}</td>
+                                        <td>${hoursSoFar}</td>
+                                            <td class="supervisor" data-userid="${personnels.UserId}" data-companyid="${personnels.CompanyId}" data-id="${personnels.IncidentValidationPersonnelsId}">${supervisor && supervisor.trim() !== "" ? supervisor : "Select"}</td>
+                                    </tr>`;
+
+                                    tbody.append(row);
+                                });
+                            } else {
+                                tbody.append('<tr><td colspan="8" class="text-center">No Data found.</td></tr>');
+                            }
+                        },
+                        error: function () {
+                            alert('Error loading data.');
+                        }
+                    });
+        } else {
+            alert('Failed to add person.');
+        }
+    });
+    });
     });
 
-    $("#saveValidationBtn").on("click", function () {
-        SaveIncidentValidation();
-    });
+    // ✅ Fetch Company & Role dynamically
+    function getCompanyAndRole1($select) {
+        var row = $select.closest('tr');
+        var userId = $select.val();
 
+        if (!userId) {
+            row.find('.companyId, .roleId').val('').prop('disabled', true);
+            return;
+        }
+
+        $.getJSON('/Settings/GetCompanyAndRole', { userId: userId }, function (data) {
+            if (data && data.companyId > 0 && data.roleId > 0) {
+                row.find('.companyId').val(data.companyId).prop('disabled', true);
+                row.find('.roleId').val(data.roleId).prop('disabled', true);
+            } else {
+                row.find('.companyId, .roleId').val('').prop('disabled', true);
+            }
+        }).fail(function () {
+            alert("Error fetching company and role details.");
+        });
+    }
 </script>
 
 <script src="~/js/custom/loader/loader.js"></script>

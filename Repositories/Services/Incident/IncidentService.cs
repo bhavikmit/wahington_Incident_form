@@ -2347,6 +2347,88 @@ namespace Repositories.Common
         #endregion
 
         #region Personnel
+        public async Task<List<SelectListItem>> GetAllUsersDrop()
+        {
+            try
+            {
+                var users = await _db.IncidentUsers
+                    .Where(c => !c.IsDeleted)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.FirstName + " " + c.LastName
+                    })
+                    .ToListAsync();
+
+                return users;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Get All Users.");
+                return new List<SelectListItem>();
+            }
+        }
+        public async Task<List<SelectListItem>> GetAllCompaniesDrop()
+        {
+            try
+            {
+                var company = await _db.Company
+                    .Where(c => !c.IsDeleted)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    })
+                    .ToListAsync();
+
+                return company;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Get All Companies.");
+                return new List<SelectListItem>();
+            }
+        }
+        public async Task<List<SelectListItem>> GetAllIncidentRolesDrop()
+        {
+            try
+            {
+                var roles = await _db.IncidentRoles
+                    .Where(c => !c.IsDeleted)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    })
+                    .ToListAsync();
+                return roles;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Get All Roles.");
+                return new List<SelectListItem>();
+            }
+        }
+        public async Task<List<SelectListItem>> GetAllShiftsDrop()
+        {
+            try
+            {
+                var shifts = await _db.IncidentShifts
+                    .Where(c => !c.IsDeleted)
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    })
+                    .ToListAsync();
+                return shifts;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error Get All Shifts.");
+                return new List<SelectListItem>();
+            }
+        }
         public async Task<List<IncidentViewModel.CompanyViewModel>> GetAllCompanies()
         {
             try
@@ -2408,24 +2490,23 @@ namespace Repositories.Common
                 return new List<IncidentViewModel.ProgressStatusViewModel>();
             }
         }
-        public async Task<long> UpdateTimeIn(long Id, DateTime timeIn)
+        
+        public async Task<IncidentValidationPersonnelsCountViewModel> UpdateTimeIn(long Id, DateTime timeIn)
         {
             try
             {
-
-                var personnels = await _db.IncidentValidationPersonnels.Where(p => p.Id == Id).FirstOrDefaultAsync();
-
-                if (personnels == null)
+                // Get the personnel record
+                var personnel = await _db.IncidentValidationPersonnels.FirstOrDefaultAsync(p => p.Id == Id);
+                if (personnel == null)
                 {
-                    return 0;
+                    return null; // or new IncidentValidationPersonnelsCountViewModel() if you prefer
                 }
 
+                // Start transaction
                 await using var transaction = await _db.Database.BeginTransactionAsync();
-
-                personnels.TimeIn = timeIn;
-
                 try
                 {
+                    personnel.TimeIn = timeIn;
                     await _db.SaveChangesAsync();
                     await transaction.CommitAsync();
                 }
@@ -2435,58 +2516,135 @@ namespace Repositories.Common
                     throw;
                 }
 
-                return personnels.Id;
+                var now = DateTime.Now;
+
+                // Get all personnels for this IncidentId
+                var IncidentValidationPersonnels = (
+                    from ivp in _db.IncidentValidationPersonnels
+                    where ivp.IncidentId == Id
+                    join u in _db.IncidentUsers on ivp.UserId equals u.Id into userGroup
+                    from u in userGroup.DefaultIfEmpty()
+                    join c in _db.Company on ivp.CompanyId equals c.Id into companyGroup
+                    from c in companyGroup.DefaultIfEmpty()
+                    join r in _db.IncidentRoles on ivp.RoleId equals r.Id into roleGroup
+                    from r in roleGroup.DefaultIfEmpty()
+                    join s in _db.IncidentShifts on ivp.ShiftId equals s.Id into shiftGroup
+                    from s in shiftGroup.DefaultIfEmpty()
+                    join si in _db.IncidentUsers on ivp.SupervisorId equals si.Id into supervisorGroup
+                    from si in supervisorGroup.DefaultIfEmpty()
+                    select new IncidentValidationPersonnelsViewModel
+                    {
+                        IncidentValidationPersonnelsId = ivp.Id,
+                        UserId = ivp.UserId,
+                        CompanyId = ivp.CompanyId,
+                        Name = (u.FirstName + " " + u.LastName).Trim(),
+                        Company = c.Name,
+                        Role = r.Name,
+                        Type = u.EmployeeType,
+                        Shift = s.Name,
+                        TimeIn = ivp.TimeIn,
+                        Supervisor = (si.FirstName + " " + si.LastName).Trim()
+                    }
+                ).ToList();
+
+                // Stats
+                var OnsiteNow = await _db.IncidentValidationPersonnels.CountAsync(p => p.IncidentId == Id);
+                var CheckedOutToday = await _db.IncidentValidationPersonnels.CountAsync(p =>
+                    p.IncidentId == Id && p.TimeIn.HasValue && p.TimeIn.Value.Date == now.Date);
+
+                var personnelTimeToday = await _db.IncidentValidationPersonnels
+                    .Where(p => !p.IsDeleted && p.IncidentId == Id && p.TimeIn.HasValue && p.TimeIn.Value.Date == now.Date)
+                    .ToListAsync();
+
+                var totalHoursToday = Math.Round(personnelTimeToday.Sum(p => (now - p.TimeIn.Value).TotalHours), 2);
+
+                var TotalDayShift = IncidentValidationPersonnels.Count(ds => ds.Shift == "Day Shift");
+                var TotalNightShift = IncidentValidationPersonnels.Count(ds => ds.Shift == "Night Shift");
+                var TotalEmployees = IncidentValidationPersonnels.Count(ds => ds.Type == "Employee");
+                var TotalContractors = IncidentValidationPersonnels.Count(ds => ds.Type == "Contractor");
+
+                double AvgHoursWorker = CheckedOutToday > 0 ? Math.Round(totalHoursToday / CheckedOutToday, 2) : 0;
+
+                var incidentValidationPersonnelsCountViewModel = new IncidentValidationPersonnelsCountViewModel
+                {
+                    OnsiteNowCount = OnsiteNow,
+                    CheckedOutTodayCount = CheckedOutToday,
+                    TotalHoursToday = totalHoursToday,
+                    AvgHoursWorker = AvgHoursWorker,
+                    TotalDayShift = TotalDayShift,
+                    TotalNightShift = TotalNightShift,
+                    TotalEmployees = TotalEmployees,
+                    TotalContractors = TotalContractors,
+                    IncidentId = Id,
+                };
+
+                return incidentValidationPersonnelsCountViewModel;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error Update TimeIn.");
-                return 0;
+                return null;
             }
         }
         public async Task<List<IncidentValidationPersonnelsViewModel>> GetFilterByRole(long incidentId, long roleId, long companyid, string onsite)
         {
             try
             {
-                var filteredData = _db.IncidentValidationPersonnels
-                          .Where(p => p.IncidentId == incidentId && p.RoleId == (roleId == 0 ? p.RoleId : roleId) && p.CompanyId == (companyid == 0 ? p.CompanyId : companyid) && !p.IsDeleted)
-                          .GroupJoin(_db.IncidentUsers,
-                                     ivp => ivp.UserId,
-                                     u => u.Id,
-                                     (ivp, userGroup) => new { ivp, userGroup })
-                          .SelectMany(x => x.userGroup.DefaultIfEmpty(), (x, u) => new { x.ivp, u })
-                          .GroupJoin(_db.Company,
-                                     x => x.ivp.CompanyId,
-                                     c => c.Id,
-                                     (x, companyGroup) => new { x.ivp, x.u, companyGroup })
-                          .SelectMany(x => x.companyGroup.DefaultIfEmpty(), (x, c) => new { x.ivp, x.u, c })
-                          .GroupJoin(_db.IncidentRoles,
-                                     x => x.ivp.RoleId,
-                                     r => r.Id,
-                                     (x, roleGroup) => new { x.ivp, x.u, x.c, roleGroup })
-                          .SelectMany(x => x.roleGroup.DefaultIfEmpty(), (x, r) => new { x.ivp, x.u, x.c, r })
-                          .GroupJoin(_db.IncidentShifts,
-                                     x => x.ivp.ShiftId,
-                                     s => s.Id,
-                                     (x, shiftGroup) => new { x.ivp, x.u, x.c, x.r, shiftGroup })
-                          .SelectMany(x => x.shiftGroup.DefaultIfEmpty(), (x, s) => new { x.ivp, x.u, x.c, x.r, s })
-                          .GroupJoin(_db.IncidentUsers,                // 👇 Join for Supervisor (SupervisorId)
-                                     x => x.ivp.SupervisorId,
-                                     sup => sup.Id,
-                                     (x, supervisorGroup) => new { x.ivp, x.u, x.c, x.r, x.s, supervisorGroup })
-                          .SelectMany(x => x.supervisorGroup.DefaultIfEmpty(), (x, sup) => new IncidentValidationPersonnelsViewModel
-                          {
-                              IncidentValidationPersonnelsId = x.ivp.Id,
-                              UserId = x.ivp.UserId,
-                              CompanyId = x.ivp.CompanyId,
-                              Name = (x.u != null ? (x.u.FirstName + " " + x.u.LastName).Trim() : string.Empty),
-                              Company = x.c != null ? x.c.Name : string.Empty,
-                              Role = x.r != null ? x.r.Name : string.Empty,
-                              Type = x.u != null ? x.u.EmployeeType : string.Empty,
-                              Shift = x.s != null ? x.s.Name : string.Empty,
-                              Supervisor = sup != null ? (sup.FirstName + " " + sup.LastName).Trim() : string.Empty, // ✅ New field
-                              TimeIn = x.ivp.TimeIn
-                          })
-                          .ToList();
+                bool isOnsite = string.Equals(onsite, "true", StringComparison.OrdinalIgnoreCase);
+
+                DateTime today = DateTime.Today;
+
+                var query = _db.IncidentValidationPersonnels
+                    .Where(p => p.IncidentId == incidentId
+                                && p.RoleId == (roleId == 0 ? p.RoleId : roleId)
+                                && p.CompanyId == (companyid == 0 ? p.CompanyId : companyid)
+                                && !p.IsDeleted);
+
+                if (isOnsite)
+                {
+                    query = query.Where(p => p.TimeIn.HasValue && p.TimeIn.Value.Date == today);
+                }
+
+                var filteredData = query
+                    .GroupJoin(_db.IncidentUsers,
+                               ivp => ivp.UserId,
+                               u => u.Id,
+                               (ivp, userGroup) => new { ivp, userGroup })
+                    .SelectMany(x => x.userGroup.DefaultIfEmpty(), (x, u) => new { x.ivp, u })
+                    .GroupJoin(_db.Company,
+                               x => x.ivp.CompanyId,
+                               c => c.Id,
+                               (x, companyGroup) => new { x.ivp, x.u, companyGroup })
+                    .SelectMany(x => x.companyGroup.DefaultIfEmpty(), (x, c) => new { x.ivp, x.u, c })
+                    .GroupJoin(_db.IncidentRoles,
+                               x => x.ivp.RoleId,
+                               r => r.Id,
+                               (x, roleGroup) => new { x.ivp, x.u, x.c, roleGroup })
+                    .SelectMany(x => x.roleGroup.DefaultIfEmpty(), (x, r) => new { x.ivp, x.u, x.c, r })
+                    .GroupJoin(_db.IncidentShifts,
+                               x => x.ivp.ShiftId,
+                               s => s.Id,
+                               (x, shiftGroup) => new { x.ivp, x.u, x.c, x.r, shiftGroup })
+                    .SelectMany(x => x.shiftGroup.DefaultIfEmpty(), (x, s) => new { x.ivp, x.u, x.c, x.r, s })
+                    .GroupJoin(_db.IncidentUsers, // Supervisor
+                               x => x.ivp.SupervisorId,
+                               sup => sup.Id,
+                               (x, supervisorGroup) => new { x.ivp, x.u, x.c, x.r, x.s, supervisorGroup })
+                    .SelectMany(x => x.supervisorGroup.DefaultIfEmpty(), (x, sup) => new IncidentValidationPersonnelsViewModel
+                    {
+                        IncidentValidationPersonnelsId = x.ivp.Id,
+                        UserId = x.ivp.UserId,
+                        CompanyId = x.ivp.CompanyId,
+                        Name = x.u != null ? (x.u.FirstName + " " + x.u.LastName).Trim() : string.Empty,
+                        Company = x.c != null ? x.c.Name : string.Empty,
+                        Role = x.r != null ? x.r.Name : string.Empty,
+                        Type = x.u != null ? x.u.EmployeeType : string.Empty,
+                        Shift = x.s != null ? x.s.Name : string.Empty,
+                        Supervisor = sup != null ? (sup.FirstName + " " + sup.LastName).Trim() : string.Empty,
+                        TimeIn = x.ivp.TimeIn
+                    })
+                    .ToList();
+
                 return filteredData;
             }
             catch (Exception ex)
@@ -2556,6 +2714,9 @@ namespace Repositories.Common
             {
                 await using var transaction = await _db.Database.BeginTransactionAsync();
 
+                var incidentValidation = await _db.IncidentValidations
+                   .Where(i => !i.IsDeleted && i.IncidentId == incidentId)
+                   .FirstOrDefaultAsync();
                 var newPersonnel = new IncidentValidationPersonnel
                 {
                     IncidentId = incidentId,
@@ -2563,7 +2724,7 @@ namespace Repositories.Common
                     CompanyId = companyId,
                     RoleId = roleId,
                     ShiftId = shiftId,
-                    IncidentValidationId = incidentValidationId, // if this is a foreign key
+                    IncidentValidationId = incidentValidation.Id, // if this is a foreign key
                     TimeIn = null, // set if needed
                 };
 

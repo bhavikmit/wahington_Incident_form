@@ -368,3 +368,6 @@ FodyWeavers.xsd
 /API/obj/Debug/net7.0/API.assets.cache
 /API/obj/Debug/net7.0/apphost.exe
 /API/obj/Debug/net7.0/API.csproj.FileListAbsolute.txt
+temp_auto_push.bat
+temp_interactive_push.bat
+branch_structure.json

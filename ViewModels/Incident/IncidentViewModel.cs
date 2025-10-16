@@ -41,7 +41,7 @@ namespace ViewModels.Incident
 
         public IncidentValidationAssignedRolesViewModel incidentValidationAssignedRolesViewModel { get; set; } = new();
         public IncidentValidationGatesViewModel incidentValidationGatesViewModel { get; set; } = new();
-        public List<IncidentValidationLocationViewModel> IncidentValidationLocations { get; set; } = new();
+        public IncidentValidationLocationViewModel IncidentValidationLocations { get; set; } = new();
         public List<IncidentMapChat> listIncidentMapChats { get; set; } = new();
         public IncidentAssessmentDetailViewModel IncidentAssessmentDetails { get; set; } = new();
         public IncidentViewAssessmentAttachmentViewModel incidentViewAssessmentAttachmentView { get; set; } = new();
@@ -137,6 +137,7 @@ namespace ViewModels.Incident
 
     public class IncidentDetailByIdViewModel
     {
+        public long StatusLegendId { get; set; }
         public string SeverityName { get; set; } = string.Empty;
         public string StatusLegendName { get; set; } = string.Empty;
         public string StatusLegendColor { get; set; } = string.Empty;

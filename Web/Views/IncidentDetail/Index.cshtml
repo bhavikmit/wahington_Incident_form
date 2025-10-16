@@ -8,6 +8,14 @@
 <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css">
 <script src="https://js.arcgis.com/4.27/"></script>
 <script type="module" src="https://js.arcgis.com/embeddable-components/4.33/arcgis-embeddable-components.esm.js"></script>
+
+<style>
+    .tab-item.disabled {
+    pointer-events: none;  /* disables clicking */
+    opacity: 0.5;          /* visually indicate disabled */
+    cursor: not-allowed;   /* show disabled cursor */
+    }
+</style>
 <div id="incidentDetailsModal" tabindex="-1" aria-hidden="true">
     <input type="hidden" id="hdnIncidentID" value="@Model.Id" />
     <div class="container-fuild">
@@ -19,31 +27,31 @@
                 </div>
 
                 <div class="tabs">
-                    <div class="tab-item active" data-tab="dashboard">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "" : "active")" data-tab="dashboard">
                         <i class="fa fa-map-marker-alt"></i>Map
                     </div>
-                    <div class="tab-item " data-tab="overview">
+                    <div class="tab-item" data-tab="overview">
                         <i class="far fa-file-alt"></i> Overview
                     </div>
-                    <div class="tab-item" data-tab="validation">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "active" : "")" data-tab="validation">
                         <i class="fas fa-shield-alt"></i> Validation
                     </div>
-                    <div class="tab-item" data-tab="personnel">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="personnel">
                         <i class="fa-regular fa-user"></i> Personnel
                     </div>
-                    <div class="tab-item " data-tab="assessment">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="assessment">
                         <i class="fa-solid fa-clipboard-check"></i>Assessment
                     </div>
-                    <div class="tab-item" data-tab="repair">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="repair">
                         <i class="fa-solid fa-screwdriver-wrench"></i> Repair
                     </div>
-                    <div class="tab-item " data-tab="restoration">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="restoration">
                         <i class="fa-solid fa-rotate"></i> Restoration
                     </div>
-                    <div class="tab-item" data-tab="closeout">
+                    <div class="tab-item @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "disabled" : "")" data-tab="closeout">
                         <i class="fa-regular fa-circle-check"></i> Closeout
                     </div>
-
+                    
                     @* <div class="tab-item" data-tab="worksteps">
                         <i class="fas fa-tasks"></i> Policies
                     </div>
@@ -54,7 +62,7 @@
                 </div>
             </div>
             <div class="tabBody">
-                <div id="dashboard" class="tab-content active">
+                <div id="dashboard" class="tab-content @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "" : "active")">
                     <div class="row g-4">
 
                         <!-- Chat & Handoffs -->
@@ -251,7 +259,7 @@
                     </div>
                 </div>
 
-                <div id="validation" class="tab-content">
+                <div id="validation" class="tab-content @(Model.incidentDetailByIdViewModel.StatusLegendId == 1 ? "active" : "")">
                     <div class="phase-header">
                         <div>
                             <div class="phaseTitle">Phase: <span class="fw-bold">Validation</span></div>
@@ -266,37 +274,38 @@
                         <div class="col-md-4">
                             <div class="card-custom">
                                 <div class="section-title">Incident Details</div>
-
-                                @foreach (var item in Model.IncidentValidationLocations)
-                                {
-                                    <div class="section-body">
+                                <div class="section-body">
+                                @* @foreach (var item in Model.IncidentValidationLocations)
+                                { *@
+                                    
                                         <div class="info-item">
                                             <div>
                                                 <span class="info-title">Severity Level:</span>
-                                                <div class="subtext">@item.SeverityName</div>
+                                                <div class="subtext">@Model.IncidentValidationLocations.SeverityName</div>
                                             </div>
                                         </div>
                                         <div class="info-item">
                                             <div>
                                                 <span class="info-title">Discovery Perimeter:</span>
-                                                <div class="subtext">@item.DiscoveryPerimeter</div>
+                                                <div class="subtext">@Model.IncidentValidationLocations.DiscoveryPerimeter</div>
                                             </div>
                                         </div>
                                         <div class="info-item">
                                             <div>
                                                 <span class="info-title">ICP Location:</span>
-                                                <div class="subtext">@item.ICPLocation</div>
+                                                <div class="subtext">@Model.IncidentValidationLocations.ICPLocation</div>
                                             </div>
                                         </div>
                                         <div class="info-item">
                                             <div>
                                                 <span class="info-title">Source:</span>
-                                                <div class="subtext">@item.Source</div>
+                                                <div class="subtext">@Model.IncidentValidationLocations.Source</div>
                                             </div>
                                         </div>
 
-                                    </div>
-                                }
+                                    
+                                @* } *@
+                                </div>
                             </div>
                         </div>
 

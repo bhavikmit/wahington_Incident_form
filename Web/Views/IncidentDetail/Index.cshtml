@@ -2246,7 +2246,7 @@
             if (!text) return;
 
             const payload = {
-                IncidentId: @Model.Id,
+                IncidentId: '@Model.Id',
                 IncidentValidationId: @Model.incidentValidationsDetailsViewModel?.IncidentValidationId ?? 0,
                 Notes: text
             };

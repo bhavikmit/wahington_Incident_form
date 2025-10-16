@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Helpers.Extensions;
+
 using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Helpers.Extensions;
 
 namespace Web.Extensions
 {
@@ -43,6 +46,31 @@ namespace Web.Extensions
             var htmlPrefix = viewData.TemplateInfo.HtmlFieldPrefix;
             viewData.TemplateInfo.HtmlFieldPrefix += !Equals(htmlPrefix, string.Empty) ? $".{prefix}" : prefix;
             return htmlHelper.PartialAsync(partialViewName, model, viewData);
+        }
+
+        public static async Task<string> RenderViewAsync<TModel>(this Controller controller, string viewName, TModel model, bool partial = false)
+        {
+            controller.ViewData.Model = model;
+            using (var writer = new StringWriter())
+            {
+                var viewEngine = controller.HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
+                var viewResult = viewEngine.FindView(controller.ControllerContext, viewName, !partial);
+
+                if (!viewResult.Success)
+                    throw new FileNotFoundException($"View {viewName} not found.");
+
+                var viewContext = new ViewContext(
+                    controller.ControllerContext,
+                    viewResult.View,
+                    controller.ViewData,
+                    controller.TempData,
+                    writer,
+                    new HtmlHelperOptions()
+                );
+
+                await viewResult.View.RenderAsync(viewContext);
+                return writer.GetStringBuilder().ToString();
+            }
         }
     }
 }

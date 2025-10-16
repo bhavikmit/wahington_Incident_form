@@ -4,6 +4,7 @@ using ViewModels.Incident;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualBasic;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Web.Extensions;
 
 namespace Web.Controllers
 {
@@ -27,7 +28,7 @@ namespace Web.Controllers
             };
 
             var model = await _iIncidentService.GetIncidentDetailsById(id);
-
+            model.Id = id;
             var incidentValidationDtl = await _iIIncidentValidationService.GetIncidentValidationDetail(id);
             model.IVDetails = incidentValidationDtl;
 
@@ -135,10 +136,27 @@ namespace Web.Controllers
                 {
                     AssestmentFilterRequest request = new()
                     {
-                        IncidentId = (long)model.IncidentId
+                        IncidentId = model?.IncidentId ?? 0
                     };
+
+
+                    var viewattachment = await _iIncidentService.ViewAssessmentAttachment(request.IncidentId);
+                    var viewattachmentHtml = await this.RenderViewAsync("_ViewAttachmentAssestmentPartial", viewattachment, true);
+
+
+
                     var details = await _iIncidentService.GetAssessmentDetails(request);
-                    return Json(new { success = true, files = fileUrls, asssetDetails = details });
+
+                    return Json(new
+                    {
+                        success = true,
+                        files = fileUrls,
+                        asssetDetails = details,
+                        partials = new
+                        {
+                            viewattachment = viewattachmentHtml,
+                        }
+                    });
                 }
                 else
                 {

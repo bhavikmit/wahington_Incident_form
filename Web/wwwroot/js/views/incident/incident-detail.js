@@ -46,7 +46,7 @@
         formData.append("MainStepId", document.getElementById("mainstepId").value);
         formData.append("SubStepId", document.getElementById("substepId").value);
         formData.append("IncidentId", document.getElementById("hdnIncidentID").value);
-        
+
 
         // Append files (multiple)
         const files = document.getElementById("fileInputAssestment").files;
@@ -70,7 +70,7 @@
                     $("#assessment").find("#completedTaskCount").text(completedTaskCount);
 
                     SwalSuccessAlert("Updated Successfully");
-                   
+
                     // Optional: close modal and refresh table
                     $("#updateIncidentAssestmentModal").modal("hide");
 
@@ -78,9 +78,17 @@
                     var ownerId = $("#ddlOwner").val() != "" ? $("#ddlOwner").val() : 0;
                     var step = $("#global_search_value").val() != "" ? $("#global_search_value").val() : "";
 
+                    debugger;
+
                     GetAssessmentDetails(statusID, ownerId, step);
 
+                    if (result.partials) {
+                        $("#div_Attachments").empty().html(result.partials.viewattachment);
+                    }
+
                     hideLoader($("#updateIncidentAssestmentModal"));
+
+
 
                 } else {
                     SwalErrorAlert(result.message || "Update failed.");

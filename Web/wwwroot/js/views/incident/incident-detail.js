@@ -324,6 +324,19 @@ async function SubmitAssestment() {
         if (result.success) {
             SwalSuccessAlert(result.data);
             $("#addIncidentAssestmentModal").modal("hide");
+
+            var openTaskCount = (result && result.asssetDetails && result.asssetDetails.OpenTaskCount)
+                ? result.asssetDetails.OpenTaskCount
+                : 0;
+
+            var completedTaskCount = (result && result.asssetDetails && result.asssetDetails.CompletedTaskCount)
+                ? result.asssetDetails.CompletedTaskCount
+                : 0;
+
+
+            $("#assessment").find("#openTaskCount").text(openTaskCount);
+            $("#assessment").find("#completedTaskCount").text(completedTaskCount);
+
             const statusID = $("#ddlStatus").val() || 0;
             const ownerId = $("#ddlOwner").val() || 0;
             const step = $("#global_search_value").val() || "";

@@ -203,10 +203,17 @@ namespace Web.Controllers
                 assessment.IncidentId = request.IncidentId;
 
                 // TODO: Call your save service when ready
-                 var resultId = await _iIncidentService.SubmitAssestment(assessment);
+                 //var resultId = await _iIncidentService.SubmitAssestment(assessment);
+
+                AssestmentFilterRequest requestFilter = new()
+                {
+                    IncidentId = request.IncidentId
+                };
+
+                var details = await _iIncidentService.GetAssessmentDetails(requestFilter);
 
                 var successMsg = "Assestment saved successfully!";
-                return Ok(new { success = true, data = successMsg });
+                return Ok(new { success = true, data = successMsg, asssetDetails = details });
             }
             catch (Exception ex)
             {

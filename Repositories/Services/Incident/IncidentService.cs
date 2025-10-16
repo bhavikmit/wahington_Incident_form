@@ -1353,8 +1353,25 @@ namespace Repositories.Common
 
 
                 if (details == null)
-                    return new IncidentAssessmentDetailViewModel();
+                {
+                    assessmentDetailViewModel.Status = statusList
+                    .Select(p => new SelectListItem
+                    {
+                        Text = p.Value,
+                        Value = p.Key.ToString()
+                    })
+                    .ToList();
 
+                    assessmentDetailViewModel.OwenerTypes = ownerList
+                        .Select(user => new SelectListItem
+                        {
+                            Text = $"{user.LastName} {user.FirstName}",
+                            Value = user.Id.ToString()
+                        })
+                        .ToList();
+
+                    return assessmentDetailViewModel;
+                }
                 ListPostDetailVM = await GetPostDetailVM(Convert.ToInt64(details?.IncidentId), 3);
 
 
